@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Cours – OSINT & Pentesting</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+<h1>OSINT & Pentesting Web</h1>
+<nav>
+<a href="index.html">Accueil</a>
+<a href="cours.html">Cours</a>
+<a href="labs.html">Labs</a>
+<a href="planning.html">Planning</a>
+<a href="rapport.html">Rapport</a>
+<a href="bugbounty.html">Bug Bounty</a>
+</nav>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>📘 Module 1 – Introduction à l’OSINT et méthodologie</h2>
+
+<h3>🎯 Objectifs pédagogiques</h3>
+<ul>
+  <li>Comprendre ce qu’est réellement l’OSINT</li>
+  <li>Savoir dans quel cadre professionnel il est utilisé</li>
+  <li>Adopter une méthodologie structurée et légale</li>
+</ul>
+
+<h3>🧠 Qu’est-ce que l’OSINT ?</h3>
+<p>
+L’OSINT (Open Source INTelligence) consiste à collecter, analyser et corréler
+des informations accessibles publiquement afin d’en extraire de la valeur.
+</p>
+
+<p>
+Contrairement au hacking, l’OSINT :
+</p>
+<ul>
+  <li>n’exploite aucune vulnérabilité technique</li>
+  <li>n’interagit pas activement avec les systèmes</li>
+  <li>repose sur des données ouvertes et légales</li>
+</ul>
+
+<h3>🏢 Contextes professionnels</h3>
+<ul>
+  <li>Audit de sécurité (phase de reconnaissance)</li>
+  <li>Bug Bounty</li>
+  <li>Investigation numérique</li>
+  <li>Veille cyber / threat intelligence</li>
+</ul>
+
+<h3>⚖️ Cadre légal et éthique</h3>
+<p>
+L’OSINT est légal si :
+</p>
+<ul>
+  <li>les données sont accessibles sans authentification</li>
+  <li>aucune manipulation intrusive n’est effectuée</li>
+  <li>le périmètre (scope) est clairement défini</li>
+</ul>
+
+<p>
+⚠️ Toute automatisation excessive ou ciblage abusif peut devenir illégale.
+</p>
+
+<h3>🧭 Méthodologie OSINT standard</h3>
+
+<ol>
+  <li><strong>Définition de la cible</strong> (entreprise, domaine, organisation)</li>
+  <li><strong>Collecte passive</strong> (moteurs, bases ouvertes)</li>
+  <li><strong>Structuration des données</strong></li>
+  <li><strong>Analyse et corrélation</strong></li>
+  <li><strong>Rédaction d’un rapport</strong></li>
+</ol>
+
+<h3>🗂️ Typologie des données OSINT</h3>
+<ul>
+  <li>Domaines et sous-domaines</li>
+  <li>Adresses email professionnelles</li>
+  <li>IP et services exposés</li>
+  <li>Métadonnées publiques</li>
+  <li>Présence sur les réseaux</li>
+</ul>
+
+<h3>🛠️ Outils que tu vas apprendre dans cette formation</h3>
+
+<table border="1" cellpadding="6">
+<tr>
+<th>Outil</th>
+<th>Rôle</th>
+</tr>
+<tr>
+<td>Shodan</td>
+<td>Découverte de services exposés</td>
+</tr>
+<tr>
+<td>Recon-ng</td>
+<td>Automatisation OSINT structurée</td>
+</tr>
+<tr>
+<td>theHarvester</td>
+<td>Emails & sous-domaines</td>
+</tr>
+<tr>
+<td>Maltego</td>
+<td>Corrélation graphique</td>
+</tr>
+</table>
+
+<h3>🧪 Exercice d’introduction</h3>
+
+<p>
+Choisir une organisation connue (ex : entreprise tech publique) et répondre
+aux questions suivantes sans utiliser d’outil :
+</p>
+
+<ul>
+  <li>Quel est son domaine principal ?</li>
+  <li>Existe-t-il des sous-domaines visibles ?</li>
+  <li>Des emails professionnels publics ?</li>
+</ul>
+
+<h3>✅ Objectif de l’exercice</h3>
+<p>
+Comprendre que l’OSINT commence par l’observation et le raisonnement,
+avant l’utilisation d’outils.
+</p>
+
+<h3>📚 Ressources complémentaires</h3>
+<ul>
+  <li>
+    OWASP – Information Gathering :
+    <a href="https://owasp.org/www-project-web-security-testing-guide/" target="_blank">
+      Web Security Testing Guide
+    </a>
+  </li>
+  <li>
+    TryHackMe :
+    <a href="https://tryhackme.com/path/outline/presecurity" target="_blank">
+      Pre Security Path
+    </a>
+  </li>
+</ul>
+</div>
+
+<div class="card">
+<h2>📚 Module 2 – Shodan : analyse de l’exposition publique</h2>
+
+<h3>🎯 Objectifs pédagogiques</h3>
+<ul>
+  <li>Comprendre à quoi sert Shodan dans une démarche OSINT</li>
+  <li>Savoir lire et interpréter les résultats</li>
+  <li>Identifier une exposition inutile ou risquée</li>
+</ul>
+
+<h3>🧠 À quoi sert Shodan ?</h3>
+<p>
+Shodan est un moteur de recherche spécialisé qui indexe les services exposés
+sur Internet (serveurs web, bases de données, caméras, VPN, etc.).
+</p>
+
+<p>
+Contrairement à Google, Shodan ne cherche pas des pages web, mais des
+<strong>services techniques</strong>.
+</p>
+
+<p>
+En OSINT, Shodan sert à :
+</p>
+<ul>
+  <li>Cartographier la surface d’exposition d’une organisation</li>
+  <li>Identifier des services accessibles publiquement</li>
+  <li>Détecter des versions obsolètes ou mal configurées</li>
+</ul>
+
+<h3>⚖️ Cadre légal</h3>
+<p>
+L’utilisation de Shodan est légale tant que :
+</p>
+<ul>
+  <li>Tu restes en consultation passive</li>
+  <li>Tu n’interagis pas avec les services</li>
+  <li>Tu respectes le scope défini</li>
+</ul>
+
+<h3>🛠️ Mise en pratique – premières recherches</h3>
+
+<p><strong>1. Créer un compte gratuit</strong></p>
+<ul>
+  <li>
+    Lien : 
+    <a href="https://www.shodan.io" target="_blank">https://www.shodan.io</a>
+  </li>
+</ul>
+
+<p><strong>2. Recherche par domaine</strong></p>
+<code>
+domain:example.com
+</code>
+
+<p>
+Cette recherche permet de voir :
+</p>
+<ul>
+  <li>les IP associées au domaine</li>
+
+<div class="card">
+<h2>📚 Module 3 – Recon-ng : framework OSINT automatisé</h2>
+
+<h3>🎯 Objectifs pédagogiques</h3>
+<ul>
+  <li>Comprendre le rôle de Recon-ng dans une démarche OSINT</li>
+  <li>Savoir lancer une reconnaissance structurée</li>
+  <li>Automatiser la collecte d’informations publiques</li>
+</ul>
+
+<h3>🧠 Présentation de Recon-ng</h3>
+<p>
+Recon-ng est un framework OSINT en ligne de commande, inspiré de Metasploit.
+Il permet de structurer, automatiser et documenter une collecte d’informations
+à partir de sources ouvertes.
+</p>
+
+<p>
+Il est particulièrement utilisé pour :
+</p>
+<ul>
+  <li>OSINT corporate</li>
+  <li>pré-audit de sécurité</li>
+  <li>cartographie d’attaque passive</li>
+</ul>
+
+<h3>⚖️ Cadre légal</h3>
+<p>
+Recon-ng est légal si :
+</p>
+<ul>
+  <li>les modules utilisés exploitent uniquement des sources publiques</li>
+  <li>aucune interaction intrusive n’est effectuée</li>
+  <li>le scope est clairement défini</li>
+</ul>
+
+<h3>🛠️ Installation et lancement (Kali Linux)</h3>
+
+<code>
+sudo apt update && sudo apt install recon-ng
+</code>
+
+<p>Lancer Recon-ng :</p>
+
+<code>
+recon-ng
+</code>
+
+<h3>🗂️ Création d’un workspace</h3>
+<p>
+Un worksp
+
+<div class="card">
+<h2>📚 Module 4 – theHarvester : collecte d’emails et sous-domaines</h2>
+
+<h3>🎯 Objectifs pédagogiques</h3>
+<ul>
+  <li>Identifier les emails exposés publiquement</li>
+  <li>Découvrir les sous-domaines d’une organisation</li>
+  <li>Comprendre l’exposition informationnelle d’une cible</li>
+</ul>
+
+<h3>🧠 Présentation de theHarvester</h3>
+<p>
+theHarvester est un outil OSINT en ligne de commande permettant de collecter
+des informations publiques via des moteurs de recherche et des bases ouvertes.
+</p>
+
+<p>
+Il est utilisé principalement en :
+</p>
+<ul>
+  <li>OSINT corporate</li>
+  <li>pré-audit de sécurité</li>
+  <li>cartographie d’attaque passive</li>
+</ul>
+
+<h3>⚖️ Cadre légal</h3>
+<p>
+theHarvester est légal si :
+</p>
+<ul>
+  <li>la cible est autorisée (entreprise, lab, domaine personnel)</li>
+  <li>les sources interrogées sont publiques</li>
+  <li>aucune tentative d’exploitation n’est réalisée</li>
+</ul>
+
+<h3>🛠️ Installation (Kali Linux)</h3>
+
+<code>
+sudo apt update && sudo apt install theharvester
+</code>
+
+<h3>🚀 Commande de base</h3>
+
+<p>
+Syntaxe générale :
+</p>
+
+<code>
+theHarvester -d example.com -b google
+</code>
+
+<ul>
+  <li><strong>-d</strong> : domaine cible</li>
+  <li><strong>-b</strong> : source (google, bing, duckduckgo, crtsh, etc.)</li>
+</ul>
+
+<h3>🔍 Sources recommandées</h3>
+
+<code>
+theHarvester -d example.com -b google
+theHarvester -d example.com -b bing
+theHarvester -d example.com -b crtsh
+</code>
+
+<p>
+<strong>crtsh</strong> est très puissant pour découvrir des sous-domaines
+via les certificats TLS.
+</p>
+
+<h3>📄 Génération d’un rapport HTML</h3>
+
+<code>
+theHarvester -d example.com -b google -f rapport_theharvester.html
+</code>
+
+<p>
+Le rapport généré peut être intégré directement dans ton portfolio.
+</p>
+
+<h3>📊 Types de données collectées</h3>
+<ul>
+  <li>emails professionnels</li>
+  <li>sous-domaines exposés</li>
+  <li>hôtes liés à l’organisation</li>
+</ul>
+
+<h3>🧠 Analyse OSINT (raisonnement attendu)</h3>
+
+<p>Tu dois te poser les questions suivantes :</p>
+<ul>
+  <li>Les emails suivent-ils un pattern (prenom.nom) ?</li>
+  <li>Les sous-domaines révèlent-ils des environnements internes ?</li>
+  <li>Certains services semblent-ils obsolètes ou exposés ?</li>
+</ul>
+
+<h3>🧪 Exercice pratique</h3>
+
+<ol>
+  <li>Choisir un domaine autorisé (lab ou domaine personnel)</li>
+  <li>Lancer theHarvester avec 2 sources différentes</li>
+  <li>Exporter un rapport HTML</li>
+  <li>Identifier au moins :
+    <ul>
+      <li>2 emails</li>
+      <li>2 sous-domaines</li>
+    </ul>
+  </li>
+</ol>
+
+<h3>✅ Solution attendue</h3>
+
+<ul>
+  <li>Commandes correctement exécutées</li>
+  <li>Données structurées</li>
+  <li>Analyse orientée exposition et risques</li>
+</ul>
+
+<h3>📚 Ressources complémentaires</h3>
+<ul>
+  <li>
+    GitHub officiel :
+    <a href="https://github.com/laramies/theHarvester" target="_blank">
+      https://github.com/laramies/theHarvester
+    </a>
+  </li>
+  <li>
+    TryHackMe :
+    <a href="https://tryhackme.com/room/harvester" target="_blank">
+      theHarvester
+    </a>
+  </li>
+</ul>
+</div>
+
+
+
+
+<p>Support : OWASP WebGoat / PortSwigger Academy</p>
+</div>
+
+</div>
+</body>
+</html>
