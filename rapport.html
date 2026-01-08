@@ -4,104 +4,138 @@
   <meta charset="UTF-8">
   <title>Rapport OSINT – Reconnaissance passive</title>
   <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* Style spécial PDF */
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+      nav, footer, button {
+        display: none;
+      }
+      .card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
+<a href="Rapport_OSINT.pdf" download class="pdf-button">
+   style="
+   display:block !important;
+   margin:30px !important;
+   padding:15px !important;
+   background:#00ff9c !important;
+   color:#000 !important;
+   text-decoration:none !important;
+   font-weight:bold !important;
+   border-radius:8px !important;
+   width:fit-content !important;
+   z-index:9999 !important;
+   ">
+📥 Télécharger le rapport PDF
+</a>
+
 <header>
-  <h1>📄 Rapport OSINT – Reconnaissance passive</h1>
-  <nav>
-    <a href="index.html">Accueil</a>
-    <a href="cours.html">Cours</a>
-    <a href="labs.html">Labs</a>
-    <a href="rapport.html">Rapport</a>
-  </nav>
+  <h1>📄 Rapport OSINT</h1>
+  <p>Reconnaissance passive – Usage pédagogique</p>
 </header>
 
 <main>
 
 <section class="card">
-<h2>1. Contexte et objectif</h2>
+<h2>1. Contexte & Objectifs</h2>
 <p>
-Ce rapport présente les résultats d’une phase de reconnaissance OSINT passive
-réalisée dans un cadre légal, à des fins d’analyse de l’exposition
-informationnelle d’une organisation.
+Ce rapport présente une mission de reconnaissance OSINT (Open Source Intelligence)
+réalisée dans un cadre strictement légal et pédagogique.
 </p>
-
 <p>
-L’objectif est d’identifier les informations accessibles publiquement
-pouvant être exploitées lors d’attaques indirectes (phishing, ingénierie sociale,
-cartographie d’attaque).
+Objectif : identifier les informations publiquement accessibles exposant une
+organisation fictive, sans interaction intrusive.
 </p>
 </section>
 
 <section class="card">
-<h2>2. Scope et cadre légal</h2>
+<h2>2. Cadre légal & éthique</h2>
 <ul>
-  <li>Domaine analysé : <em>example.com</em></li>
-  <li>Type d’audit : OSINT passif</li>
-  <li>Sources : données publiques uniquement</li>
-  <li>Aucune interaction intrusive réalisée</li>
+  <li>Données issues de sources publiques uniquement</li>
+  <li>Aucune authentification contournée</li>
+  <li>Aucune exploitation de vulnérabilité</li>
+  <li>Respect des principes de Responsible Disclosure</li>
 </ul>
 </section>
 
 <section class="card">
-<h2>3. Méthodologie</h2>
-<p>
-La méthodologie suivie repose sur une approche progressive :
-</p>
+<h2>3. Méthodologie OSINT</h2>
 <ol>
-  <li>Définition du périmètre</li>
-  <li>Collecte d’informations via sources ouvertes</li>
-  <li>Automatisation OSINT</li>
-  <li>Analyse et corrélation des données</li>
+  <li>Définition de la cible (domaine, activité)</li>
+  <li>Recherche d’exposition réseau (Shodan)</li>
+  <li>Collecte automatisée (Recon-ng)</li>
+  <li>Collecte emails & sous-domaines (theHarvester)</li>
 </ol>
 </section>
 
 <section class="card">
 <h2>4. Outils utilisés</h2>
 <ul>
-  <li>Shodan – identification de services exposés</li>
-  <li>Recon-ng – OSINT automatisé structuré</li>
-  <li>theHarvester – emails et sous-domaines</li>
+  <li>Shodan</li>
+  <li>Recon-ng</li>
+  <li>theHarvester</li>
+  <li>Navigateurs & moteurs OSINT</li>
 </ul>
 </section>
 
 <section class="card">
-<h2>5. Résultats</h2>
-
-<table border="1" cellpadding="6">
-<tr>
-<th>Catégorie</th>
-<th>Donnée observée</th>
-<th>Impact potentiel</th>
-</tr>
-</table>
-
+<h2>5. Résultats synthétiques</h2>
 <p>
-<i>Les données ci-dessus sont issues de sources publiques et n’impliquent
-aucune exploitation technique.</i>
+Les informations collectées montrent une exposition informationnelle classique :
+</p>
+<ul>
+  <li>Sous-domaines publics</li>
+  <li>Adresses emails professionnelles</li>
+  <li>Services visibles via moteurs spécialisés</li>
+</ul>
+<p>
+Aucune donnée sensible n’a été exploitée.
 </p>
 </section>
 
 <section class="card">
-<h2>6. Analyse des risques</h2>
+<h2>6. Recommandations</h2>
 <ul>
-  <li>Exposition d’adresses emails professionnelles</li>
-  <li>Possibilité de phishing ciblé</li>
-  <li>Cartographie partielle de l’infrastructure publique</li>
+  <li>Réduction de l’exposition publique inutile</li>
+  <li>Surveillance OSINT régulière</li>
+  <li>Politique de gestion des métadonnées</li>
 </ul>
 </section>
 
 <section class="card">
-<h2>7. Recommandations</h2>
-<ul>
-  <li>Limiter l’exposition des emails publics</li>
-  <li>Auditer les sous-domaines inutilisés</li>
-  <li>Renforcer la sensibilisation à l’ingénierie sociale</li>
-</ul>
+<h2>7. Conclusion</h2>
+<p>
+Cette mission démontre l’importance de l’OSINT dans une démarche de cybersécurité
+préventive et met en évidence les risques liés aux informations publiques.
+</p>
 </section>
 
 <section class="card">
-<h2>8. Conclus
+<h2>8. Auteur</h2>
+<p>
+Nom / Pseudo : <strong>TON NOM</strong><br>
+Profil : OSINT Analyst / Pentester junior<br>
+Date : <strong>AAAA-MM-JJ</strong>
+</p>
+</section>
 
+</main>
+
+<footer>
+  <p>Rapport pédagogique – OSINT</p>
+</footer>
+
+</body>
+</html>
