@@ -2,58 +2,139 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Planning de formation OSINT</title>
+  <title>Rapport OSINT – Reconnaissance passive</title>
   <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+      header, footer {
+        display: none;
+      }
+      .card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+    }
+
+    /* Bouton PDF (sécurité anti CSS global) */
+    .pdf-container {
+      white-space: normal !important;
+    }
+
+    .pdf-button {
+      display: inline-block;
+      margin: 30px;
+      padding: 15px;
+      background: #00ff9c;
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 
 <body>
 
+<div class="pdf-container">
+  <a href="Rapport_OSINT.pdf" download class="pdf-button">
+    📥 Télécharger le rapport PDF
+  </a>
+</div>
+
 <header>
-  <h1>🧭 Planning de formation</h1>
-  <p>1 à 2 heures par jour – Objectif OSINT Analyst Junior</p>
+  <h1>📄 Rapport OSINT</h1>
+  <p>Reconnaissance passive – Usage pédagogique</p>
 </header>
 
 <main>
 
 <section class="card">
-<h2>Semaine 1 – Fondamentaux</h2>
-<ul>
-  <li>Jour 1 : Introduction OSINT + cadre légal</li>
-  <li>Jour 2 : Recherche Google avancée (dorks)</li>
-  <li>Jour 3 : Whois / DNS / domaines</li>
-  <li>Jour 4 : Introduction TryHackMe – OSINT</li>
-  <li>Jour 5 : Synthèse & notes personnelles</li>
-</ul>
+  <h2>1. Contexte & Objectifs</h2>
+  <p>
+    Ce rapport présente une mission de reconnaissance OSINT (Open Source Intelligence)
+    réalisée dans un cadre strictement légal et pédagogique.
+  </p>
+  <p>
+    Objectif : identifier les informations publiquement accessibles exposant une
+    organisation fictive, sans interaction intrusive.
+  </p>
 </section>
 
 <section class="card">
-<h2>Semaine 2 – Outils OSINT</h2>
-<ul>
-  <li>Jour 1 : Shodan – théorie</li>
-  <li>Jour 2 : Shodan – pratique</li>
-  <li>Jour 3 : Recon-ng</li>
-  <li>Jour 4 : theHarvester</li>
-  <li>Jour 5 : Mini-lab OSINT</li>
-</ul>
+  <h2>2. Cadre légal & éthique</h2>
+  <ul>
+    <li>Données issues de sources publiques uniquement</li>
+    <li>Aucune authentification contournée</li>
+    <li>Aucune exploitation de vulnérabilité</li>
+    <li>Respect des principes de Responsible Disclosure</li>
+  </ul>
 </section>
 
 <section class="card">
-<h2>Semaine 3 – Reporting & Portfolio</h2>
-<ul>
-  <li>Jour 1 : Structurer un rapport</li>
-  <li>Jour 2 : Rédaction OSINT</li>
-  <li>Jour 3 : Bug Bounty & disclosure</li>
-  <li>Jour 4 : Mise à jour GitHub</li>
-  <li>Jour 5 : Publication LinkedIn</li>
-</ul>
+  <h2>3. Méthodologie OSINT</h2>
+  <ol>
+    <li>Définition de la cible (domaine, activité)</li>
+    <li>Recherche d’exposition réseau (Shodan)</li>
+    <li>Collecte automatisée (Recon-ng)</li>
+    <li>Collecte emails & sous-domaines (theHarvester)</li>
+  </ol>
+</section>
+
+<section class="card">
+  <h2>4. Outils utilisés</h2>
+  <ul>
+    <li>Shodan</li>
+    <li>Recon-ng</li>
+    <li>theHarvester</li>
+    <li>Navigateurs & moteurs OSINT</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>5. Résultats synthétiques</h2>
+  <ul>
+    <li>Sous-domaines publics identifiés</li>
+    <li>Adresses emails professionnelles</li>
+    <li>Services visibles via moteurs spécialisés</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>6. Recommandations</h2>
+  <ul>
+    <li>Réduction de l’exposition publique inutile</li>
+    <li>Surveillance OSINT régulière</li>
+    <li>Gestion des métadonnées</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>7. Conclusion</h2>
+  <p>
+    Cette mission démontre l’importance de l’OSINT dans une démarche de cybersécurité
+    préventive.
+  </p>
+</section>
+
+<section class="card">
+  <h2>8. Auteur</h2>
+  <p>
+    Nom / Pseudo : <strong>TON NOM</strong><br>
+    Profil : OSINT Analyst / Pentester junior<br>
+    Date : <strong>AAAA-MM-JJ</strong>
+  </p>
 </section>
 
 </main>
 
 <footer>
-  <p>Planning pédagogique OSINT</p>
+  <p>Rapport pédagogique – OSINT</p>
 </footer>
 
 </body>
 </html>
-
