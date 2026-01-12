@@ -182,6 +182,7 @@ Pays : International
 
 </section>
 
+
 <section class="module">
   <h2>Module 2 – OSINT & Shodan (Reconnaissance Internet)</h2>
 
@@ -278,196 +279,335 @@ Pays : International
 </section>
 
 
-<div class="card">
-<h2>📚 Module 3 – Recon-ng : framework OSINT automatisé</h2>
 
-<h3>🎯 Objectifs pédagogiques</h3>
-<ul>
-  <li>Comprendre le rôle de Recon-ng dans une démarche OSINT</li>
-  <li>Savoir lancer une reconnaissance structurée</li>
-  <li>Automatiser la collecte d’informations publiques</li>
-</ul>
+<section class="module">
+  <h2>Module 3 – OSINT & Recon-ng (Automatisation)</h2>
 
-<h3>🧠 Présentation de Recon-ng</h3>
-<p>
-Recon-ng est un framework OSINT en ligne de commande, inspiré de Metasploit.
-Il permet de structurer, automatiser et documenter une collecte d’informations
-à partir de sources ouvertes.
-</p>
+  <h3>🎯 Objectifs pédagogiques</h3>
+  <ul>
+    <li>Comprendre le rôle de Recon-ng en OSINT</li>
+    <li>Utiliser Recon-ng depuis Kali Linux</li>
+    <li>Créer et gérer des workspaces</li>
+    <li>Automatiser la collecte d’informations OSINT</li>
+  </ul>
 
-<p>
-Il est particulièrement utilisé pour :
-</p>
-<ul>
-  <li>OSINT corporate</li>
-  <li>pré-audit de sécurité</li>
-  <li>cartographie d’attaque passive</li>
-</ul>
+  <h3>📘 Théorie – Qu’est-ce que Recon-ng ?</h3>
+  <p>
+    Recon-ng est un framework OSINT écrit en Python, inspiré de Metasploit,
+    permettant d’automatiser la collecte d’informations à partir de sources publiques.
+  </p>
+  <p>
+    Il s’appuie sur des <strong>modules</strong> capables d’interroger
+    moteurs de recherche, APIs, bases de données publiques et services OSINT.
+  </p>
 
-<h3>⚖️ Cadre légal</h3>
-<p>
-Recon-ng est légal si :
-</p>
-<ul>
-  <li>les modules utilisés exploitent uniquement des sources publiques</li>
-  <li>aucune interaction intrusive n’est effectuée</li>
-  <li>le scope est clairement défini</li>
-</ul>
+  <h3>⚖️ Cadre légal & éthique</h3>
+  <ul>
+    <li>Collecte de données publiques uniquement</li>
+    <li>Aucune interaction active avec les systèmes ciblés</li>
+    <li>Respect des conditions d’utilisation des APIs</li>
+  </ul>
 
-<h3>🛠️ Installation et lancement (Kali Linux)</h3>
+  <h3>🛠️ Lancer Recon-ng sur Kali</h3>
+  <pre><code>recon-ng</code></pre>
 
-<code>
-sudo apt update && sudo apt install recon-ng
-</code>
+  <h3>📂 Gestion des workspaces</h3>
 
-<p>Lancer Recon-ng :</p>
+  <h4>Créer un workspace</h4>
+  <pre><code>workspaces create osint_lab</code></pre>
 
-<code>
-recon-ng
-</code>
+  <h4>Afficher les workspaces</h4>
+  <pre><code>workspaces list</code></pre>
 
-<h3>🗂️ Création d’un workspace</h3>
-<p>
-Un worksp
+  <h4>Sélectionner un workspace</h4>
+  <pre><code>workspaces select osint_lab</code></pre>
 
-<div class="card">
-<h2>📚 Module 4 – theHarvester : collecte d’emails et sous-domaines</h2>
+  <h3>➕ Ajouter une cible (domaine)</h3>
+  <pre><code>add domains example.com</code></pre>
 
-<h3>🎯 Objectifs pédagogiques</h3>
-<ul>
-  <li>Identifier les emails exposés publiquement</li>
-  <li>Découvrir les sous-domaines d’une organisation</li>
-  <li>Comprendre l’exposition informationnelle d’une cible</li>
-</ul>
+  <h3>🧩 Découvrir les modules disponibles</h3>
+  <pre><code>marketplace search</code></pre>
 
-<h3>🧠 Présentation de theHarvester</h3>
-<p>
-theHarvester est un outil OSINT en ligne de commande permettant de collecter
-des informations publiques via des moteurs de recherche et des bases ouvertes.
-</p>
+  <h4>Rechercher des modules liés aux domaines</h4>
+  <pre><code>marketplace search domains</code></pre>
 
-<p>
-Il est utilisé principalement en :
-</p>
-<ul>
-  <li>OSINT corporate</li>
-  <li>pré-audit de sécurité</li>
-  <li>cartographie d’attaque passive</li>
-</ul>
+  <h4>Installer un module</h4>
+  <pre><code>marketplace install recon/domains-hosts/hackertarget</code></pre>
 
-<h3>⚖️ Cadre légal</h3>
-<p>
-theHarvester est légal si :
-</p>
-<ul>
-  <li>la cible est autorisée (entreprise, lab, domaine personnel)</li>
-  <li>les sources interrogées sont publiques</li>
-  <li>aucune tentative d’exploitation n’est réalisée</li>
-</ul>
+  <h3>▶️ Utiliser un module</h3>
+  <pre><code>modules load recon/domains-hosts/hackertarget</code></pre>
 
-<h3>🛠️ Installation (Kali Linux)</h3>
+  <h4>Afficher les options du module</h4>
+  <pre><code>options list</code></pre>
 
-<code>
-sudo apt update && sudo apt install theharvester
-</code>
+  <h4>Lancer le module</h4>
+  <pre><code>run</code></pre>
 
-<h3>🚀 Commande de base</h3>
+  <h3>📊 Données collectées</h3>
+  <ul>
+    <li>Sous-domaines</li>
+    <li>Hôtes publics</li>
+    <li>Adresses IP</li>
+    <li>Relations domaine / infrastructure</li>
+  </ul>
 
-<p>
-Syntaxe générale :
-</p>
+  <h3>🧪 Mini-exercice guidé</h3>
+  <ol>
+    <li>Créer un workspace</li>
+    <li>Ajouter un domaine fictif</li>
+    <li>Installer un module OSINT</li>
+    <li>Lancer la collecte</li>
+    <li>Observer les résultats</li>
+  </ol>
 
-<code>
-theHarvester -d example.com -b google
-</code>
+  <h3>🧠 Analyse attendue</h3>
+  <p>
+    L’étudiant doit expliquer comment Recon-ng automatise la collecte OSINT,
+    comparer les résultats avec ceux obtenus manuellement (Shodan),
+    et identifier les limites de l’outil.
+  </p>
 
-<ul>
-  <li><strong>-d</strong> : domaine cible</li>
-  <li><strong>-b</strong> : source (google, bing, duckduckgo, crtsh, etc.)</li>
-</ul>
+  <h3>✅ Critères de réussite</h3>
+  <ul>
+    <li>Workspace correctement configuré</li>
+    <li>Module installé et exécuté</li>
+    <li>Données collectées comprises</li>
+    <li>Respect du cadre OSINT passif</li>
+  </ul>
 
-<h3>🔍 Sources recommandées</h3>
-
-<code>
-theHarvester -d example.com -b google
-theHarvester -d example.com -b bing
-theHarvester -d example.com -b crtsh
-</code>
-
-<p>
-<strong>crtsh</strong> est très puissant pour découvrir des sous-domaines
-via les certificats TLS.
-</p>
-
-<h3>📄 Génération d’un rapport HTML</h3>
-
-<code>
-theHarvester -d example.com -b google -f rapport_theharvester.html
-</code>
-
-<p>
-Le rapport généré peut être intégré directement dans ton portfolio.
-</p>
-
-<h3>📊 Types de données collectées</h3>
-<ul>
-  <li>emails professionnels</li>
-  <li>sous-domaines exposés</li>
-  <li>hôtes liés à l’organisation</li>
-</ul>
-
-<h3>🧠 Analyse OSINT (raisonnement attendu)</h3>
-
-<p>Tu dois te poser les questions suivantes :</p>
-<ul>
-  <li>Les emails suivent-ils un pattern (prenom.nom) ?</li>
-  <li>Les sous-domaines révèlent-ils des environnements internes ?</li>
-  <li>Certains services semblent-ils obsolètes ou exposés ?</li>
-</ul>
-
-<h3>🧪 Exercice pratique</h3>
-
-<ol>
-  <li>Choisir un domaine autorisé (lab ou domaine personnel)</li>
-  <li>Lancer theHarvester avec 2 sources différentes</li>
-  <li>Exporter un rapport HTML</li>
-  <li>Identifier au moins :
-    <ul>
-      <li>2 emails</li>
-      <li>2 sous-domaines</li>
-    </ul>
-  </li>
-</ol>
-
-<h3>✅ Solution attendue</h3>
-
-<ul>
-  <li>Commandes correctement exécutées</li>
-  <li>Données structurées</li>
-  <li>Analyse orientée exposition et risques</li>
-</ul>
-
-<h3>📚 Ressources complémentaires</h3>
-<ul>
-  <li>
-    GitHub officiel :
-    <a href="https://github.com/laramies/theHarvester" target="_blank">
-      https://github.com/laramies/theHarvester
-    </a>
-  </li>
-  <li>
-    TryHackMe :
-    <a href="https://tryhackme.com/room/harvester" target="_blank">
-      theHarvester
-    </a>
-  </li>
-</ul>
-</div>
+  <h3>📚 Ressources complémentaires</h3>
+  <ul>
+    <li><a href="https://github.com/lanmaster53/recon-ng" target="_blank">Recon-ng GitHub</a></li>
+    <li><a href="https://www.kali.org/tools/recon-ng/" target="_blank">Recon-ng sur Kali</a></li>
+  </ul>
+</section>
 
 
 
+<section class="module">
+  <h2>Module 4 – OSINT & Maltego (Corrélation & Visualisation)</h2>
 
-<p>Support : OWASP WebGoat / PortSwigger Academy</p>
+  <h3>🎯 Objectifs pédagogiques</h3>
+  <ul>
+    <li>Comprendre le rôle de Maltego en OSINT</li>
+    <li>Visualiser les relations entre entités</li>
+    <li>Corréler des données issues de plusieurs sources</li>
+    <li>Produire une analyse visuelle exploitable</li>
+  </ul>
+
+  <h3>📘 Théorie – Qu’est-ce que Maltego ?</h3>
+  <p>
+    Maltego est un outil d’OSINT et d’investigation graphique permettant de
+    représenter visuellement les relations entre des entités :
+    domaines, IPs, emails, personnes, entreprises, réseaux sociaux, etc.
+  </p>
+  <p>
+    Il est particulièrement utilisé pour :
+  </p>
+  <ul>
+    <li>La cartographie d’infrastructures</li>
+    <li>L’analyse d’exposition informationnelle</li>
+    <li>Les enquêtes OSINT et cyber</li>
+  </ul>
+
+  <h3>⚖️ Cadre légal & éthique</h3>
+  <ul>
+    <li>Données publiques uniquement</li>
+    <li>Respect des conditions des transforms</li>
+    <li>Usage légal en OSINT, audit et bug bounty</li>
+  </ul>
+
+  <h3>🛠️ Installation & lancement</h3>
+  <p>Maltego est disponible sur Kali Linux :</p>
+  <pre><code>maltego</code></pre>
+
+  <p>
+    Une version gratuite (Maltego CE) suffit pour l’apprentissage.
+  </p>
+
+  <h3>🧩 Concepts clés</h3>
+  <ul>
+    <li><strong>Entité</strong> : élément analysé (domaine, IP, email…)</li>
+    <li><strong>Transform</strong> : action permettant de découvrir des relations</li>
+    <li><strong>Graph</strong> : représentation visuelle des résultats</li>
+  </ul>
+
+  <h3>📂 Démarrage d’une analyse</h3>
+  <ol>
+    <li>Lancer Maltego</li>
+    <li>Créer un nouveau graph</li>
+    <li>Ajouter une entité de type <strong>Domain</strong></li>
+    <li>Entrer un domaine de test (ex : example.com)</li>
+  </ol>
+
+  <h3>▶️ Utilisation des transforms</h3>
+  <p>
+    Clic droit sur l’entité → choisir un transform.
+  </p>
+  <ul>
+    <li>To DNS Name</li>
+    <li>To IP Address</li>
+    <li>To Website</li>
+    <li>To Email Addresses</li>
+  </ul>
+
+  <h3>📊 Analyse des résultats</h3>
+  <p>
+    Chaque nœud représente une information OSINT.
+    Les liens montrent les relations entre les entités.
+  </p>
+  <p>
+    L’analyste doit identifier :
+  </p>
+  <ul>
+    <li>Les dépendances techniques</li>
+    <li>Les regroupements d’infrastructures</li>
+    <li>Les points d’exposition visibles</li>
+  </ul>
+
+  <h3>🧪 Mini-exercice guidé</h3>
+  <ol>
+    <li>Créer un graph Maltego</li>
+    <li>Ajouter un domaine fictif</li>
+    <li>Lancer 2 à 3 transforms</li>
+    <li>Observer les relations obtenues</li>
+    <li>Capturer une vue du graph (screenshot)</li>
+  </ol>
+
+  <h3>🧠 Analyse attendue</h3>
+  <p>
+    L’étudiant doit expliquer comment Maltego permet de relier des données
+    issues de différentes sources OSINT et pourquoi la visualisation
+    améliore la compréhension des risques.
+  </p>
+
+  <h3>✅ Critères de réussite</h3>
+  <ul>
+    <li>Graph correctement construit</li>
+    <li>Transforms utilisés de manière pertinente</li>
+    <li>Relations comprises et expliquées</li>
+    <li>Aucune action intrusive</li>
+  </ul>
+
+  <h3>📚 Ressources complémentaires</h3>
+  <ul>
+    <li><a href="https://www.maltego.com" target="_blank">Site officiel Maltego</a></li>
+    <li><a href="https://docs.maltego.com" target="_blank">Documentation Maltego</a></li>
+  </ul>
+</section>
+
+
+
+<section class="module">
+  <h2>Module 5 – Workflow OSINT complet (Analyse & Reporting)</h2>
+
+  <h3>🎯 Objectifs pédagogiques</h3>
+  <ul>
+    <li>Structurer une mission OSINT de bout en bout</li>
+    <li>Enchaîner les outils de manière cohérente</li>
+    <li>Analyser et contextualiser les données collectées</li>
+    <li>Produire un rapport professionnel exploitable</li>
+  </ul>
+
+  <h3>📘 Théorie – Pourquoi un workflow ?</h3>
+  <p>
+    Un bon analyste OSINT ne se contente pas de collecter des données.
+    Il suit une méthodologie claire garantissant :
+  </p>
+  <ul>
+    <li>La légalité de la mission</li>
+    <li>La pertinence des informations</li>
+    <li>La reproductibilité de l’analyse</li>
+    <li>La qualité du livrable final</li>
+  </ul>
+
+  <h3>🧭 Étape 1 – Définition du périmètre</h3>
+  <ul>
+    <li>Objectif de la mission</li>
+    <li>Cible autorisée (organisation, domaine)</li>
+    <li>Type d’OSINT : passif uniquement</li>
+  </ul>
+
+  <h3>🔍 Étape 2 – Collecte manuelle</h3>
+  <p>
+    Phase exploratoire visant à comprendre l’écosystème de la cible.
+  </p>
+  <ul>
+    <li>Google Dorks</li>
+    <li>Recherche WHOIS</li>
+    <li>Analyse du site web public</li>
+  </ul>
+
+  <h3>🌐 Étape 3 – Collecte spécialisée</h3>
+  <ul>
+    <li><strong>Shodan</strong> : exposition réseau</li>
+    <li><strong>Recon-ng</strong> : automatisation OSINT</li>
+    <li><strong>theHarvester</strong> : emails & sous-domaines</li>
+  </ul>
+
+  <h3>🧩 Étape 4 – Corrélation</h3>
+  <p>
+    Les données issues de différentes sources doivent être reliées
+    pour produire une vision globale.
+  </p>
+  <ul>
+    <li>Regroupement d’IPs</li>
+    <li>Correspondance domaines / emails</li>
+    <li>Visualisation via Maltego</li>
+  </ul>
+
+  <h3>🧠 Étape 5 – Analyse & interprétation</h3>
+  <p>
+    L’analyste doit répondre à la question :
+    <strong>Que révèlent ces données sur l’exposition de la cible ?</strong>
+  </p>
+  <ul>
+    <li>Informations sensibles accessibles</li>
+    <li>Faiblesses informationnelles</li>
+    <li>Risques potentiels</li>
+  </ul>
+
+  <h3>📄 Étape 6 – Reporting professionnel</h3>
+  <p>
+    Le rapport OSINT doit être :
+  </p>
+  <ul>
+    <li>Clair</li>
+    <li>Structuré</li>
+    <li>Compréhensible par un non-technicien</li>
+  </ul>
+
+  <h4>Structure recommandée</h4>
+  <ol>
+    <li>Contexte & objectifs</li>
+    <li>Cadre légal</li>
+    <li>Méthodologie</li>
+    <li>Résultats</li>
+    <li>Analyse</li>
+    <li>Recommandations</li>
+    <li>Conclusion</li>
+  </ol>
+
+  <h3>🧪 Exercice de synthèse</h3>
+  <p><strong>Objectif :</strong> simuler une mission OSINT complète.</p>
+  <ol>
+    <li>Définir une cible fictive</li>
+    <li>Choisir les outils adaptés</li>
+    <li>Collecter les données</li>
+    <li>Corréler les informations</li>
+    <li>Rédiger un rapport synthétique</li>
+  </ol>
+
+  <h3>✅ Critères de réussite</h3>
+  <ul>
+    <li>Workflow respecté</li>
+    <li>Données pertinentes et expliquées</li>
+    <li>Analyse structurée</li>
+    <li>Rapport professionnel</li>
+  </ul>
+</section>
+
+
 </div>
 
 </div>
