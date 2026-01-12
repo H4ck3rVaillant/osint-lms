@@ -1,225 +1,103 @@
-<section class="card">
-<h2>🧪 Lab OSINT – Reconnaissance passive d’une organisation</h2>
+<section class="lab">
+  <h2>🧪 Lab 1 – Reconnaissance OSINT passive</h2>
 
-<h3>🎯 Objectif du lab</h3>
-<p>
-Réaliser une reconnaissance OSINT passive et légale afin d’identifier
-les points d’exposition informationnelle d’une organisation.
-</p>
+  <h3>🎯 Objectif du lab</h3>
+  <p>
+    Réaliser une mission OSINT complète, 100 % passive et légale, afin
+    d’identifier l’exposition informationnelle d’une organisation fictive.
+  </p>
 
-<h3>⚖️ Cadre légal</h3>
-<ul>
-  <li>Données accessibles publiquement</li>
-  <li>Aucune interaction active avec les systèmes</li>
-  <li>Cible autorisée (lab, domaine personnel, entreprise publique)</li>
-</ul>
+  <h3>⚖️ Cadre légal</h3>
+  <ul>
+    <li>Données publiques uniquement</li>
+    <li>Aucune interaction intrusive</li>
+    <li>Aucun scan actif</li>
+    <li>Domaine de test autorisé</li>
+  </ul>
 
-<hr>
+  <h3>🧭 Contexte</h3>
+  <p>
+    Vous êtes analyste OSINT junior.  
+    Votre mission consiste à analyser l’exposition publique d’une organisation
+    fictive nommée <strong>ExampleCorp</strong>.
+  </p>
 
-<h3>🗂️ Phase 1 – Définition de la cible</h3>
-<p><strong>Action :</strong></p>
-<ul>
-  <li>Identifier le domaine principal</li>
-  <li>Identifier l’activité de l’organisation</li>
-  <li>Identifier sa présence publique</li>
-</ul>
+  <h3>🔍 Phase 1 – Définition de la cible</h3>
+  <ul>
+    <li>Domaine principal : <code>example.com</code></li>
+    <li>Activité : entreprise fictive</li>
+    <li>Type d’OSINT : passif</li>
+  </ul>
 
-<p><strong>Livrable :</strong></p>
-<pre>
-Organisation :
-Domaine :
-Secteur :
-</pre>
+  <h3>🌐 Phase 2 – Recherche via Shodan</h3>
+  <p>Accéder à <a href="https://www.shodan.io" target="_blank">Shodan</a> et utiliser les requêtes suivantes :</p>
 
-<hr>
+  <pre><code>hostname:example.com</code></pre>
+  <pre><code>hostname:example.com port:443</code></pre>
 
-<h3>🌐 Phase 2 – Recherche de services exposés (Shodan)</h3>
+  <p><strong>À collecter :</strong></p>
+  <ul>
+    <li>Adresses IP visibles</li>
+    <li>Ports exposés</li>
+    <li>Services identifiés</li>
+  </ul>
 
-<p><strong>Action :</strong></p>
-<pre>
-hostname:example.com
-</pre>
+  <h3>🧩 Phase 3 – Recon-ng (Kali Linux)</h3>
+  <p>Lancer Recon-ng :</p>
 
-<p><strong>Données à collecter :</strong></p>
-<ul>
-  <li>Adresses IP exposées</li>
-  <li>Ports ouverts</li>
-  <li>Services visibles</li>
-</ul>
+  <pre><code>recon-ng</code></pre>
 
-<p><strong>Analyse attendue :</strong></p>
-<ul>
-  <li>Service inutile exposé ?</li>
-  <li>Version obsolète ?</li>
-  <li>Surface d’attaque visible ?</li>
-</ul>
+  <p>Créer un workspace :</p>
+  <pre><code>workspaces create lab_osint</code></pre>
 
-<hr>
+  <p>Ajouter le domaine :</p>
+  <pre><code>add domains example.com</code></pre>
 
-<h3>🧩 Phase 3 – OSINT automatisé (Recon-ng)</h3>
+  <p>Installer un module :</p>
+  <pre><code>marketplace install recon/domains-hosts/hackertarget</code></pre>
 
-<p><strong>Commandes Kali :</strong></p>
-<pre>
-recon-ng
-workspaces create lab_osint
-workspaces select lab_osint
-add domains example.com
-</pre>
+  <p>Lancer le module :</p>
+  <pre><code>modules load recon/domains-hosts/hackertarget
+run</code></pre>
 
-<p><strong>Modules recommandés :</strong></p>
-<pre>
-modules load recon/domains-contacts/whois_pocs
-run
-</pre>
+  <h3>📧 Phase 4 – theHarvester</h3>
+  <p>Depuis Kali :</p>
 
-<p><strong>Données collectées :</strong></p>
-<ul>
-  <li>Emails publics</li>
-  <li>Contacts WHOIS</li>
-</ul>
+  <pre><code>theHarvester -d example.com -b crtsh</code></pre>
 
-<hr>
+  <p><strong>À collecter :</strong></p>
+  <ul>
+    <li>Sous-domaines</li>
+    <li>Emails publics éventuels</li>
+  </ul>
 
-<h3>📧 Phase 4 – Emails & sous-domaines (theHarvester)</h3>
+  <h3>🧠 Phase 5 – Analyse</h3>
+  <p>
+    Interpréter les données collectées :
+  </p>
+  <ul>
+    <li>Pourquoi ces informations sont-elles visibles ?</li>
+    <li>Quel risque informationnel potentiel ?</li>
+    <li>Que pourrait améliorer l’organisation ?</li>
+  </ul>
 
-<p><strong>Commandes Kali :</strong></p>
-<pre>
-theHarvester -d example.com -b google
-theHarvester -d example.com -b crtsh
-</pre>
+  <h3>📄 Phase 6 – Restitution</h3>
+  <p>
+    Rédiger une synthèse OSINT contenant :
+  </p>
+  <ul>
+    <li>Objectif</li>
+    <li>Méthodologie</li>
+    <li>Résultats</li>
+    <li>Analyse</li>
+    <li>Recommandations</li>
+  </ul>
 
-<p><strong>Données collectées :</strong></p>
-<ul>
-  <li>Emails professionnels</li>
-  <li>Sous-domaines exposés</li>
-</ul>
-
-<hr>
-
-<h3>📊 Phase 5 – Analyse et synthèse</h3>
-
-<table border="1" cellpadding="6">
-<tr>
-<th>Catégorie</th>
-<th>Donnée</th>
-<th>Risque potentiel</th>
-</tr>
-<tr>
-<td>Email</td>
-<td>prenom.nom@</td>
-<td>Phishing ciblé</td>
-</tr>
-<tr>
-<td>Sous-domaine</td>
-<td>dev.example.com</td>
-<td>Environnement exposé</td>
-</tr>
-</table>
-
-<hr>
-
-<h3>✅ Critères de réussite</h3>
-<ul>
-  <li>Données organisées et sourcées</li>
-  <li>Analyse argumentée</li>
-  <li>Aucune action intrusive</li>
-</ul>
-
-<h3>🎯 Exploitation professionnelle</h3>
-<ul>
-  <li>Portfolio OSINT</li>
-  <li>Rapport client</li>
-  <li>Bug Bounty (phase recon)</li>
-</ul>
-</section>
-
-<section class="card">
-<h2>📋 Checklist d’audit OSINT – Reconnaissance passive</h2>
-
-<p>
-Cette checklist permet de vérifier qu’une reconnaissance OSINT passive
-a été menée de manière structurée, légale et exploitable.
-</p>
-
-<hr>
-
-<h3>🗂️ 1. Définition du scope</h3>
-<ul>
-  <li><input type="checkbox"> Domaine principal identifié</li>
-  <li><input type="checkbox"> Organisation clairement définie</li>
-  <li><input type="checkbox"> Cible autorisée (publique / lab / perso)</li>
-  <li><input type="checkbox"> Aucune interaction intrusive prévue</li>
-</ul>
-
-<hr>
-
-<h3>🌐 2. Recherche via moteurs & Shodan</h3>
-<ul>
-  <li><input type="checkbox"> Recherche Shodan effectuée</li>
-  <li><input type="checkbox"> IP exposées identifiées</li>
-  <li><input type="checkbox"> Ports ouverts recensés</li>
-  <li><input type="checkbox"> Services et versions notés</li>
-  <li><input type="checkbox"> Exposition potentielle analysée</li>
-</ul>
-
-<hr>
-
-<h3>🧩 3. OSINT automatisé – Recon-ng</h3>
-<ul>
-  <li><input type="checkbox"> Workspace créé</li>
-  <li><input type="checkbox"> Domaine ajouté</li>
-  <li><input type="checkbox"> Modules OSINT exécutés</li>
-  <li><input type="checkbox"> Emails publics collectés</li>
-  <li><input type="checkbox"> Contacts WHOIS analysés</li>
-</ul>
-
-<hr>
-
-<h3>📧 4. Emails & sous-domaines – theHarvester</h3>
-<ul>
-  <li><input type="checkbox"> theHarvester exécuté</li>
-  <li><input type="checkbox"> Emails professionnels identifiés</li>
-  <li><input type="checkbox"> Sous-domaines collectés</li>
-  <li><input type="checkbox"> Rapport HTML généré</li>
-</ul>
-
-<hr>
-
-<h3>📊 5. Analyse & corrélation</h3>
-<ul>
-  <li><input type="checkbox"> Données croisées entre outils</li>
-  <li><input type="checkbox"> Patterns identifiés (emails, infra)</li>
-  <li><input type="checkbox"> Surface d’attaque visible évaluée</li>
-  <li><input type="checkbox"> Aucun faux positif évident</li>
-</ul>
-
-<hr>
-
-<h3>📄 6. Livrables</h3>
-<ul>
-  <li><input type="checkbox"> Notes OSINT structurées</li>
-  <li><input type="checkbox"> Tableau de synthèse complété</li>
-  <li><input type="checkbox"> Rapport prêt pour client / portfolio</li>
-</ul>
-
-<hr>
-
-<h3>⚖️ 7. Conformité légale</h3>
-<ul>
-  <li><input type="checkbox"> Sources publiques uniquement</li>
-  <li><input type="checkbox"> Pas de scan actif</li>
-  <li><input type="checkbox"> Pas d’exploitation</li>
-</ul>
-
-<hr>
-
-<h3>🎯 Validation finale</h3>
-<p>
-Si toutes les cases sont cochées, la phase OSINT est :
-</p>
-<ul>
-  <li>✔️ complète</li>
-  <li>✔️ légale</li>
-  <li>✔️ exploitable professionnellement</li>
-</ul>
+  <h3>✅ Critères de réussite</h3>
+  <ul>
+    <li>Données correctement collectées</li>
+    <li>Analyse claire et argumentée</li>
+    <li>Aucune action intrusive</li>
+    <li>Rapport structuré</li>
+  </ul>
 </section>
