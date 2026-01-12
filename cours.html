@@ -182,6 +182,101 @@ Pays : International
 
 </section>
 
+<section class="module">
+  <h2>Module 2 – OSINT & Shodan (Reconnaissance Internet)</h2>
+
+  <h3>🎯 Objectifs pédagogiques</h3>
+  <ul>
+    <li>Comprendre le rôle de Shodan en OSINT</li>
+    <li>Savoir formuler des requêtes efficaces</li>
+    <li>Identifier l’exposition d’un service ou d’un domaine</li>
+    <li>Interpréter les résultats sans action intrusive</li>
+  </ul>
+
+  <h3>📘 Théorie – Qu’est-ce que Shodan ?</h3>
+  <p>
+    Shodan est un moteur de recherche spécialisé qui indexe les services exposés
+    sur Internet (serveurs web, bases de données, IoT, firewalls, etc.).
+  </p>
+  <p>
+    Contrairement à Google, Shodan ne référence pas des pages web,
+    mais des <strong>services réseau accessibles publiquement</strong>.
+  </p>
+
+  <h3>⚖️ Cadre légal & éthique</h3>
+  <ul>
+    <li>Utilisation de données déjà indexées</li>
+    <li>Aucune interaction directe avec la cible</li>
+    <li>Usage autorisé en audit OSINT et bug bounty</li>
+  </ul>
+
+  <h3>🛠️ Accès à Shodan</h3>
+  <ul>
+    <li>Site officiel : <a href="https://www.shodan.io" target="_blank">https://www.shodan.io</a></li>
+    <li>Compte gratuit suffisant pour l’apprentissage</li>
+    <li>Compte payant utile pour API et filtres avancés</li>
+  </ul>
+
+  <h3>🔍 Requêtes Shodan essentielles</h3>
+
+  <h4>Recherche par domaine</h4>
+  <pre><code>hostname:example.com</code></pre>
+
+  <h4>Recherche par IP</h4>
+  <pre><code>ip:8.8.8.8</code></pre>
+
+  <h4>Recherche par port</h4>
+  <pre><code>port:22</code></pre>
+
+  <h4>Recherche par service</h4>
+  <pre><code>product:Apache</code></pre>
+
+  <h4>Recherche par pays</h4>
+  <pre><code>country:FR</code></pre>
+
+  <h4>Recherche combinée</h4>
+  <pre><code>hostname:example.com port:443</code></pre>
+
+  <h3>📊 Lecture et interprétation des résultats</h3>
+  <ul>
+    <li>Adresse IP exposée</li>
+    <li>Ports ouverts</li>
+    <li>Bannières de service</li>
+    <li>Version logicielle</li>
+    <li>Localisation approximative</li>
+  </ul>
+
+  <h3>🧪 Mini-exercice guidé</h3>
+  <p><strong>Objectif :</strong> Identifier l’exposition publique d’un domaine fictif.</p>
+  <ol>
+    <li>Choisir un domaine de test (ex : example.com)</li>
+    <li>Lancer une recherche <code>hostname:example.com</code></li>
+    <li>Noter :
+      <ul>
+        <li>IP trouvées</li>
+        <li>Ports visibles</li>
+        <li>Services exposés</li>
+      </ul>
+    </li>
+    <li>Expliquer chaque information trouvée</li>
+  </ol>
+
+  <h3>🧠 Analyse attendue</h3>
+  <p>
+    L’étudiant doit être capable d’expliquer pourquoi certaines informations
+    sont visibles publiquement et quels risques potentiels elles représentent,
+    sans proposer d’exploitation.
+  </p>
+
+  <h3>✅ Critères de réussite</h3>
+  <ul>
+    <li>Requêtes correctement formulées</li>
+    <li>Résultats compris et expliqués</li>
+    <li>Aucune action intrusive</li>
+    <li>Respect du cadre légal OSINT</li>
+  </ul>
+</section>
+
 
 <div class="card">
 n>
