@@ -1,43 +1,45 @@
-/* =========================
-   OSINT LMS – TryHackMe-like
-   ========================= */
+/* ================================
+   OSINT LMS – STYLE GLOBAL
+   Thème Cyber / TryHackMe-like
+   ================================ */
 
+/* ---------- VARIABLES ---------- */
 :root {
   --bg-main: #0b0f14;
-  --bg-card: #121821;
-  --bg-header: #0e141b;
-  --green: #00ff9c;
-  --green-soft: #00cc7a;
-  --cyan: #00bcd4;
-  --text-main: #e6edf3;
-  --text-muted: #9aa4b2;
-  --border: #1f2937;
-  --danger: #ff4d4d;
+  --bg-card: #111827;
+  --bg-accent: #020617;
+
+  --green-main: #00ff9c;
+  --green-soft: #4ade80;
+
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+
+  --border-soft: rgba(0,255,156,0.15);
 }
 
+/* ---------- RESET ---------- */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* ---------- BODY ---------- */
 body {
+  font-family: "Inter", "Roboto Mono", monospace;
   background: var(--bg-main);
   color: var(--text-main);
-  font-family: "JetBrains Mono", monospace;
   line-height: 1.6;
 }
 
-/* =========================
-   HEADER & NAV
-   ========================= */
-
+/* ---------- HEADER / NAV ---------- */
 header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: var(--bg-header);
-  border-bottom: 1px solid var(--border);
+  background: var(--bg-accent);
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .nav-container {
@@ -45,8 +47,8 @@ header {
   margin: auto;
   padding: 12px 20px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 }
 
 .nav-left {
@@ -55,122 +57,159 @@ header {
   gap: 15px;
 }
 
-.avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 2px solid var(--green);
-}
-
 .site-title {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  color: var(--green);
+  color: var(--green-main);
 }
 
 .site-subtitle {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
+/* ---------- AVATAR ---------- */
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--green-main);
+  box-shadow: 0 0 10px rgba(0,255,156,0.6);
+}
+
+/* ---------- NAV LINKS ---------- */
 nav a {
   color: var(--text-main);
   text-decoration: none;
-  margin-left: 20px;
-  font-size: 0.9rem;
-  transition: color 0.2s ease;
+  margin-left: 18px;
+  font-weight: 600;
+  transition: color 0.3s, text-shadow 0.3s;
 }
 
 nav a:hover {
-  color: var(--green);
+  color: var(--green-main);
+  text-shadow: 0 0 6px rgba(0,255,156,0.7);
 }
 
-/* =========================
-   MAIN CONTENT
-   ========================= */
-
-main {
-  max-width: 1200px;
+/* ---------- CONTAINER ---------- */
+.container {
+  max-width: 1100px;
   margin: 40px auto;
   padding: 0 20px;
 }
 
-h1, h2, h3 {
-  color: var(--green);
-  margin-bottom: 15px;
-}
-
-p {
-  color: var(--text-main);
-  margin-bottom: 15px;
-}
-
-/* =========================
-   CARDS
-   ========================= */
-
+/* ---------- CARDS ---------- */
 .card {
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 22px;
   margin-bottom: 25px;
-  box-shadow: 0 0 0 transparent;
-  transition: box-shadow 0.3s ease;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: 0 0 12px rgba(0, 255, 156, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 0 25px rgba(0,255,156,0.25);
 }
 
-/* =========================
-   BUTTONS & LINKS
-   ========================= */
+.card h2 {
+  color: var(--green-main);
+  margin-bottom: 10px;
+}
 
+/* ---------- BADGES ---------- */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(0,255,156,0.15);
+  color: var(--green-main);
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+/* ---------- BUTTONS ---------- */
 .btn {
   display: inline-block;
   padding: 10px 18px;
-  background: var(--green);
+  border-radius: 8px;
+  background: var(--green-main);
   color: #000;
-  text-decoration: none;
-  border-radius: 6px;
   font-weight: bold;
-  transition: background 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  box-shadow: 0 0 15px rgba(0,255,156,0.6);
+  transition: all 0.3s ease;
 }
 
 .btn:hover {
-  background: var(--green-soft);
-  transform: translateY(-2px);
+  background: #1affaa;
+  box-shadow: 0 0 25px rgba(0,255,156,0.9);
 }
 
-.btn-outline {
-  background: transparent;
-  color: var(--green);
-  border: 1px solid var(--green);
+/* ---------- LINKS ---------- */
+a {
+  color: var(--green-soft);
 }
 
-/* =========================
-   LISTS
-   ========================= */
-
-ul {
-  margin-left: 20px;
-  margin-bottom: 15px;
+a:hover {
+  color: var(--green-main);
 }
 
-li {
-  margin-bottom: 6px;
-}
-
-/* =========================
-   FOOTER
-   ========================= */
-
+/* ---------- FOOTER ---------- */
 footer {
   margin-top: 60px;
   padding: 20px;
   text-align: center;
-  font-size: 0.8rem;
   color: var(--text-muted);
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-soft);
+}
+
+/* ---------- CHATBOX ---------- */
+#chatbox {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 280px;
+  background: var(--bg-accent);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,255,156,0.3);
+  overflow: hidden;
+  font-size: 14px;
+  z-index: 2000;
+}
+
+.chat-header {
+  background: var(--green-main);
+  color: #000;
+  padding: 8px;
+  font-weight: bold;
+}
+
+.chat-body {
+  padding: 10px;
+  color: var(--text-main);
+}
+
+#chatbox input {
+  width: 100%;
+  border: none;
+  padding: 8px;
+  background: var(--bg-accent);
+  color: var(--text-main);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  nav a {
+    margin-left: 10px;
+    font-size: 0.9rem;
+  }
+
+  .nav-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
