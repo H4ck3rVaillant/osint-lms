@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>OSINT & Pentest – Labs</title>
-<link rel="stylesheet" href="css/style.css">
-<script src="js/progress.js"></script>
+  <meta charset="UTF-8">
+  <title>Labs – OSINT & Pentest</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
 <header>
@@ -14,206 +14,47 @@
       <img src="img/avatar.png" alt="Avatar" class="avatar">
       <div>
         <div class="site-title">OSINT & Pentest LMS</div>
-        <div class="site-subtitle">Analyst / Pentester junior</div>
+        <div class="site-subtitle">OSINT Analyst / Pentester junior</div>
       </div>
     </div>
-
     <nav>
       <a href="index.html">Accueil</a>
       <a href="cours.html">Cours</a>
       <a href="labs.html">Labs</a>
       <a href="planning.html">Planning</a>
       <a href="tracking.html">Tracking</a>
+      <a href="bugbounty.html">Bug Bounty</a>
       <a href="rapport.html">Rapport</a>
     </nav>
   </div>
 </header>
 
+<div class="container">
 
+  <div class="card">
+    <h2>🧪 Lab OSINT – Reconnaissance passive</h2>
+    <p>
+      Réaliser une collecte OSINT 100 % légale à partir de sources publiques.
+    </p>
+    <ul>
+      <li>Shodan</li>
+      <li>Recon-ng</li>
+      <li>theHarvester</li>
+    </ul>
+  </div>
 
-<section class="lab">
-  <h2>🧪 Lab 1 – Reconnaissance OSINT passive</h2>
+  <div class="card">
+    <h2>📓 Journal de lab</h2>
+    <p>
+      Chaque lab donne lieu à une analyse, une synthèse et un retour d’expérience.
+    </p>
+  </div>
 
-  <h3>🎯 Objectif du lab</h3>
-  <p>
-    Réaliser une mission OSINT complète, 100 % passive et légale, afin
-    d’identifier l’exposition informationnelle d’une organisation fictive.
-  </p>
+</div>
 
-  <h3>⚖️ Cadre légal</h3>
-  <ul>
-    <li>Données publiques uniquement</li>
-    <li>Aucune interaction intrusive</li>
-    <li>Aucun scan actif</li>
-    <li>Domaine de test autorisé</li>
-  </ul>
+<footer>
+  <p>© OSINT LMS – Labs</p>
+</footer>
 
-  <h3>🧭 Contexte</h3>
-  <p>
-    Vous êtes analyste OSINT junior.  
-    Votre mission consiste à analyser l’exposition publique d’une organisation
-    fictive nommée <strong>ExampleCorp</strong>.
-  </p>
-
-  <h3>🔍 Phase 1 – Définition de la cible</h3>
-  <ul>
-    <li>Domaine principal : <code>example.com</code></li>
-    <li>Activité : entreprise fictive</li>
-    <li>Type d’OSINT : passif</li>
-  </ul>
-
-  <h3>🌐 Phase 2 – Recherche via Shodan</h3>
-  <p>Accéder à <a href="https://www.shodan.io" target="_blank">Shodan</a> et utiliser les requêtes suivantes :</p>
-
-  <pre><code>hostname:example.com</code></pre>
-  <pre><code>hostname:example.com port:443</code></pre>
-
-  <p><strong>À collecter :</strong></p>
-  <ul>
-    <li>Adresses IP visibles</li>
-    <li>Ports exposés</li>
-    <li>Services identifiés</li>
-  </ul>
-
-  <h3>🧩 Phase 3 – Recon-ng (Kali Linux)</h3>
-  <p>Lancer Recon-ng :</p>
-
-  <pre><code>recon-ng</code></pre>
-
-  <p>Créer un workspace :</p>
-  <pre><code>workspaces create lab_osint</code></pre>
-
-  <p>Ajouter le domaine :</p>
-  <pre><code>add domains example.com</code></pre>
-
-  <p>Installer un module :</p>
-  <pre><code>marketplace install recon/domains-hosts/hackertarget</code></pre>
-
-  <p>Lancer le module :</p>
-  <pre><code>modules load recon/domains-hosts/hackertarget
-run</code></pre>
-
-  <h3>📧 Phase 4 – theHarvester</h3>
-  <p>Depuis Kali :</p>
-
-  <pre><code>theHarvester -d example.com -b crtsh</code></pre>
-
-  <p><strong>À collecter :</strong></p>
-  <ul>
-    <li>Sous-domaines</li>
-    <li>Emails publics éventuels</li>
-  </ul>
-
-  <h3>🧠 Phase 5 – Analyse</h3>
-  <p>
-    Interpréter les données collectées :
-  </p>
-  <ul>
-    <li>Pourquoi ces informations sont-elles visibles ?</li>
-    <li>Quel risque informationnel potentiel ?</li>
-    <li>Que pourrait améliorer l’organisation ?</li>
-  </ul>
-
-  <h3>📄 Phase 6 – Restitution</h3>
-  <p>
-    Rédiger une synthèse OSINT contenant :
-  </p>
-  <ul>
-    <li>Objectif</li>
-    <li>Méthodologie</li>
-    <li>Résultats</li>
-    <li>Analyse</li>
-    <li>Recommandations</li>
-  </ul>
-
-  <h3>✅ Critères de réussite</h3>
-  <ul>
-    <li>Données correctement collectées</li>
-    <li>Analyse claire et argumentée</li>
-    <li>Aucune action intrusive</li>
-    <li>Rapport structuré</li>
-  </ul>
-</section>
-
-
-<section class="lab checklist">
-  <h2>📋 Checklist d’audit OSINT – Reconnaissance passive</h2>
-
-  <p>
-    Cette checklist permet de structurer une mission OSINT 100 % passive
-    dans un cadre légal et professionnel.
-  </p>
-
-  <h3>🧭 1. Cadrage de la mission</h3>
-  <ul>
-    <li>☐ Objectif clairement défini</li>
-    <li>☐ Périmètre autorisé validé</li>
-    <li>☐ Type d’OSINT : passif uniquement</li>
-    <li>☐ Domaine(s) autorisé(s)</li>
-  </ul>
-
-  <h3>🌐 2. Recherche générale (Open Web)</h3>
-  <ul>
-    <li>☐ Recherche Google classique</li>
-    <li>☐ Google Dorks utilisés</li>
-    <li>☐ WHOIS consulté</li>
-    <li>☐ Présence sur réseaux sociaux</li>
-  </ul>
-
-  <h3>🔍 3. Exposition réseau (Shodan)</h3>
-  <ul>
-    <li>☐ Recherche par domaine</li>
-    <li>☐ Recherche par IP</li>
-    <li>☐ Ports exposés identifiés</li>
-    <li>☐ Services visibles</li>
-    <li>☐ Versions logicielles notées</li>
-  </ul>
-
-  <h3>🧩 4. Collecte automatisée (Recon-ng)</h3>
-  <ul>
-    <li>☐ Workspace créé</li>
-    <li>☐ Domaine ajouté</li>
-    <li>☐ Modules OSINT installés</li>
-    <li>☐ Données collectées (hosts, IPs)</li>
-  </ul>
-
-  <h3>📧 5. Emails & sous-domaines</h3>
-  <ul>
-    <li>☐ theHarvester exécuté</li>
-    <li>☐ Sous-domaines identifiés</li>
-    <li>☐ Emails publics recensés</li>
-  </ul>
-
-  <h3>🧠 6. Corrélation & analyse</h3>
-  <ul>
-    <li>☐ Données regroupées</li>
-    <li>☐ Relations identifiées</li>
-    <li>☐ Visualisation (Maltego)</li>
-    <li>☐ Risques informationnels évalués</li>
-  </ul>
-
-  <h3>📄 7. Reporting</h3>
-  <ul>
-    <li>☐ Résultats synthétisés</li>
-    <li>☐ Analyse compréhensible</li>
-    <li>☐ Recommandations formulées</li>
-    <li>☐ Rapport structuré</li>
-  </ul>
-
-  <h3>⚖️ 8. Conformité légale & éthique</h3>
-  <ul>
-    <li>☐ Données publiques uniquement</li>
-    <li>☐ Aucune action intrusive</li>
-    <li>☐ Respect du Responsible Disclosure</li>
-  </ul>
-
-  <h3>✅ Validation finale</h3>
-  <p>
-    ☐ Audit OSINT conforme aux bonnes pratiques professionnelles  
-    ☐ Prêt à être présenté à un client ou recruteur
-  </p>
-</section>
-
-
-
-
+</body>
+</html>
