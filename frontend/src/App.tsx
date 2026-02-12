@@ -9,6 +9,8 @@ import GameNotification from "./components/GameNotification";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import ProfilePage from "./pages/ProfilePage";
+import ContactPage from "./pages/ContactPage";
 
 /* CORE */
 import Dashboard from "./pages/Dashboard";
