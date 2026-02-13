@@ -1,0 +1,11 @@
+{
+  "name": "osint-lms-api",
+  "version": "1.0.0",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.13.3",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0"
+  }
+}
