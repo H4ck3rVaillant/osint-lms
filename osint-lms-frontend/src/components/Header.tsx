@@ -38,6 +38,7 @@ export default function Header() {
   const auth = useAuth();
   const [showOutilsMenu, setShowOutilsMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   if (!auth.user) return null;
 
@@ -50,7 +51,6 @@ export default function Header() {
 
   return (
     <>
-    {/* LIGNE 1 - LOGO + LIENS PRINCIPAUX */}
     <header style={{
       position: "fixed" as const,
       top: 0,
@@ -62,12 +62,11 @@ export default function Header() {
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
     }}>
       
-      {/* PREMIÈRE LIGNE */}
       <div style={{
         height: "60px",
         display: "flex",
         alignItems: "center",
-        padding: "0 30px",
+        padding: "0 20px",
         gap: "20px",
       }}>
         
@@ -79,15 +78,34 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* NAVIGATION PRINCIPALE */}
+        {/* MENU HAMBURGER (mobile) */}
+        <button
+          onClick={() => setShowMobileMenu(!showMobileMenu)}
+          style={{
+            display: "none",
+            background: "transparent",
+            border: "2px solid #00ff9c",
+            color: "#00ff9c",
+            fontSize: "1.5rem",
+            padding: "5px 10px",
+            borderRadius: "6px",
+            cursor: "pointer",
+            marginLeft: "auto",
+          }}
+          className="mobile-menu-btn"
+        >
+          ☰
+        </button>
+
+        {/* NAVIGATION (desktop) */}
         <nav style={{
           display: "flex",
           gap: "6px",
           flex: 1,
           alignItems: "center",
-        }}>
+        }}
+        className="desktop-nav">
           
-          {/* ✅ BARRE 1 - AVANT DASHBOARD */}
           <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
 
           <Link to="/dashboard" style={{
@@ -139,7 +157,6 @@ export default function Header() {
             </Link>
           ))}
 
-          {/* ✅ BARRE 2 - ENTRE BADGES ET CTF */}
           <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
 
           {[
@@ -170,7 +187,6 @@ export default function Header() {
             </Link>
           ))}
 
-          {/* MENU OUTILS CLIQUABLE */}
           <div style={{ position: "relative" as const }}>
             <span onClick={() => setShowOutilsMenu(!showOutilsMenu)} style={{
               color: showOutilsMenu ? "#00ff9c" : "#e5e7eb",
@@ -232,13 +248,12 @@ export default function Header() {
             )}
           </div>
 
-          {/* ✅ BARRE 3 - APRÈS OUTILS */}
           <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
 
         </nav>
 
         {/* MENU UTILISATEUR */}
-        <div style={{ position: "relative" as const }}>
+        <div style={{ position: "relative" as const }} className="user-menu-container">
           <div onClick={() => setShowUserMenu(!showUserMenu)} style={{
             display: "flex",
             alignItems: "center",
@@ -265,7 +280,7 @@ export default function Header() {
               {getUserAvatar(user.username)}
             </div>
 
-            <span style={{ color: "#9ca3af", fontWeight: "500", fontSize: "0.85rem" }}>{user.username}</span>
+            <span style={{ color: "#9ca3af", fontWeight: "500", fontSize: "0.85rem" }} className="username-text">{user.username}</span>
             <span style={{ color: "#9ca3af", fontSize: "0.6rem" }}>▾</span>
           </div>
 
@@ -347,10 +362,143 @@ export default function Header() {
         </div>
 
       </div>
+
+      {/* MENU MOBILE OVERLAY */}
+      {showMobileMenu && (
+        <div style={{
+          position: "fixed" as const,
+          top: "60px",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "#0b0f1a",
+          zIndex: 999,
+          overflowY: "auto" as const,
+          padding: "20px",
+        }}>
+          <div style={{ display: "flex", flexDirection: "column" as const, gap: "10px" }}>
+            <Link to="/dashboard" onClick={() => setShowMobileMenu(false)} style={{
+              color: "#e5e7eb",
+              textDecoration: "none",
+              padding: "15px",
+              background: "#1a1f2e",
+              borderRadius: "8px",
+              fontSize: "1rem",
+              border: "1px solid #2a3f3f",
+            }}>
+              🏠 Dashboard
+            </Link>
+            <Link to="/parcours" onClick={() => setShowMobileMenu(false)} style={{
+              color: "#e5e7eb",
+              textDecoration: "none",
+              padding: "15px",
+              background: "#1a1f2e",
+              borderRadius: "8px",
+              fontSize: "1rem",
+              border: "1px solid #2a3f3f",
+            }}>
+              📚 Parcours
+            </Link>
+            <Link to="/exercices-osint" onClick={() => setShowMobileMenu(false)} style={{
+              color: "#e5e7eb",
+              textDecoration: "none",
+              padding: "15px",
+              background: "#1a1f2e",
+              borderRadius: "8px",
+              fontSize: "1rem",
+              border: "1px solid #2a3f3f",
+            }}>
+              📝 Exercices
+            </Link>
+            <Link to="/etudes-osint" onClick={() => setShowMobileMenu(false)} style={{
+              color: "#e5e7eb",
+              textDecoration: "none",
+              padding: "15px",
+              background: "#1a1f2e",
+              borderRadius: "8px",
+              fontSize: "1rem",
+              border: "1px solid #2a3f3f",
+            }}>
+              🔎 Études de Cas
+            </Link>
+            <Link to="/badges-osint" onClick={() => setShowMobileMenu(false)} style={{
+              color: "#e5e7eb",
+              textDecoration: "none",
+              padding: "15px",
+              background: "#1a1f2e",
+              borderRadius: "8px",
+              fontSize: "1rem",
+              border: "1px solid #2a3f3f",
+            }}>
+              🏅 Badges
+            </Link>
+            <Link to="/ctf" onClick={() => setShowMobileMenu(false)} style={{
+              color: "#e5e7eb",
+              textDecoration: "none",
+              padding: "15px",
+              background: "#1a1f2e",
+              borderRadius: "8px",
+              fontSize: "1rem",
+              border: "1px solid #2a3f3f",
+            }}>
+              🚩 CTF
+            </Link>
+            <Link to="/leaderboard" onClick={() => setShowMobileMenu(false)} style={{
+              color: "#e5e7eb",
+              textDecoration: "none",
+              padding: "15px",
+              background: "#1a1f2e",
+              borderRadius: "8px",
+              fontSize: "1rem",
+              border: "1px solid #2a3f3f",
+            }}>
+              🏆 Leaderboard
+            </Link>
+            <Link to="/progression" onClick={() => setShowMobileMenu(false)} style={{
+              color: "#e5e7eb",
+              textDecoration: "none",
+              padding: "15px",
+              background: "#1a1f2e",
+              borderRadius: "8px",
+              fontSize: "1rem",
+              border: "1px solid #2a3f3f",
+            }}>
+              ⭐ Progression
+            </Link>
+            <Link to="/labo-osint" onClick={() => setShowMobileMenu(false)} style={{
+              color: "#e5e7eb",
+              textDecoration: "none",
+              padding: "15px",
+              background: "#1a1f2e",
+              borderRadius: "8px",
+              fontSize: "1rem",
+              border: "1px solid #2a3f3f",
+            }}>
+              🧪 Labo
+            </Link>
+          </div>
+        </div>
+      )}
+
     </header>
 
-    {/* SPACER pour compenser le header fixed */}
+    {/* SPACER */}
     <div style={{ height: "60px" }} />
+
+    {/* CSS responsive */}
+    <style>{`
+      @media (max-width: 768px) {
+        .mobile-menu-btn {
+          display: block !important;
+        }
+        .desktop-nav {
+          display: none !important;
+        }
+        .username-text {
+          display: none !important;
+        }
+      }
+    `}</style>
     </>
   );
 }
