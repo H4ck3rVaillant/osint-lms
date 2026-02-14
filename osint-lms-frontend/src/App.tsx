@@ -69,7 +69,39 @@ function ScrollToTop() {
 }
 
 function Protected({ children }: { children: JSX.Element }) {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  
+  // ✅ FIX F5: Attendre que le token soit vérifié avant de rediriger
+  if (isLoading) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#0b0f1a"
+      }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{
+            width: "50px",
+            height: "50px",
+            border: "4px solid #2a3f3f",
+            borderTop: "4px solid #00ff9c",
+            borderRadius: "50%",
+            animation: "spin 1s linear infinite",
+            margin: "0 auto 20px"
+          }} />
+          <p style={{ color: "#9ca3af", fontSize: "1rem" }}>Chargement...</p>
+        </div>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
+  
   if (!user) return <Navigate to="/login" replace />;
   return children;
 }
