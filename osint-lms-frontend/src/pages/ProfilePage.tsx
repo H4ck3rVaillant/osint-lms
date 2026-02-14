@@ -90,7 +90,8 @@ export default function ProfilePage() {
     setAvatarSuccess("✅ Avatar mis à jour avec succès !");
     setTimeout(() => {
       setAvatarSuccess("");
-      window.location.reload();
+      // ✅ Redirection vers dashboard au lieu de reload qui déconnecte
+      navigate("/dashboard");
     }, 1500);
   };
 

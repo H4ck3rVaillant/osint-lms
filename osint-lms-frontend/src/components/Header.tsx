@@ -9,7 +9,27 @@ const AVATARS: Record<string, string> = {
   fox: "🦊", wolf: "🐺", dragon: "🐉", parrot: "🦜", cyber: "⚡",
 };
 
-function getUserAvatar(username: string): string {
+function getUserAvatar(username: string): string | JSX.Element {
+  const avatarType = localStorage.getItem(`avatar_type_${username}`) || "emoji";
+  
+  if (avatarType === "image") {
+    const customImage = localStorage.getItem(`avatar_image_${username}`);
+    if (customImage) {
+      return (
+        <img 
+          src={customImage} 
+          alt="Avatar" 
+          style={{
+            width: "100%",
+            height: "100%",
+            borderRadius: "50%",
+            objectFit: "cover" as const
+          }} 
+        />
+      );
+    }
+  }
+  
   const saved = localStorage.getItem(`avatar_${username}`);
   return saved && AVATARS[saved] ? AVATARS[saved] : "🧑‍💻";
 }
@@ -99,6 +119,9 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
+
+          {/* ✅ BARRE VERTE VERTICALE */}
+          <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
 
           {/* MENU OUTILS CLIQUABLE */}
           <div style={{ position: "relative" as const }}>
