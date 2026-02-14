@@ -112,7 +112,7 @@ export default function Header() {
           </Link>
 
           {[
-            { label: "📚 Parcours", to: "/parcours-debutant" },
+            { label: "📚 Parcours", to: "/parcours" },
             { label: "📝 Exercices", to: "/exercices-osint" },
             { label: "🔎 Études", to: "/etudes-osint" },
             { label: "🏅 Badges", to: "/badges-osint" },

@@ -16,6 +16,7 @@ import ContactPage from "./pages/ContactPage";
 import Dashboard from "./pages/Dashboard";
 
 /* PARCOURS */
+import ParcoursHub from "./pages/ParcoursHub";
 import ParcoursDebutant from "./pages/ParcoursDebutant";
 import ParcoursDebutantIntroduction from "./pages/ParcoursDebutantIntroduction";
 import ParcoursDebutantMethodologie from "./pages/ParcoursDebutantMethodologie";
@@ -102,6 +103,9 @@ export default function App() {
       {/* ✅ PROFIL & CONTACT */}
       <Route path="/profil" element={<Protected><Layout><ProfilePage /></Layout></Protected>} />
       <Route path="/contact" element={<Protected><Layout><ContactPage /></Layout></Protected>} />
+
+      {/* ✅ PARCOURS HUB */}
+      <Route path="/parcours" element={<Protected><Layout><ParcoursHub /></Layout></Protected>} />
 
       {/* ✅ PARCOURS - Routes avec tirets (Dashboard) ET avec slashes (ancien) */}
       <Route path="/parcours-debutant" element={<Protected><Layout><ParcoursDebutant /></Layout></Protected>} />
