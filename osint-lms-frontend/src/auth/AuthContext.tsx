@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   // Backend URL
-  const BACKEND_URL = "http://localhost:3000";
+  const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   // Configuration de l'auto-logout
   const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes en millisecondes
