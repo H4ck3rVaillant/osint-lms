@@ -87,12 +87,62 @@ export default function Header() {
           alignItems: "center",
         }}>
           
+          {/* ✅ BARRE 1 - AVANT DASHBOARD */}
+          <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
+
+          <Link to="/dashboard" style={{
+            color: "#e5e7eb",
+            textDecoration: "none",
+            fontWeight: "500",
+            padding: "6px 10px",
+            borderRadius: "6px",
+            fontSize: "0.8rem",
+            whiteSpace: "nowrap" as const,
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "#00ff9c";
+            e.currentTarget.style.background = "#1a1f2e";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "#e5e7eb";
+            e.currentTarget.style.background = "transparent";
+          }}>
+            🏠 Dashboard
+          </Link>
+
           {[
-            { label: "🏠 Dashboard", to: "/dashboard" },
             { label: "📚 Parcours", to: "/parcours-debutant" },
             { label: "📝 Exercices", to: "/exercices-osint" },
             { label: "🔎 Études", to: "/etudes-osint" },
             { label: "🏅 Badges", to: "/badges-osint" },
+          ].map((item) => (
+            <Link key={item.to} to={item.to} style={{
+              color: "#e5e7eb",
+              textDecoration: "none",
+              fontWeight: "500",
+              padding: "6px 10px",
+              borderRadius: "6px",
+              fontSize: "0.8rem",
+              whiteSpace: "nowrap" as const,
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#00ff9c";
+              e.currentTarget.style.background = "#1a1f2e";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "#e5e7eb";
+              e.currentTarget.style.background = "transparent";
+            }}>
+              {item.label}
+            </Link>
+          ))}
+
+          {/* ✅ BARRE 2 - ENTRE BADGES ET CTF */}
+          <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
+
+          {[
             { label: "🚩 CTF", to: "/ctf" },
             { label: "🏆 Leaderboard", to: "/leaderboard" },
             { label: "⭐ Progression", to: "/progression" },
@@ -119,9 +169,6 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-
-          {/* ✅ BARRE VERTE VERTICALE */}
-          <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
 
           {/* MENU OUTILS CLIQUABLE */}
           <div style={{ position: "relative" as const }}>
@@ -184,6 +231,9 @@ export default function Header() {
               </div>
             )}
           </div>
+
+          {/* ✅ BARRE 3 - APRÈS OUTILS */}
+          <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
 
         </nav>
 
