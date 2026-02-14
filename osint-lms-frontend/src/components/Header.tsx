@@ -476,6 +476,107 @@ export default function Header() {
             }}>
               🧪 Labo
             </Link>
+
+            {/* SECTION OUTILS */}
+            <div style={{
+              marginTop: "20px",
+              paddingTop: "20px",
+              borderTop: "1px solid #2a3f3f",
+            }}>
+              <p style={{ color: "#9ca3af", fontSize: "0.8rem", marginBottom: "10px", paddingLeft: "5px" }}>
+                🛠️ OUTILS
+              </p>
+              <Link to="/hacker-ai" onClick={() => setShowMobileMenu(false)} style={{
+                color: "#e5e7eb",
+                textDecoration: "none",
+                padding: "15px",
+                background: "#1a1f2e",
+                borderRadius: "8px",
+                fontSize: "1rem",
+                border: "1px solid #2a3f3f",
+                display: "block",
+                marginBottom: "10px",
+              }}>
+                🤖 HackerAI
+              </Link>
+              <Link to="/dependency-track" onClick={() => setShowMobileMenu(false)} style={{
+                color: "#e5e7eb",
+                textDecoration: "none",
+                padding: "15px",
+                background: "#1a1f2e",
+                borderRadius: "8px",
+                fontSize: "1rem",
+                border: "1px solid #2a3f3f",
+                display: "block",
+                marginBottom: "10px",
+              }}>
+                📦 Dependency Track
+              </Link>
+              <Link to="/outils-cyber" onClick={() => setShowMobileMenu(false)} style={{
+                color: "#e5e7eb",
+                textDecoration: "none",
+                padding: "15px",
+                background: "#1a1f2e",
+                borderRadius: "8px",
+                fontSize: "1rem",
+                border: "1px solid #2a3f3f",
+                display: "block",
+                marginBottom: "10px",
+              }}>
+                🔧 Outils Cyber
+              </Link>
+              <Link to="/referentiels" onClick={() => setShowMobileMenu(false)} style={{
+                color: "#e5e7eb",
+                textDecoration: "none",
+                padding: "15px",
+                background: "#1a1f2e",
+                borderRadius: "8px",
+                fontSize: "1rem",
+                border: "1px solid #2a3f3f",
+                display: "block",
+                marginBottom: "10px",
+              }}>
+                📚 Référentiels
+              </Link>
+              <Link to="/vm-access" onClick={() => setShowMobileMenu(false)} style={{
+                color: "#e5e7eb",
+                textDecoration: "none",
+                padding: "15px",
+                background: "#1a1f2e",
+                borderRadius: "8px",
+                fontSize: "1rem",
+                border: "1px solid #2a3f3f",
+                display: "block",
+                marginBottom: "10px",
+              }}>
+                💻 VM Access
+              </Link>
+              <Link to="/vm-kali" onClick={() => setShowMobileMenu(false)} style={{
+                color: "#e5e7eb",
+                textDecoration: "none",
+                padding: "15px",
+                background: "#1a1f2e",
+                borderRadius: "8px",
+                fontSize: "1rem",
+                border: "1px solid #2a3f3f",
+                display: "block",
+                marginBottom: "10px",
+              }}>
+                🐉 Kali Linux Lab
+              </Link>
+              <Link to="/vm-parrot" onClick={() => setShowMobileMenu(false)} style={{
+                color: "#e5e7eb",
+                textDecoration: "none",
+                padding: "15px",
+                background: "#1a1f2e",
+                borderRadius: "8px",
+                fontSize: "1rem",
+                border: "1px solid #2a3f3f",
+                display: "block",
+              }}>
+                🦜 Parrot OS Lab
+              </Link>
+            </div>
           </div>
         </div>
       )}
