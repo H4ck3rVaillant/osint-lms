@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -23,11 +23,19 @@ const AVATARS = [
 export default function ProfilePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-  const currentAvatar = localStorage.getItem(`avatar_${user?.username}`) || "hacker";
+  // Avatar actuel (emoji OU image custom)
+  const currentAvatarType = localStorage.getItem(`avatar_type_${user?.username}`) || "emoji";
+  const currentAvatarEmoji = localStorage.getItem(`avatar_${user?.username}`) || "hacker";
+  const currentAvatarImage = localStorage.getItem(`avatar_image_${user?.username}`) || "";
   
-  const [selectedAvatar, setSelectedAvatar] = useState(currentAvatar);
+  const [avatarType, setAvatarType] = useState<"emoji" | "image">(currentAvatarType as "emoji" | "image");
+  const [selectedEmoji, setSelectedEmoji] = useState(currentAvatarEmoji);
+  const [customImage, setCustomImage] = useState(currentAvatarImage);
+  const [imagePreview, setImagePreview] = useState(currentAvatarImage);
+  
   const [showPasswordSection, setShowPasswordSection] = useState(false);
   
   const [oldPassword, setOldPassword] = useState("");
@@ -38,15 +46,52 @@ export default function ProfilePage() {
   
   const [avatarSuccess, setAvatarSuccess] = useState("");
 
-  const handleSaveAvatar = () => {
-    if (user) {
-      localStorage.setItem(`avatar_${user.username}`, selectedAvatar);
-      setAvatarSuccess("✅ Avatar mis à jour avec succès !");
-      setTimeout(() => {
-        setAvatarSuccess("");
-        window.location.reload();
-      }, 1500);
+  // ✅ UPLOAD IMAGE PERSO
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Vérifier type
+    if (!file.type.startsWith("image/")) {
+      alert("❌ Veuillez sélectionner une image (JPG, PNG, GIF, WEBP)");
+      return;
     }
+
+    // Vérifier taille (max 2 MB)
+    if (file.size > 2 * 1024 * 1024) {
+      alert("❌ L'image est trop lourde (max 2 MB)");
+      return;
+    }
+
+    // Convertir en base64
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      setCustomImage(base64);
+      setImagePreview(base64);
+      setAvatarType("image");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSaveAvatar = () => {
+    if (!user) return;
+
+    if (avatarType === "emoji") {
+      localStorage.setItem(`avatar_type_${user.username}`, "emoji");
+      localStorage.setItem(`avatar_${user.username}`, selectedEmoji);
+      localStorage.removeItem(`avatar_image_${user.username}`);
+    } else {
+      localStorage.setItem(`avatar_type_${user.username}`, "image");
+      localStorage.setItem(`avatar_image_${user.username}`, customImage);
+      localStorage.setItem(`avatar_${user.username}`, "custom");
+    }
+
+    setAvatarSuccess("✅ Avatar mis à jour avec succès !");
+    setTimeout(() => {
+      setAvatarSuccess("");
+      window.location.reload();
+    }, 1500);
   };
 
   const handleChangePassword = async () => {
@@ -115,7 +160,6 @@ export default function ProfilePage() {
     }}>
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>
         
-        {/* En-tête */}
         <div style={{ marginBottom: "40px" }}>
           <h1 style={{ color: "#00ff9c", fontSize: "2.5rem", margin: "0 0 10px 0" }}>
             👤 Mon Profil
@@ -125,7 +169,7 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        {/* Section Avatar */}
+        {/* SECTION AVATAR */}
         <div style={{
           background: "#0b0f1a",
           border: "1px solid #2a3f3f",
@@ -150,50 +194,152 @@ export default function ProfilePage() {
             </div>
           )}
 
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(5, 1fr)",
-            gap: "12px",
-            marginBottom: "20px"
-          }}>
-            {AVATARS.map((av) => (
-              <div
-                key={av.id}
-                onClick={() => setSelectedAvatar(av.id)}
+          {/* CHOIX TYPE */}
+          <div style={{ marginBottom: "20px" }}>
+            <div style={{ display: "flex", gap: "15px" }}>
+              <button
+                onClick={() => setAvatarType("emoji")}
                 style={{
-                  background: selectedAvatar === av.id ? "#0b1a0f" : "#1a1f2e",
-                  border: `2px solid ${selectedAvatar === av.id ? "#00ff9c" : "#2a3f3f"}`,
-                  borderRadius: "12px",
-                  padding: "14px 8px",
-                  textAlign: "center" as const,
+                  flex: 1,
+                  padding: "12px",
+                  background: avatarType === "emoji" ? "#00ff9c" : "transparent",
+                  color: avatarType === "emoji" ? "#0b0f1a" : "#9ca3af",
+                  border: `2px solid ${avatarType === "emoji" ? "#00ff9c" : "#2a3f3f"}`,
+                  borderRadius: "8px",
+                  fontWeight: "bold",
                   cursor: "pointer",
-                  transition: "all 0.2s",
-                  boxShadow: selectedAvatar === av.id ? "0 0 15px rgba(0,255,156,0.25)" : "none"
-                }}
-                onMouseEnter={(e) => {
-                  if (selectedAvatar !== av.id) {
-                    e.currentTarget.style.borderColor = "#00ff9c66";
-                    e.currentTarget.style.transform = "translateY(-3px)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (selectedAvatar !== av.id) {
-                    e.currentTarget.style.borderColor = "#2a3f3f";
-                    e.currentTarget.style.transform = "translateY(0)";
-                  }
+                  transition: "all 0.2s"
                 }}
               >
-                <div style={{ fontSize: "2.2rem", marginBottom: "6px" }}>{av.emoji}</div>
-                <div style={{
-                  color: selectedAvatar === av.id ? "#00ff9c" : "#9ca3af",
-                  fontSize: "0.72rem",
-                  fontWeight: selectedAvatar === av.id ? "bold" : "normal"
-                }}>
-                  {av.label}
-                </div>
-              </div>
-            ))}
+                😀 Emoji
+              </button>
+              <button
+                onClick={() => setAvatarType("image")}
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  background: avatarType === "image" ? "#00ff9c" : "transparent",
+                  color: avatarType === "image" ? "#0b0f1a" : "#9ca3af",
+                  border: `2px solid ${avatarType === "image" ? "#00ff9c" : "#2a3f3f"}`,
+                  borderRadius: "8px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+              >
+                🖼️ Image perso
+              </button>
+            </div>
           </div>
+
+          {/* EMOJIS */}
+          {avatarType === "emoji" && (
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(5, 1fr)",
+              gap: "12px",
+              marginBottom: "20px"
+            }}>
+              {AVATARS.map((av) => (
+                <div
+                  key={av.id}
+                  onClick={() => setSelectedEmoji(av.id)}
+                  style={{
+                    background: selectedEmoji === av.id ? "#0b1a0f" : "#1a1f2e",
+                    border: `2px solid ${selectedEmoji === av.id ? "#00ff9c" : "#2a3f3f"}`,
+                    borderRadius: "12px",
+                    padding: "14px 8px",
+                    textAlign: "center" as const,
+                    cursor: "pointer",
+                    transition: "all 0.2s",
+                    boxShadow: selectedEmoji === av.id ? "0 0 15px rgba(0,255,156,0.25)" : "none"
+                  }}
+                  onMouseEnter={(e) => {
+                    if (selectedEmoji !== av.id) {
+                      e.currentTarget.style.borderColor = "#00ff9c66";
+                      e.currentTarget.style.transform = "translateY(-3px)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (selectedEmoji !== av.id) {
+                      e.currentTarget.style.borderColor = "#2a3f3f";
+                      e.currentTarget.style.transform = "translateY(0)";
+                    }
+                  }}
+                >
+                  <div style={{ fontSize: "2.2rem", marginBottom: "6px" }}>{av.emoji}</div>
+                  <div style={{
+                    color: selectedEmoji === av.id ? "#00ff9c" : "#9ca3af",
+                    fontSize: "0.72rem",
+                    fontWeight: selectedEmoji === av.id ? "bold" : "normal"
+                  }}>
+                    {av.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* UPLOAD IMAGE */}
+          {avatarType === "image" && (
+            <div style={{ marginBottom: "20px" }}>
+              
+              {/* Preview */}
+              {imagePreview && (
+                <div style={{ marginBottom: "20px", textAlign: "center" as const }}>
+                  <img 
+                    src={imagePreview} 
+                    alt="Avatar preview" 
+                    style={{
+                      width: "120px",
+                      height: "120px",
+                      borderRadius: "50%",
+                      objectFit: "cover" as const,
+                      border: "3px solid #00ff9c",
+                      boxShadow: "0 0 20px rgba(0,255,156,0.3)"
+                    }} 
+                  />
+                </div>
+              )}
+
+              {/* Upload button */}
+              <input 
+                ref={fileInputRef}
+                type="file" 
+                accept="image/*" 
+                onChange={handleImageUpload}
+                style={{ display: "none" }}
+              />
+              
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                style={{
+                  width: "100%",
+                  padding: "14px",
+                  background: "transparent",
+                  color: "#00ff9c",
+                  border: "2px dashed #00ff9c",
+                  borderRadius: "8px",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#00ff9c22";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                }}
+              >
+                📤 Choisir une image (JPG, PNG, GIF, max 2 MB)
+              </button>
+              
+              <p style={{ color: "#6b7280", fontSize: "0.8rem", marginTop: "10px", textAlign: "center" as const }}>
+                Votre image sera stockée localement dans votre navigateur
+              </p>
+            </div>
+          )}
 
           <button
             onClick={handleSaveAvatar}
@@ -216,7 +362,7 @@ export default function ProfilePage() {
           </button>
         </div>
 
-        {/* Section Mot de passe */}
+        {/* SECTION MOT DE PASSE */}
         <div style={{
           background: "#0b0f1a",
           border: "1px solid #2a3f3f",
@@ -359,7 +505,6 @@ export default function ProfilePage() {
           )}
         </div>
 
-        {/* Bouton retour */}
         <button
           onClick={() => navigate("/dashboard")}
           style={{
