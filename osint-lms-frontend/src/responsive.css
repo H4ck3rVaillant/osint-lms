@@ -1,0 +1,194 @@
+/* ========================================
+   RESPONSIVE MOBILE - CyberOSINT Academy
+   ======================================== */
+
+/* Tablettes (< 1024px) */
+@media (max-width: 1024px) {
+  /* Header plus compact */
+  header nav a {
+    font-size: 0.75rem !important;
+    padding: 5px 8px !important;
+  }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 768px) {
+  
+  /* === HEADER === */
+  header {
+    height: auto !important;
+    flex-wrap: wrap !important;
+    padding: 10px 15px !important;
+    gap: 10px !important;
+  }
+
+  header img {
+    height: 35px !important;
+  }
+
+  header nav {
+    display: none !important; /* Caché sur mobile - TODO: hamburger menu */
+  }
+
+  /* Menu utilisateur compact */
+  header > div:last-child {
+    flex-direction: row !important;
+    gap: 8px !important;
+  }
+
+  header > div:last-child span {
+    font-size: 0.75rem !important;
+  }
+
+  /* Avatar plus petit */
+  header div[style*="width: 32px"] {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 1rem !important;
+  }
+
+  /* === MAIN CONTENT === */
+  main {
+    padding: 20px 15px !important;
+  }
+
+  /* Titres */
+  h1 {
+    font-size: 1.8rem !important;
+  }
+
+  h2 {
+    font-size: 1.3rem !important;
+  }
+
+  h3 {
+    font-size: 1.1rem !important;
+  }
+
+  /* Paragraphes */
+  p {
+    font-size: 0.9rem !important;
+  }
+
+  /* === GRIDS === */
+  /* 3 colonnes → 1 colonne */
+  div[style*="repeat(auto-fit, minmax(320px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="repeat(auto-fit, minmax(350px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="repeat(auto-fit, minmax(280px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="repeat(auto-fit, minmax(200px"] {
+    grid-template-columns: repeat(2, 1fr) !important; /* Stats 2 colonnes */
+  }
+
+  div[style*="repeat(auto-fit, minmax(180px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Dashboard avatars selection - 3 colonnes au lieu de 5 */
+  div[style*="repeat(5, 1fr)"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* === CARDS === */
+  div[style*="padding: 24px"],
+  div[style*="padding: 30px"] {
+    padding: 20px !important;
+  }
+
+  /* === BUTTONS === */
+  button,
+  a[style*="padding"] {
+    font-size: 0.85rem !important;
+  }
+
+  /* === FORMS === */
+  input,
+  textarea {
+    font-size: 0.9rem !important;
+  }
+
+  /* === DASHBOARD === */
+  /* Progression globale */
+  div[style*="Progression Globale"] h2 {
+    font-size: 1.2rem !important;
+  }
+
+  /* === PROFILE PAGE === */
+  /* Preview avatar */
+  img[alt="Avatar preview"] {
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  /* === PARCOURS HUB === */
+  /* Emoji parcours */
+  div[style*="fontSize: '4rem'"] {
+    font-size: 3rem !important;
+  }
+
+  /* === CTF / CHALLENGES === */
+  /* Code blocks */
+  pre {
+    font-size: 0.75rem !important;
+    overflow-x: auto !important;
+  }
+
+  code {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+  
+  h1 {
+    font-size: 1.5rem !important;
+  }
+
+  h2 {
+    font-size: 1.2rem !important;
+  }
+
+  /* Logo texte plus petit */
+  header span[style*="fontSize: '1rem'"] {
+    font-size: 0.85rem !important;
+  }
+
+  /* Stats 1 colonne sur très petits écrans */
+  div[style*="repeat(2, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Padding réduit */
+  main {
+    padding: 15px 10px !important;
+  }
+
+  div[style*="padding: 20px"] {
+    padding: 15px !important;
+  }
+
+  /* Avatars selection 2 colonnes */
+  div[style*="repeat(3, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* === LANDSCAPE MOBILE === */
+@media (max-width: 900px) and (orientation: landscape) {
+  header {
+    height: 60px !important;
+  }
+
+  main {
+    padding-top: 70px !important;
+  }
+}
