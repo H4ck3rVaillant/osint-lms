@@ -1,0 +1,356 @@
+/* ========================================
+   ANIMATIONS - CyberOSINT Academy
+   ======================================== */
+
+/* === KEYFRAMES === */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(0, 255, 156, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 156, 0.6);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* === TRANSITIONS GLOBALES === */
+
+* {
+  transition: background-color 0.2s ease, 
+              color 0.2s ease, 
+              border-color 0.2s ease,
+              transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+/* === APPARITION DES PAGES === */
+
+main {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* === CARDS & LINKS === */
+
+a[style*="border"],
+div[style*="border: 1px solid"],
+div[style*="border: 2px solid"] {
+  transition: all 0.3s ease !important;
+}
+
+a[style*="border"]:hover,
+div[style*="border"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 255, 156, 0.2);
+}
+
+/* === BUTTONS === */
+
+button {
+  transition: all 0.3s ease !important;
+  cursor: pointer;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 255, 156, 0.3);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* === INPUTS === */
+
+input:focus,
+textarea:focus {
+  border-color: #00ff9c !important;
+  box-shadow: 0 0 10px rgba(0, 255, 156, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* === HEADER ANIMATIONS === */
+
+header {
+  animation: slideInFromLeft 0.5s ease-out;
+}
+
+header a,
+header button,
+header span {
+  transition: all 0.2s ease !important;
+}
+
+/* === DASHBOARD CARDS === */
+
+main > section > div > a,
+main > section > div > div {
+  animation: fadeIn 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+main > section > div > a:nth-child(1),
+main > section > div > div:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+main > section > div > a:nth-child(2),
+main > section > div > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+main > section > div > a:nth-child(3),
+main > section > div > div:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+main > section > div > a:nth-child(4),
+main > section > div > div:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+main > section > div > a:nth-child(5),
+main > section > div > div:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+main > section > div > a:nth-child(6),
+main > section > div > div:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+/* === PROGRESS BARS === */
+
+div[style*="background: linear-gradient(90deg, #00ff9c"],
+div[style*="background: #00ff9c"],
+div[style*="background: #fbbf24"],
+div[style*="background: #ef4444"] {
+  transition: width 0.8s ease-out !important;
+}
+
+/* === BADGES & ICONS === */
+
+div[style*="fontSize: '2.2rem'"],
+div[style*="fontSize: '4rem'"] {
+  transition: transform 0.3s ease !important;
+}
+
+div[style*="fontSize: '2.2rem'"]:hover,
+div[style*="fontSize: '4rem'"]:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* === NOTIFICATIONS === */
+
+div[style*="border: 1px solid #00ff9c"][style*="background: #0a1a0a"],
+div[style*="border: 1px solid #ef4444"][style*="background: #1a0a0a"] {
+  animation: slideInFromRight 0.4s ease-out;
+}
+
+/* === DROPDOWNS === */
+
+div[style*="position: absolute"][style*="zIndex: 1000"] {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* === AVATAR HOVER === */
+
+div[style*="borderRadius: '50%'"] {
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+div[style*="borderRadius: '50%'"]:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(0, 255, 156, 0.4);
+}
+
+/* === LOADING STATES === */
+
+.loading {
+  background: linear-gradient(
+    90deg,
+    #1a1f2e 0%,
+    #2a3f3f 50%,
+    #1a1f2e 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* === SUCCESS ANIMATIONS === */
+
+.success-check {
+  animation: scaleIn 0.5s ease-out, pulse 2s infinite 1s;
+}
+
+/* === GLOW EFFECTS === */
+
+div[style*="border: 2px solid #00ff9c"],
+div[style*="border: 3px solid #00ff9c"] {
+  animation: glow 3s ease-in-out infinite;
+}
+
+/* === SMOOTH SCROLLING === */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* === PAGE TRANSITIONS === */
+
+@keyframes pageTransition {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+body {
+  animation: pageTransition 0.3s ease-out;
+}
+
+/* === RESPONSIVE ANIMATIONS === */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* === FOCUS STATES === */
+
+a:focus,
+button:focus,
+input:focus,
+textarea:focus {
+  outline: 2px solid #00ff9c;
+  outline-offset: 2px;
+}
+
+/* === TEXT SELECTION === */
+
+::selection {
+  background: #00ff9c;
+  color: #0b0f1a;
+}
+
+::-moz-selection {
+  background: #00ff9c;
+  color: #0b0f1a;
+}
+
+/* === CUSTOM SCROLLBAR === */
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a3f3f;
+  border-radius: 6px;
+  border: 2px solid #0b0f1a;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00ff9c;
+}
+
+/* === UTILITY CLASSES === */
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInFromLeft 0.5s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInFromRight 0.5s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
