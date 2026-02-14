@@ -59,25 +59,20 @@ import Leaderboard from "./pages/Leaderboard";
 import Gamification from "./pages/Gamification";
 import InactivityWarning from "./components/InactivityWarning";
 
-/* SCROLL TO TOP AU CHANGEMENT DE PAGE */
 function ScrollToTop() {
   const { pathname } = useLocation();
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-
   return null;
 }
 
-/* ROUTE PROTÉGÉE */
 function Protected({ children }: { children: JSX.Element }) {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
   return children;
 }
 
-/* LAYOUT */
 function Layout({ children }: { children: JSX.Element }) {
   return (
     <>
@@ -104,20 +99,25 @@ export default function App() {
       {/* DASHBOARD */}
       <Route path="/dashboard" element={<Protected><Layout><Dashboard /></Layout></Protected>} />
 
-      {/* DÉBUTANT */}
-      <Route path="/parcours/debutant" element={<Protected><Layout><ParcoursDebutant /></Layout></Protected>} />
+      {/* ✅ PROFIL & CONTACT */}
+      <Route path="/profil" element={<Protected><Layout><ProfilePage /></Layout></Protected>} />
+      <Route path="/contact" element={<Protected><Layout><ContactPage /></Layout></Protected>} />
+
+      {/* ✅ PARCOURS - Routes avec tirets (Dashboard) ET avec slashes (ancien) */}
+      <Route path="/parcours-debutant" element={<Protected><Layout><ParcoursDebutant /></Layout></Protected>} />
+      <Route path="/parcours/debutant" element={<Navigate to="/parcours-debutant" replace />} />
       <Route path="/parcours/debutant/introduction" element={<Protected><Layout><ParcoursDebutantIntroduction /></Layout></Protected>} />
       <Route path="/parcours/debutant/methodologie" element={<Protected><Layout><ParcoursDebutantMethodologie /></Layout></Protected>} />
       <Route path="/parcours/debutant/outils" element={<Protected><Layout><ParcoursDebutantOutils /></Layout></Protected>} />
 
-      {/* INTERMÉDIAIRE */}
-      <Route path="/parcours/intermediaire" element={<Protected><Layout><ParcoursIntermediaire /></Layout></Protected>} />
+      <Route path="/parcours-intermediaire" element={<Protected><Layout><ParcoursIntermediaire /></Layout></Protected>} />
+      <Route path="/parcours/intermediaire" element={<Navigate to="/parcours-intermediaire" replace />} />
       <Route path="/parcours/intermediaire/introduction" element={<Protected><Layout><ParcoursIntermediaireIntroduction /></Layout></Protected>} />
       <Route path="/parcours/intermediaire/methodologie" element={<Protected><Layout><ParcoursIntermediaireMethodologie /></Layout></Protected>} />
       <Route path="/parcours/intermediaire/outils" element={<Protected><Layout><ParcoursIntermediaireOutils /></Layout></Protected>} />
 
-      {/* AVANCÉ */}
-      <Route path="/parcours/avance" element={<Protected><Layout><ParcoursAvance /></Layout></Protected>} />
+      <Route path="/parcours-avance" element={<Protected><Layout><ParcoursAvance /></Layout></Protected>} />
+      <Route path="/parcours/avance" element={<Navigate to="/parcours-avance" replace />} />
       <Route path="/parcours/avance/introduction" element={<Protected><Layout><ParcoursAvanceIntroduction /></Layout></Protected>} />
       <Route path="/parcours/avance/methodologie" element={<Protected><Layout><ParcoursAvanceMethodologie /></Layout></Protected>} />
       <Route path="/parcours/avance/outils" element={<Protected><Layout><ParcoursAvanceOutils /></Layout></Protected>} />

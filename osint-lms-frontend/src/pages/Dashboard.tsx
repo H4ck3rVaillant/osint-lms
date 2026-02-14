@@ -8,6 +8,7 @@ export default function Dashboard() {
     avance: 0,
     etudesCas: 0,
     exercices: 0,
+    badges: 0,
     total: 0,
   });
 
@@ -38,12 +39,16 @@ export default function Dashboard() {
     const caseFinal = localStorage.getItem("badge_cases_osint") === "true";
     const etudesCasCount = [caseGeo, caseMedia, caseAttr, caseChrono, caseFinal].filter(Boolean).length;
 
-    // Exercices OSINT (20 exercices au total)
+    // Exercices OSINT
     const exercicesCompleted = parseInt(localStorage.getItem("exercices_completed") || "0");
     const totalExercices = 20;
 
-    const totalModules = 9 + 5; // 9 modules parcours + 5 cas
-    const totalCompleted = debutantCount + intermediaireCount + avanceCount + etudesCasCount;
+    // Badges (20 badges au total dans le système)
+    const totalBadges = 20;
+    const badgesEarned = debutantCount + intermediaireCount + avanceCount + etudesCasCount;
+
+    const totalModules = 9 + 5;
+    const totalCompleted = badgesEarned;
 
     setStats({
       debutant: (debutantCount / 3) * 100,
@@ -51,6 +56,7 @@ export default function Dashboard() {
       avance: (avanceCount / 3) * 100,
       etudesCas: (etudesCasCount / 5) * 100,
       exercices: (exercicesCompleted / totalExercices) * 100,
+      badges: (badgesEarned / totalBadges) * 100,
       total: (totalCompleted / totalModules) * 100,
     });
   }, []);
@@ -67,7 +73,7 @@ export default function Dashboard() {
   };
 
   return (
-    <main style={{ padding: "40px", maxWidth: "1200px", margin: "0 auto" }}>
+    <main style={{ padding: "40px 20px", maxWidth: "1400px", margin: "0 auto" }}>
       <h1 style={{ color: "#00ff9c", fontSize: "2rem", marginBottom: "10px" }}>
         Dashboard OSINT
       </h1>
@@ -100,468 +106,317 @@ export default function Dashboard() {
             {Math.round(stats.total)}%
           </span>
         </div>
-        
         <div style={{
           width: "100%",
-          height: "30px",
+          height: "20px",
           background: "#1a1f2e",
-          borderRadius: "15px",
-          overflow: "hidden",
-          border: "1px solid #2a3f3f"
+          borderRadius: "10px",
+          overflow: "hidden"
         }}>
           <div style={{
             width: `${stats.total}%`,
             height: "100%",
-            background: "linear-gradient(90deg, #00ff9c 0%, #00d484 100%)",
-            transition: "width 0.5s ease",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#0b0f1a",
-            fontWeight: "bold",
-            fontSize: "0.9rem"
-          }}>
-            {stats.total > 5 && `${Math.round(stats.total)}%`}
-          </div>
+            background: "linear-gradient(90deg, #00ff9c 0%, #00cc7a 100%)",
+            transition: "width 0.5s ease"
+          }} />
         </div>
-
-        <p style={{ color: "#9ca3af", marginTop: "15px", fontSize: "0.95rem" }}>
-          Complétez tous les modules et études de cas pour devenir un expert OSINT !
-        </p>
       </div>
 
-      {/* Parcours et Ressources */}
-      <h2 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "20px" }}>
-        📚 Formation et Pratique
-      </h2>
-
-      <section style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", 
-        gap: "24px",
-        marginBottom: "40px"
-      }}>
-        {/* Lien vers Parcours */}
-        <Link to="/parcours/debutant" style={cardStyle}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              📚 Parcours de Formation
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Accédez aux 3 parcours progressifs : Débutant, Intermédiaire et Avancé. 
-            9 modules complets pour maîtriser l'OSINT.
-          </p>
-          
-          <div style={{
-            background: "#1a1f2e",
-            border: "1px solid #2a3f3f",
-            borderRadius: "6px",
-            padding: "12px",
-            marginBottom: "15px"
-          }}>
-            <div style={{ 
-              display: "grid", 
-              gridTemplateColumns: "repeat(3, 1fr)", 
-              gap: "10px",
-              textAlign: "center"
-            }}>
-              <div>
-                <p style={{ color: "#00ff9c", fontSize: "1.3rem", fontWeight: "bold", margin: "0 0 4px 0" }}>
-                  {Math.round(stats.debutant)}%
-                </p>
-                <p style={{ color: "#9ca3af", fontSize: "0.75rem", margin: 0 }}>
-                  Débutant
-                </p>
-              </div>
-              <div>
-                <p style={{ color: "#00ff9c", fontSize: "1.3rem", fontWeight: "bold", margin: "0 0 4px 0" }}>
-                  {Math.round(stats.intermediaire)}%
-                </p>
-                <p style={{ color: "#9ca3af", fontSize: "0.75rem", margin: 0 }}>
-                  Intermédiaire
-                </p>
-              </div>
-              <div>
-                <p style={{ color: "#00ff9c", fontSize: "1.3rem", fontWeight: "bold", margin: "0 0 4px 0" }}>
-                  {Math.round(stats.avance)}%
-                </p>
-                <p style={{ color: "#9ca3af", fontSize: "0.75rem", margin: 0 }}>
-                  Avancé
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <p style={{ 
-            color: "#00ff9c",
-            fontSize: "0.9rem",
-            fontWeight: "bold"
-          }}>
-            → Voir tous les parcours
-          </p>
-        </Link>
-
-        {/* Études de cas */}
-        <Link to="/etudes-osint" style={cardStyle}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              🛰️ Études de Cas OSINT
-            </h3>
-            <span style={{ 
-              color: "#00ff9c", 
-              fontSize: "1.1rem",
-              fontWeight: "bold"
-            }}>
-              {Math.round(stats.etudesCas)}%
-            </span>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Analyses réelles : géolocalisation, vérification de médias, attribution d'acteurs et chronologies.
-          </p>
-          
-          <div style={{
-            width: "100%",
-            height: "8px",
-            background: "#1a1f2e",
-            borderRadius: "4px",
-            overflow: "hidden",
-            marginBottom: "10px"
-          }}>
-            <div style={{
-              width: `${stats.etudesCas}%`,
-              height: "100%",
-              background: "#00ff9c",
-              transition: "width 0.3s ease"
-            }} />
-          </div>
-          
-          <p style={{ 
-            color: stats.etudesCas === 100 ? "#00ff9c" : "#00ff9c",
-            fontSize: "0.9rem",
-            fontWeight: "bold"
-          }}>
-            {stats.etudesCas === 100 ? "✓ Tous les cas complétés" : "→ Commencer les cas"}
-          </p>
-        </Link>
-
-        {/* Exercices OSINT */}
-        <Link to="/exercices-osint" style={cardStyle}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              📝 Exercices OSINT
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Entraînez-vous avec des exercices pratiques progressifs pour renforcer vos compétences.
-          </p>
-          
-          <p style={{ 
-            color: "#00ff9c",
-            fontSize: "0.9rem",
-            fontWeight: "bold"
-          }}>
-            → Accéder aux exercices
-          </p>
-        </Link>
-
-        {/* Badges */}
-        <Link to="/badges-osint" style={cardStyle}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              🏆 Mes Badges
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Consultez tous vos badges débloqués et ceux à venir. Chaque accomplissement compte !
-          </p>
-          
-          <p style={{ 
-            color: "#00ff9c",
-            fontSize: "0.9rem",
-            fontWeight: "bold"
-          }}>
-            → Voir mes badges
-          </p>
-        </Link>
-
-        {/* Labo OSINT */}
-        <Link to="/labo-osint" style={{
-          ...cardStyle,
-          background: "linear-gradient(135deg, #0b0f1a 0%, #1a1f2e 100%)",
-          border: "2px solid #00ff9c"
-        }}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              🧪 Labo Interactif
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Terminal web, challenges OSINT interactifs, code playground et outils en ligne !
-          </p>
-          
-          <p style={{ 
-            color: "#00ff9c",
-            fontSize: "0.9rem",
-            fontWeight: "bold"
-          }}>
-            🚀 Découvrir le labo
-          </p>
-        </Link>
-      </section>
-
-      {/* Outils & Ressources Cyber */}
-      <h2 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "20px", marginTop: "40px" }}>
-        🛠️ Outils & Ressources Cyber
-      </h2>
-
-      <section style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", 
-        gap: "24px",
-        marginBottom: "40px"
-      }}>
-        {/* HackerAI */}
-        <Link to="/hacker-ai" style={cardStyle}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              🤖 HackerAI
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Outil d'intelligence artificielle orienté cybersécurité. Présentation, accès et guide d'utilisation.
-          </p>
-          
-          <p style={{ 
-            color: "#00ff9c",
-            fontSize: "0.9rem",
-            fontWeight: "bold"
-          }}>
-            → Découvrir HackerAI
-          </p>
-        </Link>
-
-        {/* DependencyTrack */}
-        <Link to="/dependency-track" style={cardStyle}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              📦 Dependency Track
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Analyse de dépendances, SBOM et sécurité de la supply chain logicielle.
-          </p>
-          
-          <p style={{ 
-            color: "#00ff9c",
-            fontSize: "0.9rem",
-            fontWeight: "bold"
-          }}>
-            → Accéder à l'outil
-          </p>
-        </Link>
-
-        {/* Outils Cyber */}
-        <Link to="/outils-cyber" style={cardStyle}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              🔧 Outils Cyber
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Boîte à outils organisée : OSINT, Cyber Analyse, Défense, Analyse Machine & Réseaux.
-          </p>
-          
-          <p style={{ 
-            color: "#00ff9c",
-            fontSize: "0.9rem",
-            fontWeight: "bold"
-          }}>
-            → Explorer les outils
-          </p>
-        </Link>
-
-        {/* Référentiels */}
-        <Link to="/referentiels" style={cardStyle}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              📚 Référentiels
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            ANSSI, lois (RGPD, LPM), normes ISO 27001/27002/27005. Documentation complète.
-          </p>
-          
-          <p style={{ 
-            color: "#00ff9c",
-            fontSize: "0.9rem",
-            fontWeight: "bold"
-          }}>
-            → Consulter les référentiels
-          </p>
-        </Link>
-
-        {/* VM Access */}
-        <Link to="/vm-access" style={cardStyle}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              💻 VM Access
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Présentation de Kali Linux & Parrot OS. Guides d'installation et d'utilisation.
-          </p>
-          <p style={{ color: "#00ff9c", fontSize: "0.9rem", fontWeight: "bold" }}>
-            → Accéder aux VM
-          </p>
-        </Link>
-
-        {/* Kali Linux Lab */}
-        <Link to="/vm-kali" style={cardStyle}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              🐉 Kali Linux Lab
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Terminal Kali Linux interactif. Pratiquez nmap, theHarvester, sqlmap, hashcat et plus.
-          </p>
-          <p style={{ color: "#00ff9c", fontSize: "0.9rem", fontWeight: "bold" }}>
-            → Lancer le terminal
-          </p>
-        </Link>
-
-        {/* Parrot OS Lab */}
-        <Link to="/vm-parrot" style={cardStyle}>
-          <div style={{ marginBottom: "12px" }}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
-              🦜 Parrot OS Lab
-            </h3>
-          </div>
-          <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-            Terminal Parrot OS avec AnonSurf/Tor, GPG, WiFi audit et outils privacy.
-          </p>
-          <p style={{ color: "#00ff9c", fontSize: "0.9rem", fontWeight: "bold" }}>
-            → Lancer le terminal
-          </p>
-        </Link>
-      </section>
-
-      {/* === SECTION GAMIFICATION === */}
-      <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "20px", borderBottom: "1px solid #2a3f3f", paddingBottom: "10px" }}>
-          🎮 Challenges & Gamification
-        </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
-
-          {/* CTF */}
-          <Link to="/ctf" style={cardStyle}>
-            <div style={{ marginBottom: "12px" }}>
-              <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>🚩 Mini-CTF</h3>
-              <span style={{ background: "#ef4444", color: "#fff", fontSize: "0.7rem", fontWeight: "bold", padding: "2px 8px", borderRadius: "4px", marginTop: "6px", display: "inline-block" }}>
-                11 DÉFIS
-              </span>
-            </div>
-            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-              OSINT, Cryptographie, Web Hacking. Résolvez les défis et gagnez des XP !
-            </p>
-            <p style={{ color: "#00ff9c", fontSize: "0.9rem", fontWeight: "bold" }}>→ Relever les défis</p>
-          </Link>
-
-          {/* Leaderboard */}
-          <Link to="/leaderboard" style={cardStyle}>
-            <div style={{ marginBottom: "12px" }}>
-              <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>🏆 Leaderboard</h3>
-              <span style={{ background: "#fbbf24", color: "#0b0f1a", fontSize: "0.7rem", fontWeight: "bold", padding: "2px 8px", borderRadius: "4px", marginTop: "6px", display: "inline-block" }}>
-                TEMPS RÉEL
-              </span>
-            </div>
-            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-              Classement global des hackers. Comparez vos scores et montez dans le classement.
-            </p>
-            <p style={{ color: "#00ff9c", fontSize: "0.9rem", fontWeight: "bold" }}>→ Voir le classement</p>
-          </Link>
-
-          {/* Progression */}
-          <Link to="/progression" style={cardStyle}>
-            <div style={{ marginBottom: "12px" }}>
-              <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>⭐ Progression</h3>
-              <span style={{ background: "#8b5cf6", color: "#fff", fontSize: "0.7rem", fontWeight: "bold", padding: "2px 8px", borderRadius: "4px", marginTop: "6px", display: "inline-block" }}>
-                XP & BADGES
-              </span>
-            </div>
-            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
-              Votre XP, niveau, streak d'activité et collection de 20 badges à débloquer.
-            </p>
-            <p style={{ color: "#00ff9c", fontSize: "0.9rem", fontWeight: "bold" }}>→ Ma progression</p>
-          </Link>
-
-        </div>
-      </section>
-
-      {/* Statistiques rapides */}
+      {/* Statistiques en 2 lignes */}
       <div style={{
         background: "#1a1f2e",
         border: "1px solid #2a3f3f",
         borderRadius: "8px",
         padding: "24px",
-        marginTop: "30px"
+        marginBottom: "40px"
       }}>
         <h3 style={{ color: "#00ff9c", marginBottom: "20px", fontSize: "1.2rem" }}>
-          📊 Statistiques Rapides
+          📊 Statistiques Détaillées
         </h3>
         
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
-          gap: "20px" 
-        }}>
-          <div>
-            <p style={{ color: "#9ca3af", fontSize: "0.9rem", marginBottom: "5px" }}>
-              Parcours Débutant
-            </p>
-            <p style={{ color: "#00ff9c", fontSize: "1.5rem", fontWeight: "bold" }}>
-              {Math.round(stats.debutant)}%
-            </p>
+        {/* Ligne 1: Parcours */}
+        <div style={{ marginBottom: "20px" }}>
+          <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: "10px", fontWeight: "bold" }}>
+            PARCOURS
+          </p>
+          <div style={{ 
+            display: "grid", 
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", 
+            gap: "15px" 
+          }}>
+            <div style={{ background: "#0b0f1a", padding: "15px", borderRadius: "6px", border: "1px solid #2a3f3f" }}>
+              <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: "5px" }}>
+                🟢 Débutant
+              </p>
+              <p style={{ color: "#00ff9c", fontSize: "1.5rem", fontWeight: "bold", margin: 0 }}>
+                {Math.round(stats.debutant)}%
+              </p>
+            </div>
+            
+            <div style={{ background: "#0b0f1a", padding: "15px", borderRadius: "6px", border: "1px solid #2a3f3f" }}>
+              <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: "5px" }}>
+                🟡 Intermédiaire
+              </p>
+              <p style={{ color: "#00ff9c", fontSize: "1.5rem", fontWeight: "bold", margin: 0 }}>
+                {Math.round(stats.intermediaire)}%
+              </p>
+            </div>
+            
+            <div style={{ background: "#0b0f1a", padding: "15px", borderRadius: "6px", border: "1px solid #2a3f3f" }}>
+              <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: "5px" }}>
+                🔴 Avancé
+              </p>
+              <p style={{ color: "#00ff9c", fontSize: "1.5rem", fontWeight: "bold", margin: 0 }}>
+                {Math.round(stats.avance)}%
+              </p>
+            </div>
           </div>
-          
-          <div>
-            <p style={{ color: "#9ca3af", fontSize: "0.9rem", marginBottom: "5px" }}>
-              Parcours Intermédiaire
-            </p>
-            <p style={{ color: "#00ff9c", fontSize: "1.5rem", fontWeight: "bold" }}>
-              {Math.round(stats.intermediaire)}%
-            </p>
-          </div>
-          
-          <div>
-            <p style={{ color: "#9ca3af", fontSize: "0.9rem", marginBottom: "5px" }}>
-              Parcours Avancé
-            </p>
-            <p style={{ color: "#00ff9c", fontSize: "1.5rem", fontWeight: "bold" }}>
-              {Math.round(stats.avance)}%
-            </p>
-          </div>
-          
-          <div>
-            <p style={{ color: "#9ca3af", fontSize: "0.9rem", marginBottom: "5px" }}>
-              Études de Cas
-            </p>
-            <p style={{ color: "#00ff9c", fontSize: "1.5rem", fontWeight: "bold" }}>
-              {Math.round(stats.etudesCas)}%
-            </p>
-          </div>
+        </div>
 
-          <div>
-            <p style={{ color: "#9ca3af", fontSize: "0.9rem", marginBottom: "5px" }}>
-              Exercices OSINT
-            </p>
-            <p style={{ color: "#00ff9c", fontSize: "1.5rem", fontWeight: "bold" }}>
-              {Math.round(stats.exercices)}%
-            </p>
+        {/* Ligne 2: Exercices et Cas */}
+        <div style={{ marginBottom: "20px" }}>
+          <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: "10px", fontWeight: "bold" }}>
+            PRATIQUE
+          </p>
+          <div style={{ 
+            display: "grid", 
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", 
+            gap: "15px" 
+          }}>
+            <div style={{ background: "#0b0f1a", padding: "15px", borderRadius: "6px", border: "1px solid #2a3f3f" }}>
+              <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: "5px" }}>
+                🛰️ Études de Cas
+              </p>
+              <p style={{ color: "#00ff9c", fontSize: "1.5rem", fontWeight: "bold", margin: 0 }}>
+                {Math.round(stats.etudesCas)}%
+              </p>
+            </div>
+            
+            <div style={{ background: "#0b0f1a", padding: "15px", borderRadius: "6px", border: "1px solid #2a3f3f" }}>
+              <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: "5px" }}>
+                📝 Exercices OSINT
+              </p>
+              <p style={{ color: "#00ff9c", fontSize: "1.5rem", fontWeight: "bold", margin: 0 }}>
+                {Math.round(stats.exercices)}%
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Ligne 3: Badges */}
+        <div>
+          <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: "10px", fontWeight: "bold" }}>
+            RÉCOMPENSES
+          </p>
+          <div style={{ 
+            display: "grid", 
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", 
+            gap: "15px" 
+          }}>
+            <div style={{ background: "#0b0f1a", padding: "15px", borderRadius: "6px", border: "1px solid #fbbf24" }}>
+              <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: "5px" }}>
+                🏆 Badges Débloqués
+              </p>
+              <p style={{ color: "#fbbf24", fontSize: "1.5rem", fontWeight: "bold", margin: 0 }}>
+                {Math.round((stats.badges / 100) * 20)}/20
+              </p>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Parcours */}
+      <section style={{ marginBottom: "30px" }}>
+        <h2 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "20px" }}>
+          📚 Parcours de Formation
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px" }}>
+          
+          {/* Débutant */}
+          <Link to="/parcours-debutant" style={cardStyle}>
+            <div style={{ marginBottom: "12px" }}>
+              <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
+                🟢 Parcours Débutant
+              </h3>
+            </div>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              Introduction à l'OSINT, méthodologie de base et premiers outils.
+            </p>
+            <div style={{
+              width: "100%",
+              height: "6px",
+              background: "#1a1f2e",
+              borderRadius: "3px",
+              overflow: "hidden",
+              marginBottom: "10px"
+            }}>
+              <div style={{
+                width: `${stats.debutant}%`,
+                height: "100%",
+                background: "#00ff9c",
+                transition: "width 0.3s ease"
+              }} />
+            </div>
+            <p style={{ color: "#00ff9c", fontSize: "0.9rem", fontWeight: "bold" }}>
+              {stats.debutant === 100 ? "✓ Complété" : "→ Continuer"}
+            </p>
+          </Link>
+
+          {/* Intermédiaire */}
+          <Link to="/parcours-intermediaire" style={cardStyle}>
+            <div style={{ marginBottom: "12px" }}>
+              <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
+                🟡 Parcours Intermédiaire
+              </h3>
+            </div>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              Techniques avancées, analyse de réseaux sociaux, dark web.
+            </p>
+            <div style={{
+              width: "100%",
+              height: "6px",
+              background: "#1a1f2e",
+              borderRadius: "3px",
+              overflow: "hidden",
+              marginBottom: "10px"
+            }}>
+              <div style={{
+                width: `${stats.intermediaire}%`,
+                height: "100%",
+                background: "#fbbf24",
+                transition: "width 0.3s ease"
+              }} />
+            </div>
+            <p style={{ color: "#fbbf24", fontSize: "0.9rem", fontWeight: "bold" }}>
+              {stats.intermediaire === 100 ? "✓ Complété" : "→ Continuer"}
+            </p>
+          </Link>
+
+          {/* Avancé */}
+          <Link to="/parcours-avance" style={cardStyle}>
+            <div style={{ marginBottom: "12px" }}>
+              <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
+                🔴 Parcours Avancé
+              </h3>
+            </div>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              OPSEC, investigations complexes, automation et rapports pros.
+            </p>
+            <div style={{
+              width: "100%",
+              height: "6px",
+              background: "#1a1f2e",
+              borderRadius: "3px",
+              overflow: "hidden",
+              marginBottom: "10px"
+            }}>
+              <div style={{
+                width: `${stats.avance}%`,
+                height: "100%",
+                background: "#ef4444",
+                transition: "width 0.3s ease"
+              }} />
+            </div>
+            <p style={{ color: "#ef4444", fontSize: "0.9rem", fontWeight: "bold" }}>
+              {stats.avance === 100 ? "✓ Complété" : "→ Continuer"}
+            </p>
+          </Link>
+
+        </div>
+      </section>
+
+      {/* Études & Exercices */}
+      <section style={{ marginBottom: "30px" }}>
+        <h2 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "20px" }}>
+          🎯 Pratique & Cas Réels
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px" }}>
+          
+          <Link to="/etudes-osint" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: "0 0 12px 0", fontSize: "1.3rem" }}>
+              🛰️ Études de Cas
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              Analyses réelles : géolocalisation, médias, attribution.
+            </p>
+            <p style={{ color: "#00ff9c", fontSize: "0.9rem", fontWeight: "bold" }}>
+              → Commencer les cas
+            </p>
+          </Link>
+
+          <Link to="/exercices-osint" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: "0 0 12px 0", fontSize: "1.3rem" }}>
+              📝 Exercices OSINT
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              20 exercices progressifs pour renforcer vos compétences.
+            </p>
+            <p style={{ color: "#00ff9c", fontSize: "0.9rem", fontWeight: "bold" }}>
+              → Accéder aux exercices
+            </p>
+          </Link>
+
+          <Link to="/badges-osint" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: "0 0 12px 0", fontSize: "1.3rem" }}>
+              🏆 Mes Badges
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              20 badges à débloquer. Chaque accomplissement compte !
+            </p>
+            <p style={{ color: "#fbbf24", fontSize: "0.9rem", fontWeight: "bold" }}>
+              {Math.round((stats.badges / 100) * 20)}/20 débloqués
+            </p>
+          </Link>
+
+        </div>
+      </section>
+
+      {/* CTF & Gamification */}
+      <section>
+        <h2 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "20px" }}>
+          🎮 Challenges & XP
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
+          
+          <Link to="/ctf" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: "0 0 12px 0", fontSize: "1.3rem" }}>
+              🚩 Mini-CTF
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              11 défis OSINT, Crypto, Web. Gagnez des XP !
+            </p>
+            <p style={{ color: "#ef4444", fontSize: "0.9rem", fontWeight: "bold" }}>
+              → Relever les défis
+            </p>
+          </Link>
+
+          <Link to="/leaderboard" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: "0 0 12px 0", fontSize: "1.3rem" }}>
+              🏆 Leaderboard
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              Classement global. Montez dans le ranking !
+            </p>
+            <p style={{ color: "#fbbf24", fontSize: "0.9rem", fontWeight: "bold" }}>
+              → Voir le classement
+            </p>
+          </Link>
+
+          <Link to="/progression" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: "0 0 12px 0", fontSize: "1.3rem" }}>
+              ⭐ Ma Progression
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              XP, niveau, streak et 20 badges à débloquer.
+            </p>
+            <p style={{ color: "#8b5cf6", fontSize: "0.9rem", fontWeight: "bold" }}>
+              → Ma progression
+            </p>
+          </Link>
+
+        </div>
+      </section>
+
     </main>
   );
 }
