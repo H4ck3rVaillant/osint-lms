@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- Page d'accueil -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Dashboard -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/dashboard</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Parcours Hub -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/parcours</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Parcours Débutant -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/parcours-debutant</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Parcours Intermédiaire -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/parcours-intermediaire</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Parcours Avancé -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/parcours-avance</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Exercices OSINT -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/exercices-osint</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Études de Cas -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/etudes-osint</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Badges -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/badges-osint</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- CTF -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/ctf</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Leaderboard -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/leaderboard</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Labo OSINT -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/labo-osint</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Outils Cyber -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/outils-cyber</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <!-- VM Kali -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/vm-kali</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <!-- VM Parrot -->
+  <url>
+    <loc>https://cyberosint-academy.vercel.app/vm-parrot</loc>
+    <lastmod>2026-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+</urlset>

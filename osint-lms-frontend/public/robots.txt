@@ -1,0 +1,24 @@
+# CyberOSINT Academy - robots.txt
+# Autoriser tous les robots à indexer le site
+
+User-agent: *
+Allow: /
+
+# Pages importantes pour le référencement
+Allow: /dashboard
+Allow: /parcours
+Allow: /parcours-debutant
+Allow: /parcours-intermediaire
+Allow: /parcours-avance
+Allow: /exercices-osint
+Allow: /etudes-osint
+Allow: /badges-osint
+Allow: /ctf
+Allow: /labo-osint
+
+# Bloquer les pages privées
+Disallow: /profil
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://cyberosint-academy.vercel.app/sitemap.xml
