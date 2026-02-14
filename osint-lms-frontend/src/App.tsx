@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { useAuth } from "./auth/AuthContext";
 import { GameProvider } from "./context/GameContext";
 import Header from "./components/Header";
@@ -91,6 +92,7 @@ function Layout({ children }: { children: JSX.Element }) {
 export default function App() {
   return (
     <GameProvider>
+      <Analytics />
       <Routes>
       {/* PUBLIC */}
       <Route path="/" element={<Home />} />
