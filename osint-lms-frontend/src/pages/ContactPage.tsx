@@ -1,56 +1,78 @@
 import { useState } from "react";
-import { useAuth } from "../auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function ContactPage() {
-  const { user } = useAuth();
-  
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  });
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setStatus("sending");
+    setErrorMessage("");
 
-    if (!subject.trim() || !message.trim()) {
-      setError("Le sujet et le message sont requis");
+    // Validation
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      setStatus("error");
+      setErrorMessage("Tous les champs sont requis");
       return;
     }
 
-    if (message.length < 20) {
-      setError("Le message doit faire au moins 20 caractères");
+    if (!formData.email.includes("@")) {
+      setStatus("error");
+      setErrorMessage("Email invalide");
       return;
     }
-
-    setIsLoading(true);
 
     try {
-      // En production, tu pourras connecter ça à un vrai service email
-      // Pour l'instant, on simule l'envoi
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Sauvegarder dans localStorage comme backup
-      const messages = JSON.parse(localStorage.getItem("admin_messages") || "[]");
-      messages.push({
-        from: user?.username || "Anonyme",
-        subject,
-        message,
-        date: new Date().toISOString()
+      // ✅ ENVOI RÉEL via Web3Forms
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          access_key: "cbc2c408-db0f-4a14-868f-a2ca3a193798",
+          name: formData.name,
+          email: formData.email,
+          subject: `[CyberOSINT Academy] ${formData.subject}`,
+          message: formData.message,
+          from_name: "CyberOSINT Academy Contact Form"
+        })
       });
-      localStorage.setItem("admin_messages", JSON.stringify(messages));
 
-      setSuccess("✅ Votre message a été envoyé à l'administrateur !");
-      setSubject("");
-      setMessage("");
-      
-      setTimeout(() => setSuccess(""), 5000);
-    } catch {
-      setError("Erreur lors de l'envoi du message");
-    } finally {
-      setIsLoading(false);
+      const data = await response.json();
+
+      if (data.success) {
+        setStatus("success");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        
+        // Redirection après 3 secondes
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 3000);
+      } else {
+        setStatus("error");
+        setErrorMessage(data.message || "Erreur lors de l'envoi");
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+      setStatus("error");
+      setErrorMessage("Erreur de connexion. Veuillez réessayer.");
     }
   };
 
@@ -60,16 +82,14 @@ export default function ContactPage() {
       background: "linear-gradient(135deg, #0b0f1a 0%, #1a1f2e 100%)",
       padding: "40px 20px"
     }}>
-      <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
         
-        {/* En-tête */}
         <div style={{ marginBottom: "40px", textAlign: "center" }}>
-          <div style={{ fontSize: "4rem", marginBottom: "16px" }}>📧</div>
           <h1 style={{ color: "#00ff9c", fontSize: "2.5rem", margin: "0 0 10px 0" }}>
-            Contacter l'Admin
+            📧 Contactez l'Admin
           </h1>
-          <p style={{ color: "#9ca3af", fontSize: "1rem" }}>
-            Une question ? Un problème technique ? Envoyez-nous un message
+          <p style={{ color: "#9ca3af", fontSize: "1.1rem" }}>
+            Une question ? Un problème ? Un feedback ? Envoyez-nous un message !
           </p>
         </div>
 
@@ -78,156 +98,277 @@ export default function ContactPage() {
           background: "#0b0f1a",
           border: "1px solid #2a3f3f",
           borderRadius: "16px",
-          padding: "35px"
+          padding: "40px",
         }}>
-          
-          {error && (
+
+          {/* Message succès */}
+          {status === "success" && (
             <div style={{
-              background: "#1a0a0a",
-              border: "1px solid #ef4444",
-              borderRadius: "8px",
-              padding: "12px 16px",
-              color: "#ef4444",
-              marginBottom: "20px",
-              fontSize: "0.9rem"
+              background: "#0a1a0a",
+              border: "2px solid #00ff9c",
+              borderRadius: "12px",
+              padding: "20px",
+              marginBottom: "30px",
+              textAlign: "center"
             }}>
-              ⚠️ {error}
+              <div style={{ fontSize: "3rem", marginBottom: "15px" }}>✅</div>
+              <h3 style={{ color: "#00ff9c", margin: "0 0 10px 0", fontSize: "1.3rem" }}>
+                Message envoyé avec succès !
+              </h3>
+              <p style={{ color: "#9ca3af", margin: 0 }}>
+                Nous vous répondrons dans les plus brefs délais.<br />
+                Redirection vers le dashboard...
+              </p>
             </div>
           )}
 
-          {success && (
+          {/* Message erreur */}
+          {status === "error" && (
             <div style={{
-              background: "#0a1a0a",
-              border: "1px solid #00ff9c",
-              borderRadius: "8px",
-              padding: "12px 16px",
-              color: "#00ff9c",
-              marginBottom: "20px",
-              fontSize: "0.9rem"
+              background: "#1a0a0a",
+              border: "2px solid #ef4444",
+              borderRadius: "12px",
+              padding: "15px 20px",
+              marginBottom: "25px"
             }}>
-              {success}
+              <p style={{ color: "#ef4444", margin: 0 }}>
+                ⚠️ {errorMessage}
+              </p>
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
             
-            {/* Nom (pré-rempli si connecté) */}
-            <div style={{ marginBottom: "18px" }}>
-              <label style={{ color: "#9ca3af", fontSize: "0.85rem", display: "block", marginBottom: "6px" }}>
-                Votre nom d'utilisateur
+            {/* Nom */}
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{
+                color: "#e5e7eb",
+                fontSize: "0.95rem",
+                fontWeight: "500",
+                display: "block",
+                marginBottom: "8px"
+              }}>
+                Votre nom *
               </label>
               <input
                 type="text"
-                value={user?.username || "Visiteur"}
-                disabled
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="John Doe"
+                disabled={status === "sending" || status === "success"}
                 style={{
-                  ...inputStyle,
+                  width: "100%",
+                  padding: "12px 16px",
                   background: "#1a1f2e",
-                  color: "#6b7280",
-                  cursor: "not-allowed"
+                  border: "1px solid #2a3f3f",
+                  borderRadius: "8px",
+                  color: "#e5e7eb",
+                  fontSize: "1rem",
+                  outline: "none",
+                  transition: "border-color 0.2s",
+                  boxSizing: "border-box"
                 }}
+                onFocus={(e) => e.target.style.borderColor = "#00ff9c"}
+                onBlur={(e) => e.target.style.borderColor = "#2a3f3f"}
+              />
+            </div>
+
+            {/* Email */}
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{
+                color: "#e5e7eb",
+                fontSize: "0.95rem",
+                fontWeight: "500",
+                display: "block",
+                marginBottom: "8px"
+              }}>
+                Votre email *
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="john@example.com"
+                disabled={status === "sending" || status === "success"}
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  background: "#1a1f2e",
+                  border: "1px solid #2a3f3f",
+                  borderRadius: "8px",
+                  color: "#e5e7eb",
+                  fontSize: "1rem",
+                  outline: "none",
+                  transition: "border-color 0.2s",
+                  boxSizing: "border-box"
+                }}
+                onFocus={(e) => e.target.style.borderColor = "#00ff9c"}
+                onBlur={(e) => e.target.style.borderColor = "#2a3f3f"}
               />
             </div>
 
             {/* Sujet */}
-            <div style={{ marginBottom: "18px" }}>
-              <label style={{ color: "#9ca3af", fontSize: "0.85rem", display: "block", marginBottom: "6px" }}>
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{
+                color: "#e5e7eb",
+                fontSize: "0.95rem",
+                fontWeight: "500",
+                display: "block",
+                marginBottom: "8px"
+              }}>
                 Sujet *
               </label>
-              <input
-                type="text"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder="ex: Problème de connexion, Question sur les badges..."
-                style={inputStyle}
-                onFocus={(e) => e.currentTarget.style.borderColor = "#00ff9c"}
-                onBlur={(e) => e.currentTarget.style.borderColor = "#2a3f3f"}
-              />
+              <select
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                disabled={status === "sending" || status === "success"}
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  background: "#1a1f2e",
+                  border: "1px solid #2a3f3f",
+                  borderRadius: "8px",
+                  color: "#e5e7eb",
+                  fontSize: "1rem",
+                  outline: "none",
+                  transition: "border-color 0.2s",
+                  boxSizing: "border-box",
+                  cursor: "pointer"
+                }}
+                onFocus={(e) => e.target.style.borderColor = "#00ff9c"}
+                onBlur={(e) => e.target.style.borderColor = "#2a3f3f"}
+              >
+                <option value="">-- Choisir un sujet --</option>
+                <option value="Question générale">Question générale</option>
+                <option value="Problème technique">Problème technique</option>
+                <option value="Bug à signaler">Bug à signaler</option>
+                <option value="Suggestion d'amélioration">Suggestion d'amélioration</option>
+                <option value="Demande de partenariat">Demande de partenariat</option>
+                <option value="Autre">Autre</option>
+              </select>
             </div>
 
             {/* Message */}
-            <div style={{ marginBottom: "24px" }}>
-              <label style={{ color: "#9ca3af", fontSize: "0.85rem", display: "block", marginBottom: "6px" }}>
-                Message *
+            <div style={{ marginBottom: "25px" }}>
+              <label style={{
+                color: "#e5e7eb",
+                fontSize: "0.95rem",
+                fontWeight: "500",
+                display: "block",
+                marginBottom: "8px"
+              }}>
+                Votre message *
               </label>
               <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Décrivez votre question ou problème en détail..."
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Décrivez votre question ou votre problème en détail..."
                 rows={8}
+                disabled={status === "sending" || status === "success"}
                 style={{
-                  ...inputStyle,
-                  resize: "vertical" as const,
-                  fontFamily: "inherit"
+                  width: "100%",
+                  padding: "12px 16px",
+                  background: "#1a1f2e",
+                  border: "1px solid #2a3f3f",
+                  borderRadius: "8px",
+                  color: "#e5e7eb",
+                  fontSize: "1rem",
+                  outline: "none",
+                  transition: "border-color 0.2s",
+                  resize: "vertical",
+                  fontFamily: "inherit",
+                  boxSizing: "border-box"
                 }}
-                onFocus={(e) => e.currentTarget.style.borderColor = "#00ff9c"}
-                onBlur={(e) => e.currentTarget.style.borderColor = "#2a3f3f"}
+                onFocus={(e) => e.target.style.borderColor = "#00ff9c"}
+                onBlur={(e) => e.target.style.borderColor = "#2a3f3f"}
               />
-              <p style={{ color: "#6b7280", fontSize: "0.75rem", marginTop: "4px" }}>
-                {message.length} / 20 caractères minimum
-              </p>
             </div>
 
-            {/* Bouton Envoyer */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              style={{
-                width: "100%",
-                padding: "14px",
-                background: isLoading ? "#6b7280" : "#00ff9c",
-                color: "#0b0f1a",
-                border: "none",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                fontSize: "1rem",
-                cursor: isLoading ? "not-allowed" : "pointer",
-                transition: "all 0.2s"
-              }}
-              onMouseEnter={(e) => {
-                if (!isLoading) e.currentTarget.style.boxShadow = "0 0 20px rgba(0,255,156,0.4)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              {isLoading ? "Envoi en cours..." : "📤 Envoyer le message"}
-            </button>
+            {/* Boutons */}
+            <div style={{ display: "flex", gap: "15px" }}>
+              <button
+                type="submit"
+                disabled={status === "sending" || status === "success"}
+                style={{
+                  flex: 1,
+                  padding: "14px",
+                  background: status === "sending" ? "#2a3f3f" : "#00ff9c",
+                  color: status === "sending" ? "#9ca3af" : "#0b0f1a",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  cursor: status === "sending" ? "not-allowed" : "pointer",
+                  transition: "all 0.2s"
+                }}
+                onMouseEnter={(e) => {
+                  if (status === "idle" || status === "error") {
+                    e.currentTarget.style.boxShadow = "0 0 20px rgba(0,255,156,0.4)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                {status === "sending" ? "📤 Envoi en cours..." : "📧 Envoyer le message"}
+              </button>
+
+              {status !== "success" && (
+                <button
+                  type="button"
+                  onClick={() => navigate("/dashboard")}
+                  disabled={status === "sending"}
+                  style={{
+                    padding: "14px 24px",
+                    background: "transparent",
+                    color: "#9ca3af",
+                    border: "1px solid #2a3f3f",
+                    borderRadius: "8px",
+                    fontSize: "1rem",
+                    cursor: status === "sending" ? "not-allowed" : "pointer",
+                    transition: "all 0.2s"
+                  }}
+                  onMouseEnter={(e) => {
+                    if (status !== "sending") {
+                      e.currentTarget.style.borderColor = "#00ff9c";
+                      e.currentTarget.style.color = "#00ff9c";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "#2a3f3f";
+                    e.currentTarget.style.color = "#9ca3af";
+                  }}
+                >
+                  Annuler
+                </button>
+              )}
+            </div>
+
           </form>
         </div>
 
-        {/* Infos complémentaires */}
+        {/* Info */}
         <div style={{
           marginTop: "30px",
+          padding: "20px",
           background: "#0b0f1a",
           border: "1px solid #2a3f3f",
           borderRadius: "12px",
-          padding: "20px"
+          textAlign: "center"
         }}>
-          <h3 style={{ color: "#00ff9c", fontSize: "1rem", marginBottom: "12px" }}>
-            💡 Avant de nous contacter
-          </h3>
-          <ul style={{ color: "#9ca3af", fontSize: "0.9rem", lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li>Vérifiez la FAQ dans la section Documentation</li>
-            <li>Consultez les guides dans les parcours</li>
-            <li>Essayez de vous déconnecter/reconnecter</li>
-            <li>Temps de réponse moyen : 24-48h</li>
-          </ul>
+          <p style={{ color: "#9ca3af", fontSize: "0.9rem", margin: 0 }}>
+            💡 <strong style={{ color: "#e5e7eb" }}>Temps de réponse moyen :</strong> 24-48 heures<br />
+            Pour les urgences, contactez-nous sur les réseaux sociaux
+          </p>
         </div>
+
       </div>
     </div>
   );
 }
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "12px 14px",
-  background: "#1a1f2e",
-  border: "1px solid #2a3f3f",
-  borderRadius: "8px",
-  color: "#e5e7eb",
-  fontSize: "1rem",
-  outline: "none",
-  boxSizing: "border-box",
-  transition: "border-color 0.2s"
-};
