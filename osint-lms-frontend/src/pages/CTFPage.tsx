@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useGame, CTF_CHALLENGES } from "../context/GameContext";
+import { useThemeColors } from "../context/ThemeContext";
 
 const CATEGORY_CONFIG = {
-  osint:  { label: "OSINT",          icon: "🔍", color: "#00ff9c" },
-  crypto: { label: "Cryptographie",  icon: "🔐", color: "#8b5cf6" },
-  web:    { label: "Web Hacking",    icon: "🌐", color: "#3b82f6" },
+  osint:  { label: "OSINT",          icon: "🔍", colorDark: "#00ff9c", colorLight: "#10b981" },
+  crypto: { label: "Cryptographie",  icon: "🔐", colorDark: "#8b5cf6", colorLight: "#7c3aed" },
+  web:    { label: "Web Hacking",    icon: "🌐", colorDark: "#3b82f6", colorLight: "#2563eb" },
 };
 
 const DIFFICULTY_CONFIG = {
@@ -15,6 +16,7 @@ const DIFFICULTY_CONFIG = {
 
 export default function CTFPage() {
   const { challenges, submitFlag, useHint, gameState } = useGame();
+  const colors = useThemeColors();
   const [activeCategory, setActiveCategory] = useState<"all" | "osint" | "crypto" | "web">("all");
   const [selectedChallenge, setSelectedChallenge] = useState<string | null>(null);
   const [flagInput, setFlagInput] = useState("");
@@ -34,7 +36,7 @@ export default function CTFPage() {
   const handleSubmit = async () => {
     if (!selectedChallenge || !flagInput.trim()) return;
     setIsSubmitting(true);
-    await new Promise(r => setTimeout(r, 600)); // Petit délai pour le feedback visuel
+    await new Promise(r => setTimeout(r, 600));
     const result = submitFlag(selectedChallenge, flagInput);
     setFeedback({ msg: result.message, ok: result.success });
     if (result.success) {
@@ -53,10 +55,10 @@ export default function CTFPage() {
 
       {/* Header */}
       <div style={{ marginBottom: "35px" }}>
-        <h1 style={{ color: "#00ff9c", fontSize: "2.5rem", margin: 0 }}>
+        <h1 style={{ color: colors.accent, fontSize: "2.5rem", margin: 0 }}>
           🚩 Mini-CTF Platform
         </h1>
-        <p style={{ color: "#9ca3af", fontSize: "1.1rem", marginTop: "8px" }}>
+        <p style={{ color: colors.textSecondary, fontSize: "1.1rem", marginTop: "8px" }}>
           Capture The Flag — Résolvez les défis pour gagner des XP et des badges
         </p>
       </div>
@@ -76,15 +78,15 @@ export default function CTFPage() {
           { icon: "🏅", value: `${gameState.badges.filter(b => b.unlocked).length}/20`, label: "Badges" },
         ].map((s, i) => (
           <div key={i} style={{
-            background: "#0b0f1a",
-            border: "1px solid #2a3f3f",
+            background: colors.bgPrimary,
+            border: `1px solid ${colors.border}`,
             borderRadius: "10px",
             padding: "18px",
             textAlign: "center"
           }}>
             <div style={{ fontSize: "1.8rem" }}>{s.icon}</div>
-            <div style={{ color: "#00ff9c", fontWeight: "bold", fontSize: "1.3rem" }}>{s.value}</div>
-            <div style={{ color: "#9ca3af", fontSize: "0.8rem" }}>{s.label}</div>
+            <div style={{ color: colors.accent, fontWeight: "bold", fontSize: "1.3rem" }}>{s.value}</div>
+            <div style={{ color: colors.textSecondary, fontSize: "0.8rem" }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -101,9 +103,9 @@ export default function CTFPage() {
             key={cat.key}
             onClick={() => setActiveCategory(cat.key)}
             style={{
-              background: activeCategory === cat.key ? "#00ff9c" : "#0b0f1a",
-              color: activeCategory === cat.key ? "#0b0f1a" : "#e5e7eb",
-              border: `1px solid ${activeCategory === cat.key ? "#00ff9c" : "#2a3f3f"}`,
+              background: activeCategory === cat.key ? colors.accent : colors.bgPrimary,
+              color: activeCategory === cat.key ? "#ffffff" : colors.textPrimary,
+              border: `1px solid ${activeCategory === cat.key ? colors.accent : colors.border}`,
               padding: "10px 22px",
               borderRadius: "8px",
               cursor: "pointer",
@@ -115,8 +117,8 @@ export default function CTFPage() {
             {cat.icon} {cat.label}
             <span style={{
               marginLeft: "8px",
-              background: activeCategory === cat.key ? "#0b0f1a" : "#1a1f2e",
-              color: activeCategory === cat.key ? "#00ff9c" : "#9ca3af",
+              background: activeCategory === cat.key ? colors.bgPrimary : colors.bgSecondary,
+              color: activeCategory === cat.key ? colors.accent : colors.textSecondary,
               padding: "2px 7px",
               borderRadius: "10px",
               fontSize: "0.8rem"
@@ -148,8 +150,8 @@ export default function CTFPage() {
                   }
                 }}
                 style={{
-                  background: ch.solved ? "#0a1a0a" : "#0b0f1a",
-                  border: `2px solid ${ch.solved ? "#22c55e" : isSelected ? "#00ff9c" : "#2a3f3f"}`,
+                  background: ch.solved ? colors.accentDark : colors.bgPrimary,
+                  border: `2px solid ${ch.solved ? "#22c55e" : isSelected ? colors.accent : colors.border}`,
                   borderRadius: "12px",
                   padding: "22px",
                   cursor: ch.solved ? "default" : "pointer",
@@ -158,10 +160,10 @@ export default function CTFPage() {
                   opacity: ch.solved ? 0.85 : 1
                 }}
                 onMouseEnter={(e) => {
-                  if (!ch.solved && !isSelected) e.currentTarget.style.borderColor = "#00ff9c";
+                  if (!ch.solved && !isSelected) e.currentTarget.style.borderColor = colors.accent;
                 }}
                 onMouseLeave={(e) => {
-                  if (!ch.solved && !isSelected) e.currentTarget.style.borderColor = "#2a3f3f";
+                  if (!ch.solved && !isSelected) e.currentTarget.style.borderColor = colors.border;
                 }}
               >
                 {/* Badge résolu */}
@@ -183,9 +185,9 @@ export default function CTFPage() {
 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
                   <span style={{
-                    background: "#1a1f2e",
-                    color: cat.color,
-                    border: `1px solid ${cat.color}`,
+                    background: colors.bgSecondary,
+                    color: cat.colorDark,
+                    border: `1px solid ${cat.colorDark}`,
                     padding: "4px 10px",
                     borderRadius: "6px",
                     fontSize: "0.8rem",
@@ -193,20 +195,20 @@ export default function CTFPage() {
                   }}>
                     {cat.icon} {cat.label}
                   </span>
-                  <span style={{ color: "#fbbf24", fontSize: "0.9rem" }}>{diff.xp}</span>
+                  <span style={{ color: diff.color, fontSize: "1.3rem" }}>{diff.xp}</span>
                 </div>
 
-                <h3 style={{ color: ch.solved ? "#22c55e" : "#e5e7eb", fontSize: "1.1rem", marginBottom: "8px" }}>
+                <h3 style={{ color: colors.textPrimary, fontSize: "1.1rem", marginBottom: "10px" }}>
                   {ch.title}
                 </h3>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "15px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ color: diff.color, fontSize: "0.85rem", fontWeight: "bold" }}>
                     {diff.label}
                   </span>
                   <span style={{
-                    background: "#1a1f2e",
-                    color: "#00ff9c",
+                    background: colors.bgSecondary,
+                    color: colors.accent,
                     padding: "4px 10px",
                     borderRadius: "6px",
                     fontWeight: "bold",
@@ -229,8 +231,8 @@ export default function CTFPage() {
         {/* Panneau du défi sélectionné */}
         {current && !current.solved && (
           <div style={{
-            background: "#0b0f1a",
-            border: "2px solid #00ff9c",
+            background: colors.bgPrimary,
+            border: `2px solid ${colors.accent}`,
             borderRadius: "12px",
             padding: "30px",
             position: "sticky",
@@ -241,9 +243,9 @@ export default function CTFPage() {
             {/* En-tête */}
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
               <span style={{
-                background: "#1a1f2e",
-                color: CATEGORY_CONFIG[current.category].color,
-                border: `1px solid ${CATEGORY_CONFIG[current.category].color}`,
+                background: colors.bgSecondary,
+                color: CATEGORY_CONFIG[current.category].colorDark,
+                border: `1px solid ${CATEGORY_CONFIG[current.category].colorDark}`,
                 padding: "5px 12px",
                 borderRadius: "6px",
                 fontSize: "0.85rem",
@@ -253,13 +255,13 @@ export default function CTFPage() {
               </span>
               <button
                 onClick={() => { setSelectedChallenge(null); setFeedback(null); setShowHint(false); }}
-                style={{ background: "transparent", border: "none", color: "#9ca3af", cursor: "pointer", fontSize: "1.2rem" }}
+                style={{ background: "transparent", border: "none", color: colors.textSecondary, cursor: "pointer", fontSize: "1.2rem" }}
               >
                 ✕
               </button>
             </div>
 
-            <h2 style={{ color: "#00ff9c", fontSize: "1.6rem", marginBottom: "8px" }}>
+            <h2 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "8px" }}>
               {current.title}
             </h2>
 
@@ -267,28 +269,28 @@ export default function CTFPage() {
               <span style={{ color: DIFFICULTY_CONFIG[current.difficulty].color, fontSize: "0.9rem", fontWeight: "bold" }}>
                 {DIFFICULTY_CONFIG[current.difficulty].label}
               </span>
-              <span style={{ color: "#9ca3af" }}>•</span>
-              <span style={{ color: "#00ff9c", fontWeight: "bold" }}>+{current.points} XP</span>
+              <span style={{ color: colors.textSecondary }}>•</span>
+              <span style={{ color: colors.accent, fontWeight: "bold" }}>+{current.points} XP</span>
             </div>
 
-            {/* Description avec markdown basique */}
+            {/* Description */}
             <div style={{
-              background: "#1a1f2e",
+              background: colors.bgSecondary,
               borderRadius: "8px",
               padding: "20px",
               marginBottom: "20px",
-              color: "#e5e7eb",
+              color: colors.textPrimary,
               lineHeight: "1.8",
               fontSize: "0.95rem",
               whiteSpace: "pre-wrap"
             }}>
               {current.description.split(/(\*\*.*?\*\*|`[^`]+`|\`\`\`[\s\S]*?\`\`\`)/).map((part, i) => {
                 if (part.startsWith("**") && part.endsWith("**"))
-                  return <strong key={i} style={{ color: "#00ff9c" }}>{part.slice(2, -2)}</strong>;
+                  return <strong key={i} style={{ color: colors.accent }}>{part.slice(2, -2)}</strong>;
                 if (part.startsWith("```") && part.endsWith("```"))
-                  return <pre key={i} style={{ background: "#0b0f1a", padding: "12px", borderRadius: "6px", color: "#00ff9c", overflowX: "auto", fontSize: "0.85rem" }}>{part.slice(3, -3).trim()}</pre>;
+                  return <pre key={i} style={{ background: colors.bgPrimary, padding: "12px", borderRadius: "6px", color: colors.accent, overflowX: "auto", fontSize: "0.85rem" }}>{part.slice(3, -3).trim()}</pre>;
                 if (part.startsWith("`") && part.endsWith("`"))
-                  return <code key={i} style={{ background: "#0b0f1a", color: "#00ff9c", padding: "2px 6px", borderRadius: "4px" }}>{part.slice(1, -1)}</code>;
+                  return <code key={i} style={{ background: colors.bgPrimary, color: colors.accent, padding: "2px 6px", borderRadius: "4px" }}>{part.slice(1, -1)}</code>;
                 return <span key={i}>{part}</span>;
               })}
             </div>
@@ -309,20 +311,20 @@ export default function CTFPage() {
                       fontSize: "0.9rem",
                       transition: "all 0.2s"
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = "#1a1500"}
+                    onMouseEnter={(e) => e.currentTarget.style.background = colors.bgSecondary}
                     onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                   >
                     💡 Afficher l'indice
                   </button>
                 ) : (
                   <div style={{
-                    background: "#1a1500",
+                    background: colors.bgSecondary,
                     border: "1px solid #fbbf24",
                     borderRadius: "8px",
                     padding: "15px"
                   }}>
                     <p style={{ color: "#fbbf24", fontWeight: "bold", marginBottom: "6px" }}>💡 Indice :</p>
-                    <p style={{ color: "#e5e7eb", margin: 0, lineHeight: "1.6" }}>{current.hint}</p>
+                    <p style={{ color: colors.textPrimary, margin: 0, lineHeight: "1.6" }}>{current.hint}</p>
                   </div>
                 )}
               </div>
@@ -330,7 +332,7 @@ export default function CTFPage() {
 
             {/* Soumission */}
             <div>
-              <label style={{ color: "#00ff9c", fontWeight: "bold", display: "block", marginBottom: "8px" }}>
+              <label style={{ color: colors.accent, fontWeight: "bold", display: "block", marginBottom: "8px" }}>
                 🚩 Soumettre le flag
               </label>
               <input
@@ -342,23 +344,23 @@ export default function CTFPage() {
                 style={{
                   width: "100%",
                   padding: "12px",
-                  background: "#1a1f2e",
-                  border: "1px solid #2a3f3f",
+                  background: colors.bgSecondary,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: "8px",
-                  color: "#e5e7eb",
+                  color: colors.textPrimary,
                   fontFamily: "monospace",
                   fontSize: "1rem",
                   outline: "none",
                   marginBottom: "12px",
                   boxSizing: "border-box"
                 }}
-                onFocus={(e) => e.target.style.borderColor = "#00ff9c"}
-                onBlur={(e) => e.target.style.borderColor = "#2a3f3f"}
+                onFocus={(e) => e.target.style.borderColor = colors.accent}
+                onBlur={(e) => e.target.style.borderColor = colors.border}
               />
 
               {feedback && (
                 <div style={{
-                  background: feedback.ok ? "#0a1a0a" : "#1a0a0a",
+                  background: feedback.ok ? colors.accentDark : colors.bgSecondary,
                   border: `1px solid ${feedback.ok ? "#22c55e" : "#ef4444"}`,
                   borderRadius: "8px",
                   padding: "12px",
@@ -376,8 +378,8 @@ export default function CTFPage() {
                 style={{
                   width: "100%",
                   padding: "14px",
-                  background: isSubmitting || !flagInput.trim() ? "#6b7280" : "#00ff9c",
-                  color: "#0b0f1a",
+                  background: isSubmitting || !flagInput.trim() ? colors.textTertiary : colors.accent,
+                  color: "#ffffff",
                   border: "none",
                   borderRadius: "8px",
                   fontWeight: "bold",
