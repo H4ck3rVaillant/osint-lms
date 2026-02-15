@@ -8,6 +8,7 @@ import './responsive.css'
 import './animations.css'
 import { ThemeProvider } from './context/ThemeContext'
 import './theme.css'
+import './theme-override.css
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
