@@ -1,23 +1,26 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
-import App from "./App";
-import { AuthProvider } from "./auth/AuthContext";
-import "./index.css";
+import ReactDOM from 'react-dom/client'
+import { StrictMode } from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
+import { AuthProvider } from './auth/AuthContext'
+import { GameProvider } from './context/GameContext'
+import './index.css'
 import './responsive.css'
 import './animations.css'
 import { ThemeProvider } from './context/ThemeContext'
 import './theme.css'
-import './theme-override.css
+import './theme-override.css'  // ← Guillemet fermant !
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  <StrictMode>
     <BrowserRouter>
-     <ThemeProvider> 
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-     </ThemeProvider> 
+      <ThemeProvider>
+        <AuthProvider>
+          <GameProvider>
+            <App />
+          </GameProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
-  </React.StrictMode>
-);
+  </StrictMode>
+)
