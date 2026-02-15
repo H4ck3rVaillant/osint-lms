@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
+import { useTheme, useThemeColors } from "../context/ThemeContext";
 import Logo from "../assets/images/Logo.png";
 
 const AVATARS: Record<string, string> = {
@@ -36,6 +37,8 @@ function getUserAvatar(username: string): string | JSX.Element {
 
 export default function Header() {
   const auth = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const colors = useThemeColors();
   const [showOutilsMenu, setShowOutilsMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -49,6 +52,17 @@ export default function Header() {
     window.location.href = "/";
   };
 
+  const linkStyle = {
+    color: colors.textPrimary,
+    textDecoration: "none" as const,
+    fontWeight: "500" as const,
+    padding: "6px 10px",
+    borderRadius: "6px",
+    fontSize: "0.8rem",
+    whiteSpace: "nowrap" as const,
+    transition: "all 0.2s",
+  };
+
   return (
     <>
     <header style={{
@@ -57,9 +71,9 @@ export default function Header() {
       left: 0,
       right: 0,
       zIndex: 1000,
-      background: "#020617",
-      borderBottom: "1px solid #00ff9c",
-      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
+      background: colors.bgPrimary,
+      borderBottom: `1px solid ${colors.accent}`,
+      boxShadow: `0 4px 20px ${colors.shadow}`,
     }}>
       
       <div style={{
@@ -73,7 +87,7 @@ export default function Header() {
         {/* LOGO */}
         <Link to="/dashboard" style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0 }}>
           <img src={Logo} alt="Logo" style={{ height: "40px", marginRight: "10px" }} />
-          <span style={{ color: "#00ff9c", fontSize: "1rem", fontWeight: "bold", whiteSpace: "nowrap" }}>
+          <span style={{ color: colors.accent, fontSize: "1rem", fontWeight: "bold", whiteSpace: "nowrap" }}>
             CyberOSINT Academy
           </span>
         </Link>
@@ -84,8 +98,8 @@ export default function Header() {
           style={{
             display: "none",
             background: "transparent",
-            border: "2px solid #00ff9c",
-            color: "#00ff9c",
+            border: `2px solid ${colors.accent}`,
+            color: colors.accent,
             fontSize: "1.5rem",
             padding: "5px 10px",
             borderRadius: "6px",
@@ -106,24 +120,15 @@ export default function Header() {
         }}
         className="desktop-nav">
           
-          <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
+          <div style={{ width: "2px", height: "28px", background: colors.accent, margin: "0 6px", flexShrink: 0 }} />
 
-          <Link to="/dashboard" style={{
-            color: "#e5e7eb",
-            textDecoration: "none",
-            fontWeight: "500",
-            padding: "6px 10px",
-            borderRadius: "6px",
-            fontSize: "0.8rem",
-            whiteSpace: "nowrap" as const,
-            transition: "all 0.2s",
-          }}
+          <Link to="/dashboard" style={linkStyle}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = "#00ff9c";
-            e.currentTarget.style.background = "#1a1f2e";
+            e.currentTarget.style.color = colors.accent;
+            e.currentTarget.style.background = colors.bgSecondary;
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = "#e5e7eb";
+            e.currentTarget.style.color = colors.textPrimary;
             e.currentTarget.style.background = "transparent";
           }}>
             🏠 Dashboard
@@ -135,29 +140,20 @@ export default function Header() {
             { label: "🔎 Études", to: "/etudes-osint" },
             { label: "🏅 Badges", to: "/badges-osint" },
           ].map((item) => (
-            <Link key={item.to} to={item.to} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              fontWeight: "500",
-              padding: "6px 10px",
-              borderRadius: "6px",
-              fontSize: "0.8rem",
-              whiteSpace: "nowrap" as const,
-              transition: "all 0.2s",
-            }}
+            <Link key={item.to} to={item.to} style={linkStyle}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = "#00ff9c";
-              e.currentTarget.style.background = "#1a1f2e";
+              e.currentTarget.style.color = colors.accent;
+              e.currentTarget.style.background = colors.bgSecondary;
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = "#e5e7eb";
+              e.currentTarget.style.color = colors.textPrimary;
               e.currentTarget.style.background = "transparent";
             }}>
               {item.label}
             </Link>
           ))}
 
-          <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
+          <div style={{ width: "2px", height: "28px", background: colors.accent, margin: "0 6px", flexShrink: 0 }} />
 
           {[
             { label: "🚩 CTF", to: "/ctf" },
@@ -165,38 +161,30 @@ export default function Header() {
             { label: "⭐ Progression", to: "/progression" },
             { label: "🧪 Labo", to: "/labo-osint" },
           ].map((item) => (
-            <Link key={item.to} to={item.to} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              fontWeight: "500",
-              padding: "6px 10px",
-              borderRadius: "6px",
-              fontSize: "0.8rem",
-              whiteSpace: "nowrap" as const,
-              transition: "all 0.2s",
-            }}
+            <Link key={item.to} to={item.to} style={linkStyle}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = "#00ff9c";
-              e.currentTarget.style.background = "#1a1f2e";
+              e.currentTarget.style.color = colors.accent;
+              e.currentTarget.style.background = colors.bgSecondary;
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = "#e5e7eb";
+              e.currentTarget.style.color = colors.textPrimary;
               e.currentTarget.style.background = "transparent";
             }}>
               {item.label}
             </Link>
           ))}
 
+          {/* Menu Outils */}
           <div style={{ position: "relative" as const }}>
             <span onClick={() => setShowOutilsMenu(!showOutilsMenu)} style={{
-              color: showOutilsMenu ? "#00ff9c" : "#e5e7eb",
+              color: showOutilsMenu ? colors.accent : colors.textPrimary,
               fontWeight: "500",
               cursor: "pointer",
               padding: "6px 10px",
               borderRadius: "6px",
               fontSize: "0.8rem",
               transition: "all 0.2s",
-              background: showOutilsMenu ? "#1a1f2e" : "transparent",
+              background: showOutilsMenu ? colors.bgSecondary : "transparent",
               display: "block",
               whiteSpace: "nowrap" as const,
             }}>
@@ -208,13 +196,13 @@ export default function Header() {
                 position: "absolute" as const,
                 top: "36px",
                 left: "-20px",
-                background: "#0b0f1a",
-                border: "1px solid #00ff9c",
+                background: colors.bgPrimary,
+                border: `1px solid ${colors.accent}`,
                 borderRadius: "8px",
                 padding: "8px 0",
                 minWidth: "200px",
                 zIndex: 1000,
-                boxShadow: "0 4px 20px rgba(0, 255, 156, 0.2)",
+                boxShadow: `0 4px 20px ${colors.shadow}`,
               }}>
                 {[
                   { label: "🤖 HackerAI", to: "/hacker-ai" },
@@ -227,19 +215,19 @@ export default function Header() {
                 ].map((item) => (
                   <Link key={item.to} to={item.to} onClick={() => setShowOutilsMenu(false)} style={{
                     display: "block",
-                    color: "#e5e7eb",
+                    color: colors.textPrimary,
                     textDecoration: "none",
                     padding: "10px 20px",
                     fontSize: "0.85rem",
                     transition: "all 0.2s",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#1a1f2e";
-                    e.currentTarget.style.color = "#00ff9c";
+                    e.currentTarget.style.background = colors.bgSecondary;
+                    e.currentTarget.style.color = colors.accent;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = "#e5e7eb";
+                    e.currentTarget.style.color = colors.textPrimary;
                   }}>
                     {item.label}
                   </Link>
@@ -248,9 +236,38 @@ export default function Header() {
             )}
           </div>
 
-          <div style={{ width: "2px", height: "28px", background: "#00ff9c", margin: "0 6px", flexShrink: 0 }} />
+          <div style={{ width: "2px", height: "28px", background: colors.accent, margin: "0 6px", flexShrink: 0 }} />
 
         </nav>
+
+        {/* TOGGLE THÈME */}
+        <button
+          onClick={toggleTheme}
+          title={theme === "dark" ? "Mode clair" : "Mode sombre"}
+          style={{
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.border}`,
+            borderRadius: "8px",
+            padding: "8px 12px",
+            cursor: "pointer",
+            fontSize: "1.2rem",
+            transition: "all 0.2s",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+          }}
+          className="theme-toggle-btn"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = colors.accent;
+            e.currentTarget.style.transform = "scale(1.05)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = colors.border;
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        >
+          {theme === "dark" ? "🌞" : "🌙"}
+        </button>
 
         {/* MENU UTILISATEUR */}
         <div style={{ position: "relative" as const }} className="user-menu-container">
@@ -262,15 +279,15 @@ export default function Header() {
             padding: "6px 12px",
             borderRadius: "8px",
             transition: "background 0.2s",
-            background: showUserMenu ? "#1a1f2e" : "transparent",
+            background: showUserMenu ? colors.bgSecondary : "transparent",
           }}>
             
             <div style={{
               width: "32px",
               height: "32px",
               borderRadius: "50%",
-              border: "2px solid #00ff9c",
-              background: "#1a1f2e",
+              border: `2px solid ${colors.accent}`,
+              background: colors.bgSecondary,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -280,8 +297,8 @@ export default function Header() {
               {getUserAvatar(user.username)}
             </div>
 
-            <span style={{ color: "#9ca3af", fontWeight: "500", fontSize: "0.85rem" }} className="username-text">{user.username}</span>
-            <span style={{ color: "#9ca3af", fontSize: "0.6rem" }}>▾</span>
+            <span style={{ color: colors.textSecondary, fontWeight: "500", fontSize: "0.85rem" }} className="username-text">{user.username}</span>
+            <span style={{ color: colors.textSecondary, fontSize: "0.6rem" }}>▾</span>
           </div>
 
           {showUserMenu && (
@@ -289,59 +306,59 @@ export default function Header() {
               position: "absolute" as const,
               top: "50px",
               right: 0,
-              background: "#0b0f1a",
-              border: "1px solid #00ff9c",
+              background: colors.bgPrimary,
+              border: `1px solid ${colors.accent}`,
               borderRadius: "8px",
               padding: "8px 0",
               minWidth: "180px",
               zIndex: 1000,
-              boxShadow: "0 4px 20px rgba(0, 255, 156, 0.2)",
+              boxShadow: `0 4px 20px ${colors.shadow}`,
             }}>
               
               <Link to="/profil" onClick={() => setShowUserMenu(false)} style={{
                 display: "block",
-                color: "#e5e7eb",
+                color: colors.textPrimary,
                 textDecoration: "none",
                 padding: "12px 20px",
                 fontSize: "0.85rem",
                 transition: "all 0.2s",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#1a1f2e";
-                e.currentTarget.style.color = "#00ff9c";
+                e.currentTarget.style.background = colors.bgSecondary;
+                e.currentTarget.style.color = colors.accent;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "#e5e7eb";
+                e.currentTarget.style.color = colors.textPrimary;
               }}>
                 👤 Mon Profil
               </Link>
 
               <Link to="/contact" onClick={() => setShowUserMenu(false)} style={{
                 display: "block",
-                color: "#e5e7eb",
+                color: colors.textPrimary,
                 textDecoration: "none",
                 padding: "12px 20px",
                 fontSize: "0.85rem",
                 transition: "all 0.2s",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#1a1f2e";
-                e.currentTarget.style.color = "#00ff9c";
+                e.currentTarget.style.background = colors.bgSecondary;
+                e.currentTarget.style.color = colors.accent;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "#e5e7eb";
+                e.currentTarget.style.color = colors.textPrimary;
               }}>
                 📧 Contact Admin
               </Link>
 
-              <div style={{ height: "1px", background: "#2a3f3f", margin: "8px 0" }} />
+              <div style={{ height: "1px", background: colors.border, margin: "8px 0" }} />
 
               <button onClick={handleLogout} style={{
                 width: "100%",
                 background: "transparent",
-                color: "#ef4444",
+                color: colors.error,
                 border: "none",
                 padding: "12px 20px",
                 textAlign: "left" as const,
@@ -350,7 +367,7 @@ export default function Header() {
                 transition: "all 0.2s",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#1a1f2e";
+                e.currentTarget.style.background = colors.bgSecondary;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
@@ -371,211 +388,68 @@ export default function Header() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "#0b0f1a",
+          background: colors.bgPrimary,
           zIndex: 999,
           overflowY: "auto" as const,
           padding: "20px",
         }}>
           <div style={{ display: "flex", flexDirection: "column" as const, gap: "10px" }}>
-            <Link to="/dashboard" onClick={() => setShowMobileMenu(false)} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              padding: "15px",
-              background: "#1a1f2e",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              border: "1px solid #2a3f3f",
-            }}>
-              🏠 Dashboard
-            </Link>
-            <Link to="/parcours" onClick={() => setShowMobileMenu(false)} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              padding: "15px",
-              background: "#1a1f2e",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              border: "1px solid #2a3f3f",
-            }}>
-              📚 Parcours
-            </Link>
-            <Link to="/exercices-osint" onClick={() => setShowMobileMenu(false)} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              padding: "15px",
-              background: "#1a1f2e",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              border: "1px solid #2a3f3f",
-            }}>
-              📝 Exercices
-            </Link>
-            <Link to="/etudes-osint" onClick={() => setShowMobileMenu(false)} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              padding: "15px",
-              background: "#1a1f2e",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              border: "1px solid #2a3f3f",
-            }}>
-              🔎 Études de Cas
-            </Link>
-            <Link to="/badges-osint" onClick={() => setShowMobileMenu(false)} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              padding: "15px",
-              background: "#1a1f2e",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              border: "1px solid #2a3f3f",
-            }}>
-              🏅 Badges
-            </Link>
-            <Link to="/ctf" onClick={() => setShowMobileMenu(false)} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              padding: "15px",
-              background: "#1a1f2e",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              border: "1px solid #2a3f3f",
-            }}>
-              🚩 CTF
-            </Link>
-            <Link to="/leaderboard" onClick={() => setShowMobileMenu(false)} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              padding: "15px",
-              background: "#1a1f2e",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              border: "1px solid #2a3f3f",
-            }}>
-              🏆 Leaderboard
-            </Link>
-            <Link to="/progression" onClick={() => setShowMobileMenu(false)} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              padding: "15px",
-              background: "#1a1f2e",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              border: "1px solid #2a3f3f",
-            }}>
-              ⭐ Progression
-            </Link>
-            <Link to="/labo-osint" onClick={() => setShowMobileMenu(false)} style={{
-              color: "#e5e7eb",
-              textDecoration: "none",
-              padding: "15px",
-              background: "#1a1f2e",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              border: "1px solid #2a3f3f",
-            }}>
-              🧪 Labo
-            </Link>
+            {[
+              { label: "🏠 Dashboard", to: "/dashboard" },
+              { label: "📚 Parcours", to: "/parcours" },
+              { label: "📝 Exercices", to: "/exercices-osint" },
+              { label: "🔎 Études de Cas", to: "/etudes-osint" },
+              { label: "🏅 Badges", to: "/badges-osint" },
+              { label: "🚩 CTF", to: "/ctf" },
+              { label: "🏆 Leaderboard", to: "/leaderboard" },
+              { label: "⭐ Progression", to: "/progression" },
+              { label: "🧪 Labo", to: "/labo-osint" },
+            ].map((item) => (
+              <Link key={item.to} to={item.to} onClick={() => setShowMobileMenu(false)} style={{
+                color: colors.textPrimary,
+                textDecoration: "none",
+                padding: "15px",
+                background: colors.bgSecondary,
+                borderRadius: "8px",
+                fontSize: "1rem",
+                border: `1px solid ${colors.border}`,
+              }}>
+                {item.label}
+              </Link>
+            ))}
 
-            {/* SECTION OUTILS */}
+            {/* Section Outils mobile */}
             <div style={{
               marginTop: "20px",
               paddingTop: "20px",
-              borderTop: "1px solid #2a3f3f",
+              borderTop: `1px solid ${colors.border}`,
             }}>
-              <p style={{ color: "#9ca3af", fontSize: "0.8rem", marginBottom: "10px", paddingLeft: "5px" }}>
+              <p style={{ color: colors.textSecondary, fontSize: "0.8rem", marginBottom: "10px", paddingLeft: "5px" }}>
                 🛠️ OUTILS
               </p>
-              <Link to="/hacker-ai" onClick={() => setShowMobileMenu(false)} style={{
-                color: "#e5e7eb",
-                textDecoration: "none",
-                padding: "15px",
-                background: "#1a1f2e",
-                borderRadius: "8px",
-                fontSize: "1rem",
-                border: "1px solid #2a3f3f",
-                display: "block",
-                marginBottom: "10px",
-              }}>
-                🤖 HackerAI
-              </Link>
-              <Link to="/dependency-track" onClick={() => setShowMobileMenu(false)} style={{
-                color: "#e5e7eb",
-                textDecoration: "none",
-                padding: "15px",
-                background: "#1a1f2e",
-                borderRadius: "8px",
-                fontSize: "1rem",
-                border: "1px solid #2a3f3f",
-                display: "block",
-                marginBottom: "10px",
-              }}>
-                📦 Dependency Track
-              </Link>
-              <Link to="/outils-cyber" onClick={() => setShowMobileMenu(false)} style={{
-                color: "#e5e7eb",
-                textDecoration: "none",
-                padding: "15px",
-                background: "#1a1f2e",
-                borderRadius: "8px",
-                fontSize: "1rem",
-                border: "1px solid #2a3f3f",
-                display: "block",
-                marginBottom: "10px",
-              }}>
-                🔧 Outils Cyber
-              </Link>
-              <Link to="/referentiels" onClick={() => setShowMobileMenu(false)} style={{
-                color: "#e5e7eb",
-                textDecoration: "none",
-                padding: "15px",
-                background: "#1a1f2e",
-                borderRadius: "8px",
-                fontSize: "1rem",
-                border: "1px solid #2a3f3f",
-                display: "block",
-                marginBottom: "10px",
-              }}>
-                📚 Référentiels
-              </Link>
-              <Link to="/vm-access" onClick={() => setShowMobileMenu(false)} style={{
-                color: "#e5e7eb",
-                textDecoration: "none",
-                padding: "15px",
-                background: "#1a1f2e",
-                borderRadius: "8px",
-                fontSize: "1rem",
-                border: "1px solid #2a3f3f",
-                display: "block",
-                marginBottom: "10px",
-              }}>
-                💻 VM Access
-              </Link>
-              <Link to="/vm-kali" onClick={() => setShowMobileMenu(false)} style={{
-                color: "#e5e7eb",
-                textDecoration: "none",
-                padding: "15px",
-                background: "#1a1f2e",
-                borderRadius: "8px",
-                fontSize: "1rem",
-                border: "1px solid #2a3f3f",
-                display: "block",
-                marginBottom: "10px",
-              }}>
-                🐉 Kali Linux Lab
-              </Link>
-              <Link to="/vm-parrot" onClick={() => setShowMobileMenu(false)} style={{
-                color: "#e5e7eb",
-                textDecoration: "none",
-                padding: "15px",
-                background: "#1a1f2e",
-                borderRadius: "8px",
-                fontSize: "1rem",
-                border: "1px solid #2a3f3f",
-                display: "block",
-              }}>
-                🦜 Parrot OS Lab
-              </Link>
+              {[
+                { label: "🤖 HackerAI", to: "/hacker-ai" },
+                { label: "📦 Dependency Track", to: "/dependency-track" },
+                { label: "🔧 Outils Cyber", to: "/outils-cyber" },
+                { label: "📚 Référentiels", to: "/referentiels" },
+                { label: "💻 VM Access", to: "/vm-access" },
+                { label: "🐉 Kali Linux Lab", to: "/vm-kali" },
+                { label: "🦜 Parrot OS Lab", to: "/vm-parrot" },
+              ].map((item) => (
+                <Link key={item.to} to={item.to} onClick={() => setShowMobileMenu(false)} style={{
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "15px",
+                  background: colors.bgSecondary,
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  border: `1px solid ${colors.border}`,
+                  display: "block",
+                  marginBottom: "10px",
+                }}>
+                  {item.label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -597,6 +471,10 @@ export default function Header() {
         }
         .username-text {
           display: none !important;
+        }
+        .theme-toggle-btn {
+          padding: 6px 10px !important;
+          font-size: 1rem !important;
         }
       }
     `}</style>

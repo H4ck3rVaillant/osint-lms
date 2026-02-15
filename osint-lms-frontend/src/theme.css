@@ -1,0 +1,81 @@
+/* ========================================
+   THEME VARIABLES - CyberOSINT Academy
+   ======================================== */
+
+/* Thème SOMBRE (par défaut) */
+:root[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-primary: #0b0f1a;
+  --bg-secondary: #1a1f2e;
+  --bg-tertiary: #2a3f3f;
+  
+  /* Text */
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-tertiary: #6b7280;
+  
+  /* Accent */
+  --accent: #00ff9c;
+  --accent-hover: #00cc7a;
+  --accent-dark: #0a1a0f;
+  
+  /* Borders */
+  --border: #2a3f3f;
+  --border-light: #1a1f2e;
+  
+  /* Status */
+  --success: #00ff9c;
+  --error: #ef4444;
+  --warning: #fbbf24;
+  --info: #3b82f6;
+  
+  /* Shadow & Overlay */
+  --shadow: rgba(0, 0, 0, 0.5);
+  --overlay: rgba(11, 15, 26, 0.95);
+}
+
+/* Thème CLAIR */
+:root[data-theme="light"] {
+  /* Backgrounds */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #e5e7eb;
+  
+  /* Text */
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-tertiary: #9ca3af;
+  
+  /* Accent */
+  --accent: #1e3a8a;
+  --accent-hover: #1e40af;
+  --accent-dark: #eff6ff;
+  
+  /* Borders */
+  --border: #d1d5db;
+  --border-light: #e5e7eb;
+  
+  /* Status */
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  
+  /* Shadow & Overlay */
+  --shadow: rgba(0, 0, 0, 0.1);
+  --overlay: rgba(255, 255, 255, 0.95);
+}
+
+/* Application des variables aux éléments */
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Smooth transitions pour tous les éléments */
+* {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease;
+}
