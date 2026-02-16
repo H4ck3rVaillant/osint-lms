@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useThemeColors } from "../context/ThemeContext";
 
 export default function OutilsCyber() {
+  const colors = useThemeColors();
   const [activeCategory, setActiveCategory] = useState<"osint" | "analyse" | "defense" | "network">("osint");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTool, setSelectedTool] = useState<any>(null);
@@ -608,10 +610,10 @@ export default function OutilsCyber() {
     <main style={{ padding: "40px", maxWidth: "1600px", margin: "0 auto" }}>
       {/* Header */}
       <div style={{ marginBottom: "40px" }}>
-        <h1 style={{ color: "#00ff9c", fontSize: "2.5rem", marginBottom: "10px" }}>
+        <h1 style={{ color: colors.accent, fontSize: "2.5rem", marginBottom: "10px" }}>
           🔧 Outils Cyber
         </h1>
-        <p style={{ color: "#9ca3af", fontSize: "1.2rem", lineHeight: "1.6" }}>
+        <p style={{ color: colors.textSecondary, fontSize: "1.2rem", lineHeight: "1.6" }}>
           Catalogue complet des meilleurs outils de cybersécurité organisés par catégorie
         </p>
       </div>
@@ -626,10 +628,10 @@ export default function OutilsCyber() {
           style={{
             width: "100%",
             padding: "15px 20px",
-            background: "#0b0f1a",
+            background: colors.bgPrimary,
             border: "2px solid #00ff9c",
             borderRadius: "12px",
-            color: "#e5e7eb",
+            color: colors.textPrimary,
             fontSize: "1rem"
           }}
         />
@@ -655,9 +657,9 @@ export default function OutilsCyber() {
               setSearchQuery("");
             }}
             style={{
-              background: activeCategory === cat.key ? "#00ff9c" : "#0b0f1a",
-              color: activeCategory === cat.key ? "#0b0f1a" : "#e5e7eb",
-              border: `2px solid ${activeCategory === cat.key ? "#00ff9c" : "#2a3f3f"}`,
+              background: activeCategory === cat.key ? colors.accent : colors.bgPrimary,
+              color: activeCategory === cat.key ? colors.bgPrimary : colors.textPrimary,
+              border: `2px solid ${activeCategory === cat.key ? colors.accent : colors.bgTertiary}`,
               padding: "20px",
               borderRadius: "12px",
               cursor: "pointer",
@@ -686,7 +688,7 @@ export default function OutilsCyber() {
             key={tool.id}
             onClick={() => setSelectedTool(tool)}
             style={{
-              background: "#0b0f1a",
+              background: colors.bgPrimary,
               border: tool.premium ? "2px solid #fbbf24" : "1px solid #2a3f3f",
               borderRadius: "12px",
               padding: "25px",
@@ -709,7 +711,7 @@ export default function OutilsCyber() {
                 top: "15px",
                 right: "15px",
                 background: "#fbbf24",
-                color: "#0b0f1a",
+                color: colors.bgPrimary,
                 padding: "4px 10px",
                 borderRadius: "6px",
                 fontSize: "0.75rem",
@@ -721,14 +723,14 @@ export default function OutilsCyber() {
 
             <div style={{ fontSize: "3rem", marginBottom: "15px" }}>{tool.icon}</div>
 
-            <h3 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "8px" }}>
+            <h3 style={{ color: colors.accent, fontSize: "1.4rem", marginBottom: "8px" }}>
               {tool.name}
             </h3>
 
             <div style={{ marginBottom: "12px" }}>
               <span style={{
-                background: "#1a1f2e",
-                color: "#9ca3af",
+                background: colors.bgSecondary,
+                color: colors.textSecondary,
                 padding: "4px 10px",
                 borderRadius: "6px",
                 fontSize: "0.8rem",
@@ -739,7 +741,7 @@ export default function OutilsCyber() {
               <span style={{
                 background: tool.difficulty === "Débutant" ? "#22c55e" :
                            tool.difficulty === "Intermédiaire" ? "#fbbf24" : "#ef4444",
-                color: "#0b0f1a",
+                color: colors.bgPrimary,
                 padding: "4px 10px",
                 borderRadius: "6px",
                 fontSize: "0.8rem",
@@ -749,7 +751,7 @@ export default function OutilsCyber() {
               </span>
             </div>
 
-            <p style={{ color: "#9ca3af", lineHeight: "1.7", marginBottom: "15px", minHeight: "60px" }}>
+            <p style={{ color: colors.textSecondary, lineHeight: "1.7", marginBottom: "15px", minHeight: "60px" }}>
               {tool.description}
             </p>
 
@@ -758,8 +760,8 @@ export default function OutilsCyber() {
                 <span
                   key={idx}
                   style={{
-                    background: "#1a1f2e",
-                    color: "#00ff9c",
+                    background: colors.bgSecondary,
+                    color: colors.accent,
                     padding: "3px 8px",
                     borderRadius: "4px",
                     fontSize: "0.75rem"
@@ -777,10 +779,10 @@ export default function OutilsCyber() {
               justifyContent: "space-between",
               alignItems: "center"
             }}>
-              <span style={{ color: "#9ca3af", fontSize: "0.85rem" }}>
+              <span style={{ color: colors.textSecondary, fontSize: "0.85rem" }}>
                 {tool.pricing.split("(")[0]}
               </span>
-              <span style={{ color: "#00ff9c", fontWeight: "bold", fontSize: "0.9rem" }}>
+              <span style={{ color: colors.accent, fontWeight: "bold", fontSize: "0.9rem" }}>
                 En savoir plus →
               </span>
             </div>
@@ -792,11 +794,11 @@ export default function OutilsCyber() {
         <div style={{
           textAlign: "center",
           padding: "60px",
-          background: "#0b0f1a",
+          background: colors.bgPrimary,
           border: "1px solid #2a3f3f",
           borderRadius: "12px"
         }}>
-          <p style={{ color: "#9ca3af", fontSize: "1.2rem" }}>
+          <p style={{ color: colors.textSecondary, fontSize: "1.2rem" }}>
             Aucun outil trouvé pour "{searchQuery}"
           </p>
         </div>
@@ -824,7 +826,7 @@ export default function OutilsCyber() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: "#0b0f1a",
+              background: colors.bgPrimary,
               border: "2px solid #00ff9c",
               borderRadius: "12px",
               padding: "40px",
@@ -838,13 +840,13 @@ export default function OutilsCyber() {
               <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
                 <span style={{ fontSize: "4rem" }}>{selectedTool.icon}</span>
                 <div>
-                  <h2 style={{ color: "#00ff9c", fontSize: "2rem", marginBottom: "8px" }}>
+                  <h2 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "8px" }}>
                     {selectedTool.name}
                   </h2>
                   <div style={{ display: "flex", gap: "10px" }}>
                     <span style={{
-                      background: "#1a1f2e",
-                      color: "#9ca3af",
+                      background: colors.bgSecondary,
+                      color: colors.textSecondary,
                       padding: "6px 12px",
                       borderRadius: "6px",
                       fontSize: "0.9rem"
@@ -854,7 +856,7 @@ export default function OutilsCyber() {
                     <span style={{
                       background: selectedTool.difficulty === "Débutant" ? "#22c55e" :
                                  selectedTool.difficulty === "Intermédiaire" ? "#fbbf24" : "#ef4444",
-                      color: "#0b0f1a",
+                      color: colors.bgPrimary,
                       padding: "6px 12px",
                       borderRadius: "6px",
                       fontSize: "0.9rem",
@@ -869,7 +871,7 @@ export default function OutilsCyber() {
                 onClick={() => setSelectedTool(null)}
                 style={{
                   background: "transparent",
-                  color: "#9ca3af",
+                  color: colors.textSecondary,
                   border: "none",
                   fontSize: "2rem",
                   cursor: "pointer",
@@ -880,16 +882,16 @@ export default function OutilsCyber() {
               </button>
             </div>
 
-            <p style={{ color: "#e5e7eb", fontSize: "1.1rem", lineHeight: "1.8", marginBottom: "25px" }}>
+            <p style={{ color: colors.textPrimary, fontSize: "1.1rem", lineHeight: "1.8", marginBottom: "25px" }}>
               {selectedTool.longDesc}
             </p>
 
             {selectedTool.features && (
               <div style={{ marginBottom: "25px" }}>
-                <h3 style={{ color: "#00ff9c", marginBottom: "15px", fontSize: "1.3rem" }}>
+                <h3 style={{ color: colors.accent, marginBottom: "15px", fontSize: "1.3rem" }}>
                   ⚡ Fonctionnalités principales
                 </h3>
-                <ul style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px" }}>
+                <ul style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
                   {selectedTool.features.map((feature: string, idx: number) => (
                     <li key={idx}>{feature}</li>
                   ))}
@@ -899,10 +901,10 @@ export default function OutilsCyber() {
 
             {selectedTool.useCases && (
               <div style={{ marginBottom: "25px" }}>
-                <h3 style={{ color: "#00ff9c", marginBottom: "15px", fontSize: "1.3rem" }}>
+                <h3 style={{ color: colors.accent, marginBottom: "15px", fontSize: "1.3rem" }}>
                   🎯 Cas d'usage
                 </h3>
-                <ul style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px" }}>
+                <ul style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
                   {selectedTool.useCases.map((useCase: string, idx: number) => (
                     <li key={idx}>{useCase}</li>
                   ))}
@@ -911,13 +913,13 @@ export default function OutilsCyber() {
             )}
 
             <div style={{
-              background: "#1a1f2e",
+              background: colors.bgSecondary,
               padding: "20px",
               borderRadius: "8px",
               marginBottom: "25px"
             }}>
-              <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>💰 Tarification</h3>
-              <p style={{ color: "#e5e7eb", margin: 0 }}>{selectedTool.pricing}</p>
+              <h3 style={{ color: colors.accent, marginBottom: "10px" }}>💰 Tarification</h3>
+              <p style={{ color: colors.textPrimary, margin: 0 }}>{selectedTool.pricing}</p>
             </div>
 
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" as const, marginBottom: "25px" }}>
@@ -925,8 +927,8 @@ export default function OutilsCyber() {
                 <span
                   key={idx}
                   style={{
-                    background: "#1a1f2e",
-                    color: "#00ff9c",
+                    background: colors.bgSecondary,
+                    color: colors.accent,
                     padding: "6px 14px",
                     borderRadius: "6px",
                     fontSize: "0.85rem"
@@ -942,8 +944,8 @@ export default function OutilsCyber() {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                background: "#00ff9c",
-                color: "#0b0f1a",
+                background: colors.accent,
+                color: colors.bgPrimary,
                 padding: "15px 30px",
                 borderRadius: "8px",
                 textDecoration: "none",

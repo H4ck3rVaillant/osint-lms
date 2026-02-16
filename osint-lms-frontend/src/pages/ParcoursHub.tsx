@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useThemeColors } from "../context/ThemeContext";
 
 export default function ParcoursHub() {
+  const colors = useThemeColors();
   const [stats, setStats] = useState({
     debutant: 0,
     intermediaire: 0,
@@ -35,31 +37,31 @@ export default function ParcoursHub() {
   }, []);
 
   const cardStyle = {
-    background: "#0b0f1a",
-    border: "2px solid #00ff9c",
+    background: colors.bgPrimary,
+    border: `2px solid ${colors.accent}`,
     borderRadius: "12px",
     padding: "30px",
     textDecoration: "none",
     transition: "all 0.3s ease",
     cursor: "pointer",
     display: "block",
-    boxShadow: "0 4px 15px rgba(0,255,156,0.1)",
+    boxShadow: `0 4px 15px ${colors.shadow}`,
   };
 
   return (
     <main style={{
       minHeight: "100vh",
-      background: "linear-gradient(135deg, #0b0f1a 0%, #1a1f2e 100%)",
+      background: `linear-gradient(135deg, ${colors.bgPrimary} 0%, ${colors.bgSecondary} 100%)`,
       padding: "40px 20px"
     }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         
         {/* En-tête */}
         <div style={{ marginBottom: "50px", textAlign: "center" }}>
-          <h1 style={{ color: "#00ff9c", fontSize: "3rem", margin: "0 0 15px 0" }}>
+          <h1 style={{ color: colors.accent, fontSize: "3rem", margin: "0 0 15px 0" }}>
             📚 Parcours de Formation OSINT
           </h1>
-          <p style={{ color: "#9ca3af", fontSize: "1.2rem", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, fontSize: "1.2rem", lineHeight: "1.8" }}>
             Choisissez votre parcours en fonction de votre niveau.<br />
             Du débutant absolu à l'expert en investigations complexes.
           </p>
@@ -74,28 +76,39 @@ export default function ParcoursHub() {
         }}>
 
           {/* DÉBUTANT */}
-          <Link to="/parcours-debutant" style={cardStyle}>
+          <Link 
+            to="/parcours-debutant" 
+            style={cardStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-5px)";
+              e.currentTarget.style.boxShadow = `0 10px 30px ${colors.shadow}`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = `0 4px 15px ${colors.shadow}`;
+            }}
+          >
             <div style={{ marginBottom: "20px", textAlign: "center" }}>
               <div style={{ fontSize: "4rem", marginBottom: "15px" }}>🟢</div>
-              <h2 style={{ color: "#00ff9c", margin: "0 0 10px 0", fontSize: "1.8rem" }}>
+              <h2 style={{ color: colors.accent, margin: "0 0 10px 0", fontSize: "1.8rem" }}>
                 Parcours Débutant
               </h2>
-              <p style={{ color: "#9ca3af", fontSize: "0.95rem", margin: 0 }}>
+              <p style={{ color: colors.textSecondary, fontSize: "0.95rem", margin: 0 }}>
                 Niveau 1 • 3 modules
               </p>
             </div>
 
             <div style={{
-              background: "#1a1f2e",
+              background: colors.bgSecondary,
               borderRadius: "8px",
               padding: "20px",
               marginBottom: "20px"
             }}>
-              <h3 style={{ color: "#e5e7eb", fontSize: "1rem", marginBottom: "12px" }}>
+              <h3 style={{ color: colors.textPrimary, fontSize: "1rem", marginBottom: "12px" }}>
                 📖 Ce que vous allez apprendre :
               </h3>
               <ul style={{
-                color: "#9ca3af",
+                color: colors.textSecondary,
                 fontSize: "0.9rem",
                 lineHeight: "1.8",
                 paddingLeft: "20px",
@@ -112,7 +125,7 @@ export default function ParcoursHub() {
             <div style={{
               width: "100%",
               height: "10px",
-              background: "#1a1f2e",
+              background: colors.bgSecondary,
               borderRadius: "5px",
               overflow: "hidden",
               marginBottom: "15px"
@@ -120,7 +133,7 @@ export default function ParcoursHub() {
               <div style={{
                 width: `${stats.debutant}%`,
                 height: "100%",
-                background: "#00ff9c",
+                background: colors.accent,
                 transition: "width 0.3s ease"
               }} />
             </div>
@@ -130,10 +143,10 @@ export default function ParcoursHub() {
               justifyContent: "space-between",
               alignItems: "center"
             }}>
-              <span style={{ color: "#9ca3af", fontSize: "0.9rem" }}>
+              <span style={{ color: colors.textSecondary, fontSize: "0.9rem" }}>
                 Progression
               </span>
-              <span style={{ color: "#00ff9c", fontWeight: "bold", fontSize: "1.1rem" }}>
+              <span style={{ color: colors.accent, fontWeight: "bold", fontSize: "1.1rem" }}>
                 {Math.round(stats.debutant)}%
               </span>
             </div>
@@ -141,8 +154,8 @@ export default function ParcoursHub() {
             <div style={{
               marginTop: "20px",
               padding: "12px",
-              background: "#00ff9c",
-              color: "#0b0f1a",
+              background: colors.accent,
+              color: "#ffffff",
               textAlign: "center",
               borderRadius: "8px",
               fontWeight: "bold",
@@ -153,28 +166,39 @@ export default function ParcoursHub() {
           </Link>
 
           {/* INTERMÉDIAIRE */}
-          <Link to="/parcours-intermediaire" style={cardStyle}>
+          <Link 
+            to="/parcours-intermediaire" 
+            style={cardStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-5px)";
+              e.currentTarget.style.boxShadow = `0 10px 30px ${colors.shadow}`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = `0 4px 15px ${colors.shadow}`;
+            }}
+          >
             <div style={{ marginBottom: "20px", textAlign: "center" }}>
               <div style={{ fontSize: "4rem", marginBottom: "15px" }}>🟡</div>
-              <h2 style={{ color: "#fbbf24", margin: "0 0 10px 0", fontSize: "1.8rem" }}>
+              <h2 style={{ color: "#f59e0b", margin: "0 0 10px 0", fontSize: "1.8rem" }}>
                 Parcours Intermédiaire
               </h2>
-              <p style={{ color: "#9ca3af", fontSize: "0.95rem", margin: 0 }}>
+              <p style={{ color: colors.textSecondary, fontSize: "0.95rem", margin: 0 }}>
                 Niveau 2 • 3 modules
               </p>
             </div>
 
             <div style={{
-              background: "#1a1f2e",
+              background: colors.bgSecondary,
               borderRadius: "8px",
               padding: "20px",
               marginBottom: "20px"
             }}>
-              <h3 style={{ color: "#e5e7eb", fontSize: "1rem", marginBottom: "12px" }}>
+              <h3 style={{ color: colors.textPrimary, fontSize: "1rem", marginBottom: "12px" }}>
                 📖 Ce que vous allez apprendre :
               </h3>
               <ul style={{
-                color: "#9ca3af",
+                color: colors.textSecondary,
                 fontSize: "0.9rem",
                 lineHeight: "1.8",
                 paddingLeft: "20px",
@@ -190,7 +214,7 @@ export default function ParcoursHub() {
             <div style={{
               width: "100%",
               height: "10px",
-              background: "#1a1f2e",
+              background: colors.bgSecondary,
               borderRadius: "5px",
               overflow: "hidden",
               marginBottom: "15px"
@@ -198,7 +222,7 @@ export default function ParcoursHub() {
               <div style={{
                 width: `${stats.intermediaire}%`,
                 height: "100%",
-                background: "#fbbf24",
+                background: "#f59e0b",
                 transition: "width 0.3s ease"
               }} />
             </div>
@@ -208,10 +232,10 @@ export default function ParcoursHub() {
               justifyContent: "space-between",
               alignItems: "center"
             }}>
-              <span style={{ color: "#9ca3af", fontSize: "0.9rem" }}>
+              <span style={{ color: colors.textSecondary, fontSize: "0.9rem" }}>
                 Progression
               </span>
-              <span style={{ color: "#fbbf24", fontWeight: "bold", fontSize: "1.1rem" }}>
+              <span style={{ color: "#f59e0b", fontWeight: "bold", fontSize: "1.1rem" }}>
                 {Math.round(stats.intermediaire)}%
               </span>
             </div>
@@ -219,8 +243,8 @@ export default function ParcoursHub() {
             <div style={{
               marginTop: "20px",
               padding: "12px",
-              background: "#fbbf24",
-              color: "#0b0f1a",
+              background: "#f59e0b",
+              color: "#ffffff",
               textAlign: "center",
               borderRadius: "8px",
               fontWeight: "bold",
@@ -231,28 +255,39 @@ export default function ParcoursHub() {
           </Link>
 
           {/* AVANCÉ */}
-          <Link to="/parcours-avance" style={cardStyle}>
+          <Link 
+            to="/parcours-avance" 
+            style={cardStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-5px)";
+              e.currentTarget.style.boxShadow = `0 10px 30px ${colors.shadow}`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = `0 4px 15px ${colors.shadow}`;
+            }}
+          >
             <div style={{ marginBottom: "20px", textAlign: "center" }}>
               <div style={{ fontSize: "4rem", marginBottom: "15px" }}>🔴</div>
               <h2 style={{ color: "#ef4444", margin: "0 0 10px 0", fontSize: "1.8rem" }}>
                 Parcours Avancé
               </h2>
-              <p style={{ color: "#9ca3af", fontSize: "0.95rem", margin: 0 }}>
+              <p style={{ color: colors.textSecondary, fontSize: "0.95rem", margin: 0 }}>
                 Niveau 3 • 3 modules
               </p>
             </div>
 
             <div style={{
-              background: "#1a1f2e",
+              background: colors.bgSecondary,
               borderRadius: "8px",
               padding: "20px",
               marginBottom: "20px"
             }}>
-              <h3 style={{ color: "#e5e7eb", fontSize: "1rem", marginBottom: "12px" }}>
+              <h3 style={{ color: colors.textPrimary, fontSize: "1rem", marginBottom: "12px" }}>
                 📖 Ce que vous allez apprendre :
               </h3>
               <ul style={{
-                color: "#9ca3af",
+                color: colors.textSecondary,
                 fontSize: "0.9rem",
                 lineHeight: "1.8",
                 paddingLeft: "20px",
@@ -268,7 +303,7 @@ export default function ParcoursHub() {
             <div style={{
               width: "100%",
               height: "10px",
-              background: "#1a1f2e",
+              background: colors.bgSecondary,
               borderRadius: "5px",
               overflow: "hidden",
               marginBottom: "15px"
@@ -286,7 +321,7 @@ export default function ParcoursHub() {
               justifyContent: "space-between",
               alignItems: "center"
             }}>
-              <span style={{ color: "#9ca3af", fontSize: "0.9rem" }}>
+              <span style={{ color: colors.textSecondary, fontSize: "0.9rem" }}>
                 Progression
               </span>
               <span style={{ color: "#ef4444", fontWeight: "bold", fontSize: "1.1rem" }}>
@@ -312,19 +347,20 @@ export default function ParcoursHub() {
 
         {/* Info complémentaire */}
         <div style={{
-          background: "#0b0f1a",
-          border: "1px solid #2a3f3f",
+          background: colors.bgPrimary,
+          border: `1px solid ${colors.border}`,
           borderRadius: "12px",
           padding: "30px",
-          textAlign: "center"
+          textAlign: "center",
+          boxShadow: `0 2px 10px ${colors.shadow}`
         }}>
-          <h3 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+          <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
             💡 Recommandations
           </h3>
-          <p style={{ color: "#9ca3af", fontSize: "1rem", lineHeight: "1.8", margin: 0 }}>
+          <p style={{ color: colors.textSecondary, fontSize: "1rem", lineHeight: "1.8", margin: 0 }}>
             Il est recommandé de suivre les parcours dans l'ordre.<br />
             Chaque niveau construit sur les connaissances du précédent.<br />
-            Comptez environ <strong style={{ color: "#00ff9c" }}>2-3 heures par module</strong>.
+            Comptez environ <strong style={{ color: colors.accent }}>2-3 heures par module</strong>.
           </p>
         </div>
 

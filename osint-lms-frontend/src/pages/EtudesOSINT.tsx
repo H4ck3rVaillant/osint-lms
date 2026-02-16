@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useThemeColors } from "../context/ThemeContext";
 
 export default function EtudesOSINT() {
   const navigate = useNavigate();
+  const colors = useThemeColors();
   const [showResetPopup, setShowResetPopup] = useState(false);
   const [completedCases, setCompletedCases] = useState({
     geo: false,
@@ -66,7 +68,7 @@ export default function EtudesOSINT() {
     {
       key: "final",
       badgeKey: "badge_cases_osint",
-      title: "🎯 Cas final – Analyse complète",
+      title: "🎯 Cas final — Analyse complète",
       desc: "Enquête OSINT multi-angles type Bellingcat",
       longDesc: "Synthèse de toutes les compétences acquises : géolocalisation, vérification, attribution et chronologie dans une investigation complexe.",
       path: "/cas/final",
@@ -96,35 +98,35 @@ export default function EtudesOSINT() {
     });
     
     setShowResetPopup(false);
-    // Pas de reload : les states React sont déjà remis à zéro ci-dessus
   };
 
   const difficultyColor = (difficulty: string) => {
     switch(difficulty) {
-      case "Intermédiaire": return "#fbbf24";
+      case "Intermédiaire": return "#f59e0b";
       case "Avancé": return "#f97316";
       case "Expert": return "#ef4444";
-      default: return "#00ff9c";
+      default: return colors.accent;
     }
   };
 
   return (
     <main style={{ padding: "40px", maxWidth: "1200px", margin: "0 auto" }}>
-      <h1 style={{ color: "#00ff9c", fontSize: "2rem", marginBottom: "10px" }}>
+      <h1 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "10px" }}>
         Études de Cas OSINT Réels
       </h1>
-      <p style={{ color: "#9ca3af", marginBottom: "30px", fontSize: "1.1rem" }}>
+      <p style={{ color: colors.textSecondary, marginBottom: "30px", fontSize: "1.1rem" }}>
         Appliquez vos compétences à travers des cas d'investigation inspirés de situations réelles. 
         Méthodologie professionnelle type Bellingcat.
       </p>
 
       {/* Barre de progression globale */}
       <div style={{ 
-        background: "#0b0f1a", 
-        border: "1px solid #00ff9c", 
+        background: colors.bgPrimary, 
+        border: `1px solid ${colors.accent}`, 
         borderRadius: "8px", 
         padding: "24px",
-        marginBottom: "30px"
+        marginBottom: "30px",
+        boxShadow: `0 2px 8px ${colors.shadow}`
       }}>
         <div style={{ 
           display: "flex", 
@@ -132,11 +134,11 @@ export default function EtudesOSINT() {
           alignItems: "center",
           marginBottom: "12px"
         }}>
-          <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.1rem" }}>
+          <h3 style={{ color: colors.accent, margin: 0, fontSize: "1.1rem" }}>
             Progression globale des études de cas
           </h3>
           <span style={{ 
-            color: "#00ff9c", 
+            color: colors.accent, 
             fontWeight: "bold",
             fontSize: "1.1rem"
           }}>
@@ -147,20 +149,20 @@ export default function EtudesOSINT() {
         <div style={{
           width: "100%",
           height: "24px",
-          background: "#1a1f2e",
+          background: colors.bgSecondary,
           borderRadius: "12px",
           overflow: "hidden",
-          border: "1px solid #2a3f3f"
+          border: `1px solid ${colors.border}`
         }}>
           <div style={{
             width: `${globalProgress}%`,
             height: "100%",
-            background: "linear-gradient(90deg, #00ff9c 0%, #00d484 100%)",
+            background: `linear-gradient(90deg, ${colors.accent} 0%, ${colors.accentHover} 100%)`,
             transition: "width 0.5s ease",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#0b0f1a",
+            color: "#ffffff",
             fontWeight: "bold",
             fontSize: "0.875rem"
           }}>
@@ -183,47 +185,50 @@ export default function EtudesOSINT() {
               key={c.key}
               onClick={() => navigate(c.path)}
               style={{
-                background: "#0b0f1a",
-                border: `1px solid ${done ? "#00ff9c" : "#2a3f3f"}`,
+                background: colors.bgPrimary,
+                border: `2px solid ${done ? colors.accent : colors.border}`,
                 borderRadius: "12px",
                 padding: "24px",
                 cursor: "pointer",
                 transition: "all 0.3s ease",
                 position: "relative" as const,
+                boxShadow: `0 2px 8px ${colors.shadow}`
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px)";
-                e.currentTarget.style.boxShadow = "0 0 20px rgba(0,255,156,0.3)";
+                e.currentTarget.style.boxShadow = `0 8px 20px ${colors.shadow}`;
+                e.currentTarget.style.borderColor = colors.accent;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "none";
+                e.currentTarget.style.boxShadow = `0 2px 8px ${colors.shadow}`;
+                e.currentTarget.style.borderColor = done ? colors.accent : colors.border;
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "10px" }}>
-                <h2 style={{ color: "#00ff9c", margin: 0, fontSize: "1.3rem" }}>
+                <h2 style={{ color: colors.accent, margin: 0, fontSize: "1.3rem" }}>
                   {c.title}
                 </h2>
                 <span style={{ 
-                  color: done ? "#00ff9c" : "#6b7280",
+                  color: done ? colors.accent : colors.textTertiary,
                   fontSize: "1.5rem"
                 }}>
                   {done ? "✓" : "○"}
                 </span>
               </div>
 
-              <p style={{ color: "#9ca3af", fontSize: "0.95rem", marginBottom: "12px", lineHeight: "1.6" }}>
+              <p style={{ color: colors.textSecondary, fontSize: "0.95rem", marginBottom: "12px", lineHeight: "1.6" }}>
                 {c.desc}
               </p>
 
-              <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginBottom: "15px", lineHeight: "1.5" }}>
+              <p style={{ color: colors.textSecondary, fontSize: "0.85rem", marginBottom: "15px", lineHeight: "1.5" }}>
                 {c.longDesc}
               </p>
 
               {/* Badges difficulté et durée */}
               <div style={{ display: "flex", gap: "10px", marginBottom: "15px", flexWrap: "wrap" as const }}>
                 <span style={{
-                  background: "#1a1f2e",
+                  background: colors.bgSecondary,
                   color: difficultyColor(c.difficulty),
                   padding: "4px 12px",
                   borderRadius: "6px",
@@ -234,12 +239,12 @@ export default function EtudesOSINT() {
                   {c.difficulty}
                 </span>
                 <span style={{
-                  background: "#1a1f2e",
-                  color: "#9ca3af",
+                  background: colors.bgSecondary,
+                  color: colors.textSecondary,
                   padding: "4px 12px",
                   borderRadius: "6px",
                   fontSize: "0.8rem",
-                  border: "1px solid #2a3f3f"
+                  border: `1px solid ${colors.border}`
                 }}>
                   ⏱️ {c.duration}
                 </span>
@@ -249,7 +254,7 @@ export default function EtudesOSINT() {
               <div style={{
                 width: "100%",
                 height: "8px",
-                background: "#1a1f2e",
+                background: colors.bgSecondary,
                 borderRadius: "4px",
                 overflow: "hidden",
                 marginBottom: "10px"
@@ -257,14 +262,14 @@ export default function EtudesOSINT() {
                 <div style={{
                   width: done ? "100%" : "0%",
                   height: "100%",
-                  background: "#00ff9c",
+                  background: colors.accent,
                   transition: "width 0.5s ease",
                   borderRadius: "4px"
                 }} />
               </div>
 
               <p style={{ 
-                color: done ? "#00ff9c" : "#6b7280",
+                color: done ? colors.accent : colors.textTertiary,
                 fontSize: "0.9rem",
                 fontWeight: "bold",
                 margin: 0
@@ -278,21 +283,21 @@ export default function EtudesOSINT() {
 
       {/* Section informative */}
       <div style={{
-        background: "#1a1f2e",
-        border: "1px solid #2a3f3f",
+        background: colors.bgSecondary,
+        border: `1px solid ${colors.border}`,
         borderRadius: "8px",
         padding: "24px",
         marginBottom: "30px"
       }}>
-        <h3 style={{ color: "#00ff9c", marginBottom: "15px", fontSize: "1.2rem" }}>
+        <h3 style={{ color: colors.accent, marginBottom: "15px", fontSize: "1.2rem" }}>
           💡 À propos des études de cas
         </h3>
-        <p style={{ color: "#9ca3af", lineHeight: "1.7", marginBottom: "12px" }}>
+        <p style={{ color: colors.textSecondary, lineHeight: "1.7", marginBottom: "12px" }}>
           Ces études de cas sont conçues pour reproduire des <strong>investigations OSINT réelles</strong>. 
           Chaque cas vous guide à travers une méthodologie professionnelle utilisée par des organisations 
           comme Bellingcat, les CERT et les analystes en renseignement.
         </p>
-        <ul style={{ color: "#9ca3af", lineHeight: "1.8", paddingLeft: "20px" }}>
+        <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
           <li>Méthodologies vérifiables et reproductibles</li>
           <li>Sources ouvertes authentiques et légales</li>
           <li>Approche éthique et transparente</li>
@@ -305,9 +310,9 @@ export default function EtudesOSINT() {
         <button
           onClick={() => setShowResetPopup(true)}
           style={{
-            background: "#0b0f1a",
-            color: "#00ff9c",
-            border: "1px solid #00ff9c",
+            background: colors.bgPrimary,
+            color: colors.accent,
+            border: `2px solid ${colors.accent}`,
             padding: "14px 32px",
             borderRadius: "8px",
             fontSize: "1rem",
@@ -316,19 +321,19 @@ export default function EtudesOSINT() {
             transition: "all 0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#00ff9c";
-            e.currentTarget.style.color = "#0b0f1a";
+            e.currentTarget.style.background = colors.accent;
+            e.currentTarget.style.color = "#ffffff";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = "#0b0f1a";
-            e.currentTarget.style.color = "#00ff9c";
+            e.currentTarget.style.background = colors.bgPrimary;
+            e.currentTarget.style.color = colors.accent;
           }}
         >
           🔄 Réinitialiser toutes les études de cas
         </button>
       </div>
 
-      {/* Pop-up de confirmation de réinitialisation */}
+      {/* Pop-up de confirmation */}
       {showResetPopup && (
         <div style={{
           position: "fixed",
@@ -336,25 +341,25 @@ export default function EtudesOSINT() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(0, 0, 0, 0.85)",
+          background: colors.overlay,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 1000,
         }}>
           <div style={{
-            background: "#0b0f1a",
-            border: "2px solid #00ff9c",
+            background: colors.bgPrimary,
+            border: `2px solid ${colors.accent}`,
             borderRadius: "12px",
             padding: "40px",
             maxWidth: "500px",
             textAlign: "center",
-            boxShadow: "0 0 50px rgba(0, 255, 156, 0.3)",
+            boxShadow: `0 10px 40px ${colors.shadow}`,
           }}>
-            <h3 style={{ color: "#00ff9c", marginBottom: "15px", fontSize: "1.5rem" }}>
+            <h3 style={{ color: colors.accent, marginBottom: "15px", fontSize: "1.5rem" }}>
               Réinitialiser les études de cas ?
             </h3>
-            <p style={{ color: "#9ca3af", marginBottom: "30px", lineHeight: "1.6" }}>
+            <p style={{ color: colors.textSecondary, marginBottom: "30px", lineHeight: "1.6" }}>
               Tous les badges d'études de cas seront verrouillés et vous devrez les compléter à nouveau. 
               Cette action est irréversible.
             </p>
@@ -364,8 +369,8 @@ export default function EtudesOSINT() {
                 onClick={resetCases}
                 style={{
                   padding: "12px 28px",
-                  background: "#00ff9c",
-                  color: "#0b0f1a",
+                  background: colors.accent,
+                  color: "#ffffff",
                   borderRadius: "8px",
                   cursor: "pointer",
                   border: "none",
@@ -380,8 +385,8 @@ export default function EtudesOSINT() {
                 style={{
                   padding: "12px 28px",
                   background: "transparent",
-                  color: "#00ff9c",
-                  border: "1px solid #00ff9c",
+                  color: colors.accent,
+                  border: `2px solid ${colors.accent}`,
                   borderRadius: "8px",
                   cursor: "pointer",
                   fontWeight: "bold",
