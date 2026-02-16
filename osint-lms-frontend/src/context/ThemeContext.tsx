@@ -42,34 +42,34 @@ export const themes = {
     overlay: "rgba(11, 15, 26, 0.95)",
   },
   light: {
-    // Backgrounds
+    // Backgrounds - Gradient subtil blanc/bleu très clair
     bgPrimary: "#ffffff",
-    bgSecondary: "#f9fafb",
-    bgTertiary: "#e5e7eb",
+    bgSecondary: "#f8fafc",
+    bgTertiary: "#f1f5f9",
     
-    // Text
-    textPrimary: "#1f2937",
-    textSecondary: "#4b5563",
-    textTertiary: "#9ca3af",
+    // Text - Noir profond pour meilleur contraste
+    textPrimary: "#0f172a",
+    textSecondary: "#475569",
+    textTertiary: "#94a3b8",
     
-    // Accent
-    accent: "#2563eb",
-    accentHover: "#1e40af",
-    accentDark: "#eff6ff",
+    // Accent - Bleu moderne vibrant
+    accent: "#3b82f6",
+    accentHover: "#2563eb",
+    accentDark: "#dbeafe",
     
-    // Borders
-    border: "#d1d5db",
-    borderLight: "#e5e7eb",
+    // Borders - Plus subtiles
+    border: "#e2e8f0",
+    borderLight: "#f1f5f9",
     
-    // Status
+    // Status - Plus saturés pour visibilité
     success: "#10b981",
     error: "#ef4444",
     warning: "#f59e0b",
     info: "#3b82f6",
     
-    // Autres
-    shadow: "rgba(0, 0, 0, 0.1)",
-    overlay: "rgba(255, 255, 255, 0.95)",
+    // Autres - Ombres plus douces et profondes
+    shadow: "rgba(15, 23, 42, 0.08)",
+    overlay: "rgba(248, 250, 252, 0.98)",
   }
 };
 
