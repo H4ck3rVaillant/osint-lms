@@ -53,7 +53,7 @@ export const themes = {
     textTertiary: "#9ca3af",
     
     // Accent
-    accent: "#1e3a8a",
+    accent: "#2563eb",
     accentHover: "#1e40af",
     accentDark: "#eff6ff",
     
