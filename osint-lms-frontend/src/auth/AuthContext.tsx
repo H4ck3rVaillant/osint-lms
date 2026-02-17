@@ -29,7 +29,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     localStorage.removeItem("token");
+    localStorage.removeItem("lastActivity"); // ✅ Nettoyer aussi le timestamp
     setUser(null);
+  }, []);
+
+  // ✅ Fonction pour mettre à jour le timestamp de dernière activité
+  const updateLastActivity = useCallback(() => {
+    localStorage.setItem("lastActivity", Date.now().toString());
   }, []);
 
   // Gestion de l'inactivité
@@ -42,6 +48,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const resetTimer = () => {
       clearTimeout(inactivityTimer);
       clearTimeout(warningTimer);
+
+      // ✅ Mettre à jour le timestamp à chaque activité
+      updateLastActivity();
 
       warningTimer = setTimeout(() => {
         console.log("⚠️ Déconnexion dans 1 minute");
@@ -63,18 +72,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       clearTimeout(warningTimer);
       events.forEach(event => document.removeEventListener(event, resetTimer));
     };
-  }, [user, logout]);
+  }, [user, logout, updateLastActivity]);
 
-  // ✅ FIX F5: Restaurer la session depuis le JWT localStorage
+  // ✅ FIX F5 + INACTIVITÉ: Restaurer la session ET vérifier l'inactivité
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const lastActivity = localStorage.getItem("lastActivity");
+    
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         const isExpired = payload.exp && Date.now() / 1000 > payload.exp;
         
+        // ✅ Vérifier aussi si 15 min d'inactivité sont écoulées
+        const timeSinceLastActivity = lastActivity 
+          ? Date.now() - parseInt(lastActivity, 10)
+          : Infinity;
+        
+        const isInactive = timeSinceLastActivity > INACTIVITY_TIMEOUT;
+        
         if (isExpired) {
+          console.log("🔐 Token JWT expiré");
           localStorage.removeItem("token");
+          localStorage.removeItem("lastActivity");
+        } else if (isInactive) {
+          console.log("⏱️ Session expirée (inactivité > 15 min)");
+          localStorage.removeItem("token");
+          localStorage.removeItem("lastActivity");
         } else if (payload.id && payload.username) {
           // ✅ SESSION RESTAURÉE - l'utilisateur reste connecté après F5
           setUser({
@@ -82,15 +106,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             username: payload.username,
             role: payload.role || "user"
           });
+          // ✅ Mettre à jour le timestamp car l'utilisateur vient de charger la page
+          updateLastActivity();
         } else {
           localStorage.removeItem("token");
+          localStorage.removeItem("lastActivity");
         }
       } catch {
         localStorage.removeItem("token");
+        localStorage.removeItem("lastActivity");
       }
     }
     setIsLoading(false);
-  }, []);
+  }, [updateLastActivity]);
 
   const login = async (username: string, password: string) => {
     try {
@@ -134,6 +162,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (data.token && data.user) {
         localStorage.setItem("token", data.token);
         setUser(data.user);
+        // ✅ Initialiser le timestamp de dernière activité à la connexion
+        updateLastActivity();
         return { success: true };
       }
 
