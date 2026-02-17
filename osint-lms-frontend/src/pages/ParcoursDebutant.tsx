@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useThemeColors } from "../context/ThemeContext";
 
 export default function ParcoursDebutant() {
-  const colors = useThemeColors();
   const [introDone, setIntroDone] = useState(false);
   const [methodoDone, setMethodoDone] = useState(false);
   const [outilsDone, setOutilsDone] = useState(false);
@@ -20,598 +18,236 @@ export default function ParcoursDebutant() {
   const progressPercentage = (completedModules / totalModules) * 100;
 
   const cardStyle = {
-    background: colors.bgPrimary,
-    border: `2px solid ${colors.border}`,
-    borderRadius: "12px",
-    padding: "28px",
+    background: "#0b0f1a",
+    border: "1px solid #00ff9c",
+    borderRadius: "8px",
+    padding: "24px",
     textDecoration: "none",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    transition: "all 0.3s ease",
     cursor: "pointer",
     display: "block",
-    boxShadow: `0 1px 3px ${colors.shadow}, 0 1px 2px ${colors.shadow}`,
   };
 
-  const disabledStyle = { 
-    opacity: 0.5, 
-    cursor: "not-allowed",
-    filter: "grayscale(0.3)"
-  };
+  const disabledStyle = { opacity: 0.4, cursor: "not-allowed" };
+  const titleStyle = { color: "#00ff9c", marginBottom: "10px", fontSize: "1.25rem", fontWeight: "600" };
+  const textStyle = { color: "#9ca3af", marginBottom: "8px" };
 
   return (
-    <main style={{ 
-      padding: "40px 20px", 
-      maxWidth: "1200px", 
-      margin: "0 auto",
-      background: `linear-gradient(to bottom, ${colors.bgPrimary}, ${colors.bgSecondary})`
-    }}>
-      
-      {/* Header avec gradient */}
-      <div style={{ marginBottom: "40px" }}>
-        <h1 style={{ 
-          color: colors.textPrimary, 
-          fontSize: "2.5rem", 
-          marginBottom: "12px",
-          fontWeight: "700",
-          background: `linear-gradient(135deg, ${colors.accent}, #8b5cf6)`,
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text"
-        }}>
-          🟢 Parcours Débutant OSINT
-        </h1>
-        <p style={{ 
-          color: colors.textSecondary, 
-          fontSize: "1.15rem",
-          lineHeight: "1.7",
-          maxWidth: "800px"
-        }}>
-          Découvrez les fondamentaux de l'OSINT et apprenez à collecter, analyser et exploiter des informations publiques de manière éthique et légale.
-        </p>
-      </div>
+    <main style={{ padding: "40px", maxWidth: "1200px", margin: "0 auto" }}>
+      <h1 style={{ color: "#00ff9c", fontSize: "2rem", marginBottom: "10px" }}>
+        Parcours DÃ©butant OSINT
+      </h1>
+      <p style={{ color: "#9ca3af", marginBottom: "30px", fontSize: "1.1rem" }}>
+        DÃ©couvrez les fondamentaux de l'OSINT et apprenez Ã  collecter, analyser et exploiter des informations publiques de maniÃ¨re Ã©thique et lÃ©gale.
+      </p>
 
-      {/* Barre de progression PREMIUM */}
+      {/* Barre de progression */}
       <div style={{ 
-        background: `linear-gradient(135deg, ${colors.bgPrimary}, ${colors.bgSecondary})`,
-        border: `2px solid ${colors.accent}`,
-        borderRadius: "16px", 
-        padding: "32px",
-        marginBottom: "40px",
-        boxShadow: `0 10px 40px ${colors.shadow}, 0 0 0 1px ${colors.borderLight}`,
-        position: "relative",
-        overflow: "hidden"
+        background: "#0b0f1a", 
+        border: "1px solid #00ff9c", 
+        borderRadius: "8px", 
+        padding: "24px",
+        marginBottom: "30px"
       }}>
-        {/* Glow effect background */}
-        <div style={{
-          position: "absolute",
-          top: "-50%",
-          right: "-10%",
-          width: "300px",
-          height: "300px",
-          background: `radial-gradient(circle, ${colors.accent}15, transparent)`,
-          borderRadius: "50%",
-          pointerEvents: "none"
-        }} />
-        
         <div style={{ 
           display: "flex", 
           justifyContent: "space-between", 
           alignItems: "center",
-          marginBottom: "20px",
-          position: "relative",
-          zIndex: 1
+          marginBottom: "12px"
         }}>
-          <h3 style={{ 
-            color: colors.textPrimary, 
-            margin: 0, 
-            fontSize: "1.3rem",
-            fontWeight: "600",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px"
-          }}>
-            <span style={{
-              background: colors.accent,
-              color: "#fff",
-              width: "32px",
-              height: "32px",
-              borderRadius: "8px",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "1.2rem"
-            }}>📊</span>
+          <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.1rem" }}>
             Progression du parcours
           </h3>
           <span style={{ 
-            background: colors.accentDark,
-            color: colors.accent,
-            padding: "8px 16px",
-            borderRadius: "20px",
-            fontWeight: "700",
-            fontSize: "1.1rem",
-            border: `2px solid ${colors.accent}`
+            color: "#00ff9c", 
+            fontWeight: "bold",
+            fontSize: "1.1rem"
           }}>
-            {completedModules}/{totalModules} modules
+            {completedModules}/{totalModules} modules complÃ©tÃ©s
           </span>
         </div>
         
-        {/* Progress bar avec gradient */}
+        {/* Barre de progression visuelle */}
         <div style={{
           width: "100%",
-          height: "32px",
-          background: colors.bgSecondary,
-          borderRadius: "16px",
+          height: "24px",
+          background: "#1a1f2e",
+          borderRadius: "12px",
           overflow: "hidden",
-          border: `2px solid ${colors.border}`,
-          position: "relative",
-          boxShadow: `inset 0 2px 4px ${colors.shadow}`
+          border: "1px solid #2a3f3f"
         }}>
           <div style={{
             width: `${progressPercentage}%`,
             height: "100%",
-            background: `linear-gradient(90deg, ${colors.accent}, #8b5cf6)`,
-            transition: "width 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+            background: "linear-gradient(90deg, #00ff9c 0%, #00d484 100%)",
+            transition: "width 0.5s ease",
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-end",
-            paddingRight: "12px",
-            color: "#ffffff",
-            fontWeight: "700",
-            fontSize: "0.9rem",
-            boxShadow: `0 0 20px ${colors.accent}50`
+            justifyContent: "center",
+            color: "#0b0f1a",
+            fontWeight: "bold",
+            fontSize: "0.875rem"
           }}>
-            {progressPercentage > 5 && `${Math.round(progressPercentage)}%`}
+            {progressPercentage > 0 && `${Math.round(progressPercentage)}%`}
           </div>
         </div>
       </div>
 
       <section style={{ 
         display: "grid", 
-        gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", 
-        gap: "28px" 
+        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", 
+        gap: "24px" 
       }}>
-        {/* Module 1: Introduction - PREMIUM CARD */}
-        <Link 
-          to="/parcours/debutant/introduction" 
-          style={{
-            ...cardStyle,
-            borderColor: introDone ? "#10b981" : colors.border,
-            background: introDone 
-              ? `linear-gradient(135deg, #ecfdf520, ${colors.bgPrimary})`
-              : colors.bgPrimary
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-8px) scale(1.02)";
-            e.currentTarget.style.boxShadow = `0 20px 40px ${colors.shadow}, 0 0 0 2px ${colors.accent}`;
-            e.currentTarget.style.borderColor = colors.accent;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0) scale(1)";
-            e.currentTarget.style.boxShadow = `0 1px 3px ${colors.shadow}`;
-            e.currentTarget.style.borderColor = introDone ? "#10b981" : colors.border;
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "16px" }}>
-            <div style={{ flex: 1 }}>
-              <div style={{
-                display: "inline-block",
-                background: colors.accentDark,
-                color: colors.accent,
-                padding: "4px 12px",
-                borderRadius: "6px",
-                fontSize: "0.75rem",
-                fontWeight: "600",
-                marginBottom: "12px"
-              }}>
-                MODULE 1
-              </div>
-              <h2 style={{ 
-                color: colors.textPrimary, 
-                margin: "0 0 8px 0", 
-                fontSize: "1.4rem", 
-                fontWeight: "700",
-                lineHeight: "1.3"
-              }}>
-                Introduction OSINT
-              </h2>
-            </div>
+        {/* Module 1: Introduction */}
+        <Link to="/parcours/debutant/introduction" style={cardStyle}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "12px" }}>
+            <h2 style={titleStyle}>Module 1: Introduction OSINT</h2>
             <span style={{ 
-              color: introDone ? "#10b981" : colors.textTertiary,
-              fontSize: "2rem",
-              marginLeft: "16px",
-              filter: introDone ? "drop-shadow(0 0 8px #10b98150)" : "none"
+              color: introDone ? "#00ff9c" : "#6b7280",
+              fontSize: "1.5rem"
             }}>
-              {introDone ? "✓" : "○"}
+              {introDone ? "â" : "â"}
             </span>
           </div>
-
-          <p style={{ 
-            color: colors.textSecondary, 
-            fontSize: "0.95rem", 
-            marginBottom: "16px", 
-            lineHeight: "1.6" 
-          }}>
-            Découvrez les concepts fondamentaux de l'Open Source Intelligence et son importance dans le monde moderne.
+          <p style={textStyle}>
+            DÃ©couvrez les concepts fondamentaux de l'Open Source Intelligence et son importance dans le monde moderne.
           </p>
-
-          <div style={{
-            background: colors.bgSecondary,
-            borderRadius: "10px",
-            padding: "16px",
-            marginBottom: "16px"
+          <ul style={{ ...textStyle, paddingLeft: "20px", margin: "12px 0" }}>
+            <li>DÃ©finition et pÃ©rimÃ¨tre de l'OSINT</li>
+            <li>Sources ouvertes et lÃ©galitÃ©</li>
+            <li>Cas d'usage et applications</li>
+            <li>Ãthique et responsabilitÃ©</li>
+          </ul>
+          <p style={{ 
+            ...textStyle, 
+            color: introDone ? "#00ff9c" : "#6b7280",
+            fontWeight: "bold",
+            marginTop: "12px"
           }}>
-            <ul style={{ 
-              color: colors.textSecondary, 
-              fontSize: "0.9rem",
-              paddingLeft: "20px", 
-              margin: 0,
-              lineHeight: "1.8"
-            }}>
-              <li>Définition et périmètre de l'OSINT</li>
-              <li>Sources ouvertes et légalité</li>
-              <li>Cas d'usage et applications</li>
-              <li>Éthique et responsabilité</li>
-            </ul>
-          </div>
-
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "12px 16px",
-            background: introDone ? "#ecfdf5" : colors.bgSecondary,
-            borderRadius: "8px",
-            border: `1px solid ${introDone ? "#10b981" : colors.border}`
-          }}>
-            <span style={{ 
-              color: introDone ? "#10b981" : colors.accent,
-              fontWeight: "700",
-              fontSize: "0.95rem"
-            }}>
-              {introDone ? "✓ Module validé" : "→ Accéder au module"}
-            </span>
-          </div>
+            {introDone ? "â Module validÃ©" : "â AccÃ©der au module"}
+          </p>
         </Link>
 
-        {/* Module 2: Méthodologie */}
+        {/* Module 2: MÃ©thodologie */}
         {introDone ? (
-          <Link 
-            to="/parcours/debutant/methodologie" 
-            style={{
-              ...cardStyle,
-              borderColor: methodoDone ? "#10b981" : colors.border,
-              background: methodoDone 
-                ? `linear-gradient(135deg, #ecfdf520, ${colors.bgPrimary})`
-                : colors.bgPrimary
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-8px) scale(1.02)";
-              e.currentTarget.style.boxShadow = `0 20px 40px ${colors.shadow}, 0 0 0 2px ${colors.accent}`;
-              e.currentTarget.style.borderColor = colors.accent;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0) scale(1)";
-              e.currentTarget.style.boxShadow = `0 1px 3px ${colors.shadow}`;
-              e.currentTarget.style.borderColor = methodoDone ? "#10b981" : colors.border;
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "16px" }}>
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  display: "inline-block",
-                  background: colors.accentDark,
-                  color: colors.accent,
-                  padding: "4px 12px",
-                  borderRadius: "6px",
-                  fontSize: "0.75rem",
-                  fontWeight: "600",
-                  marginBottom: "12px"
-                }}>
-                  MODULE 2
-                </div>
-                <h2 style={{ 
-                  color: colors.textPrimary, 
-                  margin: "0 0 8px 0", 
-                  fontSize: "1.4rem", 
-                  fontWeight: "700",
-                  lineHeight: "1.3"
-                }}>
-                  Méthodologie OSINT
-                </h2>
-              </div>
+          <Link to="/parcours/debutant/methodologie" style={cardStyle}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "12px" }}>
+              <h2 style={titleStyle}>Module 2: MÃ©thodologie OSINT</h2>
               <span style={{ 
-                color: methodoDone ? "#10b981" : colors.textTertiary,
-                fontSize: "2rem",
-                marginLeft: "16px",
-                filter: methodoDone ? "drop-shadow(0 0 8px #10b98150)" : "none"
+                color: methodoDone ? "#00ff9c" : "#6b7280",
+                fontSize: "1.5rem"
               }}>
-                {methodoDone ? "✓" : "○"}
+                {methodoDone ? "â" : "â"}
               </span>
             </div>
-
-            <p style={{ 
-              color: colors.textSecondary, 
-              fontSize: "0.95rem", 
-              marginBottom: "16px", 
-              lineHeight: "1.6" 
-            }}>
-              Apprenez la méthodologie structurée pour mener des recherches OSINT efficaces et rigoureuses.
+            <p style={textStyle}>
+              Apprenez la mÃ©thodologie structurÃ©e pour mener des recherches OSINT efficaces et rigoureuses.
             </p>
-
-            <div style={{
-              background: colors.bgSecondary,
-              borderRadius: "10px",
-              padding: "16px",
-              marginBottom: "16px"
+            <ul style={{ ...textStyle, paddingLeft: "20px", margin: "12px 0" }}>
+              <li>Cadrage et dÃ©finition des objectifs</li>
+              <li>Formulation d'hypothÃ¨ses</li>
+              <li>Collecte systÃ©matique</li>
+              <li>Recoupement et validation</li>
+            </ul>
+            <p style={{ 
+              ...textStyle, 
+              color: methodoDone ? "#00ff9c" : "#6b7280",
+              fontWeight: "bold",
+              marginTop: "12px"
             }}>
-              <ul style={{ 
-                color: colors.textSecondary, 
-                fontSize: "0.9rem",
-                paddingLeft: "20px", 
-                margin: 0,
-                lineHeight: "1.8"
-              }}>
-                <li>Cadrage et définition des objectifs</li>
-                <li>Formulation d'hypothèses</li>
-                <li>Collecte systématique</li>
-                <li>Recoupement et validation</li>
-              </ul>
-            </div>
-
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "12px 16px",
-              background: methodoDone ? "#ecfdf5" : colors.bgSecondary,
-              borderRadius: "8px",
-              border: `1px solid ${methodoDone ? "#10b981" : colors.border}`
-            }}>
-              <span style={{ 
-                color: methodoDone ? "#10b981" : colors.accent,
-                fontWeight: "700",
-                fontSize: "0.95rem"
-              }}>
-                {methodoDone ? "✓ Module validé" : "→ Accéder au module"}
-              </span>
-            </div>
+              {methodoDone ? "â Module validÃ©" : "â AccÃ©der au module"}
+            </p>
           </Link>
         ) : (
           <div style={{ ...cardStyle, ...disabledStyle }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "16px" }}>
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  display: "inline-block",
-                  background: colors.bgTertiary,
-                  color: colors.textTertiary,
-                  padding: "4px 12px",
-                  borderRadius: "6px",
-                  fontSize: "0.75rem",
-                  fontWeight: "600",
-                  marginBottom: "12px"
-                }}>
-                  MODULE 2
-                </div>
-                <h2 style={{ 
-                  color: colors.textSecondary, 
-                  margin: "0 0 8px 0", 
-                  fontSize: "1.4rem", 
-                  fontWeight: "700"
-                }}>
-                  Méthodologie OSINT
-                </h2>
-              </div>
-              <span style={{ color: colors.textTertiary, fontSize: "2rem", marginLeft: "16px" }}>🔒</span>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "12px" }}>
+              <h2 style={titleStyle}>Module 2: MÃ©thodologie OSINT</h2>
+              <span style={{ color: "#6b7280", fontSize: "1.5rem" }}>ð</span>
             </div>
-
-            <p style={{ color: colors.textTertiary, fontSize: "0.95rem", marginBottom: "16px" }}>
-              Apprenez la méthodologie structurée pour mener des recherches OSINT efficaces et rigoureuses.
+            <p style={textStyle}>
+              Apprenez la mÃ©thodologie structurÃ©e pour mener des recherches OSINT efficaces et rigoureuses.
             </p>
-
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "12px 16px",
-              background: colors.bgTertiary,
-              borderRadius: "8px",
-              border: `1px solid ${colors.border}`
-            }}>
-              <span style={{ color: colors.textTertiary, fontWeight: "600", fontSize: "0.9rem" }}>
-                🔒 Complétez d'abord le Module 1
-              </span>
-            </div>
+            <p style={{ ...textStyle, fontWeight: "bold", color: "#6b7280", marginTop: "12px" }}>
+              ð ComplÃ©tez d'abord le Module 1
+            </p>
           </div>
         )}
 
         {/* Module 3: Outils */}
         {introDone && methodoDone ? (
-          <Link 
-            to="/parcours/debutant/outils" 
-            style={{
-              ...cardStyle,
-              borderColor: outilsDone ? "#10b981" : colors.border,
-              background: outilsDone 
-                ? `linear-gradient(135deg, #ecfdf520, ${colors.bgPrimary})`
-                : colors.bgPrimary
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-8px) scale(1.02)";
-              e.currentTarget.style.boxShadow = `0 20px 40px ${colors.shadow}, 0 0 0 2px ${colors.accent}`;
-              e.currentTarget.style.borderColor = colors.accent;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0) scale(1)";
-              e.currentTarget.style.boxShadow = `0 1px 3px ${colors.shadow}`;
-              e.currentTarget.style.borderColor = outilsDone ? "#10b981" : colors.border;
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "16px" }}>
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  display: "inline-block",
-                  background: colors.accentDark,
-                  color: colors.accent,
-                  padding: "4px 12px",
-                  borderRadius: "6px",
-                  fontSize: "0.75rem",
-                  fontWeight: "600",
-                  marginBottom: "12px"
-                }}>
-                  MODULE 3
-                </div>
-                <h2 style={{ 
-                  color: colors.textPrimary, 
-                  margin: "0 0 8px 0", 
-                  fontSize: "1.4rem", 
-                  fontWeight: "700",
-                  lineHeight: "1.3"
-                }}>
-                  Outils OSINT
-                </h2>
-              </div>
+          <Link to="/parcours/debutant/outils" style={cardStyle}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "12px" }}>
+              <h2 style={titleStyle}>Module 3: Outils OSINT</h2>
               <span style={{ 
-                color: outilsDone ? "#10b981" : colors.textTertiary,
-                fontSize: "2rem",
-                marginLeft: "16px",
-                filter: outilsDone ? "drop-shadow(0 0 8px #10b98150)" : "none"
+                color: outilsDone ? "#00ff9c" : "#6b7280",
+                fontSize: "1.5rem"
               }}>
-                {outilsDone ? "✓" : "○"}
+                {outilsDone ? "â" : "â"}
               </span>
             </div>
-
-            <p style={{ 
-              color: colors.textSecondary, 
-              fontSize: "0.95rem", 
-              marginBottom: "16px", 
-              lineHeight: "1.6" 
-            }}>
-              Maîtrisez les outils essentiels pour débuter en OSINT et automatiser vos premières recherches.
+            <p style={textStyle}>
+              MaÃ®trisez les outils essentiels pour dÃ©buter en OSINT et automatiser vos premiÃ¨res recherches.
             </p>
-
-            <div style={{
-              background: colors.bgSecondary,
-              borderRadius: "10px",
-              padding: "16px",
-              marginBottom: "16px"
+            <ul style={{ ...textStyle, paddingLeft: "20px", margin: "12px 0" }}>
+              <li>Google Dorks et recherche avancÃ©e</li>
+              <li>Shodan pour la reconnaissance</li>
+              <li>Sherlock et outils d'identification</li>
+              <li>Maltego pour la visualisation</li>
+            </ul>
+            <p style={{ 
+              ...textStyle, 
+              color: outilsDone ? "#00ff9c" : "#6b7280",
+              fontWeight: "bold",
+              marginTop: "12px"
             }}>
-              <ul style={{ 
-                color: colors.textSecondary, 
-                fontSize: "0.9rem",
-                paddingLeft: "20px", 
-                margin: 0,
-                lineHeight: "1.8"
-              }}>
-                <li>Google Dorks et recherche avancée</li>
-                <li>Shodan pour la reconnaissance</li>
-                <li>Sherlock et outils d'identification</li>
-                <li>Maltego pour la visualisation</li>
-              </ul>
-            </div>
-
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "12px 16px",
-              background: outilsDone ? "#ecfdf5" : colors.bgSecondary,
-              borderRadius: "8px",
-              border: `1px solid ${outilsDone ? "#10b981" : colors.border}`
-            }}>
-              <span style={{ 
-                color: outilsDone ? "#10b981" : colors.accent,
-                fontWeight: "700",
-                fontSize: "0.95rem"
-              }}>
-                {outilsDone ? "✓ Module validé" : "→ Accéder au module"}
-              </span>
-            </div>
+              {outilsDone ? "â Module validÃ©" : "â AccÃ©der au module"}
+            </p>
           </Link>
         ) : (
           <div style={{ ...cardStyle, ...disabledStyle }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "16px" }}>
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  display: "inline-block",
-                  background: colors.bgTertiary,
-                  color: colors.textTertiary,
-                  padding: "4px 12px",
-                  borderRadius: "6px",
-                  fontSize: "0.75rem",
-                  fontWeight: "600",
-                  marginBottom: "12px"
-                }}>
-                  MODULE 3
-                </div>
-                <h2 style={{ 
-                  color: colors.textSecondary, 
-                  margin: "0 0 8px 0", 
-                  fontSize: "1.4rem", 
-                  fontWeight: "700"
-                }}>
-                  Outils OSINT
-                </h2>
-              </div>
-              <span style={{ color: colors.textTertiary, fontSize: "2rem", marginLeft: "16px" }}>🔒</span>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "12px" }}>
+              <h2 style={titleStyle}>Module 3: Outils OSINT</h2>
+              <span style={{ color: "#6b7280", fontSize: "1.5rem" }}>ð</span>
             </div>
-
-            <p style={{ color: colors.textTertiary, fontSize: "0.95rem", marginBottom: "16px" }}>
-              Maîtrisez les outils essentiels pour débuter en OSINT et automatiser vos premières recherches.
+            <p style={textStyle}>
+              MaÃ®trisez les outils essentiels pour dÃ©buter en OSINT et automatiser vos premiÃ¨res recherches.
             </p>
-
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "12px 16px",
-              background: colors.bgTertiary,
-              borderRadius: "8px",
-              border: `1px solid ${colors.border}`
-            }}>
-              <span style={{ color: colors.textTertiary, fontWeight: "600", fontSize: "0.9rem" }}>
-                🔒 Complétez d'abord les Modules 1 et 2
-              </span>
-            </div>
+            <p style={{ ...textStyle, fontWeight: "bold", color: "#6b7280", marginTop: "12px" }}>
+              ð ComplÃ©tez d'abord les Modules 1 et 2
+            </p>
           </div>
         )}
       </section>
 
-      {/* Bouton de réinitialisation PREMIUM */}
-      <div style={{ textAlign: "center", marginTop: "60px" }}>
+      {/* Bouton de rÃ©initialisation */}
+      <div style={{ textAlign: "center", marginTop: "50px" }}>
         <button
           onClick={() => setShowResetPopup(true)}
           style={{
-            background: colors.bgPrimary,
-            color: colors.textSecondary,
-            border: `2px solid ${colors.border}`,
-            padding: "16px 32px",
-            borderRadius: "12px",
+            background: "#0b0f1a",
+            color: "#00ff9c",
+            border: "1px solid #00ff9c",
+            padding: "14px 32px",
+            borderRadius: "8px",
             fontSize: "1rem",
-            fontWeight: "600",
+            fontWeight: "bold",
             cursor: "pointer",
             transition: "all 0.3s ease",
-            boxShadow: `0 2px 8px ${colors.shadow}`
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = colors.bgSecondary;
-            e.currentTarget.style.borderColor = colors.accent;
-            e.currentTarget.style.color = colors.accent;
-            e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.boxShadow = `0 8px 16px ${colors.shadow}`;
+            e.currentTarget.style.background = "#00ff9c";
+            e.currentTarget.style.color = "#0b0f1a";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = colors.bgPrimary;
-            e.currentTarget.style.borderColor = colors.border;
-            e.currentTarget.style.color = colors.textSecondary;
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow = `0 2px 8px ${colors.shadow}`;
+            e.currentTarget.style.background = "#0b0f1a";
+            e.currentTarget.style.color = "#00ff9c";
           }}
         >
-          🔄 Réinitialiser mon parcours
+          ð RÃ©initialiser mon parcours
         </button>
       </div>
 
-      {/* Pop-up PREMIUM */}
+      {/* Pop-up de confirmation de rÃ©initialisation */}
       {showResetPopup && (
         <div style={{
           position: "fixed",
@@ -619,110 +255,66 @@ export default function ParcoursDebutant() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: colors.overlay,
-          backdropFilter: "blur(8px)",
+          background: "rgba(0, 0, 0, 0.85)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 1000,
-          animation: "fadeIn 0.2s ease"
         }}>
           <div style={{
-            background: colors.bgPrimary,
-            border: `2px solid ${colors.accent}`,
-            borderRadius: "20px",
-            padding: "48px",
+            background: "#0b0f1a",
+            border: "2px solid #00ff9c",
+            borderRadius: "12px",
+            padding: "40px",
             maxWidth: "500px",
             textAlign: "center",
-            boxShadow: `0 20px 60px ${colors.shadow}, 0 0 0 1px ${colors.borderLight}`,
-            animation: "slideUp 0.3s ease"
+            boxShadow: "0 0 50px rgba(0, 255, 156, 0.3)",
           }}>
-            <div style={{
-              width: "64px",
-              height: "64px",
-              background: `linear-gradient(135deg, ${colors.accent}, #8b5cf6)`,
-              borderRadius: "16px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "2rem",
-              margin: "0 auto 24px",
-              boxShadow: `0 8px 20px ${colors.accent}30`
-            }}>
-              ⚠️
-            </div>
-
-            <h3 style={{ 
-              color: colors.textPrimary, 
-              marginBottom: "16px", 
-              fontSize: "1.6rem",
-              fontWeight: "700"
-            }}>
-              Réinitialiser le parcours ?
+            <h3 style={{ color: "#00ff9c", marginBottom: "15px", fontSize: "1.5rem" }}>
+              RÃ©initialiser le parcours ?
             </h3>
-            <p style={{ 
-              color: colors.textSecondary, 
-              marginBottom: "32px", 
-              lineHeight: "1.7",
-              fontSize: "1.05rem"
-            }}>
-              Tous les badges de ce parcours seront verrouillés et vous devrez les compléter à nouveau. Cette action est irréversible.
+            <p style={{ color: "#9ca3af", marginBottom: "30px", lineHeight: "1.6" }}>
+              Tous les badges de ce parcours seront verrouillÃ©s et vous devrez les complÃ©ter Ã  nouveau. 
+              Cette action est irrÃ©versible.
             </p>
 
-            <div style={{ display: "flex", gap: "16px", justifyContent: "center" }}>
+            <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
               <button
                 onClick={() => {
                   localStorage.removeItem("badge_deb_intro");
                   localStorage.removeItem("badge_deb_methodo");
                   localStorage.removeItem("badge_deb_outils");
+                  localStorage.removeItem("cyberosint_game_state");
+                  localStorage.removeItem("cyberosint_challenges");
                   setIntroDone(false);
                   setMethodoDone(false);
                   setOutilsDone(false);
                   setShowResetPopup(false);
                 }}
                 style={{
-                  padding: "14px 32px",
-                  background: `linear-gradient(135deg, ${colors.accent}, #8b5cf6)`,
-                  color: "#ffffff",
-                  borderRadius: "10px",
+                  padding: "12px 28px",
+                  background: "#00ff9c",
+                  color: "#0b0f1a",
+                  borderRadius: "8px",
                   cursor: "pointer",
                   border: "none",
-                  fontWeight: "700",
+                  fontWeight: "bold",
                   fontSize: "1rem",
-                  boxShadow: `0 4px 12px ${colors.accent}40`,
-                  transition: "all 0.2s"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = `0 8px 20px ${colors.accent}50`;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = `0 4px 12px ${colors.accent}40`;
                 }}
               >
-                ✓ Confirmer
+                â Confirmer
               </button>
               <button
                 onClick={() => setShowResetPopup(false)}
                 style={{
-                  padding: "14px 32px",
-                  background: colors.bgSecondary,
-                  color: colors.textPrimary,
-                  border: `2px solid ${colors.border}`,
-                  borderRadius: "10px",
+                  padding: "12px 28px",
+                  background: "transparent",
+                  color: "#00ff9c",
+                  border: "1px solid #00ff9c",
+                  borderRadius: "8px",
                   cursor: "pointer",
-                  fontWeight: "600",
+                  fontWeight: "bold",
                   fontSize: "1rem",
-                  transition: "all 0.2s"
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = colors.bgTertiary;
-                  e.currentTarget.style.borderColor = colors.accent;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = colors.bgSecondary;
-                  e.currentTarget.style.borderColor = colors.border;
                 }}
               >
                 Annuler

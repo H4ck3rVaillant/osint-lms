@@ -12,32 +12,32 @@ type Exercise = {
 };
 
 const exercises: Exercise[] = [
-  // ==================== DÉBUTANT (1-5) ====================
+  // ==================== DÃBUTANT (1-5) ====================
   {
     id: 1,
-    title: "Recherche d'exposition numérique",
+    title: "Recherche d'exposition numÃ©rique",
     category: "Reconnaissance",
-    description: "Identifier les informations publiques accessibles sur une entreprise via ses canaux officiels et les profils de ses employés.",
-    question: "Quels types d'informations peut-on légalement collecter via un site corporate et LinkedIn pour évaluer la surface d'attaque d'une organisation ?",
-    solution: "On peut identifier : les noms et fonctions des employés (notamment IT/sécurité), les technologies utilisées (mentionnées dans les offres d'emploi), les partenaires technologiques, la structure organisationnelle, les localisations géographiques, les projets en cours, et les adresses emails au format standard. Ces informations permettent de cartographier l'infrastructure et les points d'entrée potentiels.",
-    difficulty: "Débutant",
+    description: "Identifier les informations publiques accessibles sur une entreprise via ses canaux officiels et les profils de ses employÃ©s.",
+    question: "Quels types d'informations peut-on lÃ©galement collecter via un site corporate et LinkedIn pour Ã©valuer la surface d'attaque d'une organisation ?",
+    solution: "On peut identifier : les noms et fonctions des employÃ©s (notamment IT/sÃ©curitÃ©), les technologies utilisÃ©es (mentionnÃ©es dans les offres d'emploi), les partenaires technologiques, la structure organisationnelle, les localisations gÃ©ographiques, les projets en cours, et les adresses emails au format standard. Ces informations permettent de cartographier l'infrastructure et les points d'entrÃ©e potentiels.",
+    difficulty: "DÃ©butant",
     tips: [
-      "Consultez la page 'Carrières' pour identifier les technologies recherchées",
-      "Analysez les profils LinkedIn des employés IT pour repérer les outils utilisés",
-      "Vérifiez les communiqués de presse pour les partenariats technologiques"
+      "Consultez la page 'CarriÃ¨res' pour identifier les technologies recherchÃ©es",
+      "Analysez les profils LinkedIn des employÃ©s IT pour repÃ©rer les outils utilisÃ©s",
+      "VÃ©rifiez les communiquÃ©s de presse pour les partenariats technologiques"
     ]
   },
   {
     id: 2,
     title: "Google Dorks basiques",
     category: "Outils de recherche",
-    description: "Utiliser les opérateurs de recherche Google pour affiner vos résultats et découvrir des informations ciblées.",
-    question: "Quels opérateurs Google Dorks permettent de rechercher un type de fichier spécifique sur un domaine particulier, et donnez un exemple pratique ?",
-    solution: "Les opérateurs clés sont : 'filetype:' pour le type de fichier et 'site:' pour le domaine. Exemple complet : 'filetype:pdf site:gouv.fr budget 2024' trouve tous les PDF contenant 'budget 2024' sur les sites gouvernementaux français. Autres opérateurs utiles : 'intitle:' (dans le titre), 'inurl:' (dans l'URL), 'intext:' (dans le texte), et les guillemets \"\" pour une recherche exacte.",
-    difficulty: "Débutant",
+    description: "Utiliser les opÃ©rateurs de recherche Google pour affiner vos rÃ©sultats et dÃ©couvrir des informations ciblÃ©es.",
+    question: "Quels opÃ©rateurs Google Dorks permettent de rechercher un type de fichier spÃ©cifique sur un domaine particulier, et donnez un exemple pratique ?",
+    solution: "Les opÃ©rateurs clÃ©s sont : 'filetype:' pour le type de fichier et 'site:' pour le domaine. Exemple complet : 'filetype:pdf site:gouv.fr budget 2024' trouve tous les PDF contenant 'budget 2024' sur les sites gouvernementaux franÃ§ais. Autres opÃ©rateurs utiles : 'intitle:' (dans le titre), 'inurl:' (dans l'URL), 'intext:' (dans le texte), et les guillemets \"\" pour une recherche exacte.",
+    difficulty: "DÃ©butant",
     tips: [
-      "Combinez plusieurs opérateurs pour des recherches très précises",
-      "Les guillemets forcent Google à chercher l'expression exacte",
+      "Combinez plusieurs opÃ©rateurs pour des recherches trÃ¨s prÃ©cises",
+      "Les guillemets forcent Google Ã  chercher l'expression exacte",
       "Utilisez le tiret '-' pour exclure des termes (ex: -site:exemple.fr)"
     ]
   },
@@ -45,185 +45,185 @@ const exercises: Exercise[] = [
     id: 3,
     title: "WHOIS et informations de domaine",
     category: "Infrastructure",
-    description: "Extraire des informations sur les propriétaires de domaines et leur infrastructure DNS.",
-    question: "Quelles informations principales peut-on obtenir via une requête WHOIS d'un nom de domaine, et quelles limitations existent depuis le RGPD ?",
-    solution: "Un WHOIS révèle : le registrant (propriétaire), les dates de création/expiration/mise à jour du domaine, les serveurs DNS (nameservers), le registrar (bureau d'enregistrement), et parfois des contacts (email, téléphone, adresse). Depuis le RGPD (2018), beaucoup de données personnelles sont masquées par des services de confidentialité (Privacy Protection). Les informations d'entreprises restent souvent visibles. Les nameservers peuvent révéler l'hébergeur DNS.",
-    difficulty: "Débutant",
+    description: "Extraire des informations sur les propriÃ©taires de domaines et leur infrastructure DNS.",
+    question: "Quelles informations principales peut-on obtenir via une requÃªte WHOIS d'un nom de domaine, et quelles limitations existent depuis le RGPD ?",
+    solution: "Un WHOIS rÃ©vÃ¨le : le registrant (propriÃ©taire), les dates de crÃ©ation/expiration/mise Ã  jour du domaine, les serveurs DNS (nameservers), le registrar (bureau d'enregistrement), et parfois des contacts (email, tÃ©lÃ©phone, adresse). Depuis le RGPD (2018), beaucoup de donnÃ©es personnelles sont masquÃ©es par des services de confidentialitÃ© (Privacy Protection). Les informations d'entreprises restent souvent visibles. Les nameservers peuvent rÃ©vÃ©ler l'hÃ©bergeur DNS.",
+    difficulty: "DÃ©butant",
     tips: [
-      "Les dates de création révèlent l'ancienneté et la légitimité d'un site",
-      "Les services de confidentialité masquent les données mais peuvent être contournés via d'autres sources",
+      "Les dates de crÃ©ation rÃ©vÃ¨lent l'anciennetÃ© et la lÃ©gitimitÃ© d'un site",
+      "Les services de confidentialitÃ© masquent les donnÃ©es mais peuvent Ãªtre contournÃ©s via d'autres sources",
       "Utilisez whois.domaintools.com ou who.is pour des interfaces conviviales"
     ]
   },
   {
     id: 4,
-    title: "Recherche d'images inversée",
-    category: "Vérification",
-    description: "Vérifier l'authenticité et tracer l'origine d'une image en utilisant la recherche inversée.",
-    question: "Quels sont les trois principaux moteurs de recherche d'images inversée et dans quels cas utiliser chacun d'eux ?",
-    solution: "1) Google Images : le plus utilisé, bon pour les images populaires et les lieux. 2) TinEye : excellent pour l'historique (montre les apparitions chronologiques), idéal pour détecter les manipulations. 3) Yandex Images : supérieur pour la reconnaissance de visages et d'objets, très efficace pour les photos de profil. Cas d'usage : vérifier si une photo de profil est volée, tracer l'origine d'une image virale, trouver des versions haute résolution, détecter des fake news visuelles.",
-    difficulty: "Débutant",
+    title: "Recherche d'images inversÃ©e",
+    category: "VÃ©rification",
+    description: "VÃ©rifier l'authenticitÃ© et tracer l'origine d'une image en utilisant la recherche inversÃ©e.",
+    question: "Quels sont les trois principaux moteurs de recherche d'images inversÃ©e et dans quels cas utiliser chacun d'eux ?",
+    solution: "1) Google Images : le plus utilisÃ©, bon pour les images populaires et les lieux. 2) TinEye : excellent pour l'historique (montre les apparitions chronologiques), idÃ©al pour dÃ©tecter les manipulations. 3) Yandex Images : supÃ©rieur pour la reconnaissance de visages et d'objets, trÃ¨s efficace pour les photos de profil. Cas d'usage : vÃ©rifier si une photo de profil est volÃ©e, tracer l'origine d'une image virale, trouver des versions haute rÃ©solution, dÃ©tecter des fake news visuelles.",
+    difficulty: "DÃ©butant",
     tips: [
-      "Utilisez les trois moteurs pour maximiser vos résultats",
+      "Utilisez les trois moteurs pour maximiser vos rÃ©sultats",
       "Yandex est souvent plus efficace que Google pour les visages",
       "TinEye garde un historique plus long que les autres"
     ]
   },
   {
     id: 5,
-    title: "Métadonnées EXIF d'images",
+    title: "MÃ©tadonnÃ©es EXIF d'images",
     category: "Forensics",
-    description: "Comprendre et extraire les métadonnées des fichiers images pour obtenir des informations contextuelles.",
-    question: "Quelles informations critiques peuvent être extraites des métadonnées EXIF d'une photo et comment les consulter ?",
-    solution: "Les métadonnées EXIF contiennent : date et heure de prise, modèle d'appareil photo/smartphone, paramètres (ISO, ouverture, vitesse), parfois coordonnées GPS (si activées), logiciel d'édition utilisé, orientation. Outils d'extraction : ExifTool (ligne de commande, le plus complet), Jeffrey's Image Metadata Viewer (en ligne), ou propriétés du fichier (Windows/Mac). ATTENTION : les réseaux sociaux suppriment généralement les EXIF lors de l'upload. Les coordonnées GPS peuvent révéler le lieu exact de prise de vue.",
-    difficulty: "Débutant",
+    description: "Comprendre et extraire les mÃ©tadonnÃ©es des fichiers images pour obtenir des informations contextuelles.",
+    question: "Quelles informations critiques peuvent Ãªtre extraites des mÃ©tadonnÃ©es EXIF d'une photo et comment les consulter ?",
+    solution: "Les mÃ©tadonnÃ©es EXIF contiennent : date et heure de prise, modÃ¨le d'appareil photo/smartphone, paramÃ¨tres (ISO, ouverture, vitesse), parfois coordonnÃ©es GPS (si activÃ©es), logiciel d'Ã©dition utilisÃ©, orientation. Outils d'extraction : ExifTool (ligne de commande, le plus complet), Jeffrey's Image Metadata Viewer (en ligne), ou propriÃ©tÃ©s du fichier (Windows/Mac). ATTENTION : les rÃ©seaux sociaux suppriment gÃ©nÃ©ralement les EXIF lors de l'upload. Les coordonnÃ©es GPS peuvent rÃ©vÃ©ler le lieu exact de prise de vue.",
+    difficulty: "DÃ©butant",
     tips: [
-      "ExifTool est l'outil de référence : 'exiftool image.jpg'",
-      "Les métadonnées peuvent être facilement supprimées ou falsifiées",
-      "Corréllez toujours avec d'autres éléments visuels de la photo"
+      "ExifTool est l'outil de rÃ©fÃ©rence : 'exiftool image.jpg'",
+      "Les mÃ©tadonnÃ©es peuvent Ãªtre facilement supprimÃ©es ou falsifiÃ©es",
+      "CorrÃ©llez toujours avec d'autres Ã©lÃ©ments visuels de la photo"
     ]
   },
 
-  // ==================== INTERMÉDIAIRE (6-10) ====================
+  // ==================== INTERMÃDIAIRE (6-10) ====================
   {
     id: 6,
-    title: "Analyse de profil social avancée",
-    category: "Réseaux Sociaux",
-    description: "Détecter les faux comptes, bots et comportements automatisés sur les réseaux sociaux.",
+    title: "Analyse de profil social avancÃ©e",
+    category: "RÃ©seaux Sociaux",
+    description: "DÃ©tecter les faux comptes, bots et comportements automatisÃ©s sur les rÃ©seaux sociaux.",
     question: "Quels indicateurs techniques et comportementaux permettent de distinguer un compte authentique d'un bot ou d'un faux profil ?",
-    solution: "Indicateurs techniques : date de création récente, photo de profil générée par IA ou stock photo (vérifiable par recherche inversée), peu ou pas de photos personnelles, ratio followers/following anormal (très élevé ou 1:1 suspect). Indicateurs comportementaux : publications à intervalles réguliers parfaits (automatisation), peu d'interactions authentiques, contenus répétitifs ou copiés-collés, langue incohérente avec la localisation prétendue, activité 24/7 impossible pour un humain, soutien unilatéral d'un narratif spécifique. Analysez sur plusieurs mois pour détecter les patterns.",
-    difficulty: "Intermédiaire",
+    solution: "Indicateurs techniques : date de crÃ©ation rÃ©cente, photo de profil gÃ©nÃ©rÃ©e par IA ou stock photo (vÃ©rifiable par recherche inversÃ©e), peu ou pas de photos personnelles, ratio followers/following anormal (trÃ¨s Ã©levÃ© ou 1:1 suspect). Indicateurs comportementaux : publications Ã  intervalles rÃ©guliers parfaits (automatisation), peu d'interactions authentiques, contenus rÃ©pÃ©titifs ou copiÃ©s-collÃ©s, langue incohÃ©rente avec la localisation prÃ©tendue, activitÃ© 24/7 impossible pour un humain, soutien unilatÃ©ral d'un narratif spÃ©cifique. Analysez sur plusieurs mois pour dÃ©tecter les patterns.",
+    difficulty: "IntermÃ©diaire",
     tips: [
-      "Vérifiez la photo de profil via TinEye ou Google Images",
-      "Analysez l'historique complet : les bots ont souvent des périodes d'inactivité puis d'hyperactivité",
-      "Les interactions (réponses aux commentaires) sont plus révélatrices que les posts"
+      "VÃ©rifiez la photo de profil via TinEye ou Google Images",
+      "Analysez l'historique complet : les bots ont souvent des pÃ©riodes d'inactivitÃ© puis d'hyperactivitÃ©",
+      "Les interactions (rÃ©ponses aux commentaires) sont plus rÃ©vÃ©latrices que les posts"
     ]
   },
   {
     id: 7,
-    title: "Géolocalisation par analyse d'ombres",
-    category: "Géolocalisation",
-    description: "Utiliser les ombres dans une photo pour déterminer l'orientation géographique et l'heure approximative.",
+    title: "GÃ©olocalisation par analyse d'ombres",
+    category: "GÃ©olocalisation",
+    description: "Utiliser les ombres dans une photo pour dÃ©terminer l'orientation gÃ©ographique et l'heure approximative.",
     question: "Comment utiliser les ombres visibles dans une photo pour calculer l'orientation cardinale et estimer l'heure de prise de vue ?",
-    solution: "L'ombre pointe vers le nord (hémisphère nord) à midi solaire. Méthodologie : 1) Mesurer la longueur et l'angle de l'ombre par rapport à des objets verticaux, 2) Utiliser SunCalc.org pour visualiser la position du soleil à différentes heures pour un lieu donné, 3) Comparer avec la photo pour trouver la correspondance. La longueur de l'ombre varie : courte à midi, longue le matin/soir. Précision : ±30-60 minutes pour l'heure, ±100km pour la localisation. Nécessite de connaître la date approximative.",
-    difficulty: "Intermédiaire",
+    solution: "L'ombre pointe vers le nord (hÃ©misphÃ¨re nord) Ã  midi solaire. MÃ©thodologie : 1) Mesurer la longueur et l'angle de l'ombre par rapport Ã  des objets verticaux, 2) Utiliser SunCalc.org pour visualiser la position du soleil Ã  diffÃ©rentes heures pour un lieu donnÃ©, 3) Comparer avec la photo pour trouver la correspondance. La longueur de l'ombre varie : courte Ã  midi, longue le matin/soir. PrÃ©cision : Â±30-60 minutes pour l'heure, Â±100km pour la localisation. NÃ©cessite de connaÃ®tre la date approximative.",
+    difficulty: "IntermÃ©diaire",
     tips: [
-      "Plusieurs ombres de longueurs différentes augmentent la précision",
-      "Combinez avec d'autres éléments (végétation, architecture) pour affiner",
-      "ShadowCalculator.eu offre des outils de calcul spécialisés"
+      "Plusieurs ombres de longueurs diffÃ©rentes augmentent la prÃ©cision",
+      "Combinez avec d'autres Ã©lÃ©ments (vÃ©gÃ©tation, architecture) pour affiner",
+      "ShadowCalculator.eu offre des outils de calcul spÃ©cialisÃ©s"
     ]
   },
   {
     id: 8,
     title: "Maltego pour cartographie de relations",
-    category: "Outils avancés",
-    description: "Utiliser Maltego pour visualiser et analyser les connexions entre différentes entités.",
-    question: "Comment utiliser Maltego pour créer un graphe de relations à partir d'un domaine web et quelles informations peut-on découvrir ?",
-    solution: "Workflow Maltego : 1) Créer un nouveau graphe, 2) Ajouter une entité 'Domain' avec le domaine cible, 3) Exécuter des transforms : DNS lookups (trouve IPs, nameservers), WHOIS (trouve registrant), Email addresses (trouve contacts), 4) Pivoter sur les nouvelles entités découvertes (ex: chercher d'autres domaines avec le même registrant), 5) Analyser le graphe visuel. Maltego révèle : sous-domaines, adresses email, serveurs associés, domaines liés, structure réseau. La version CE (Community Edition) est gratuite mais limitée.",
-    difficulty: "Intermédiaire",
+    category: "Outils avancÃ©s",
+    description: "Utiliser Maltego pour visualiser et analyser les connexions entre diffÃ©rentes entitÃ©s.",
+    question: "Comment utiliser Maltego pour crÃ©er un graphe de relations Ã  partir d'un domaine web et quelles informations peut-on dÃ©couvrir ?",
+    solution: "Workflow Maltego : 1) CrÃ©er un nouveau graphe, 2) Ajouter une entitÃ© 'Domain' avec le domaine cible, 3) ExÃ©cuter des transforms : DNS lookups (trouve IPs, nameservers), WHOIS (trouve registrant), Email addresses (trouve contacts), 4) Pivoter sur les nouvelles entitÃ©s dÃ©couvertes (ex: chercher d'autres domaines avec le mÃªme registrant), 5) Analyser le graphe visuel. Maltego rÃ©vÃ¨le : sous-domaines, adresses email, serveurs associÃ©s, domaines liÃ©s, structure rÃ©seau. La version CE (Community Edition) est gratuite mais limitÃ©e.",
+    difficulty: "IntermÃ©diaire",
     tips: [
-      "Commencez par une seule entité pour ne pas surcharger le graphe",
+      "Commencez par une seule entitÃ© pour ne pas surcharger le graphe",
       "Les transforms peuvent prendre plusieurs minutes sur de gros ensembles",
-      "Exportez votre graphe régulièrement (File > Export Graph)"
+      "Exportez votre graphe rÃ©guliÃ¨rement (File > Export Graph)"
     ]
   },
   {
     id: 9,
     title: "Certificate Transparency Logs",
     category: "Infrastructure",
-    description: "Utiliser les logs de certificats SSL/TLS pour découvrir des sous-domaines et l'infrastructure web.",
-    question: "Comment utiliser crt.sh et les Certificate Transparency logs pour découvrir tous les sous-domaines d'un domaine cible ?",
-    solution: "Les Certificate Transparency logs enregistrent publiquement tous les certificats SSL émis. Sur crt.sh : 1) Rechercher '%.example.com' (le % agit comme wildcard), 2) Le site retourne tous les certificats contenant ce pattern, révélant les sous-domaines, 3) Analyser les résultats : dates d'émission, autorités de certification, certificats actifs vs expirés. Révèle : sous-domaines cachés (dev, staging, admin), environnements internes exposés, services oubliés. Alternative : censys.io, Entrust CT Search. C'est une technique de reconnaissance 100% passive (non détectable).",
-    difficulty: "Intermédiaire",
+    description: "Utiliser les logs de certificats SSL/TLS pour dÃ©couvrir des sous-domaines et l'infrastructure web.",
+    question: "Comment utiliser crt.sh et les Certificate Transparency logs pour dÃ©couvrir tous les sous-domaines d'un domaine cible ?",
+    solution: "Les Certificate Transparency logs enregistrent publiquement tous les certificats SSL Ã©mis. Sur crt.sh : 1) Rechercher '%.example.com' (le % agit comme wildcard), 2) Le site retourne tous les certificats contenant ce pattern, rÃ©vÃ©lant les sous-domaines, 3) Analyser les rÃ©sultats : dates d'Ã©mission, autoritÃ©s de certification, certificats actifs vs expirÃ©s. RÃ©vÃ¨le : sous-domaines cachÃ©s (dev, staging, admin), environnements internes exposÃ©s, services oubliÃ©s. Alternative : censys.io, Entrust CT Search. C'est une technique de reconnaissance 100% passive (non dÃ©tectable).",
+    difficulty: "IntermÃ©diaire",
     tips: [
-      "Les certificats expirés révèlent aussi des sous-domaines historiques",
+      "Les certificats expirÃ©s rÃ©vÃ¨lent aussi des sous-domaines historiques",
       "Recherchez les certificats wildcard (*.example.com) qui couvrent tous les sous-domaines",
-      "Combinez avec d'autres techniques (DNS bruteforce) pour une couverture complète"
+      "Combinez avec d'autres techniques (DNS bruteforce) pour une couverture complÃ¨te"
     ]
   },
   {
     id: 10,
-    title: "Corrélation multi-sources",
+    title: "CorrÃ©lation multi-sources",
     category: "Analyse",
-    description: "Croiser plusieurs sources d'information pour valider et enrichir vos découvertes.",
-    question: "Quelle méthodologie appliquer pour corréler efficacement des informations provenant de sources diverses (réseaux sociaux, WHOIS, archives) ?",
-    solution: "Méthodologie de corrélation : 1) Identifier les points communs : noms, dates, lieux, identifiants uniques, 2) Vérifier la cohérence temporelle (les dates concordent-elles ?), 3) Chercher des sources indépendantes (éviter l'echo chamber où les sources se citent mutuellement), 4) Évaluer la crédibilité de chaque source avec le modèle Admiralty, 5) Appliquer la triangulation (minimum 3 sources), 6) Noter les contradictions pour investigation supplémentaire, 7) Documenter le niveau de confiance final. La corrélation renforce la confiance mais ne garantit pas la vérité absolue (méfiance du biais de confirmation).",
-    difficulty: "Intermédiaire",
+    description: "Croiser plusieurs sources d'information pour valider et enrichir vos dÃ©couvertes.",
+    question: "Quelle mÃ©thodologie appliquer pour corrÃ©ler efficacement des informations provenant de sources diverses (rÃ©seaux sociaux, WHOIS, archives) ?",
+    solution: "MÃ©thodologie de corrÃ©lation : 1) Identifier les points communs : noms, dates, lieux, identifiants uniques, 2) VÃ©rifier la cohÃ©rence temporelle (les dates concordent-elles ?), 3) Chercher des sources indÃ©pendantes (Ã©viter l'echo chamber oÃ¹ les sources se citent mutuellement), 4) Ãvaluer la crÃ©dibilitÃ© de chaque source avec le modÃ¨le Admiralty, 5) Appliquer la triangulation (minimum 3 sources), 6) Noter les contradictions pour investigation supplÃ©mentaire, 7) Documenter le niveau de confiance final. La corrÃ©lation renforce la confiance mais ne garantit pas la vÃ©ritÃ© absolue (mÃ©fiance du biais de confirmation).",
+    difficulty: "IntermÃ©diaire",
     tips: [
-      "Une information répétée par 10 sources qui se citent = 1 seule source",
-      "Cherchez activement des informations qui contredisent votre hypothèse",
+      "Une information rÃ©pÃ©tÃ©e par 10 sources qui se citent = 1 seule source",
+      "Cherchez activement des informations qui contredisent votre hypothÃ¨se",
       "Utilisez des tableurs pour tracker les correspondances entre sources"
     ]
   },
 
-  // ==================== AVANCÉ (11-15) ====================
+  // ==================== AVANCÃ (11-15) ====================
   {
     id: 11,
     title: "Analysis of Competing Hypotheses (ACH)",
-    category: "Méthodologie",
-    description: "Technique analytique structurée pour évaluer plusieurs hypothèses concurrentes et éviter les biais cognitifs.",
-    question: "Comment appliquer la méthode ACH pour analyser un incident de sécurité avec plusieurs explications possibles ?",
-    solution: "Méthodologie ACH : 1) Lister toutes les hypothèses plausibles (ex: attaque APT, insider threat, erreur de configuration, coïncidence), même les improbables, 2) Identifier toutes les preuves/informations collectées, 3) Créer une matrice : hypothèses en colonnes, preuves en lignes, 4) Pour chaque cellule, évaluer si la preuve est Cohérente (C), Incohérente (I) ou Neutre (N) avec l'hypothèse, 5) L'hypothèse avec le moins d'incohérences est la plus probable, 6) Documenter le raisonnement et le niveau de confiance. ACH combat le biais de confirmation en forçant à considérer toutes les alternatives systématiquement.",
-    difficulty: "Avancé",
+    category: "MÃ©thodologie",
+    description: "Technique analytique structurÃ©e pour Ã©valuer plusieurs hypothÃ¨ses concurrentes et Ã©viter les biais cognitifs.",
+    question: "Comment appliquer la mÃ©thode ACH pour analyser un incident de sÃ©curitÃ© avec plusieurs explications possibles ?",
+    solution: "MÃ©thodologie ACH : 1) Lister toutes les hypothÃ¨ses plausibles (ex: attaque APT, insider threat, erreur de configuration, coÃ¯ncidence), mÃªme les improbables, 2) Identifier toutes les preuves/informations collectÃ©es, 3) CrÃ©er une matrice : hypothÃ¨ses en colonnes, preuves en lignes, 4) Pour chaque cellule, Ã©valuer si la preuve est CohÃ©rente (C), IncohÃ©rente (I) ou Neutre (N) avec l'hypothÃ¨se, 5) L'hypothÃ¨se avec le moins d'incohÃ©rences est la plus probable, 6) Documenter le raisonnement et le niveau de confiance. ACH combat le biais de confirmation en forÃ§ant Ã  considÃ©rer toutes les alternatives systÃ©matiquement.",
+    difficulty: "AvancÃ©",
     tips: [
-      "Listez au moins 4-5 hypothèses pour éviter le biais binaire (vrai/faux)",
-      "Les preuves qui réfutent sont plus informatives que celles qui confirment",
-      "Mettez à jour la matrice quand de nouvelles informations arrivent"
+      "Listez au moins 4-5 hypothÃ¨ses pour Ã©viter le biais binaire (vrai/faux)",
+      "Les preuves qui rÃ©futent sont plus informatives que celles qui confirment",
+      "Mettez Ã  jour la matrice quand de nouvelles informations arrivent"
     ]
   },
   {
     id: 12,
     title: "Python pour automatisation OSINT",
     category: "Automatisation",
-    description: "Scripter en Python pour automatiser la collecte et l'analyse de données OSINT à grande échelle.",
-    question: "Créez un workflow Python pour automatiser la collecte d'informations sur une liste de domaines (WHOIS, DNS, sous-domaines). Quelles bibliothèques utiliser ?",
-    solution: "Bibliothèques essentielles : requests (requêtes HTTP), python-whois (données WHOIS), dnspython (requêtes DNS), pandas (manipulation données), json (parsing), time (délais). Workflow exemple : 1) Lire une liste de domaines depuis un fichier CSV, 2) Pour chaque domaine : faire un WHOIS (python-whois), résoudre DNS A/MX (dnspython), requêter crt.sh pour sous-domaines (requests), 3) Aggréger tous les résultats dans un DataFrame pandas, 4) Exporter en CSV/Excel. Ajoutez des délais (time.sleep(2)) entre requêtes pour éviter le blocage. Gérez les exceptions (try/except) pour la robustesse.",
-    difficulty: "Avancé",
+    description: "Scripter en Python pour automatiser la collecte et l'analyse de donnÃ©es OSINT Ã  grande Ã©chelle.",
+    question: "CrÃ©ez un workflow Python pour automatiser la collecte d'informations sur une liste de domaines (WHOIS, DNS, sous-domaines). Quelles bibliothÃ¨ques utiliser ?",
+    solution: "BibliothÃ¨ques essentielles : requests (requÃªtes HTTP), python-whois (donnÃ©es WHOIS), dnspython (requÃªtes DNS), pandas (manipulation donnÃ©es), json (parsing), time (dÃ©lais). Workflow exemple : 1) Lire une liste de domaines depuis un fichier CSV, 2) Pour chaque domaine : faire un WHOIS (python-whois), rÃ©soudre DNS A/MX (dnspython), requÃªter crt.sh pour sous-domaines (requests), 3) AggrÃ©ger tous les rÃ©sultats dans un DataFrame pandas, 4) Exporter en CSV/Excel. Ajoutez des dÃ©lais (time.sleep(2)) entre requÃªtes pour Ã©viter le blocage. GÃ©rez les exceptions (try/except) pour la robustesse.",
+    difficulty: "AvancÃ©",
     tips: [
-      "Utilisez des environnements virtuels (venv) pour isoler vos dépendances",
-      "Loggez toutes les opérations (module logging) pour débugger",
-      "Stockez les clés API dans des variables d'environnement, jamais en dur"
+      "Utilisez des environnements virtuels (venv) pour isoler vos dÃ©pendances",
+      "Loggez toutes les opÃ©rations (module logging) pour dÃ©bugger",
+      "Stockez les clÃ©s API dans des variables d'environnement, jamais en dur"
     ]
   },
   {
     id: 13,
     title: "Threat Intelligence via OSINT",
-    category: "Cybersécurité",
+    category: "CybersÃ©curitÃ©",
     description: "Collecter et analyser du renseignement sur les menaces cyber en utilisant des sources ouvertes.",
     question: "Comment construire un profil de menace (threat profile) d'un groupe APT en utilisant uniquement des sources OSINT ?",
-    solution: "Méthodologie de profiling APT : 1) Collecter les IOCs (Indicators of Compromise) : IPs, domaines, hashes de malware depuis des rapports publics (Mandiant, CrowdStrike, rapports gouvernementaux), 2) Pivoter sur ces IOCs : WHOIS historique, passive DNS (SecurityTrails), VirusTotal relations, 3) Identifier les TTPs (Tactics, Techniques, Procedures) via MITRE ATT&CK, 4) Analyser l'infrastructure : patterns de réutilisation, fournisseurs préférés, 5) Chercher sur forums underground et pastebin, 6) Corréler avec le contexte géopolitique (qui ciblent-ils ? pourquoi ?), 7) Documenter dans un format structuré (STIX/TAXII). Le profil produit des IOCs actionnables pour la détection.",
-    difficulty: "Avancé",
+    solution: "MÃ©thodologie de profiling APT : 1) Collecter les IOCs (Indicators of Compromise) : IPs, domaines, hashes de malware depuis des rapports publics (Mandiant, CrowdStrike, rapports gouvernementaux), 2) Pivoter sur ces IOCs : WHOIS historique, passive DNS (SecurityTrails), VirusTotal relations, 3) Identifier les TTPs (Tactics, Techniques, Procedures) via MITRE ATT&CK, 4) Analyser l'infrastructure : patterns de rÃ©utilisation, fournisseurs prÃ©fÃ©rÃ©s, 5) Chercher sur forums underground et pastebin, 6) CorrÃ©ler avec le contexte gÃ©opolitique (qui ciblent-ils ? pourquoi ?), 7) Documenter dans un format structurÃ© (STIX/TAXII). Le profil produit des IOCs actionnables pour la dÃ©tection.",
+    difficulty: "AvancÃ©",
     tips: [
-      "Les rapports de sociétés de sécurité sont des mines d'or d'IOCs",
-      "Cherchez les patterns de réutilisation (même registrant, même ASN)",
+      "Les rapports de sociÃ©tÃ©s de sÃ©curitÃ© sont des mines d'or d'IOCs",
+      "Cherchez les patterns de rÃ©utilisation (mÃªme registrant, mÃªme ASN)",
       "Utilisez AlienVault OTX et ThreatCrowd pour enrichir les IOCs"
     ]
   },
   {
     id: 14,
-    title: "Analyse de métadonnées Office avancée",
+    title: "Analyse de mÃ©tadonnÃ©es Office avancÃ©e",
     category: "Forensics",
     description: "Extraire des informations sensibles des documents Microsoft Office (Word, Excel, PowerPoint).",
-    question: "Quelles métadonnées sensibles se cachent dans les documents Office et comment peuvent-elles révéler l'organisation interne d'une entreprise ?",
-    solution: "Métadonnées Office critiques : nom de l'auteur (souvent le nom d'utilisateur Windows complet), organisation (nom de l'entreprise), liste des personnes ayant modifié le document, temps d'édition total, chemin complet du fichier original (ex: C:\\Users\\jdupont\\Documents\\Confidentiel\\rapport.docx), version exacte du logiciel, dates de création/modification, commentaires cachés, tracked changes non acceptés, notes de présentateur (PowerPoint). Extraction : exiftool -a document.docx (le plus complet), strings document.docx | grep (Linux), ou olevba pour les macros VBA. Ces données révèlent : structure de répertoires internes, conventions de nommage, employés clés, logiciels utilisés (potentiellement obsolètes = vulnérabilités).",
-    difficulty: "Avancé",
+    question: "Quelles mÃ©tadonnÃ©es sensibles se cachent dans les documents Office et comment peuvent-elles rÃ©vÃ©ler l'organisation interne d'une entreprise ?",
+    solution: "MÃ©tadonnÃ©es Office critiques : nom de l'auteur (souvent le nom d'utilisateur Windows complet), organisation (nom de l'entreprise), liste des personnes ayant modifiÃ© le document, temps d'Ã©dition total, chemin complet du fichier original (ex: C:\\Users\\jdupont\\Documents\\Confidentiel\\rapport.docx), version exacte du logiciel, dates de crÃ©ation/modification, commentaires cachÃ©s, tracked changes non acceptÃ©s, notes de prÃ©sentateur (PowerPoint). Extraction : exiftool -a document.docx (le plus complet), strings document.docx | grep (Linux), ou olevba pour les macros VBA. Ces donnÃ©es rÃ©vÃ¨lent : structure de rÃ©pertoires internes, conventions de nommage, employÃ©s clÃ©s, logiciels utilisÃ©s (potentiellement obsolÃ¨tes = vulnÃ©rabilitÃ©s).",
+    difficulty: "AvancÃ©",
     tips: [
-      "Les documents gouvernementaux publiés sont souvent très riches en métadonnées",
-      "Comparez les métadonnées de plusieurs documents d'une même organisation",
+      "Les documents gouvernementaux publiÃ©s sont souvent trÃ¨s riches en mÃ©tadonnÃ©es",
+      "Comparez les mÃ©tadonnÃ©es de plusieurs documents d'une mÃªme organisation",
       "Les macros VBA peuvent contenir du code malveillant (analysez avec olevba)"
     ]
   },
   {
     id: 15,
     title: "OSINT sur infrastructures critiques",
-    category: "Géopolitique",
-    description: "Évaluer la surface d'attaque d'infrastructures critiques (énergie, eau, transport) via OSINT sans scan actif.",
-    question: "Comment cartographier l'exposition d'une infrastructure critique (ex: réseau électrique) en utilisant uniquement des sources passives ?",
-    solution: "Méthodologie passive : 1) Identifier les systèmes SCADA/ICS exposés via Shodan (recherche : 'SCADA country:FR', 'Modbus', 'ICS'), 2) Rechercher la documentation technique fuites (appels d'offres publics, manuels d'utilisation), 3) Cartographier le réseau via BGP/ASN lookup (identifier les plages IP de l'organisation), 4) Analyser la chaîne d'approvisionnement (quels fournisseurs ? leurs propres vulnérabilités ?), 5) Rechercher les employés sur LinkedIn (qui travaille sur ces systèmes ? quelles compétences ?), 6) Chercher les vulnérabilités connues (CVE databases) pour les technologies identifiées, 7) Produire un rapport d'exposition sans jamais scanner activement. CRITIQUE : alertez les autorités compétentes si vous découvrez des vulnérabilités graves.",
-    difficulty: "Avancé",
+    category: "GÃ©opolitique",
+    description: "Ãvaluer la surface d'attaque d'infrastructures critiques (Ã©nergie, eau, transport) via OSINT sans scan actif.",
+    question: "Comment cartographier l'exposition d'une infrastructure critique (ex: rÃ©seau Ã©lectrique) en utilisant uniquement des sources passives ?",
+    solution: "MÃ©thodologie passive : 1) Identifier les systÃ¨mes SCADA/ICS exposÃ©s via Shodan (recherche : 'SCADA country:FR', 'Modbus', 'ICS'), 2) Rechercher la documentation technique fuites (appels d'offres publics, manuels d'utilisation), 3) Cartographier le rÃ©seau via BGP/ASN lookup (identifier les plages IP de l'organisation), 4) Analyser la chaÃ®ne d'approvisionnement (quels fournisseurs ? leurs propres vulnÃ©rabilitÃ©s ?), 5) Rechercher les employÃ©s sur LinkedIn (qui travaille sur ces systÃ¨mes ? quelles compÃ©tences ?), 6) Chercher les vulnÃ©rabilitÃ©s connues (CVE databases) pour les technologies identifiÃ©es, 7) Produire un rapport d'exposition sans jamais scanner activement. CRITIQUE : alertez les autoritÃ©s compÃ©tentes si vous dÃ©couvrez des vulnÃ©rabilitÃ©s graves.",
+    difficulty: "AvancÃ©",
     tips: [
-      "Les infrastructures critiques sont des cibles ultra-sensibles (légalité ++)",
-      "Ne scannez JAMAIS activement, utilisez UNIQUEMENT des données déjà indexées",
+      "Les infrastructures critiques sont des cibles ultra-sensibles (lÃ©galitÃ© ++)",
+      "Ne scannez JAMAIS activement, utilisez UNIQUEMENT des donnÃ©es dÃ©jÃ  indexÃ©es",
       "Coordonnez avec des CERT/CSIRT nationaux pour un disclosure responsable"
     ]
   },
@@ -233,70 +233,70 @@ const exercises: Exercise[] = [
     id: 16,
     title: "Attribution d'acteurs APT",
     category: "Threat Intelligence",
-    description: "Méthodologie rigoureuse pour attribuer une cyberattaque à un groupe APT spécifique avec un niveau de confiance documenté.",
-    question: "Quels éléments OSINT permettent d'attribuer une cyberattaque à un groupe APT et quel niveau de confiance peut-on atteindre ?",
-    solution: "Éléments d'attribution multi-niveaux : 1) Infrastructure (IPs, domaines, certificats SSL, patterns de réutilisation), 2) TTPs (Tactics, Techniques, Procedures selon MITRE ATT&CK - sont-ils signature du groupe ?), 3) Malware (similitudes de code via VirusTotal, hashes connus, strings uniques), 4) Timestamps (fuseaux horaires d'activité, jours ouvrables vs weekend), 5) Langue (erreurs grammaticales dans le code, keyboards layouts), 6) Motivations (qui bénéficierait ? alignement avec intérêts géopolitiques), 7) Capacités techniques (sophistication du toolkit). Méthodologie : comparer systématiquement avec la base de connaissance APT (MITRE ATT&CK Groups, Mandiant APT reports), chercher des overlaps, scorer la confiance (Low/Medium/High). ATTENTION : les acteurs sophistiqués font du false flag (attribution trompeuse intentionnelle). L'attribution certaine à 100% est quasi-impossible en OSINT seul.",
+    description: "MÃ©thodologie rigoureuse pour attribuer une cyberattaque Ã  un groupe APT spÃ©cifique avec un niveau de confiance documentÃ©.",
+    question: "Quels Ã©lÃ©ments OSINT permettent d'attribuer une cyberattaque Ã  un groupe APT et quel niveau de confiance peut-on atteindre ?",
+    solution: "ÃlÃ©ments d'attribution multi-niveaux : 1) Infrastructure (IPs, domaines, certificats SSL, patterns de rÃ©utilisation), 2) TTPs (Tactics, Techniques, Procedures selon MITRE ATT&CK - sont-ils signature du groupe ?), 3) Malware (similitudes de code via VirusTotal, hashes connus, strings uniques), 4) Timestamps (fuseaux horaires d'activitÃ©, jours ouvrables vs weekend), 5) Langue (erreurs grammaticales dans le code, keyboards layouts), 6) Motivations (qui bÃ©nÃ©ficierait ? alignement avec intÃ©rÃªts gÃ©opolitiques), 7) CapacitÃ©s techniques (sophistication du toolkit). MÃ©thodologie : comparer systÃ©matiquement avec la base de connaissance APT (MITRE ATT&CK Groups, Mandiant APT reports), chercher des overlaps, scorer la confiance (Low/Medium/High). ATTENTION : les acteurs sophistiquÃ©s font du false flag (attribution trompeuse intentionnelle). L'attribution certaine Ã  100% est quasi-impossible en OSINT seul.",
     difficulty: "Expert",
     tips: [
-      "Cherchez des 'unique artifacts' : éléments qui n'apparaissent que chez ce groupe",
-      "Les false flags sont détectables par des incohérences (niveau de sophistication, erreurs)",
-      "Corréllez avec le contexte géopolitique : cui bono ? (à qui profite le crime)"
+      "Cherchez des 'unique artifacts' : Ã©lÃ©ments qui n'apparaissent que chez ce groupe",
+      "Les false flags sont dÃ©tectables par des incohÃ©rences (niveau de sophistication, erreurs)",
+      "CorrÃ©llez avec le contexte gÃ©opolitique : cui bono ? (Ã  qui profite le crime)"
     ]
   },
   {
     id: 17,
     title: "OSINT et cycle de renseignement",
-    category: "Méthodologie",
-    description: "Intégrer l'OSINT dans un cycle de renseignement structuré (Intelligence Cycle) de niveau professionnel.",
-    question: "Comment intégrer l'OSINT dans les 5 phases du cycle de renseignement et comment interagit-il avec les autres disciplines (HUMINT, SIGINT) ?",
-    solution: "Les 5 phases du cycle : 1) Direction (Planning) : définir les RFIs (Requirements for Information) - 'Que veut-on savoir ?', 2) Collection : utiliser l'OSINT pour collecter (70% du travail ici), combiner avec HUMINT/SIGINT si disponibles, 3) Processing : normaliser les données OSINT (formats, enrichissement via APIs), 4) Analysis & Production : appliquer ACH, modèle Admiralty, créer des rapports, 5) Dissemination : diffuser aux stakeholders avec le bon niveau de classification, 6) Feedback : évaluer l'utilité, générer de nouveaux RFIs. L'OSINT s'intègre à toutes les étapes : validation de HUMINT (fact-checking), contextualisation de SIGINT (qui parle à qui ?), enrichissement mutuel. Frameworks avancés : F3EAD (Find, Fix, Finish, Exploit, Analyze, Disseminate) utilisé en opérations militaires.",
+    category: "MÃ©thodologie",
+    description: "IntÃ©grer l'OSINT dans un cycle de renseignement structurÃ© (Intelligence Cycle) de niveau professionnel.",
+    question: "Comment intÃ©grer l'OSINT dans les 5 phases du cycle de renseignement et comment interagit-il avec les autres disciplines (HUMINT, SIGINT) ?",
+    solution: "Les 5 phases du cycle : 1) Direction (Planning) : dÃ©finir les RFIs (Requirements for Information) - 'Que veut-on savoir ?', 2) Collection : utiliser l'OSINT pour collecter (70% du travail ici), combiner avec HUMINT/SIGINT si disponibles, 3) Processing : normaliser les donnÃ©es OSINT (formats, enrichissement via APIs), 4) Analysis & Production : appliquer ACH, modÃ¨le Admiralty, crÃ©er des rapports, 5) Dissemination : diffuser aux stakeholders avec le bon niveau de classification, 6) Feedback : Ã©valuer l'utilitÃ©, gÃ©nÃ©rer de nouveaux RFIs. L'OSINT s'intÃ¨gre Ã  toutes les Ã©tapes : validation de HUMINT (fact-checking), contextualisation de SIGINT (qui parle Ã  qui ?), enrichissement mutuel. Frameworks avancÃ©s : F3EAD (Find, Fix, Finish, Exploit, Analyze, Disseminate) utilisÃ© en opÃ©rations militaires.",
     difficulty: "Expert",
     tips: [
-      "Les RFIs doivent être SMART : Specific, Measurable, Achievable, Relevant, Time-bound",
-      "L'OSINT seul est rarement suffisant pour des décisions stratégiques critiques",
+      "Les RFIs doivent Ãªtre SMART : Specific, Measurable, Achievable, Relevant, Time-bound",
+      "L'OSINT seul est rarement suffisant pour des dÃ©cisions stratÃ©giques critiques",
       "Documentez la provenance de chaque information (chain of custody)"
     ]
   },
   {
     id: 18,
-    title: "Détection de campagnes de désinformation",
+    title: "DÃ©tection de campagnes de dÃ©sinformation",
     category: "Influence",
-    description: "Identifier et analyser des opérations de désinformation coordonnées à grande échelle.",
-    question: "Quels indicateurs permettent de détecter une campagne de désinformation coordonnée par un acteur étatique et comment la documenter ?",
-    solution: "Indicateurs de coordination : 1) Volume anormal de posts similaires sur courte période (amplification artificielle), 2) Comptes créés simultanément ou récemment, 3) Patterns de publication identiques (mêmes heures, rythme robotique), 4) Réutilisation exacte de contenus (copy-paste, même images), 5) Réseau de comptes qui se suivent et s'amplifient mutuellement, 6) Narratifs alignés avec intérêts géopolitiques spécifiques. Méthodologie de documentation : 1) Identifier les 'seed accounts' (premiers à poster, amplifiés ensuite), 2) Cartographier le réseau (qui RT/like qui ?), 3) Analyser la timeline (moments de pic d'activité), 4) Techniques : network analysis (Gephi), bot detection (Botometer), propagation tracking (Hoaxy), 5) Corréler avec événements géopolitiques. Cas d'études : opérations russes (Internet Research Agency), chinoises (50 Cent Army), iraniennes. Documentation rigoureuse essentielle (preuve légale potentielle).",
+    description: "Identifier et analyser des opÃ©rations de dÃ©sinformation coordonnÃ©es Ã  grande Ã©chelle.",
+    question: "Quels indicateurs permettent de dÃ©tecter une campagne de dÃ©sinformation coordonnÃ©e par un acteur Ã©tatique et comment la documenter ?",
+    solution: "Indicateurs de coordination : 1) Volume anormal de posts similaires sur courte pÃ©riode (amplification artificielle), 2) Comptes crÃ©Ã©s simultanÃ©ment ou rÃ©cemment, 3) Patterns de publication identiques (mÃªmes heures, rythme robotique), 4) RÃ©utilisation exacte de contenus (copy-paste, mÃªme images), 5) RÃ©seau de comptes qui se suivent et s'amplifient mutuellement, 6) Narratifs alignÃ©s avec intÃ©rÃªts gÃ©opolitiques spÃ©cifiques. MÃ©thodologie de documentation : 1) Identifier les 'seed accounts' (premiers Ã  poster, amplifiÃ©s ensuite), 2) Cartographier le rÃ©seau (qui RT/like qui ?), 3) Analyser la timeline (moments de pic d'activitÃ©), 4) Techniques : network analysis (Gephi), bot detection (Botometer), propagation tracking (Hoaxy), 5) CorrÃ©ler avec Ã©vÃ©nements gÃ©opolitiques. Cas d'Ã©tudes : opÃ©rations russes (Internet Research Agency), chinoises (50 Cent Army), iraniennes. Documentation rigoureuse essentielle (preuve lÃ©gale potentielle).",
     difficulty: "Expert",
     tips: [
-      "Les campagnes sophistiquées utilisent des comptes 'vieillis' (achetés, dormants longtemps)",
-      "Cherchez les incohérences : langues mélangées, fuseaux horaires suspects",
-      "Utilisez TweetDeck ou outils similaires pour monitorer en temps réel"
+      "Les campagnes sophistiquÃ©es utilisent des comptes 'vieillis' (achetÃ©s, dormants longtemps)",
+      "Cherchez les incohÃ©rences : langues mÃ©langÃ©es, fuseaux horaires suspects",
+      "Utilisez TweetDeck ou outils similaires pour monitorer en temps rÃ©el"
     ]
   },
   {
     id: 19,
     title: "OSINT sur supply chain",
     category: "Risques",
-    description: "Analyser les risques cybersécurité de toute la chaîne d'approvisionnement d'une organisation cible.",
-    question: "Comment évaluer les risques cyber d'une supply chain complexe via OSINT et identifier les maillons faibles ?",
-    solution: "Méthodologie supply chain OSINT : 1) Cartographie complète : identifier tous les fournisseurs (sites web, rapports annuels, LinkedIn des employés, appels d'offres publics), 2) Pour chaque fournisseur, évaluer leur cybersécurité : a) Shodan (systèmes exposés), b) Recherche de breaches historiques (HaveIBeenPwned, médias), c) Certificats SSL (âge, autorité), d) Job postings (recrutent-ils un CISO ? = immaturité), e) Certifications (ISO 27001, SOC2), 3) Cartographier les dépendances (qui dépend de qui ? graphe de relations), 4) Identifier les SPOFs (Single Points of Failure), 5) Évaluer les fournisseurs de niveau 2 et 3 (supply chain profonde), 6) Scorer le risque (1-5) par fournisseur, 7) Produire une heatmap des risques. Les supply chain attacks (ex: SolarWinds 2020) sont critiques car ils permettent d'atteindre des centaines de cibles via un seul point d'entrée.",
+    description: "Analyser les risques cybersÃ©curitÃ© de toute la chaÃ®ne d'approvisionnement d'une organisation cible.",
+    question: "Comment Ã©valuer les risques cyber d'une supply chain complexe via OSINT et identifier les maillons faibles ?",
+    solution: "MÃ©thodologie supply chain OSINT : 1) Cartographie complÃ¨te : identifier tous les fournisseurs (sites web, rapports annuels, LinkedIn des employÃ©s, appels d'offres publics), 2) Pour chaque fournisseur, Ã©valuer leur cybersÃ©curitÃ© : a) Shodan (systÃ¨mes exposÃ©s), b) Recherche de breaches historiques (HaveIBeenPwned, mÃ©dias), c) Certificats SSL (Ã¢ge, autoritÃ©), d) Job postings (recrutent-ils un CISO ? = immaturitÃ©), e) Certifications (ISO 27001, SOC2), 3) Cartographier les dÃ©pendances (qui dÃ©pend de qui ? graphe de relations), 4) Identifier les SPOFs (Single Points of Failure), 5) Ãvaluer les fournisseurs de niveau 2 et 3 (supply chain profonde), 6) Scorer le risque (1-5) par fournisseur, 7) Produire une heatmap des risques. Les supply chain attacks (ex: SolarWinds 2020) sont critiques car ils permettent d'atteindre des centaines de cibles via un seul point d'entrÃ©e.",
     difficulty: "Expert",
     tips: [
       "Les petits fournisseurs (PME) sont souvent le maillon faible (moins de ressources cyber)",
-      "Cherchez les dépendances cachées (sous-traitants des sous-traitants)",
+      "Cherchez les dÃ©pendances cachÃ©es (sous-traitants des sous-traitants)",
       "Utilisez le framework NIST Cybersecurity Supply Chain Risk Management"
     ]
   },
   {
     id: 20,
-    title: "Rapport OSINT de niveau stratégique",
+    title: "Rapport OSINT de niveau stratÃ©gique",
     category: "Reporting",
-    description: "Structurer et rédiger un rapport OSINT professionnel pour des décideurs de haut niveau (C-suite, gouvernement).",
-    question: "Quelle structure et quels principes appliquer pour produire un rapport OSINT actionnable pour la direction exécutive ou des décideurs gouvernementaux ?",
-    solution: "Structure professionnelle : 1) Executive Summary (1 page max) : synthèse pour décideurs non-techniques, conclusion principale, recommandations clés, niveau de confiance global, 2) Méthodologie (1-2 pages) : sources consultées (citées précisément), outils utilisés, période de collecte, limitations et biais potentiels, 3) Findings (corps principal) : découvertes organisées par thème ou chronologiquement, chaque finding avec cotation Admiralty (ex: B2), visualisations (graphes, timelines, cartes), 4) Analysis (interprétation) : qu'est-ce que cela signifie ?, hypothèses avec niveaux de confiance (ACH), implications stratégiques, 5) Recommendations (actionnables) : actions suggérées priorisées (court/moyen/long terme), risques et bénéfices, 6) Annexes : screenshots horodatés (preuves), données brutes, glossaire si termes techniques. Principes : clarté (pas de jargon inutile), traçabilité complète (toutes sources citées), horodatage systématique, versioning du document, watermark 'CONFIDENTIAL' si nécessaire. Format : PDF professionnel, sommaire cliquable, page de garde avec date/auteur/classification.",
+    description: "Structurer et rÃ©diger un rapport OSINT professionnel pour des dÃ©cideurs de haut niveau (C-suite, gouvernement).",
+    question: "Quelle structure et quels principes appliquer pour produire un rapport OSINT actionnable pour la direction exÃ©cutive ou des dÃ©cideurs gouvernementaux ?",
+    solution: "Structure professionnelle : 1) Executive Summary (1 page max) : synthÃ¨se pour dÃ©cideurs non-techniques, conclusion principale, recommandations clÃ©s, niveau de confiance global, 2) MÃ©thodologie (1-2 pages) : sources consultÃ©es (citÃ©es prÃ©cisÃ©ment), outils utilisÃ©s, pÃ©riode de collecte, limitations et biais potentiels, 3) Findings (corps principal) : dÃ©couvertes organisÃ©es par thÃ¨me ou chronologiquement, chaque finding avec cotation Admiralty (ex: B2), visualisations (graphes, timelines, cartes), 4) Analysis (interprÃ©tation) : qu'est-ce que cela signifie ?, hypothÃ¨ses avec niveaux de confiance (ACH), implications stratÃ©giques, 5) Recommendations (actionnables) : actions suggÃ©rÃ©es priorisÃ©es (court/moyen/long terme), risques et bÃ©nÃ©fices, 6) Annexes : screenshots horodatÃ©s (preuves), donnÃ©es brutes, glossaire si termes techniques. Principes : clartÃ© (pas de jargon inutile), traÃ§abilitÃ© complÃ¨te (toutes sources citÃ©es), horodatage systÃ©matique, versioning du document, watermark 'CONFIDENTIAL' si nÃ©cessaire. Format : PDF professionnel, sommaire cliquable, page de garde avec date/auteur/classification.",
     difficulty: "Expert",
     tips: [
-      "L'executive summary doit pouvoir être lu en 2 minutes et contenir l'essentiel",
-      "Distinguez clairement les faits (prouvés) des hypothèses (probable/possible)",
-      "Incluez des visualisations : les décideurs retiennent mieux l'information visuelle"
+      "L'executive summary doit pouvoir Ãªtre lu en 2 minutes et contenir l'essentiel",
+      "Distinguez clairement les faits (prouvÃ©s) des hypothÃ¨ses (probable/possible)",
+      "Incluez des visualisations : les dÃ©cideurs retiennent mieux l'information visuelle"
     ]
   }
 ];
@@ -309,7 +309,7 @@ export default function ExercicesOSINT() {
   const [filterDifficulty, setFilterDifficulty] = useState<string>("Tous");
   const [completedExercises, setCompletedExercises] = useState<Set<number>>(new Set());
 
-  // Charger les exercices complétés au montage du composant
+  // Charger les exercices complÃ©tÃ©s au montage du composant
   useEffect(() => {
     const saved = localStorage.getItem("completed_exercises");
     if (saved) {
@@ -321,7 +321,7 @@ export default function ExercicesOSINT() {
     }
   }, []);
 
-  // Marquer un exercice comme complété
+  // Marquer un exercice comme complÃ©tÃ©
   const markAsCompleted = (exerciseId: number) => {
     const newCompleted = new Set(completedExercises);
     newCompleted.add(exerciseId);
@@ -331,7 +331,7 @@ export default function ExercicesOSINT() {
     localStorage.setItem("completed_exercises", JSON.stringify(Array.from(newCompleted)));
     localStorage.setItem("exercices_completed", newCompleted.size.toString());
     
-    // Mettre à jour les badges
+    // Mettre Ã  jour les badges
     const arr = Array.from(newCompleted);
     const deb = arr.filter(id => id >= 1 && id <= 5).length;
     const int = arr.filter(id => id >= 6 && id <= 10).length;
@@ -354,18 +354,18 @@ export default function ExercicesOSINT() {
 
   const difficultyColor = (difficulty: string) => {
     switch(difficulty) {
-      case "Débutant": return "#22c55e";
-      case "Intermédiaire": return "#fbbf24";
-      case "Avancé": return "#f97316";
+      case "DÃ©butant": return "#22c55e";
+      case "IntermÃ©diaire": return "#fbbf24";
+      case "AvancÃ©": return "#f97316";
       case "Expert": return "#ef4444";
       default: return "#00ff9c";
     }
   };
 
   const difficultyStats = {
-    "Débutant": exercises.filter(e => e.difficulty === "Débutant").length,
-    "Intermédiaire": exercises.filter(e => e.difficulty === "Intermédiaire").length,
-    "Avancé": exercises.filter(e => e.difficulty === "Avancé").length,
+    "DÃ©butant": exercises.filter(e => e.difficulty === "DÃ©butant").length,
+    "IntermÃ©diaire": exercises.filter(e => e.difficulty === "IntermÃ©diaire").length,
+    "AvancÃ©": exercises.filter(e => e.difficulty === "AvancÃ©").length,
     "Expert": exercises.filter(e => e.difficulty === "Expert").length
   };
 
@@ -375,10 +375,10 @@ export default function ExercicesOSINT() {
         Exercices OSINT Pratiques
       </h1>
       <p style={{ color: "#9ca3af", marginBottom: "30px", fontSize: "1.1rem" }}>
-        20 exercices progressifs couvrant tous les niveaux de compétence OSINT
+        20 exercices progressifs couvrant tous les niveaux de compÃ©tence OSINT
       </p>
 
-      {/* Filtres par difficulté */}
+      {/* Filtres par difficultÃ© */}
       <div style={{
         background: "#0b0f1a",
         border: "1px solid #00ff9c",
@@ -390,7 +390,7 @@ export default function ExercicesOSINT() {
           Filtrer par niveau
         </h3>
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" as const }}>
-          {["Tous", "Débutant", "Intermédiaire", "Avancé", "Expert"].map(level => (
+          {["Tous", "DÃ©butant", "IntermÃ©diaire", "AvancÃ©", "Expert"].map(level => (
             <button
               key={level}
               onClick={() => {
@@ -520,7 +520,7 @@ export default function ExercicesOSINT() {
           marginBottom: "20px"
         }}>
           <h3 style={{ color: "#00ff9c", marginBottom: "10px", fontSize: "1.1rem" }}>
-            ❓ Question
+            â Question
           </h3>
           <p style={{ color: "#e5e7eb", lineHeight: "1.7", margin: 0 }}>
             {exercise.question}
@@ -537,7 +537,7 @@ export default function ExercicesOSINT() {
             marginBottom: "20px"
           }}>
             <h3 style={{ color: "#fbbf24", marginBottom: "10px", fontSize: "1.1rem" }}>
-              💡 Conseils
+              ð¡ Conseils
             </h3>
             <ul style={{ color: "#9ca3af", lineHeight: "1.8", paddingLeft: "20px", margin: 0 }}>
               {exercise.tips.map((tip, index) => (
@@ -557,7 +557,7 @@ export default function ExercicesOSINT() {
             marginBottom: "20px"
           }}>
             <h3 style={{ color: "#22c55e", marginBottom: "10px", fontSize: "1.1rem" }}>
-              ✓ Solution détaillée
+              â Solution dÃ©taillÃ©e
             </h3>
             <p style={{ color: "#e5e7eb", lineHeight: "1.8", margin: 0 }}>
               {exercise.solution}
@@ -581,7 +581,7 @@ export default function ExercicesOSINT() {
             }}
             onClick={() => setShowTips(!showTips)}
           >
-            {showTips ? "Masquer les conseils" : "💡 Afficher des conseils"}
+            {showTips ? "Masquer les conseils" : "ð¡ Afficher des conseils"}
           </button>
 
           <button
@@ -601,7 +601,7 @@ export default function ExercicesOSINT() {
               setShowSolution(!showSolution);
             }}
           >
-            {showSolution ? "Masquer la solution" : completedExercises.has(exercise.id) ? "✓ Revoir la solution" : "✓ Afficher la solution"}
+            {showSolution ? "Masquer la solution" : completedExercises.has(exercise.id) ? "â Revoir la solution" : "â Afficher la solution"}
           </button>
         </div>
       </section>
@@ -627,7 +627,7 @@ export default function ExercicesOSINT() {
             setCurrent(current - 1);
           }}
         >
-          ← Exercice précédent
+          â Exercice prÃ©cÃ©dent
         </button>
 
         <button
@@ -649,7 +649,7 @@ export default function ExercicesOSINT() {
             setCurrent(current + 1);
           }}
         >
-          Exercice suivant →
+          Exercice suivant â
         </button>
       </div>
 
@@ -662,7 +662,7 @@ export default function ExercicesOSINT() {
         marginTop: "30px"
       }}>
         <h2 style={{ color: "#00ff9c", marginBottom: "20px", fontSize: "1.3rem" }}>
-          📋 Liste des exercices {filterDifficulty !== "Tous" && `(${filterDifficulty})`}
+          ð Liste des exercices {filterDifficulty !== "Tous" && `(${filterDifficulty})`}
         </h2>
         <div style={{ display: "grid", gap: "10px" }}>
           {filteredExercises.map((ex, index) => (
@@ -689,7 +689,7 @@ export default function ExercicesOSINT() {
                 color: completedExercises.has(ex.id) ? "#00ff9c" : index === current ? "#00ff9c" : "#6b7280",
                 fontSize: "1.2rem"
               }}>
-                {completedExercises.has(ex.id) ? "✓" : index === current ? "▶" : "○"}
+                {completedExercises.has(ex.id) ? "â" : index === current ? "â¶" : "â"}
               </span>
               <div style={{ flex: 1 }}>
                 <p style={{ 
@@ -704,7 +704,7 @@ export default function ExercicesOSINT() {
                   fontSize: "0.85rem",
                   margin: "4px 0 0 0"
                 }}>
-                  {ex.category} • {ex.difficulty}
+                  {ex.category} â¢ {ex.difficulty}
                 </p>
               </div>
             </div>
@@ -712,7 +712,7 @@ export default function ExercicesOSINT() {
         </div>
       </section>
 
-      {/* Bouton de réinitialisation */}
+      {/* Bouton de rÃ©initialisation */}
       <div style={{ marginTop: "30px", textAlign: "center" }}>
         <button
           onClick={() => setShowResetPopup(true)}
@@ -736,7 +736,7 @@ export default function ExercicesOSINT() {
             e.currentTarget.style.color = "#00ff9c";
           }}
         >
-          🔄 Recommencer depuis le début
+          ð Recommencer depuis le dÃ©but
         </button>
       </div>
 
@@ -767,8 +767,8 @@ export default function ExercicesOSINT() {
               Recommencer les exercices ?
             </h3>
             <p style={{ color: "#9ca3af", marginBottom: "30px", lineHeight: "1.6" }}>
-              Vous allez revenir au premier exercice et réinitialiser les filtres. 
-              Vous pourrez toujours revenir à n'importe quel exercice via la liste.
+              Vous allez revenir au premier exercice et rÃ©initialiser les filtres. 
+              Vous pourrez toujours revenir Ã  n'importe quel exercice via la liste.
             </p>
 
             <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
@@ -787,6 +787,8 @@ export default function ExercicesOSINT() {
                   localStorage.removeItem("badge_exo_avance");
                   localStorage.removeItem("badge_exo_expert");
                   localStorage.removeItem("badge_exo_master");
+                  localStorage.removeItem("cyberosint_game_state");
+                  localStorage.removeItem("cyberosint_challenges");
                 }}
                 style={{
                   padding: "12px 28px",
@@ -799,7 +801,7 @@ export default function ExercicesOSINT() {
                   fontSize: "1rem",
                 }}
               >
-                ✓ Confirmer
+                â Confirmer
               </button>
               <button
                 onClick={() => setShowResetPopup(false)}
