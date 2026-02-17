@@ -5,7 +5,7 @@ import { useTheme, useThemeColors } from "../context/ThemeContext";
 import Logo from "../assets/images/Logo.png";
 
 const AVATARS: Record<string, string> = {
-  hacker: "🧑‍💻", ninja: "🥷", ghost: "👻", robot: "🤖", alien: "👽",
+  hacker: "🧑\u200d💻", ninja: "🥷", ghost: "👻", robot: "🤖", alien: "👽",
   skull: "💀", detective: "🕵️", wizard: "🧙", demon: "😈", cat: "🐱",
   fox: "🦊", wolf: "🐺", dragon: "🐉", parrot: "🦜", cyber: "⚡",
 };
@@ -32,7 +32,7 @@ function getUserAvatar(username: string): string | JSX.Element {
   }
   
   const saved = localStorage.getItem(`avatar_${username}`);
-  return saved && AVATARS[saved] ? AVATARS[saved] : "🧑‍💻";
+  return saved && AVATARS[saved] ? AVATARS[saved] : "🧑\u200d💻";
 }
 
 export default function Header() {
@@ -206,6 +206,8 @@ export default function Header() {
               }}>
                 {[
                   { label: "🤖 HackerAI", to: "/hacker-ai" },
+                  { label: "🔍 Argus V2.0", to: "/outils/argus" },
+                  { label: "🖥️ Argus Console", to: "/outils/argus/console" },
                   { label: "📦 Dependency Track", to: "/dependency-track" },
                   { label: "🔧 Outils Cyber", to: "/outils-cyber" },
                   { label: "📚 Référentiels", to: "/referentiels" },
@@ -358,7 +360,7 @@ export default function Header() {
               <button onClick={handleLogout} style={{
                 width: "100%",
                 background: "transparent",
-                color: colors.error,
+                color: "#ef4444",
                 border: "none",
                 padding: "12px 20px",
                 textAlign: "left" as const,
@@ -418,7 +420,6 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* Section Outils mobile */}
             <div style={{
               marginTop: "20px",
               paddingTop: "20px",
@@ -429,6 +430,8 @@ export default function Header() {
               </p>
               {[
                 { label: "🤖 HackerAI", to: "/hacker-ai" },
+                { label: "🔍 Argus V2.0", to: "/outils/argus" },
+                { label: "🖥️ Argus Console", to: "/outils/argus/console" },
                 { label: "📦 Dependency Track", to: "/dependency-track" },
                 { label: "🔧 Outils Cyber", to: "/outils-cyber" },
                 { label: "📚 Référentiels", to: "/referentiels" },
@@ -457,10 +460,8 @@ export default function Header() {
 
     </header>
 
-    {/* SPACER */}
     <div style={{ height: "60px" }} />
 
-    {/* CSS responsive */}
     <style>{`
       @media (max-width: 768px) {
         .mobile-menu-btn {
