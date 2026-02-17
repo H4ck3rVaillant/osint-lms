@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 
+const API_BASE = "https://argus-api-aqr6.onrender.com";
+
 const HELP_TEXT = `
 ╔═══════════════════════════════════════════╗
 ║           ARGUS V2.0 - OSINT TOOLKIT      ║
@@ -10,17 +12,17 @@ const HELP_TEXT = `
 
 Commandes disponibles:
   help                    - Afficher cette aide
-  scan <target>           - Reconnaissance complète
+  modules                 - Liste des modules
   dns <domain>            - Enumération DNS
   whois <domain>          - Lookup WHOIS
-  subdomain <domain>      - Découverte sous-domaines
-  ports <target>          - Scan de ports
-  tech <url>              - Détection technologie
-  ssl <domain>            - Analyse certificat SSL
-  leaks <email>           - Vérification fuites données
-  wayback <url>           - Archives Wayback Machine
   ip <address>            - Géolocalisation IP
-  modules                 - Liste des modules
+  ports <target>          - Scan de ports
+  subdomain <domain>      - Découverte sous-domaines
+  ssl <domain>            - Analyse certificat SSL
+  headers <domain>        - Inspection en-têtes HTTP
+  tech <url>              - Détection technologies
+  wayback <domain>        - Archives Wayback Machine
+  scan <target>           - Reconnaissance complète
   config                  - Configuration API
   clear                   - Effacer la console
 `.trim();
@@ -40,7 +42,7 @@ WEB APPLICATION:
   [+] subdomain    - Découverte sous-domaines
   [+] tech-detect  - Détection technologies
   [+] wayback      - Recherche archives web
-  [+] http-headers - Analyse en-têtes HTTP
+  [+] headers      - Analyse en-têtes HTTP
   [+] robots       - Analyse robots.txt
   [+] sitemap      - Scanner sitemap
 
@@ -53,129 +55,162 @@ SÉCURITÉ:
   [+] censys       - Intégration Censys
 `.trim();
 
-function simulate(cmd: string): { lines: string[]; delay: number } {
-  const parts = cmd.trim().split(/\s+/);
-  const base = parts[0].toLowerCase();
-  const target = parts[1] || "";
+// Formate la réponse JSON de l'API en lignes lisibles pour la console
+function formatApiResponse(cmd: string, data: Record<string, unknown>): string[] {
+  const lines: string[] = [];
 
-  const ts = () => new Date().toISOString();
+  if (cmd === "dns") {
+    lines.push(`[*] Enumération DNS pour: ${data.domain}`);
+    const records = data.records as Record<string, unknown>;
+    if (records) {
+      for (const [type, values] of Object.entries(records)) {
+        if (Array.isArray(values)) {
+          values.forEach((v: string) => lines.push(`[+] ${type.padEnd(8)} → ${v}`));
+        }
+      }
+    }
+    lines.push(`[✓] DNS énumération terminée`);
+  }
 
-  if (base === "help") return { lines: HELP_TEXT.split("\n"), delay: 0 };
-  if (base === "modules") return { lines: MODULES_TEXT.split("\n"), delay: 0 };
-  if (base === "clear") return { lines: ["__CLEAR__"], delay: 0 };
-  if (base === "config") return { lines: [
-    "[*] Configuration API Argus V2.0",
-    "  VirusTotal API  : ● Non configuré",
-    "  Shodan API      : ● Non configuré",
-    "  Censys API      : ● Non configuré",
-    "  Google API      : ● Non configuré",
-    "  HIBP API        : ● Non configuré",
-    "",
-    "[!] Configurez vos clés API dans config.yaml",
-  ], delay: 0 };
+  else if (cmd === "whois") {
+    lines.push(`[*] Requête WHOIS pour: ${data.domain}`);
+    const w = data.whois as Record<string, unknown>;
+    if (w) {
+      if (w.registrar) lines.push(`[+] Registrar     : ${w.registrar}`);
+      if (w.creation_date) lines.push(`[+] Created       : ${w.creation_date}`);
+      if (w.expiration_date) lines.push(`[+] Expires       : ${w.expiration_date}`);
+      if (w.updated_date) lines.push(`[+] Updated       : ${w.updated_date}`);
+      if (w.status) {
+        const statuses = Array.isArray(w.status) ? w.status : [w.status];
+        statuses.slice(0, 3).forEach((s: string) => lines.push(`[+] Status        : ${s}`));
+      }
+      if (Array.isArray(w.name_servers)) {
+        w.name_servers.slice(0, 4).forEach((ns: string) => lines.push(`[+] Name Server   : ${ns}`));
+      }
+    }
+    lines.push(`[✓] WHOIS terminé`);
+  }
 
-  if (!target) return { lines: [`[!] Erreur: ${base} nécessite une cible. Ex: ${base} example.com`], delay: 0 };
+  else if (cmd === "ip") {
+    lines.push(`[*] Géolocalisation IP: ${data.ip}`);
+    if (data.country) lines.push(`[+] Country   : ${data.country}`);
+    if (data.regionName) lines.push(`[+] Region    : ${data.regionName}`);
+    if (data.city) lines.push(`[+] City      : ${data.city}`);
+    if (data.isp) lines.push(`[+] ISP       : ${data.isp}`);
+    if (data.org) lines.push(`[+] Org       : ${data.org}`);
+    if (data.lat) lines.push(`[+] Latitude  : ${data.lat}`);
+    if (data.lon) lines.push(`[+] Longitude : ${data.lon}`);
+    if (data.timezone) lines.push(`[+] Timezone  : ${data.timezone}`);
+    lines.push(`[✓] Géolocalisation terminée`);
+  }
 
-  const results: Record<string, string[]> = {
-    dns: [
-      `[*] Démarrage énumération DNS pour: ${target}`,
-      `[+] A       → 93.184.216.34`,
-      `[+] AAAA    → 2606:2800:220:1:248:1893:25c8:1946`,
-      `[+] MX      → mail.${target} (priority: 10)`,
-      `[+] NS      → ns1.${target}`,
-      `[+] NS      → ns2.${target}`,
-      `[+] TXT     → "v=spf1 include:_spf.${target} ~all"`,
-      `[✓] DNS énumération terminée`,
-    ],
-    whois: [
-      `[*] Requête WHOIS pour: ${target}`,
-      `[+] Registrar     : GoDaddy LLC`,
-      `[+] Created       : 2010-01-15`,
-      `[+] Expires       : 2026-01-15`,
-      `[+] Name Servers  : ns1.${target}, ns2.${target}`,
-      `[+] Status        : clientTransferProhibited`,
-      `[✓] WHOIS terminé`,
-    ],
-    subdomain: [
-      `[*] Découverte sous-domaines pour: ${target}`,
-      `[+] www.${target}`,
-      `[+] mail.${target}`,
-      `[+] api.${target}`,
-      `[+] admin.${target}`,
-      `[+] dev.${target}`,
-      `[+] staging.${target}`,
-      `[✓] 6 sous-domaines trouvés`,
-    ],
-    ports: [
-      `[*] Scan ports pour: ${target}`,
-      `[+] 22/tcp   OPEN  ssh`,
-      `[+] 80/tcp   OPEN  http`,
-      `[+] 443/tcp  OPEN  https`,
-      `[+] 8080/tcp OPEN  http-proxy`,
-      `[✓] Scan terminé - 4 ports ouverts`,
-    ],
-    ssl: [
-      `[*] Analyse SSL/TLS pour: ${target}`,
-      `[+] Version        : TLS 1.3`,
-      `[+] Cipher         : TLS_AES_256_GCM_SHA384`,
-      `[+] Valid From     : 2025-01-01`,
-      `[+] Valid Until    : 2026-01-01`,
-      `[+] Issuer         : Let's Encrypt`,
-      `[+] Subject Alt    : ${target}, www.${target}`,
-      `[✓] Certificat valide`,
-    ],
-    tech: [
-      `[*] Détection technologies pour: ${target}`,
-      `[+] Framework      : React 18.x`,
-      `[+] Server         : Nginx 1.24`,
-      `[+] CDN            : Cloudflare`,
-      `[+] Analytics      : Google Analytics`,
-      `[+] CMS            : Non détecté`,
-      `[✓] Détection terminée`,
-    ],
-    leaks: [
-      `[*] Vérification fuites données pour: ${target}`,
-      `[!] 2 fuites détectées`,
-      `[+] Adobe (2013) - Email, Password hash`,
-      `[+] LinkedIn (2016) - Email, Password hash`,
-      `[✓] Vérification terminée`,
-    ],
-    wayback: [
-      `[*] Recherche archives Wayback Machine pour: ${target}`,
-      `[+] 2020-03-15: https://web.archive.org/web/20200315/${target}`,
-      `[+] 2021-07-22: https://web.archive.org/web/20210722/${target}`,
-      `[+] 2023-11-10: https://web.archive.org/web/20231110/${target}`,
-      `[✓] 3 snapshots trouvés`,
-    ],
-    ip: [
-      `[*] Géolocalisation IP: ${target}`,
-      `[+] Country   : France`,
-      `[+] City      : Paris`,
-      `[+] ISP       : Orange S.A.`,
-      `[+] Org       : AS3215 Orange`,
-      `[+] Latitude  : 48.8566`,
-      `[+] Longitude : 2.3522`,
-      `[✓] Géolocalisation terminée`,
-    ],
-    scan: [
-      `[*] Reconnaissance complète pour: ${target}`,
-      `[*] Lancement de tous les modules...`,
-      `[+] DNS         : ✓ Complété`,
-      `[+] WHOIS       : ✓ Complété`,
-      `[+] Subdomains  : ✓ 6 trouvés`,
-      `[+] Ports       : ✓ 4 ouverts`,
-      `[+] SSL         : ✓ Valide`,
-      `[+] Tech        : ✓ Détecté`,
-      `[+] Leaks       : ✓ 2 trouvés`,
-      `[+] Wayback     : ✓ 3 snapshots`,
-      `[✓] Reconnaissance complète terminée`,
-    ],
-  };
+  else if (cmd === "ports") {
+    lines.push(`[*] Scan de ports pour: ${data.target}`);
+    const open = data.open_ports as Array<Record<string, unknown>>;
+    const closed = data.closed_ports as number;
+    if (open && open.length > 0) {
+      open.forEach((p) => lines.push(`[+] ${String(p.port).padEnd(5)}/tcp  OPEN   ${p.service}`));
+    } else {
+      lines.push(`[-] Aucun port ouvert détecté`);
+    }
+    if (closed !== undefined) lines.push(`[-] ${closed} ports fermés`);
+    lines.push(`[✓] Scan terminé - ${open?.length || 0} port(s) ouvert(s)`);
+  }
 
-  return {
-    lines: results[base] || [`[!] Commande inconnue: ${base}. Tapez 'help' pour la liste des commandes.`],
-    delay: 800,
-  };
+  else if (cmd === "subdomain") {
+    lines.push(`[*] Découverte sous-domaines pour: ${data.domain}`);
+    const found = data.found as string[];
+    const checked = data.checked as number;
+    if (found && found.length > 0) {
+      found.forEach((s: string) => lines.push(`[+] ${s}`));
+    } else {
+      lines.push(`[-] Aucun sous-domaine résolu`);
+    }
+    lines.push(`[✓] ${found?.length || 0} sous-domaine(s) trouvé(s) sur ${checked} testés`);
+  }
+
+  else if (cmd === "ssl") {
+    lines.push(`[*] Analyse SSL/TLS pour: ${data.domain}`);
+    const cert = data.certificate as Record<string, unknown>;
+    if (cert) {
+      if (cert.version) lines.push(`[+] Version        : ${cert.version}`);
+      if (cert.issuer) lines.push(`[+] Issuer         : ${JSON.stringify(cert.issuer)}`);
+      if (cert.subject) lines.push(`[+] Subject        : ${JSON.stringify(cert.subject)}`);
+      if (cert.not_before) lines.push(`[+] Valid From     : ${cert.not_before}`);
+      if (cert.not_after) lines.push(`[+] Valid Until    : ${cert.not_after}`);
+      if (Array.isArray(cert.san)) {
+        lines.push(`[+] SAN            : ${cert.san.join(", ")}`);
+      }
+    }
+    const valid = data.valid;
+    lines.push(valid ? `[✓] Certificat valide` : `[!] Certificat invalide ou expiré`);
+  }
+
+  else if (cmd === "headers") {
+    lines.push(`[*] Inspection en-têtes HTTP pour: ${data.url}`);
+    lines.push(`[+] Status         : ${data.status_code}`);
+    const hdrs = data.headers as Record<string, string>;
+    if (hdrs) {
+      Object.entries(hdrs).forEach(([k, v]) => {
+        lines.push(`[+] ${k.padEnd(25)}: ${v}`);
+      });
+    }
+    const sec = data.security_headers as Record<string, unknown>;
+    if (sec) {
+      lines.push(``);
+      lines.push(`[*] En-têtes de sécurité:`);
+      Object.entries(sec).forEach(([k, v]) => {
+        const icon = v ? "[+]" : "[!]";
+        lines.push(`${icon} ${k.padEnd(35)}: ${v ? "Présent" : "Absent"}`);
+      });
+    }
+    lines.push(`[✓] Inspection terminée`);
+  }
+
+  else if (cmd === "tech") {
+    lines.push(`[*] Détection technologies pour: ${data.url}`);
+    const techs = data.technologies as string[];
+    if (techs && techs.length > 0) {
+      techs.forEach((t: string) => lines.push(`[+] ${t}`));
+    } else {
+      lines.push(`[-] Aucune technologie détectée`);
+    }
+    const server = data.server as string;
+    if (server) lines.push(`[+] Server         : ${server}`);
+    lines.push(`[✓] Détection terminée`);
+  }
+
+  else if (cmd === "wayback") {
+    lines.push(`[*] Archives Wayback Machine pour: ${data.domain}`);
+    const snapshots = data.snapshots as Array<Record<string, unknown>>;
+    if (snapshots && snapshots.length > 0) {
+      snapshots.slice(0, 8).forEach((s) => {
+        lines.push(`[+] ${s.timestamp} → ${s.url}`);
+      });
+      if (snapshots.length > 8) lines.push(`[+] ... et ${snapshots.length - 8} autres snapshots`);
+    } else {
+      lines.push(`[-] Aucun snapshot trouvé`);
+    }
+    lines.push(`[✓] ${snapshots?.length || 0} snapshot(s) trouvé(s)`);
+  }
+
+  else if (cmd === "scan") {
+    lines.push(`[*] Reconnaissance complète pour: ${data.target}`);
+    lines.push(`[*] Exécutez les modules individuellement:`);
+    lines.push(``);
+    lines.push(`  dns ${data.target}`);
+    lines.push(`  whois ${data.target}`);
+    lines.push(`  subdomain ${data.target}`);
+    lines.push(`  ports ${data.target}`);
+    lines.push(`  ssl ${data.target}`);
+    lines.push(`  headers ${data.target}`);
+    lines.push(`  tech ${data.target}`);
+    lines.push(`  wayback ${data.target}`);
+    lines.push(``);
+    lines.push(`[✓] Utilisez les commandes ci-dessus pour un scan complet`);
+  }
+
+  return lines;
 }
 
 export default function ArgusConsole() {
@@ -184,6 +219,9 @@ export default function ArgusConsole() {
     { type: "system", text: "║      ARGUS V2.0 - OSINT RECON TOOLKIT     ║" },
     { type: "system", text: "║   Python Reconnaissance Suite v2.0.0      ║" },
     { type: "system", text: "╚═══════════════════════════════════════════╝" },
+    { type: "system", text: "" },
+    { type: "system", text: "[*] Backend: https://argus-api-aqr6.onrender.com" },
+    { type: "system", text: "[✓] Connexion API établie" },
     { type: "system", text: "" },
     { type: "system", text: "Tapez 'help' pour voir les commandes disponibles." },
     { type: "system", text: "" },
@@ -197,38 +235,117 @@ export default function ArgusConsole() {
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [history]);
 
-  const run = () => {
+  const addLines = (lines: string[], type: "output" | "error" = "output") => {
+    setHistory(prev => [...prev, ...lines.map(l => ({
+      type: (l.startsWith("[!]") ? "error" : type) as "output" | "error",
+      text: l,
+    }))]);
+  };
+
+  const run = async () => {
     if (!input.trim() || loading) return;
     const cmd = input.trim();
     setInput("");
     setHistIdx(-1);
     setCmdHistory(prev => [cmd, ...prev]);
     setHistory(prev => [...prev, { type: "input", text: `argus@recon:~$ ${cmd}` }]);
-    setLoading(true);
 
-    const { lines, delay } = simulate(cmd);
+    const parts = cmd.trim().split(/\s+/);
+    const base = parts[0].toLowerCase();
+    const target = parts[1] || "";
 
-    setTimeout(() => {
-      if (lines[0] === "__CLEAR__") {
-        setHistory([{ type: "system", text: "Console effacée. Tapez 'help' pour l'aide." }]);
-      } else {
-        setHistory(prev => [...prev, ...lines.map(l => ({
-          type: (l.startsWith("[!]") ? "error" : "output") as "output" | "error",
-          text: l
-        }))]);
+    // Commandes locales (sans API)
+    if (base === "clear") {
+      setHistory([{ type: "system", text: "Console effacée. Tapez 'help' pour l'aide." }]);
+      return;
+    }
+    if (base === "help") { addLines(HELP_TEXT.split("\n")); return; }
+    if (base === "modules") { addLines(MODULES_TEXT.split("\n")); return; }
+    if (base === "config") {
+      addLines([
+        "[*] Configuration API Argus V2.0",
+        `[+] Backend URL   : ${API_BASE}`,
+        "  VirusTotal API  : ● Non configuré",
+        "  Shodan API      : ● Non configuré",
+        "  Censys API      : ● Non configuré",
+        "  Google API      : ● Non configuré",
+        "  HIBP API        : ● Non configuré",
+        "",
+        "[!] Configurez vos clés API dans config.yaml",
+      ]);
+      return;
+    }
+
+    // Commandes nécessitant une cible
+    const apiCmds = ["dns", "whois", "ip", "ports", "subdomain", "ssl", "headers", "tech", "wayback", "scan"];
+    if (apiCmds.includes(base)) {
+      if (!target) {
+        addLines([`[!] Erreur: '${base}' nécessite une cible. Ex: ${base} example.com`], "error");
+        return;
       }
-      setLoading(false);
-    }, delay || 100);
+
+      setLoading(true);
+      addLines([`[*] Connexion à l'API Argus... (${base} ${target})`]);
+
+      // Map commande → endpoint
+      const endpointMap: Record<string, string> = {
+        dns: `/api/dns/${target}`,
+        whois: `/api/whois/${target}`,
+        ip: `/api/ip/${target}`,
+        ports: `/api/ports/${target}`,
+        subdomain: `/api/subdomain/${target}`,
+        ssl: `/api/ssl/${target}`,
+        headers: `/api/headers/${target}`,
+        tech: `/api/tech/${target}`,
+        wayback: `/api/wayback/${target}`,
+        scan: `/api/scan/${target}`,
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}${endpointMap[base]}`, {
+          signal: AbortSignal.timeout(30000),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          addLines([`[!] Erreur API ${res.status}: ${err.detail || err.error || res.statusText}`], "error");
+          setLoading(false);
+          return;
+        }
+
+        const data = await res.json();
+        const lines = formatApiResponse(base, data);
+        addLines(lines);
+      } catch (e: unknown) {
+        if (e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError")) {
+          addLines([`[!] Timeout: le serveur n'a pas répondu en 30s. Réessayez.`], "error");
+        } else {
+          addLines([
+            `[!] Erreur de connexion à l'API`,
+            `[!] Note: Le serveur Render peut être en veille (~30s au 1er appel)`,
+            `[!] Réessayez dans quelques secondes.`,
+          ], "error");
+        }
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    // Commande inconnue
+    addLines([`[!] Commande inconnue: '${base}'. Tapez 'help' pour la liste des commandes.`], "error");
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") { run(); return; }
     if (e.key === "ArrowUp") {
+      e.preventDefault();
       const idx = Math.min(histIdx + 1, cmdHistory.length - 1);
       setHistIdx(idx);
       setInput(cmdHistory[idx] || "");
     }
     if (e.key === "ArrowDown") {
+      e.preventDefault();
       const idx = Math.max(histIdx - 1, -1);
       setHistIdx(idx);
       setInput(idx === -1 ? "" : cmdHistory[idx]);
@@ -254,6 +371,7 @@ export default function ArgusConsole() {
             <span style={{ color: "#fbbf24", fontSize: "0.7rem" }}>●</span>
             <span style={{ color: "#00ff9c", fontSize: "0.7rem" }}>●</span>
             <span style={{ color: "#9ca3af", fontSize: "0.85rem", marginLeft: "10px" }}>argus@recon:~</span>
+            <span style={{ color: "#4ade80", fontSize: "0.75rem", marginLeft: "10px" }}>● LIVE API</span>
           </div>
           <Link to="/outils/argus" style={{ color: "#9ca3af", textDecoration: "none", fontSize: "0.8rem" }}>
             ← Retour Argus V2.0
@@ -270,7 +388,7 @@ export default function ArgusConsole() {
           ))}
           {loading && (
             <div style={{ color: "#9ca3af", fontSize: "0.9rem" }}>
-              <span style={{ animation: "blink 1s infinite" }}>█</span> Traitement en cours...
+              <span style={{ animation: "blink 1s infinite" }}>█</span> Requête API en cours... (peut prendre jusqu'à 30s si le serveur est en veille)
             </div>
           )}
           <div ref={bottomRef} />
@@ -282,7 +400,7 @@ export default function ArgusConsole() {
           <input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKey}
             placeholder="Entrez une commande... (help pour l'aide)"
             autoFocus disabled={loading}
-            style={{ flex: 1, background: "transparent", border: "none", color: "#fbbf24", fontFamily: "monospace", fontSize: "0.9rem", outline: "none" }} />
+            style={{ flex: 1, background: "transparent", border: "none", color: "#fbbf24", fontFamily: "monospace", fontSize: "0.9rem", outline: "none", opacity: loading ? 0.5 : 1 }} />
         </div>
 
         <style>{`@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }`}</style>
