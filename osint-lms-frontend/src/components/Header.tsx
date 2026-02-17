@@ -401,6 +401,7 @@ export default function Header() {
               { label: "📚 Parcours", to: "/parcours" },
               { label: "📝 Exercices", to: "/exercices-osint" },
               { label: "🔎 Études de Cas", to: "/etudes-osint" },
+              { label: "🎓 Quiz Interactifs", to: "/quiz" },
               { label: "🏅 Badges", to: "/badges-osint" },
               { label: "🚩 CTF", to: "/ctf" },
               { label: "🏆 Leaderboard", to: "/leaderboard" },

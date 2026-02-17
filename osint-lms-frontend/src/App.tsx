@@ -52,6 +52,9 @@ import Gamification from "./pages/Gamification";
 /* ARGUS V2.0 */
 import ArgusRecon from "./pages/ArgusRecon";
 import ArgusConsole from "./pages/ArgusConsole";
+/* QUIZ */
+import QuizPage from "./pages/QuizPage";
+import QuizSession from "./pages/QuizSession";
 
 /* SCROLL TO TOP */
 function ScrollToTop() {
@@ -151,6 +154,10 @@ export default function App() {
         <Route path="/cas/attribution" element={<Protected><Layout><CasAttribution /></Layout></Protected>} />
         <Route path="/cas/chronologie" element={<Protected><Layout><CasChronologie /></Layout></Protected>} />
         <Route path="/cas/final" element={<Protected><Layout><CasFinalOSINT /></Layout></Protected>} />
+
+        {/* QUIZ */}
+        <Route path="/quiz" element={<Protected><Layout><QuizPage /></Layout></Protected>} />
+        <Route path="/quiz/:themeId" element={<Protected><Layout><QuizSession /></Layout></Protected>} />
 
         {/* AUTRES */}
         <Route path="/exercices-osint" element={<Protected><Layout><ExercicesOSINT /></Layout></Protected>} />
