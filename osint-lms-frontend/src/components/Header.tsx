@@ -138,6 +138,7 @@ export default function Header() {
             { label: "📚 Parcours", to: "/parcours" },
             { label: "📝 Exercices", to: "/exercices-osint" },
             { label: "🔎 Études", to: "/etudes-osint" },
+            { label: "🎓 Quiz Interactifs", to: "/quiz" },
             { label: "🏅 Badges", to: "/badges-osint" },
           ].map((item) => (
             <Link key={item.to} to={item.to} style={linkStyle}
