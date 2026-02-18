@@ -65,9 +65,9 @@ export default function Header() {
     color: colors.textPrimary,
     textDecoration: "none" as const,
     fontWeight: "500" as const,
-    padding: "6px 10px",
+    padding: "6px 8px",
     borderRadius: "6px",
-    fontSize: "0.85rem",
+    fontSize: "0.8rem",
     whiteSpace: "nowrap" as const,
     transition: "all 0.2s",
   };
@@ -95,9 +95,10 @@ export default function Header() {
       <div style={{
         display: "flex",
         alignItems: "center",
-        padding: "8px 20px",
-        gap: "20px",
+        padding: "8px 15px",
+        gap: "12px",
         minHeight: "60px",
+        flexWrap: "wrap" as const,
       }}>
         
         {/* 📱 MENU HAMBURGER (mobile only) */}
@@ -142,7 +143,7 @@ export default function Header() {
         <nav style={{
           display: "flex",
           alignItems: "center",
-          gap: "5px",
+          gap: "3px",
         }}
         className="desktop-nav">
           {[
@@ -236,7 +237,7 @@ export default function Header() {
         <nav style={{
           display: "flex",
           alignItems: "center",
-          gap: "5px",
+          gap: "3px",
         }}
         className="desktop-nav">
           <Link to="/labo-osint" style={linkStyle}
@@ -325,7 +326,7 @@ export default function Header() {
         <nav style={{
           display: "flex",
           alignItems: "center",
-          gap: "5px",
+          gap: "3px",
           marginRight: "auto",
         }}
         className="desktop-nav">
@@ -362,7 +363,7 @@ export default function Header() {
         <div style={{ 
           display: "flex", 
           alignItems: "center", 
-          gap: "10px",
+          gap: "8px",
           flexShrink: 0,
         }}
         className="action-buttons">
@@ -668,12 +669,32 @@ export default function Header() {
     <div style={{ height: "60px" }} />
 
     <style>{`
-      @media (max-width: 1200px) {
+      /* Mode mobile < 1400px */
+      @media (max-width: 1400px) {
         .mobile-menu-btn {
           display: block !important;
         }
-        .desktop-nav, .separator, .action-buttons .username-text {
+        .desktop-nav, .separator {
           display: none !important;
+        }
+        .username-text {
+          display: none !important;
+        }
+      }
+
+      /* Mode compact 1400-1600px */
+      @media (min-width: 1401px) and (max-width: 1600px) {
+        .desktop-nav a, .desktop-nav span {
+          font-size: 0.75rem !important;
+          padding: 4px 6px !important;
+        }
+      }
+
+      /* Mode très large > 1920px */
+      @media (min-width: 1921px) {
+        .desktop-nav a, .desktop-nav span {
+          font-size: 0.9rem !important;
+          padding: 8px 12px !important;
         }
       }
     `}</style>
