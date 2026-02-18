@@ -287,7 +287,7 @@ export default function QuizSession() {
           <h2 style={{ color: colors.textPrimary, fontSize: "1.8rem", marginBottom: "15px" }}>
             Quiz en construction
           </h2>
-          <p style={{ color: colors.textPrimarySecondary, marginBottom: "30px" }}>
+          <p style={{ color: colors.textSecondary, marginBottom: "30px" }}>
             Les questions pour ce thème seront bientôt disponibles !
           </p>
           <button
@@ -360,7 +360,7 @@ export default function QuizSession() {
             marginBottom: "30px"
           }}>
             <div style={{ 
-              color: colors.textPrimarySecondary, 
+              color: colors.textSecondary, 
               fontSize: "0.9rem",
               marginBottom: "8px"
             }}>
@@ -463,7 +463,7 @@ export default function QuizSession() {
             <div>
               <div style={{ 
                 fontSize: "0.75rem", 
-                color: colors.textPrimarySecondary,
+                color: colors.textSecondary,
                 marginBottom: "2px"
               }}>
                 Temps total
@@ -490,7 +490,7 @@ export default function QuizSession() {
           }}>
             <div style={{
               fontSize: "0.75rem",
-              color: colors.textPrimarySecondary,
+              color: colors.textSecondary,
               marginBottom: "8px"
             }}>
               Question {currentQuestion + 1} / {questions.length}
@@ -520,7 +520,7 @@ export default function QuizSession() {
           }}>
             <div style={{ 
               fontSize: "0.75rem", 
-              color: colors.textPrimarySecondary,
+              color: colors.textSecondary,
               marginBottom: "2px"
             }}>
               Score
@@ -667,7 +667,7 @@ export default function QuizSession() {
                       justifyContent: "center",
                       fontSize: "0.9rem",
                       fontWeight: "700",
-                      color: showResult && (isCorrect || isSelected) ? "#fff" : colors.textPrimarySecondary,
+                      color: showResult && (isCorrect || isSelected) ? "#fff" : colors.textSecondary,
                       flexShrink: 0
                     }}>
                       {String.fromCharCode(65 + index)}
@@ -757,7 +757,7 @@ export default function QuizSession() {
                 </strong>
               </div>
               <p style={{
-                color: colors.textPrimarySecondary,
+                color: colors.textSecondary,
                 lineHeight: "1.6",
                 margin: 0
               }}>
