@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext";
+import { useThemeColors } from "../context/ThemeContext";
 
 interface QuizTheme {
   id: string;
@@ -71,7 +71,7 @@ const quizThemes: QuizTheme[] = [
 
 export default function QuizPage() {
   const navigate = useNavigate();
-  const { colors } = useTheme();
+  const colors = useThemeColors();
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
 
   const handleStartQuiz = (themeId: string) => {
@@ -90,7 +90,7 @@ export default function QuizPage() {
   return (
     <div style={{ 
       minHeight: "100vh", 
-      background: colors.background,
+      background: colors.bgPrimary,
       paddingTop: "80px"
     }}>
       <div style={{ 
@@ -107,14 +107,14 @@ export default function QuizPage() {
           <h1 style={{ 
             fontSize: "2.5rem", 
             fontWeight: "700", 
-            color: colors.text,
+            color: colors.textPrimary,
             marginBottom: "15px"
           }}>
             🎓 Quiz OSINT Interactifs
           </h1>
           <p style={{ 
             fontSize: "1.1rem", 
-            color: colors.textSecondary,
+            color: colors.textPrimarySecondary,
             maxWidth: "700px",
             margin: "0 auto"
           }}>
@@ -134,17 +134,17 @@ export default function QuizPage() {
         }}>
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: "2rem", marginBottom: "5px" }}>🥉</div>
-            <div style={{ color: colors.textSecondary, fontSize: "0.9rem" }}>Bronze</div>
+            <div style={{ color: colors.textPrimarySecondary, fontSize: "0.9rem" }}>Bronze</div>
             <div style={{ color: "#cd7f32", fontWeight: "600" }}>≥ 60%</div>
           </div>
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: "2rem", marginBottom: "5px" }}>🥈</div>
-            <div style={{ color: colors.textSecondary, fontSize: "0.9rem" }}>Argent</div>
+            <div style={{ color: colors.textPrimarySecondary, fontSize: "0.9rem" }}>Argent</div>
             <div style={{ color: "#c0c0c0", fontWeight: "600" }}>≥ 80%</div>
           </div>
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: "2rem", marginBottom: "5px" }}>🥇</div>
-            <div style={{ color: colors.textSecondary, fontSize: "0.9rem" }}>Or</div>
+            <div style={{ color: colors.textPrimarySecondary, fontSize: "0.9rem" }}>Or</div>
             <div style={{ color: "#ffd700", fontWeight: "600" }}>≥ 95%</div>
           </div>
         </div>
@@ -162,7 +162,7 @@ export default function QuizPage() {
               style={{
                 background: selectedTheme === theme.id 
                   ? `linear-gradient(135deg, ${colors.accent}15, ${colors.accent}05)`
-                  : colors.surface,
+                  : colors.bgSecondary,
                 border: `2px solid ${selectedTheme === theme.id ? colors.accent : colors.border}`,
                 borderRadius: "16px",
                 padding: "30px",
@@ -209,7 +209,7 @@ export default function QuizPage() {
               <h3 style={{
                 fontSize: "1.4rem",
                 fontWeight: "700",
-                color: colors.text,
+                color: colors.textPrimary,
                 marginBottom: "12px"
               }}>
                 {theme.title}
@@ -217,7 +217,7 @@ export default function QuizPage() {
 
               {/* Description */}
               <p style={{
-                color: colors.textSecondary,
+                color: colors.textPrimarySecondary,
                 fontSize: "0.95rem",
                 lineHeight: "1.6",
                 marginBottom: "20px"
@@ -235,14 +235,14 @@ export default function QuizPage() {
               }}>
                 <div>
                   <div style={{ 
-                    color: colors.textSecondary, 
+                    color: colors.textPrimarySecondary, 
                     fontSize: "0.8rem",
                     marginBottom: "4px"
                   }}>
                     Questions
                   </div>
                   <div style={{ 
-                    color: colors.text, 
+                    color: colors.textPrimary, 
                     fontWeight: "600",
                     fontSize: "1.1rem"
                   }}>
@@ -251,14 +251,14 @@ export default function QuizPage() {
                 </div>
                 <div>
                   <div style={{ 
-                    color: colors.textSecondary, 
+                    color: colors.textPrimarySecondary, 
                     fontSize: "0.8rem",
                     marginBottom: "4px"
                   }}>
                     Durée max
                   </div>
                   <div style={{ 
-                    color: colors.text, 
+                    color: colors.textPrimary, 
                     fontWeight: "600",
                     fontSize: "1.1rem"
                   }}>
@@ -319,7 +319,7 @@ export default function QuizPage() {
         }}>
           <div style={{ fontSize: "1.5rem", marginBottom: "10px" }}>💡</div>
           <h3 style={{ 
-            color: colors.text, 
+            color: colors.textPrimary, 
             fontSize: "1.2rem", 
             fontWeight: "600",
             marginBottom: "10px"
@@ -327,7 +327,7 @@ export default function QuizPage() {
             Comment ça marche ?
           </h3>
           <p style={{ 
-            color: colors.textSecondary, 
+            color: colors.textPrimarySecondary, 
             lineHeight: "1.7",
             maxWidth: "800px",
             margin: "0 auto"

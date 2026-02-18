@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext";
+import { useThemeColors } from "../context/ThemeContext";
 import { useGame } from "../context/GameContext";
 
 interface Question {
@@ -47,7 +47,7 @@ const quizDatabase: Record<string, Question[]> = {
 export default function QuizSession() {
   const { themeId } = useParams<{ themeId: string }>();
   const navigate = useNavigate();
-  const { colors } = useTheme();
+  const colors = useThemeColors();
   const { addXP, unlockBadge } = useGame();
 
   const questions = quizDatabase[themeId || ""] || [];
@@ -172,7 +172,7 @@ export default function QuizSession() {
     return (
       <div style={{ 
         minHeight: "100vh", 
-        background: colors.background,
+        background: colors.bgPrimary,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -180,10 +180,10 @@ export default function QuizSession() {
       }}>
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: "4rem", marginBottom: "20px" }}>🚧</div>
-          <h2 style={{ color: colors.text, fontSize: "1.8rem", marginBottom: "15px" }}>
+          <h2 style={{ color: colors.textPrimary, fontSize: "1.8rem", marginBottom: "15px" }}>
             Quiz en construction
           </h2>
-          <p style={{ color: colors.textSecondary, marginBottom: "30px" }}>
+          <p style={{ color: colors.textPrimarySecondary, marginBottom: "30px" }}>
             Les questions pour ce thème seront bientôt disponibles !
           </p>
           <button
@@ -214,7 +214,7 @@ export default function QuizSession() {
     return (
       <div style={{ 
         minHeight: "100vh", 
-        background: colors.background,
+        background: colors.bgPrimary,
         paddingTop: "80px",
         display: "flex",
         alignItems: "center",
@@ -223,7 +223,7 @@ export default function QuizSession() {
         <div style={{
           maxWidth: "600px",
           width: "90%",
-          background: colors.surface,
+          background: colors.bgSecondary,
           borderRadius: "20px",
           padding: "50px",
           textAlign: "center",
@@ -232,7 +232,7 @@ export default function QuizSession() {
           <div style={{ fontSize: "5rem", marginBottom: "20px" }}>{badge.emoji}</div>
           
           <h2 style={{ 
-            color: colors.text, 
+            color: colors.textPrimary, 
             fontSize: "2rem", 
             fontWeight: "700",
             marginBottom: "10px"
@@ -256,7 +256,7 @@ export default function QuizSession() {
             marginBottom: "30px"
           }}>
             <div style={{ 
-              color: colors.textSecondary, 
+              color: colors.textPrimarySecondary, 
               fontSize: "0.9rem",
               marginBottom: "8px"
             }}>
@@ -272,9 +272,9 @@ export default function QuizSession() {
             <div style={{
               marginTop: "15px",
               padding: "12px",
-              background: colors.background,
+              background: colors.bgPrimary,
               borderRadius: "8px",
-              color: colors.text,
+              color: colors.textPrimary,
               fontWeight: "600"
             }}>
               Badge {badge.name} {badge.emoji}
@@ -327,7 +327,7 @@ export default function QuizSession() {
   return (
     <div style={{ 
       minHeight: "100vh", 
-      background: colors.background,
+      background: colors.bgPrimary,
       paddingTop: "80px"
     }}>
       <div style={{ 
@@ -359,7 +359,7 @@ export default function QuizSession() {
             <div>
               <div style={{ 
                 fontSize: "0.75rem", 
-                color: colors.textSecondary,
+                color: colors.textPrimarySecondary,
                 marginBottom: "2px"
               }}>
                 Temps total
@@ -367,7 +367,7 @@ export default function QuizSession() {
               <div style={{ 
                 fontSize: "1.2rem", 
                 fontWeight: "700",
-                color: globalTime < 60 ? "#ef4444" : colors.text,
+                color: globalTime < 60 ? "#ef4444" : colors.textPrimary,
                 fontFamily: "monospace"
               }}>
                 {formatTime(globalTime)}
@@ -377,7 +377,7 @@ export default function QuizSession() {
 
           {/* Progress */}
           <div style={{
-            background: colors.surface,
+            background: colors.bgSecondary,
             border: `1px solid ${colors.border}`,
             borderRadius: "12px",
             padding: "12px 20px",
@@ -386,13 +386,13 @@ export default function QuizSession() {
           }}>
             <div style={{
               fontSize: "0.75rem",
-              color: colors.textSecondary,
+              color: colors.textPrimarySecondary,
               marginBottom: "8px"
             }}>
               Question {currentQuestion + 1} / {questions.length}
             </div>
             <div style={{
-              background: colors.background,
+              background: colors.bgPrimary,
               borderRadius: "10px",
               height: "8px",
               overflow: "hidden"
@@ -408,7 +408,7 @@ export default function QuizSession() {
 
           {/* Score actuel */}
           <div style={{
-            background: colors.surface,
+            background: colors.bgSecondary,
             border: `1px solid ${colors.border}`,
             borderRadius: "12px",
             padding: "12px 20px",
@@ -416,7 +416,7 @@ export default function QuizSession() {
           }}>
             <div style={{ 
               fontSize: "0.75rem", 
-              color: colors.textSecondary,
+              color: colors.textPrimarySecondary,
               marginBottom: "2px"
             }}>
               Score
@@ -433,7 +433,7 @@ export default function QuizSession() {
 
         {/* Question Card */}
         <div style={{
-          background: colors.surface,
+          background: colors.bgSecondary,
           borderRadius: "20px",
           padding: "40px",
           border: `2px solid ${colors.border}`,
@@ -481,7 +481,7 @@ export default function QuizSession() {
           <h3 style={{
             fontSize: "1.5rem",
             fontWeight: "600",
-            color: colors.text,
+            color: colors.textPrimary,
             lineHeight: "1.6",
             marginBottom: "35px"
           }}>
@@ -507,10 +507,10 @@ export default function QuizSession() {
                           ? "#10b98120" 
                           : isSelected 
                             ? "#ef444420" 
-                            : colors.background
+                            : colors.bgPrimary
                         : isSelected
                           ? `${colors.accent}20`
-                          : colors.background,
+                          : colors.bgPrimary,
                       border: `2px solid ${
                         showResult
                           ? isCorrect
@@ -525,7 +525,7 @@ export default function QuizSession() {
                       borderRadius: "12px",
                       padding: "18px 24px",
                       fontSize: "1.05rem",
-                      color: colors.text,
+                      color: colors.textPrimary,
                       cursor: showExplanation ? "default" : "pointer",
                       textAlign: "left",
                       transition: "all 0.3s ease",
@@ -563,7 +563,7 @@ export default function QuizSession() {
                       justifyContent: "center",
                       fontSize: "0.9rem",
                       fontWeight: "700",
-                      color: showResult && (isCorrect || isSelected) ? "#fff" : colors.textSecondary,
+                      color: showResult && (isCorrect || isSelected) ? "#fff" : colors.textPrimarySecondary,
                       flexShrink: 0
                     }}>
                       {String.fromCharCode(65 + index)}
@@ -592,10 +592,10 @@ export default function QuizSession() {
                             ? "#10b98120" 
                             : isSelected 
                               ? "#ef444420" 
-                              : colors.background
+                              : colors.bgPrimary
                           : isSelected
                             ? `${colors.accent}20`
-                            : colors.background,
+                            : colors.bgPrimary,
                         border: `2px solid ${
                           showResult
                             ? isCorrect
@@ -611,7 +611,7 @@ export default function QuizSession() {
                         padding: "20px 30px",
                         fontSize: "1.2rem",
                         fontWeight: "600",
-                        color: colors.text,
+                        color: colors.textPrimary,
                         cursor: showExplanation ? "default" : "pointer",
                         textAlign: "center",
                         transition: "all 0.3s ease"
@@ -653,7 +653,7 @@ export default function QuizSession() {
                 </strong>
               </div>
               <p style={{
-                color: colors.textSecondary,
+                color: colors.textPrimarySecondary,
                 lineHeight: "1.6",
                 margin: 0
               }}>

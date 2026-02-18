@@ -5,7 +5,7 @@ import { useTheme, useThemeColors } from "../context/ThemeContext";
 import Logo from "../assets/images/Logo.png";
 
 const AVATARS: Record<string, string> = {
-  hacker: "🧑\u200d💻", ninja: "🥷", ghost: "👻", robot: "🤖", alien: "👽",
+  hacker: "🧑‍💻", ninja: "🥷", ghost: "👻", robot: "🤖", alien: "👽",
   skull: "💀", detective: "🕵️", wizard: "🧙", demon: "😈", cat: "🐱",
   fox: "🦊", wolf: "🐺", dragon: "🐉", parrot: "🦜", cyber: "⚡",
 };
@@ -32,7 +32,7 @@ function getUserAvatar(username: string): string | JSX.Element {
   }
   
   const saved = localStorage.getItem(`avatar_${username}`);
-  return saved && AVATARS[saved] ? AVATARS[saved] : "🧑\u200d💻";
+  return saved && AVATARS[saved] ? AVATARS[saved] : "🧑‍💻";
 }
 
 export default function Header() {
@@ -76,23 +76,27 @@ export default function Header() {
       boxShadow: `0 4px 20px ${colors.shadow}`,
     }}>
       
+      {/* LIGNE 1 : Logo + Menu Principal + Avatar */}
       <div style={{
-        height: "60px",
         display: "flex",
         alignItems: "center",
-        padding: "0 20px",
-        gap: "20px",
-      }}>
+        padding: "10px 20px",
+        gap: "15px",
+        borderBottom: `1px solid ${colors.accent}`,
+      }}
+      className="header-line-1">
         
         {/* LOGO */}
         <Link to="/dashboard" style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0 }}>
-          <img src={Logo} alt="Logo" style={{ height: "40px", marginRight: "10px" }} />
-          <span style={{ color: colors.accent, fontSize: "1rem", fontWeight: "bold", whiteSpace: "nowrap" }}>
+          <img src={Logo} alt="Logo" style={{ height: "35px", marginRight: "8px" }} />
+          <span style={{ color: colors.accent, fontSize: "0.95rem", fontWeight: "bold", whiteSpace: "nowrap" }}>
             CyberOSINT Academy
           </span>
         </Link>
 
-        {/* MENU HAMBURGER (mobile) */}
+        <div style={{ width: "2px", height: "25px", background: colors.accent, flexShrink: 0 }} className="separator" />
+
+        {/* MENU HAMBURGER (mobile only) */}
         <button
           onClick={() => setShowMobileMenu(!showMobileMenu)}
           style={{
@@ -100,8 +104,8 @@ export default function Header() {
             background: "transparent",
             border: `2px solid ${colors.accent}`,
             color: colors.accent,
-            fontSize: "1.5rem",
-            padding: "5px 10px",
+            fontSize: "1.3rem",
+            padding: "4px 8px",
             borderRadius: "6px",
             cursor: "pointer",
             marginLeft: "auto",
@@ -111,34 +115,21 @@ export default function Header() {
           ☰
         </button>
 
-        {/* NAVIGATION (desktop) */}
+        {/* MENU PRINCIPAL (desktop) */}
         <nav style={{
           display: "flex",
-          gap: "6px",
+          gap: "5px",
           flex: 1,
+          justifyContent: "center",
           alignItems: "center",
         }}
-        className="desktop-nav">
-          
-          <div style={{ width: "2px", height: "28px", background: colors.accent, margin: "0 6px", flexShrink: 0 }} />
-
-          <Link to="/dashboard" style={linkStyle}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = colors.accent;
-            e.currentTarget.style.background = colors.bgSecondary;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = colors.textPrimary;
-            e.currentTarget.style.background = "transparent";
-          }}>
-            🏠 Dashboard
-          </Link>
-
+        className="desktop-nav-1">
           {[
+            { label: "🏠 Dashboard", to: "/dashboard" },
             { label: "📚 Parcours", to: "/parcours" },
             { label: "📝 Exercices", to: "/exercices-osint" },
             { label: "🔎 Études", to: "/etudes-osint" },
-            { label: "🎓 Quiz Interactifs", to: "/quiz" },
+            { label: "🎓 Quiz", to: "/quiz" },
             { label: "🏅 Badges", to: "/badges-osint" },
           ].map((item) => (
             <Link key={item.to} to={item.to} style={linkStyle}
@@ -153,97 +144,11 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-
-          <div style={{ width: "2px", height: "28px", background: colors.accent, margin: "0 6px", flexShrink: 0 }} />
-
-          {[
-            { label: "🚩 CTF", to: "/ctf" },
-            { label: "🏆 Leaderboard", to: "/leaderboard" },
-            { label: "⭐ Progression", to: "/progression" },
-            { label: "🧪 Labo", to: "/labo-osint" },
-          ].map((item) => (
-            <Link key={item.to} to={item.to} style={linkStyle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = colors.accent;
-              e.currentTarget.style.background = colors.bgSecondary;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = colors.textPrimary;
-              e.currentTarget.style.background = "transparent";
-            }}>
-              {item.label}
-            </Link>
-          ))}
-
-          {/* Menu Outils */}
-          <div style={{ position: "relative" as const }}>
-            <span onClick={() => setShowOutilsMenu(!showOutilsMenu)} style={{
-              color: showOutilsMenu ? colors.accent : colors.textPrimary,
-              fontWeight: "500",
-              cursor: "pointer",
-              padding: "6px 10px",
-              borderRadius: "6px",
-              fontSize: "0.8rem",
-              transition: "all 0.2s",
-              background: showOutilsMenu ? colors.bgSecondary : "transparent",
-              display: "block",
-              whiteSpace: "nowrap" as const,
-            }}>
-              🛠️ Outils ▾
-            </span>
-
-            {showOutilsMenu && (
-              <div style={{
-                position: "absolute" as const,
-                top: "36px",
-                left: "-20px",
-                background: colors.bgPrimary,
-                border: `1px solid ${colors.accent}`,
-                borderRadius: "8px",
-                padding: "8px 0",
-                minWidth: "200px",
-                zIndex: 1000,
-                boxShadow: `0 4px 20px ${colors.shadow}`,
-              }}>
-                {[
-                  { label: "🤖 HackerAI", to: "/hacker-ai" },
-                  { label: "🔍 Argus V2.0", to: "/outils/argus" },
-                  { label: "🖥️ Argus Console", to: "/outils/argus/console" },
-                  { label: "📦 Dependency Track", to: "/dependency-track" },
-                  { label: "🔧 Outils Cyber", to: "/outils-cyber" },
-                  { label: "📚 Référentiels", to: "/referentiels" },
-                  { label: "💻 VM Access", to: "/vm-access" },
-                  { label: "🐉 Kali Linux Lab", to: "/vm-kali" },
-                  { label: "🦜 Parrot OS Lab", to: "/vm-parrot" },
-                ].map((item) => (
-                  <Link key={item.to} to={item.to} onClick={() => setShowOutilsMenu(false)} style={{
-                    display: "block",
-                    color: colors.textPrimary,
-                    textDecoration: "none",
-                    padding: "10px 20px",
-                    fontSize: "0.85rem",
-                    transition: "all 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = colors.bgSecondary;
-                    e.currentTarget.style.color = colors.accent;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = colors.textPrimary;
-                  }}>
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div style={{ width: "2px", height: "28px", background: colors.accent, margin: "0 6px", flexShrink: 0 }} />
-
         </nav>
 
-        {/* TOGGLE THÈME */}
+        <div style={{ width: "2px", height: "25px", background: colors.accent, flexShrink: 0 }} className="separator" />
+
+        {/* TOGGLE THÈME (desktop) */}
         <button
           onClick={toggleTheme}
           title={theme === "dark" ? "Mode clair" : "Mode sombre"}
@@ -251,13 +156,13 @@ export default function Header() {
             background: colors.bgSecondary,
             border: `1px solid ${colors.border}`,
             borderRadius: "8px",
-            padding: "8px 12px",
+            padding: "6px 10px",
             cursor: "pointer",
-            fontSize: "1.2rem",
+            fontSize: "1.1rem",
             transition: "all 0.2s",
             display: "flex",
             alignItems: "center",
-            gap: "6px",
+            flexShrink: 0,
           }}
           className="theme-toggle-btn"
           onMouseEnter={(e) => {
@@ -273,47 +178,47 @@ export default function Header() {
         </button>
 
         {/* MENU UTILISATEUR */}
-        <div style={{ position: "relative" as const }} className="user-menu-container">
+        <div style={{ position: "relative" as const, flexShrink: 0 }} className="user-menu-container">
           <div onClick={() => setShowUserMenu(!showUserMenu)} style={{
             display: "flex",
             alignItems: "center",
-            gap: "10px",
+            gap: "8px",
             cursor: "pointer",
-            padding: "6px 12px",
+            padding: "4px 10px",
             borderRadius: "8px",
             transition: "background 0.2s",
             background: showUserMenu ? colors.bgSecondary : "transparent",
           }}>
             
             <div style={{
-              width: "32px",
-              height: "32px",
+              width: "30px",
+              height: "30px",
               borderRadius: "50%",
               border: `2px solid ${colors.accent}`,
               background: colors.bgSecondary,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "1.2rem",
+              fontSize: "1.1rem",
               flexShrink: 0,
             }}>
               {getUserAvatar(user.username)}
             </div>
 
-            <span style={{ color: colors.textSecondary, fontWeight: "500", fontSize: "0.85rem" }} className="username-text">{user.username}</span>
+            <span style={{ color: colors.textSecondary, fontWeight: "500", fontSize: "0.8rem" }} className="username-text">{user.username}</span>
             <span style={{ color: colors.textSecondary, fontSize: "0.6rem" }}>▾</span>
           </div>
 
           {showUserMenu && (
             <div style={{
               position: "absolute" as const,
-              top: "50px",
+              top: "45px",
               right: 0,
               background: colors.bgPrimary,
               border: `1px solid ${colors.accent}`,
               borderRadius: "8px",
               padding: "8px 0",
-              minWidth: "180px",
+              minWidth: "170px",
               zIndex: 1000,
               boxShadow: `0 4px 20px ${colors.shadow}`,
             }}>
@@ -322,7 +227,7 @@ export default function Header() {
                 display: "block",
                 color: colors.textPrimary,
                 textDecoration: "none",
-                padding: "12px 20px",
+                padding: "10px 18px",
                 fontSize: "0.85rem",
                 transition: "all 0.2s",
               }}
@@ -341,7 +246,7 @@ export default function Header() {
                 display: "block",
                 color: colors.textPrimary,
                 textDecoration: "none",
-                padding: "12px 20px",
+                padding: "10px 18px",
                 fontSize: "0.85rem",
                 transition: "all 0.2s",
               }}
@@ -363,7 +268,7 @@ export default function Header() {
                 background: "transparent",
                 color: "#ef4444",
                 border: "none",
-                padding: "12px 20px",
+                padding: "10px 18px",
                 textAlign: "left" as const,
                 cursor: "pointer",
                 fontSize: "0.85rem",
@@ -380,29 +285,124 @@ export default function Header() {
             </div>
           )}
         </div>
+      </div>
 
+      {/* LIGNE 2 : Menu Secondaire + Outils (desktop) */}
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "8px 20px",
+        gap: "8px",
+      }}
+      className="desktop-nav-2">
+        
+        {[
+          { label: "🚩 CTF", to: "/ctf" },
+          { label: "🏆 Leaderboard", to: "/leaderboard" },
+          { label: "⭐ Progression", to: "/progression" },
+          { label: "🧪 Labo", to: "/labo-osint" },
+        ].map((item) => (
+          <Link key={item.to} to={item.to} style={linkStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = colors.accent;
+            e.currentTarget.style.background = colors.bgSecondary;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = colors.textPrimary;
+            e.currentTarget.style.background = "transparent";
+          }}>
+            {item.label}
+          </Link>
+        ))}
+
+        <div style={{ width: "2px", height: "20px", background: colors.accent, margin: "0 8px" }} />
+
+        {/* Menu Outils Dropdown */}
+        <div style={{ position: "relative" as const }}>
+          <span onClick={() => setShowOutilsMenu(!showOutilsMenu)} style={{
+            color: showOutilsMenu ? colors.accent : colors.textPrimary,
+            fontWeight: "500",
+            cursor: "pointer",
+            padding: "6px 10px",
+            borderRadius: "6px",
+            fontSize: "0.8rem",
+            transition: "all 0.2s",
+            background: showOutilsMenu ? colors.bgSecondary : "transparent",
+            display: "block",
+            whiteSpace: "nowrap" as const,
+          }}>
+            🛠️ Outils ▾
+          </span>
+
+          {showOutilsMenu && (
+            <div style={{
+              position: "absolute" as const,
+              top: "32px",
+              left: "-20px",
+              background: colors.bgPrimary,
+              border: `1px solid ${colors.accent}`,
+              borderRadius: "8px",
+              padding: "8px 0",
+              minWidth: "200px",
+              zIndex: 1000,
+              boxShadow: `0 4px 20px ${colors.shadow}`,
+            }}>
+              {[
+                { label: "🤖 HackerAI", to: "/hacker-ai" },
+                { label: "🔍 Argus V2.0", to: "/outils/argus" },
+                { label: "🖥️ Argus Console", to: "/outils/argus/console" },
+                { label: "📦 Dependency Track", to: "/dependency-track" },
+                { label: "🔧 Outils Cyber", to: "/outils-cyber" },
+                { label: "📚 Référentiels", to: "/referentiels" },
+                { label: "💻 VM Access", to: "/vm-access" },
+                { label: "🐉 Kali Linux", to: "/vm-kali" },
+                { label: "🦜 Parrot OS", to: "/vm-parrot" },
+              ].map((item) => (
+                <Link key={item.to} to={item.to} onClick={() => setShowOutilsMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* MENU MOBILE OVERLAY */}
       {showMobileMenu && (
         <div style={{
           position: "fixed" as const,
-          top: "60px",
+          top: "105px",
           left: 0,
           right: 0,
           bottom: 0,
           background: colors.bgPrimary,
           zIndex: 999,
           overflowY: "auto" as const,
-          padding: "20px",
+          padding: "15px",
         }}>
-          <div style={{ display: "flex", flexDirection: "column" as const, gap: "10px" }}>
+          <div style={{ display: "flex", flexDirection: "column" as const, gap: "8px" }}>
             {[
               { label: "🏠 Dashboard", to: "/dashboard" },
               { label: "📚 Parcours", to: "/parcours" },
               { label: "📝 Exercices", to: "/exercices-osint" },
               { label: "🔎 Études de Cas", to: "/etudes-osint" },
-              { label: "🎓 Quiz Interactifs", to: "/quiz" },
+              { label: "🎓 Quiz", to: "/quiz" },
               { label: "🏅 Badges", to: "/badges-osint" },
               { label: "🚩 CTF", to: "/ctf" },
               { label: "🏆 Leaderboard", to: "/leaderboard" },
@@ -412,10 +412,10 @@ export default function Header() {
               <Link key={item.to} to={item.to} onClick={() => setShowMobileMenu(false)} style={{
                 color: colors.textPrimary,
                 textDecoration: "none",
-                padding: "15px",
+                padding: "12px",
                 background: colors.bgSecondary,
                 borderRadius: "8px",
-                fontSize: "1rem",
+                fontSize: "0.95rem",
                 border: `1px solid ${colors.border}`,
               }}>
                 {item.label}
@@ -423,11 +423,11 @@ export default function Header() {
             ))}
 
             <div style={{
-              marginTop: "20px",
-              paddingTop: "20px",
+              marginTop: "15px",
+              paddingTop: "15px",
               borderTop: `1px solid ${colors.border}`,
             }}>
-              <p style={{ color: colors.textSecondary, fontSize: "0.8rem", marginBottom: "10px", paddingLeft: "5px" }}>
+              <p style={{ color: colors.textSecondary, fontSize: "0.75rem", marginBottom: "8px", paddingLeft: "5px", fontWeight: "600" }}>
                 🛠️ OUTILS
               </p>
               {[
@@ -438,19 +438,19 @@ export default function Header() {
                 { label: "🔧 Outils Cyber", to: "/outils-cyber" },
                 { label: "📚 Référentiels", to: "/referentiels" },
                 { label: "💻 VM Access", to: "/vm-access" },
-                { label: "🐉 Kali Linux Lab", to: "/vm-kali" },
-                { label: "🦜 Parrot OS Lab", to: "/vm-parrot" },
+                { label: "🐉 Kali Linux", to: "/vm-kali" },
+                { label: "🦜 Parrot OS", to: "/vm-parrot" },
               ].map((item) => (
                 <Link key={item.to} to={item.to} onClick={() => setShowMobileMenu(false)} style={{
                   color: colors.textPrimary,
                   textDecoration: "none",
-                  padding: "15px",
+                  padding: "12px",
                   background: colors.bgSecondary,
                   borderRadius: "8px",
-                  fontSize: "1rem",
+                  fontSize: "0.95rem",
                   border: `1px solid ${colors.border}`,
                   display: "block",
-                  marginBottom: "10px",
+                  marginBottom: "8px",
                 }}>
                   {item.label}
                 </Link>
@@ -462,22 +462,22 @@ export default function Header() {
 
     </header>
 
-    <div style={{ height: "60px" }} />
+    {/* SPACER pour compenser le header fixed */}
+    <div style={{ height: "105px" }} />
 
     <style>{`
-      @media (max-width: 768px) {
+      @media (max-width: 1100px) {
         .mobile-menu-btn {
           display: block !important;
         }
-        .desktop-nav {
+        .desktop-nav-1, .desktop-nav-2, .separator, .theme-toggle-btn {
           display: none !important;
         }
         .username-text {
           display: none !important;
         }
-        .theme-toggle-btn {
-          padding: 6px 10px !important;
-          font-size: 1rem !important;
+        .header-line-1 {
+          border-bottom: none !important;
         }
       }
     `}</style>
