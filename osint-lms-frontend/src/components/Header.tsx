@@ -334,6 +334,7 @@ export default function Header() {
             { label: "Leaderboard", to: "/leaderboard" },
             { label: "Progression", to: "/progression" },
             { label: "Badges", to: "/badges-osint" },
+            { label: "Certificat", to: "/certificat" },
           ].map((item) => (
             <Link key={item.to} to={item.to} style={linkStyle}
             onMouseEnter={(e) => {
@@ -347,14 +348,6 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-
-          <span style={{
-            ...linkStyle,
-            color: colors.textSecondary,
-            cursor: "not-allowed",
-          }}>
-            Certificat
-          </span>
         </nav>
 
         <div style={separatorStyle} className="separator" />

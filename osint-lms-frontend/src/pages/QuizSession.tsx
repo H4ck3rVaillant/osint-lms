@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useThemeColors } from "../context/ThemeContext";
 import { useGame } from "../context/GameContext";
+import { markQuizComplete } from "../utils/certificateTracker";
 
 interface Question {
   id: number;
@@ -254,6 +255,11 @@ export default function QuizSession() {
     
     if (xpGain > 0) {
       addXP(xpGain, `Terminé quiz ${themeId}`);
+    }
+
+    // ✅ Tracker le quiz pour le certificat si score ≥60%
+    if (percentage >= 60 && themeId) {
+      markQuizComplete(themeId);
     }
   };
 

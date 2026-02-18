@@ -33,9 +33,13 @@ import CasVerificationMedia from "./pages/CasVerificationMedia";
 import CasAttribution from "./pages/CasAttribution";
 import CasChronologie from "./pages/CasChronologie";
 import CasFinalOSINT from "./pages/CasFinalOSINT";
+/* QUIZ */
+import QuizPage from "./pages/QuizPage";
+import QuizSession from "./pages/QuizSession";
 /* AUTRES */
 import ExercicesOSINT from "./pages/ExercicesOSINT";
 import BadgesOSINT from "./pages/BadgesOSINT";
+import CertificatPage from "./pages/CertificatPage";
 /* NOUVEAUX OUTILS & RESSOURCES */
 import HackerAI from "./pages/HackerAI";
 import DependencyTrack from "./pages/DependencyTrack";
@@ -52,9 +56,6 @@ import Gamification from "./pages/Gamification";
 /* ARGUS V2.0 */
 import ArgusRecon from "./pages/ArgusRecon";
 import ArgusConsole from "./pages/ArgusConsole";
-/* QUIZ */
-import QuizPage from "./pages/QuizPage";
-import QuizSession from "./pages/QuizSession";
 
 /* SCROLL TO TOP */
 function ScrollToTop() {
@@ -121,14 +122,14 @@ export default function App() {
         {/* DASHBOARD */}
         <Route path="/dashboard" element={<Protected><Layout><Dashboard /></Layout></Protected>} />
 
-        {/* ✅ PROFIL & CONTACT */}
+        {/* PROFIL & CONTACT */}
         <Route path="/profil" element={<Protected><Layout><ProfilePage /></Layout></Protected>} />
         <Route path="/contact" element={<Protected><Layout><ContactPage /></Layout></Protected>} />
 
-        {/* ✅ PARCOURS HUB */}
+        {/* PARCOURS HUB */}
         <Route path="/parcours" element={<Protected><Layout><ParcoursHub /></Layout></Protected>} />
 
-        {/* ✅ PARCOURS */}
+        {/* PARCOURS */}
         <Route path="/parcours-debutant" element={<Protected><Layout><ParcoursDebutant /></Layout></Protected>} />
         <Route path="/parcours/debutant" element={<Navigate to="/parcours-debutant" replace />} />
         <Route path="/parcours/debutant/introduction" element={<Protected><Layout><ParcoursDebutantIntroduction /></Layout></Protected>} />
@@ -162,6 +163,7 @@ export default function App() {
         {/* AUTRES */}
         <Route path="/exercices-osint" element={<Protected><Layout><ExercicesOSINT /></Layout></Protected>} />
         <Route path="/badges-osint" element={<Protected><Layout><BadgesOSINT /></Layout></Protected>} />
+        <Route path="/certificat" element={<Protected><Layout><CertificatPage /></Layout></Protected>} />
 
         {/* OUTILS & RESSOURCES */}
         <Route path="/hacker-ai" element={<Protected><Layout><HackerAI /></Layout></Protected>} />
