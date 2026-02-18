@@ -148,8 +148,6 @@ const quizDatabase: Record<string, Question[]> = {
   ],
 };
 
-};
-
 export default function QuizSession() {
   const { themeId } = useParams<{ themeId: string }>();
   const navigate = useNavigate();
