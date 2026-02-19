@@ -40,6 +40,7 @@ import QuizSession from "./pages/QuizSession";
 import ExercicesOSINT from "./pages/ExercicesOSINT";
 import BadgesOSINT from "./pages/BadgesOSINT";
 import CertificatPage from "./pages/CertificatPage";
+import YouTubePage from "./pages/YouTubePage";
 /* NOUVEAUX OUTILS & RESSOURCES */
 import HackerAI from "./pages/HackerAI";
 import DependencyTrack from "./pages/DependencyTrack";
@@ -164,6 +165,7 @@ export default function App() {
         <Route path="/exercices-osint" element={<Protected><Layout><ExercicesOSINT /></Layout></Protected>} />
         <Route path="/badges-osint" element={<Protected><Layout><BadgesOSINT /></Layout></Protected>} />
         <Route path="/certificat" element={<Protected><Layout><CertificatPage /></Layout></Protected>} />
+        <Route path="/youtube" element={<Protected><Layout><YouTubePage /></Layout></Protected>} />
 
         {/* OUTILS & RESSOURCES */}
         <Route path="/hacker-ai" element={<Protected><Layout><HackerAI /></Layout></Protected>} />

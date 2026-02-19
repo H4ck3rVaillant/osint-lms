@@ -311,13 +311,17 @@ export default function Header() {
             )}
           </div>
 
-          <span style={{
-            ...linkStyle,
-            color: colors.textSecondary,
-            cursor: "not-allowed",
+          <Link to="/youtube" style={linkStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = colors.accent;
+            e.currentTarget.style.background = colors.bgSecondary;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = colors.textPrimary;
+            e.currentTarget.style.background = "transparent";
           }}>
             YouTube (embeds)
-          </span>
+          </Link>
         </nav>
 
         <div style={separatorStyle} className="separator" />
