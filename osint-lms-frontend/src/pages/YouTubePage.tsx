@@ -3,220 +3,104 @@ import { useThemeColors } from "../context/ThemeContext";
 
 export default function YouTubePage() {
   const colors = useThemeColors();
-  const [selectedCategory, setSelectedCategory] = useState("debutant");
+  const [selectedCategory, setSelectedCategory] = useState("playlists");
 
   const categories = [
-    { id: "debutant", label: "🎓 Débutant", icon: "📚" },
-    { id: "intermediaire", label: "📊 Intermédiaire", icon: "🔍" },
-    { id: "avance", label: "🔬 Avancé", icon: "🎯" },
-    { id: "outils", label: "🛠️ Outils & Demos", icon: "⚙️" },
+    { id: "playlists", label: "📚 Playlists OSINT", icon: "🎬" },
+    { id: "chaines", label: "📺 Chaînes Recommandées", icon: "⭐" },
   ];
 
-  const videos = {
-    debutant: [
-      {
-        title: "Introduction to OSINT - Les Fondamentaux",
-        channel: "The OSINT Curious Project",
-        url: "https://www.youtube.com/embed/qwA6MmbeGNo",
-        description: "Introduction complète à l'OSINT et aux concepts de base"
-      },
-      {
-        title: "OSINT 101 - Getting Started",
-        channel: "OSINT Dojo",
-        url: "https://www.youtube.com/embed/HKdxwc5E4Io",
-        description: "Comment démarrer dans l'OSINT : outils et méthodologie"
-      },
-      {
-        title: "OSINT At Home #1 - Image Reverse Search",
-        channel: "Ben Strick - OSINT At Home",
-        url: "https://www.youtube.com/embed/OyvHf7EcaVc",
-        description: "Recherche d'images inversée pour démarrer une investigation"
-      },
-      {
-        title: "Google Dorking for OSINT",
-        channel: "OSINT Dojo",
-        url: "https://www.youtube.com/embed/0e-jPW-7z5c",
-        description: "Maîtriser les opérateurs de recherche Google avancés"
-      },
-      {
-        title: "Social Media OSINT Basics",
-        channel: "The Cyber Mentor",
-        url: "https://www.youtube.com/embed/j5PPgU9iLhQ",
-        description: "Techniques de base pour l'OSINT sur les réseaux sociaux"
-      },
-      {
-        title: "Username Search Techniques",
-        channel: "OSINT Dojo",
-        url: "https://www.youtube.com/embed/R8FPqjq3-z0",
-        description: "Comment rechercher un pseudonyme à travers les plateformes"
-      },
-      {
-        title: "Email OSINT Investigation",
-        channel: "OSINT Techniques",
-        url: "https://www.youtube.com/embed/Wl6tGaT9JuM",
-        description: "Investiguer une adresse email : techniques et outils"
-      },
-      {
-        title: "OSINT Framework Overview",
-        channel: "Hackers Arise",
-        url: "https://www.youtube.com/embed/dp5_1w2qFcI",
-        description: "Vue d'ensemble du framework OSINT et ses applications"
-      },
-    ],
-    
-    intermediaire: [
-      {
-        title: "OSINT At Home #4 - Geolocation from Images",
-        channel: "Ben Strick",
-        url: "https://www.youtube.com/embed/_p3B5G4QAVc",
-        description: "Identifier une localisation à partir d'une photo ou vidéo"
-      },
-      {
-        title: "EXIF Metadata Analysis",
-        channel: "OSINT Dojo",
-        url: "https://www.youtube.com/embed/8s5MjW89lKc",
-        description: "Extraction et analyse de métadonnées EXIF dans les images"
-      },
-      {
-        title: "Advanced LinkedIn OSINT",
-        channel: "OSINT Techniques",
-        url: "https://www.youtube.com/embed/MtZ3w30Lqco",
-        description: "Techniques avancées de recherche sur LinkedIn"
-      },
-      {
-        title: "Domain & IP Investigation",
-        channel: "The Cyber Mentor",
-        url: "https://www.youtube.com/embed/nLtDx8oLiQs",
-        description: "Investigation de domaines et adresses IP"
-      },
-      {
-        title: "Maltego for OSINT",
-        channel: "OSINT Curious",
-        url: "https://www.youtube.com/embed/iqXj94vp1MY",
-        description: "Utiliser Maltego pour cartographier les relations"
-      },
-      {
-        title: "Dark Web OSINT Introduction",
-        channel: "Hackers Arise",
-        url: "https://www.youtube.com/embed/9KaTsMCPu4I",
-        description: "Introduction à l'OSINT sur le Dark Web avec TOR"
-      },
-      {
-        title: "Breach Data Research",
-        channel: "OSINT Dojo",
-        url: "https://www.youtube.com/embed/F-qINbChh8Q",
-        description: "Recherche dans les bases de données de fuites"
-      },
-      {
-        title: "Cryptocurrency Tracking",
-        channel: "OSINT Techniques",
-        url: "https://www.youtube.com/embed/xZwFb5Q6qbY",
-        description: "Tracer les transactions blockchain et crypto-monnaies"
-      },
-    ],
+  // Playlists complètes OSINT (validées)
+  const playlists = [
+    {
+      title: "Open-Source Intelligence (OSINT) - Full Course",
+      channel: "Heath Adams (The Cyber Mentor)",
+      url: "https://www.youtube.com/embed/videoseries?list=PLLKT__MCUeixqHJ1TRqrHsEd6_EdEvo47",
+      description: "Cours complet OSINT de 5h couvrant tous les fondamentaux"
+    },
+    {
+      title: "OSINT At Home - Complete Series",
+      channel: "Ben Strick",
+      url: "https://www.youtube.com/embed/videoseries?list=PLrFPX1Vfqk3ehZKSFeb9pVIHqxqrNW8Sy",
+      description: "Série complète sur la vérification numérique et géolocalisation"
+    },
+    {
+      title: "OSINT Dojo - Tutorials",
+      channel: "OSINT Dojo",
+      url: "https://www.youtube.com/embed/videoseries?list=PL423I_gHbWUUOs09899rex4t2l5py9YIk",
+      description: "Tutoriels pratiques et démonstrations d'outils OSINT"
+    },
+    {
+      title: "OSINT Curious Webcasts",
+      channel: "The OSINT Curious Project",
+      url: "https://www.youtube.com/embed/videoseries?list=PLRjXu3mZO1jqNW4lJyDmHlFEcEfCc1xyT",
+      description: "Webcasts hebdomadaires avec experts et discussions OSINT"
+    },
+    {
+      title: "Social Media OSINT",
+      channel: "Bendobrown",
+      url: "https://www.youtube.com/embed/videoseries?list=PLNXhwl_HazaicUjQfI4JrC0P9z4gTcxZy",
+      description: "Investigations OSINT sur les réseaux sociaux"
+    },
+    {
+      title: "10 Minute OSINT Tips",
+      channel: "Mike Bazell (Intel Techniques)",
+      url: "https://www.youtube.com/embed/videoseries?list=PL1pn7Uy0x-Q9F-FYzUQHJ0AvGYxgGBJHY",
+      description: "Astuces OSINT rapides en 10 minutes"
+    },
+  ];
 
-    avance: [
-      {
-        title: "OSINT At Home #8 - Shadow Analysis",
-        channel: "Ben Strick",
-        url: "https://www.youtube.com/embed/K0hBa_z1X4w",
-        description: "Calculer l'heure avec l'analyse des ombres (chronolocation)"
-      },
-      {
-        title: "Advanced Geolocation Techniques",
-        channel: "OSINT Curious",
-        url: "https://www.youtube.com/embed/8ZyU7HtXPbc",
-        description: "Géolocalisation avancée : triangulation et satellite"
-      },
-      {
-        title: "OSINT Automation with Python",
-        channel: "The Cyber Mentor",
-        url: "https://www.youtube.com/embed/CPgBEy9hJ5U",
-        description: "Automatiser les investigations OSINT avec Python"
-      },
-      {
-        title: "Maritime OSINT - Tracking Vessels",
-        channel: "OSINT Techniques",
-        url: "https://www.youtube.com/embed/2kC8QFmMzpo",
-        description: "Traquer les navires et cargos avec AIS et OSINT maritime"
-      },
-      {
-        title: "Aircraft Tracking OSINT",
-        channel: "OSINT Dojo",
-        url: "https://www.youtube.com/embed/nL0fP-DgEbk",
-        description: "Suivre les avions civils et militaires en temps réel"
-      },
-      {
-        title: "Advanced SOCMINT Facebook",
-        channel: "OSINT Curious",
-        url: "https://www.youtube.com/embed/L9-UQ-YYXsY",
-        description: "Techniques avancées SOCMINT sur Facebook"
-      },
-      {
-        title: "Building Custom OSINT Tools",
-        channel: "OSINT Dojo",
-        url: "https://www.youtube.com/embed/6MoCHD1xmWk",
-        description: "Créer ses propres outils OSINT avec HTML/JavaScript"
-      },
-      {
-        title: "OSINT CTF Challenge Walkthrough",
-        channel: "Trace Labs",
-        url: "https://www.youtube.com/embed/Z8n7r-0x6rA",
-        description: "Résolution d'un challenge OSINT CTF étape par étape"
-      },
-    ],
-
-    outils: [
-      {
-        title: "Sherlock - Username Search Tool",
-        channel: "OSINT Dojo",
-        url: "https://www.youtube.com/embed/V1RYdRMohBU",
-        description: "Sherlock : recherche de pseudonymes sur 300+ plateformes"
-      },
-      {
-        title: "Shodan - The Search Engine for Hackers",
-        channel: "The Cyber Mentor",
-        url: "https://www.youtube.com/embed/cyzPxfZHpC8",
-        description: "Maîtriser Shodan pour trouver des devices connectés"
-      },
-      {
-        title: "IntelX & DeHashed Demo",
-        channel: "OSINT Techniques",
-        url: "https://www.youtube.com/embed/O0z-e8KF87M",
-        description: "Utiliser IntelX et DeHashed pour les recherches de fuites"
-      },
-      {
-        title: "Wayback Machine for OSINT",
-        channel: "OSINT Dojo",
-        url: "https://www.youtube.com/embed/Q0k0gPEOZGg",
-        description: "Exploiter les archives web avec la Wayback Machine"
-      },
-      {
-        title: "Google Earth Pro for Investigations",
-        channel: "Ben Strick",
-        url: "https://www.youtube.com/embed/yHPPGzjDnXU",
-        description: "Utiliser Google Earth Pro pour la géolocalisation"
-      },
-      {
-        title: "PhoneInfoga - Phone Number OSINT",
-        channel: "OSINT Techniques",
-        url: "https://www.youtube.com/embed/1BGU8JFcZWg",
-        description: "PhoneInfoga : investiguer un numéro de téléphone"
-      },
-      {
-        title: "Spiderfoot Tutorial",
-        channel: "The Cyber Mentor",
-        url: "https://www.youtube.com/embed/F9lwzMPGIgo",
-        description: "Spiderfoot : automation OSINT et reconnaissance"
-      },
-      {
-        title: "Recon-ng Framework",
-        channel: "OSINT Dojo",
-        url: "https://www.youtube.com/embed/E8ujr3eldDA",
-        description: "Recon-ng : framework modulaire pour reconnaissance OSINT"
-      },
-    ],
-  };
+  // Chaînes YouTube OSINT recommandées
+  const chaines = [
+    {
+      name: "The Cyber Mentor",
+      url: "https://www.youtube.com/@TCMSecurityAcademy",
+      description: "Formation complète cybersécurité et OSINT, idéal débutants",
+      subscribers: "800K+"
+    },
+    {
+      name: "Ben Strick - OSINT At Home",
+      url: "https://www.youtube.com/@BenStrick",
+      description: "Investigations digitales, géolocalisation, vérification",
+      subscribers: "30K+"
+    },
+    {
+      name: "OSINT Dojo",
+      url: "https://www.youtube.com/@OSINTDojo",
+      description: "Tutoriels pratiques, outils et méthodologie OSINT",
+      subscribers: "45K+"
+    },
+    {
+      name: "The OSINT Curious Project",
+      url: "https://www.youtube.com/@OSINTCurious",
+      description: "Webcasts, interviews et ressources communautaires",
+      subscribers: "15K+"
+    },
+    {
+      name: "Hackers Arise",
+      url: "https://www.youtube.com/@HackersArise",
+      description: "Hacking, OSINT et cybersécurité avancée",
+      subscribers: "200K+"
+    },
+    {
+      name: "David Bombal",
+      url: "https://www.youtube.com/@davidbombal",
+      description: "Outils OSINT, demos et tutoriels techniques",
+      subscribers: "3M+"
+    },
+    {
+      name: "Trace Labs",
+      url: "https://www.youtube.com/@TraceLabsOrg",
+      description: "OSINT CTF challenges et competitions",
+      subscribers: "10K+"
+    },
+    {
+      name: "Bendobrown",
+      url: "https://www.youtube.com/@bendobrown",
+      description: "SOCMINT et investigations réseaux sociaux",
+      subscribers: "20K+"
+    },
+  ];
 
   return (
     <div style={{
@@ -238,7 +122,7 @@ export default function YouTubePage() {
             color: colors.textPrimary,
             marginBottom: "15px",
           }}>
-            Tutoriels Vidéo OSINT
+            Ressources Vidéo OSINT
           </h1>
           <p style={{
             fontSize: "1.1rem",
@@ -246,11 +130,11 @@ export default function YouTubePage() {
             maxWidth: "700px",
             margin: "0 auto",
           }}>
-            Complétez votre formation avec ces vidéos YouTube sélectionnées par des experts OSINT
+            Playlists complètes et chaînes YouTube sélectionnées par des experts OSINT
           </p>
         </div>
 
-        {/* Tabs des catégories */}
+        {/* Tabs */}
         <div style={{
           display: "flex",
           justifyContent: "center",
@@ -274,101 +158,182 @@ export default function YouTubePage() {
                 transition: "all 0.3s ease",
                 boxShadow: selectedCategory === cat.id ? `0 4px 15px ${colors.accent}40` : "none",
               }}
-              onMouseEnter={(e) => {
-                if (selectedCategory !== cat.id) {
-                  e.currentTarget.style.borderColor = colors.accent;
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedCategory !== cat.id) {
-                  e.currentTarget.style.borderColor = colors.border;
-                }
-              }}
             >
               {cat.icon} {cat.label}
             </button>
           ))}
         </div>
 
-        {/* Grid de vidéos */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
-          gap: "30px",
-        }}>
-          {videos[selectedCategory as keyof typeof videos].map((video, index) => (
-            <div
-              key={index}
-              style={{
-                background: colors.bgSecondary,
-                border: `1px solid ${colors.border}`,
-                borderRadius: "12px",
-                overflow: "hidden",
-                transition: "all 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-5px)";
-                e.currentTarget.style.boxShadow = `0 10px 30px ${colors.shadow}`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              {/* Player YouTube */}
-              <div style={{
-                position: "relative" as const,
-                paddingBottom: "56.25%", // Ratio 16:9
-                height: 0,
-                overflow: "hidden",
-              }}>
-                <iframe
-                  src={video.url}
-                  title={video.title}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  style={{
-                    position: "absolute" as const,
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                  }}
-                />
-              </div>
-
-              {/* Infos vidéo */}
-              <div style={{ padding: "20px" }}>
-                <h3 style={{
-                  fontSize: "1.1rem",
-                  fontWeight: "600",
-                  color: colors.textPrimary,
-                  marginBottom: "8px",
+        {/* Playlists */}
+        {selectedCategory === "playlists" && (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
+            gap: "30px",
+          }}>
+            {playlists.map((playlist, index) => (
+              <div
+                key={index}
+                style={{
+                  background: colors.bgSecondary,
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                  e.currentTarget.style.boxShadow = `0 10px 30px ${colors.shadow}`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
+                {/* Player Playlist */}
+                <div style={{
+                  position: "relative" as const,
+                  paddingBottom: "56.25%",
+                  height: 0,
+                  overflow: "hidden",
                 }}>
-                  {video.title}
-                </h3>
+                  <iframe
+                    src={playlist.url}
+                    title={playlist.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{
+                      position: "absolute" as const,
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  />
+                </div>
+
+                <div style={{ padding: "20px" }}>
+                  <h3 style={{
+                    fontSize: "1.1rem",
+                    fontWeight: "600",
+                    color: colors.textPrimary,
+                    marginBottom: "8px",
+                  }}>
+                    {playlist.title}
+                  </h3>
+                  <p style={{
+                    fontSize: "0.85rem",
+                    color: colors.accent,
+                    marginBottom: "10px",
+                    fontWeight: "500",
+                  }}>
+                    📺 {playlist.channel}
+                  </p>
+                  <p style={{
+                    fontSize: "0.9rem",
+                    color: colors.textSecondary,
+                    lineHeight: "1.5",
+                  }}>
+                    {playlist.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Chaînes */}
+        {selectedCategory === "chaines" && (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
+            gap: "25px",
+          }}>
+            {chaines.map((chaine, index) => (
+              <a
+                key={index}
+                href={chaine.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: colors.bgSecondary,
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: "12px",
+                  padding: "25px",
+                  textDecoration: "none",
+                  transition: "all 0.3s ease",
+                  display: "block",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                  e.currentTarget.style.borderColor = colors.accent;
+                  e.currentTarget.style.boxShadow = `0 10px 30px ${colors.shadow}`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.borderColor = colors.border;
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "15px",
+                  marginBottom: "15px",
+                }}>
+                  <div style={{
+                    width: "50px",
+                    height: "50px",
+                    background: colors.accent,
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.5rem",
+                    flexShrink: 0,
+                  }}>
+                    📺
+                  </div>
+                  <div>
+                    <h3 style={{
+                      fontSize: "1.2rem",
+                      fontWeight: "600",
+                      color: colors.textPrimary,
+                      marginBottom: "4px",
+                    }}>
+                      {chaine.name}
+                    </h3>
+                    <p style={{
+                      fontSize: "0.85rem",
+                      color: colors.accent,
+                      fontWeight: "500",
+                    }}>
+                      {chaine.subscribers} abonnés
+                    </p>
+                  </div>
+                </div>
                 <p style={{
-                  fontSize: "0.85rem",
+                  fontSize: "0.95rem",
+                  color: colors.textSecondary,
+                  lineHeight: "1.6",
+                }}>
+                  {chaine.description}
+                </p>
+                <div style={{
+                  marginTop: "15px",
+                  fontSize: "0.9rem",
                   color: colors.accent,
-                  marginBottom: "10px",
                   fontWeight: "500",
                 }}>
-                  📺 {video.channel}
-                </p>
-                <p style={{
-                  fontSize: "0.9rem",
-                  color: colors.textSecondary,
-                  lineHeight: "1.5",
-                }}>
-                  {video.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+                  Visiter la chaîne →
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
 
-        {/* Note en bas de page */}
+        {/* Note */}
         <div style={{
           marginTop: "60px",
           padding: "25px",
@@ -383,8 +348,8 @@ export default function YouTubePage() {
             lineHeight: "1.6",
             margin: 0,
           }}>
-            💡 <strong>Astuce :</strong> Ces vidéos complètent votre formation mais ne sont pas obligatoires 
-            pour obtenir le certificat. Prenez votre temps et explorez les chaînes YouTube pour approfondir !
+            💡 <strong>Astuce :</strong> Ces ressources vidéo complètent votre formation mais ne sont pas 
+            obligatoires pour obtenir le certificat. Explorez à votre rythme !
           </p>
         </div>
       </div>
