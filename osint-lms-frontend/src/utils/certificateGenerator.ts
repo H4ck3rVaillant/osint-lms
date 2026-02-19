@@ -1,13 +1,10 @@
-// Générateur certificat - Design EXACT du modèle PowerPoint avec logo hibou
+// Générateur certificat - Design EXACT du modèle PowerPoint avec logo hibou dynamique
 
 interface CertificateData {
   username: string;
   dateDebut: string;
   dateFin: string;
 }
-
-// Logo hibou en base64
-const OWL_LOGO = "data:image/png;base64,$(cat /tmp/owl_logo.txt)";
 
 async function loadJsPDF(): Promise<any> {
   if (typeof (window as any).jspdf !== 'undefined') {
@@ -32,9 +29,35 @@ async function loadJsPDF(): Promise<any> {
   });
 }
 
+// Charger le logo depuis le dossier public
+async function loadLogoAsBase64(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL('image/png');
+        resolve(dataURL);
+      } else {
+        reject(new Error('Cannot get canvas context'));
+      }
+    };
+    
+    img.onerror = () => reject(new Error('Failed to load logo'));
+    img.src = '/Mon_Logo.png'; // Logo dans le dossier public
+  });
+}
+
 export async function generateCertificate(data: CertificateData): Promise<void> {
   try {
     const jsPDF = await loadJsPDF();
+    const logoBase64 = await loadLogoAsBase64();
 
     const pdf = new jsPDF({
       orientation: 'landscape',
@@ -50,25 +73,21 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     pdf.rect(0, 0, pageWidth, pageHeight, 'F');
 
     // ========== LOGO HIBOU EN FILIGRANE CENTRAL ==========
-    // Grande taille, opacité réduite via positionnement
     const logoSize = 140;
     const logoX = (pageWidth - logoSize) / 2;
     const logoY = (pageHeight - logoSize) / 2;
     
-    pdf.addImage(OWL_LOGO, 'PNG', logoX, logoY, logoSize, logoSize);
+    pdf.addImage(logoBase64, 'PNG', logoX, logoY, logoSize, logoSize);
 
     // ========== BORDURES VERTES (TRIPLE CADRE) ==========
-    // Bordure extérieure épaisse verte
     pdf.setDrawColor(0, 255, 156);
     pdf.setLineWidth(4);
     pdf.rect(6, 6, pageWidth - 12, pageHeight - 12);
 
-    // Bordure intermédiaire noire fine
     pdf.setDrawColor(30, 30, 30);
     pdf.setLineWidth(1);
     pdf.rect(10, 10, pageWidth - 20, pageHeight - 20);
 
-    // Bordure intérieure verte fine
     pdf.setDrawColor(0, 255, 156);
     pdf.setLineWidth(2);
     pdf.rect(14, 14, pageWidth - 28, pageHeight - 28);
@@ -114,7 +133,6 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     pdf.setTextColor(0, 200, 80);
     pdf.text(data.username, pageWidth / 2, 100, { align: 'center' });
 
-    // Ligne de soulignement verte
     pdf.setDrawColor(0, 200, 80);
     pdf.setLineWidth(0.8);
     pdf.line(pageWidth / 2 - 80, 104, pageWidth / 2 + 80, 104);
@@ -141,7 +159,6 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     const dateDebut = formatDate(data.dateDebut);
     const dateFin = formatDate(data.dateFin);
 
-    // Rectangle avec coins arrondis
     pdf.setFillColor(255, 255, 255);
     pdf.setDrawColor(0, 255, 156);
     pdf.setLineWidth(2);
@@ -154,13 +171,13 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(10);
-    pdf.text(\`\${dateDebut} au \${dateFin}\`, pageWidth / 2, 160, { align: 'center' });
+    pdf.text(`${dateDebut} au ${dateFin}`, pageWidth / 2, 160, { align: 'center' });
 
     // ========== DATE DÉLIVRANCE (bas gauche) ==========
     pdf.setFontSize(9);
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(50, 50, 50);
-    pdf.text(\`Délivré le \${dateFin}\`, 25, 185);
+    pdf.text(`Délivré le ${dateFin}`, 25, 185);
 
     // ========== SIGNATURE (bas droite) ==========
     pdf.setFontSize(22);
@@ -168,12 +185,10 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     pdf.setTextColor(0, 200, 80);
     pdf.text('H4ck3r Vaillant', pageWidth - 60, 180, { align: 'center' });
 
-    // Ligne de signature verte
     pdf.setDrawColor(0, 200, 80);
     pdf.setLineWidth(0.5);
     pdf.line(pageWidth - 90, 183, pageWidth - 30, 183);
 
-    // Sous-titre signature
     pdf.setFontSize(9);
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(50, 50, 50);
@@ -181,24 +196,23 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     pdf.text('CyberOSINT Academy', pageWidth - 60, 193, { align: 'center' });
 
     // ========== NUMÉRO DE CERTIFICAT (FOOTER) ==========
-    const certificateId = btoa(\`\${data.username}-\${data.dateFin}\`).substring(0, 12).toUpperCase();
+    const certificateId = btoa(`${data.username}-${data.dateFin}`).substring(0, 12).toUpperCase();
     
     pdf.setFontSize(7);
     pdf.setTextColor(120, 120, 120);
     pdf.setFont('courier', 'normal');
-    pdf.text(\`Certificat N° \${certificateId}\`, pageWidth / 2, pageHeight - 8, { align: 'center' });
+    pdf.text(`Certificat N° ${certificateId}`, pageWidth / 2, pageHeight - 8, { align: 'center' });
     
     pdf.setFontSize(6);
-    pdf.text(\`[ Validation: \${certificateId} | cyberosint-academy.com/verify ]\`, pageWidth / 2, pageHeight - 4, { align: 'center' });
+    pdf.text(`[ Validation: ${certificateId} | cyberosint-academy.com/verify ]`, pageWidth / 2, pageHeight - 4, { align: 'center' });
 
-    // ========== TÉLÉCHARGEMENT ==========
-    const fileName = \`Certificat_CyberOSINT_\${data.username.replace(/\s+/g, '_')}.pdf\`;
+    const fileName = `Certificat_CyberOSINT_${data.username.replace(/\s+/g, '_')}.pdf`;
     pdf.save(fileName);
 
-    console.log(\`✅ Certificat généré: \${fileName}\`);
+    console.log(`✅ Certificat généré: ${fileName}`);
   } catch (error) {
     console.error('Erreur lors de la génération du certificat:', error);
-    alert(\`Erreur: \${error instanceof Error ? error.message : 'Impossible de générer le certificat'}\`);
+    alert(`Erreur: ${error instanceof Error ? error.message : 'Impossible de générer le certificat'}`);
   }
 }
 
