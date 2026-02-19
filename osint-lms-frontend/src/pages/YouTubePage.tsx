@@ -31,22 +31,22 @@ export default function YouTubePage() {
       description: "Tutoriels pratiques et démonstrations d'outils OSINT"
     },
     {
-      title: "OSINT Curious Webcasts",
-      channel: "The OSINT Curious Project",
-      url: "https://www.youtube.com/embed/videoseries?list=PLRjXu3mZO1jqNW4lJyDmHlFEcEfCc1xyT",
-      description: "Webcasts hebdomadaires avec experts et discussions OSINT"
+      title: "Learn Open-Source Intelligence (OSINT)",
+      channel: "John Hammond",
+      url: "https://www.youtube.com/embed/lrxJyBa-yRc",
+      description: "Introduction complète à l'OSINT par John Hammond"
     },
     {
-      title: "Social Media OSINT",
-      channel: "Bendobrown",
-      url: "https://www.youtube.com/embed/videoseries?list=PLNXhwl_HazaicUjQfI4JrC0P9z4gTcxZy",
-      description: "Investigations OSINT sur les réseaux sociaux"
+      title: "OSINT Tools & Techniques",
+      channel: "NetworkChuck",
+      url: "https://www.youtube.com/embed/videoseries?list=PLIhvC56v63IKrRHh3gvZZBAGvsvOhwrRF",
+      description: "Outils et techniques OSINT essentiels"
     },
     {
-      title: "10 Minute OSINT Tips",
-      channel: "Mike Bazell (Intel Techniques)",
-      url: "https://www.youtube.com/embed/videoseries?list=PL1pn7Uy0x-Q9F-FYzUQHJ0AvGYxgGBJHY",
-      description: "Astuces OSINT rapides en 10 minutes"
+      title: "Cybersecurity & OSINT Training",
+      channel: "David Bombal",
+      url: "https://www.youtube.com/embed/videoseries?list=PLhfrWIlLOoKMe1Ue0IdeULQvEgCgQ3a1B",
+      description: "Formation cybersécurité avec focus OSINT et investigations"
     },
   ];
 
