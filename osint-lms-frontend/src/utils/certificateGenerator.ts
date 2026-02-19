@@ -1,4 +1,4 @@
-// Générateur certificat - Design EXACT du modèle PowerPoint avec logo hibou dynamique
+// Générateur certificat - Design PARFAIT avec harmonisation logo/fond
 
 interface CertificateData {
   username: string;
@@ -29,7 +29,6 @@ async function loadJsPDF(): Promise<any> {
   });
 }
 
-// Charger le logo depuis le dossier public
 async function loadLogoAsBase64(): Promise<string> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -50,7 +49,7 @@ async function loadLogoAsBase64(): Promise<string> {
     };
     
     img.onerror = () => reject(new Error('Failed to load logo'));
-    img.src = '/Mon_Logo.png'; // Logo dans le dossier public
+    img.src = '/Mon_Logo.png';
   });
 }
 
@@ -68,8 +67,8 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     const pageWidth = 297;
     const pageHeight = 210;
 
-    // ========== FOND VERT TRÈS CLAIR ==========
-    pdf.setFillColor(240, 248, 240);
+    // ========== FOND BLANC (au lieu de vert clair) ==========
+    pdf.setFillColor(255, 255, 255);
     pdf.rect(0, 0, pageWidth, pageHeight, 'F');
 
     // ========== LOGO HIBOU EN FILIGRANE CENTRAL ==========
@@ -92,11 +91,11 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     pdf.setLineWidth(2);
     pdf.rect(14, 14, pageWidth - 28, pageHeight - 28);
 
-    // ========== TITRE "CYBER-OSINT ACADEMY" (EXACT MODÈLE) ==========
+    // ========== TITRE "CYBER-OSINT ACADEMY" ==========
     pdf.setFontSize(36);
     pdf.setFont('helvetica', 'bold');
     
-    // Effet contour vert (ombre)
+    // Effet contour vert
     pdf.setTextColor(0, 200, 120);
     pdf.text('CYBER-OSINT ACADEMY', pageWidth / 2 + 0.5, 35.5, { align: 'center' });
     
@@ -146,7 +145,7 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     pdf.text('parcours (débutant, intermédiaire, avancé), exercices pratiques, études de cas réel, quiz', pageWidth / 2, 127, { align: 'center' });
     pdf.text('d\'évaluation et challenges CTF.', pageWidth / 2, 134, { align: 'center' });
 
-    // ========== ENCADRÉ PÉRIODE DE FORMATION ==========
+    // ========== ENCADRÉ PÉRIODE (PLUS COURT, TRAIT FIN, FOND TRANSPARENT) ==========
     const formatDate = (isoDate: string) => {
       const date = new Date(isoDate);
       return date.toLocaleDateString('fr-FR', { 
@@ -159,19 +158,19 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     const dateDebut = formatDate(data.dateDebut);
     const dateFin = formatDate(data.dateFin);
 
-    pdf.setFillColor(255, 255, 255);
+    // Encadré plus court (100mm au lieu de 130mm) avec trait fin (0.8 au lieu de 2)
     pdf.setDrawColor(0, 255, 156);
-    pdf.setLineWidth(2);
-    pdf.roundedRect(pageWidth / 2 - 65, 145, 130, 20, 5, 5, 'FD');
+    pdf.setLineWidth(0.8);
+    pdf.roundedRect(pageWidth / 2 - 50, 148, 100, 18, 4, 4, 'D'); // 'D' = draw only (pas de fill)
 
-    pdf.setFontSize(11);
+    pdf.setFontSize(10);
     pdf.setFont('helvetica', 'bold');
     pdf.setTextColor(30, 30, 30);
-    pdf.text('Période de formation', pageWidth / 2, 153, { align: 'center' });
+    pdf.text('Période de formation', pageWidth / 2, 155, { align: 'center' });
     
     pdf.setFont('helvetica', 'normal');
-    pdf.setFontSize(10);
-    pdf.text(`${dateDebut} au ${dateFin}`, pageWidth / 2, 160, { align: 'center' });
+    pdf.setFontSize(9);
+    pdf.text(`${dateDebut} au ${dateFin}`, pageWidth / 2, 161, { align: 'center' });
 
     // ========== DATE DÉLIVRANCE (bas gauche) ==========
     pdf.setFontSize(9);
