@@ -31,12 +31,6 @@ export default function YouTubePage() {
       description: "Tutoriels pratiques et démonstrations d'outils OSINT"
     },
     {
-      title: "Learn Open-Source Intelligence (OSINT)",
-      channel: "John Hammond",
-      url: "https://www.youtube.com/embed/lrxJyBa-yRc",
-      description: "Introduction complète à l'OSINT par John Hammond"
-    },
-    {
       title: "OSINT Tools & Techniques",
       channel: "NetworkChuck",
       url: "https://www.youtube.com/embed/videoseries?list=PLIhvC56v63IKrRHh3gvZZBAGvsvOhwrRF",
