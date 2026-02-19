@@ -1,10 +1,13 @@
-// Générateur de certificat PDF - Design basé sur le modèle PowerPoint
+// Générateur certificat - Design EXACT du modèle PowerPoint avec logo hibou
 
 interface CertificateData {
   username: string;
   dateDebut: string;
   dateFin: string;
 }
+
+// Logo hibou en base64
+const OWL_LOGO = "data:image/png;base64,$(cat /tmp/owl_logo.txt)";
 
 async function loadJsPDF(): Promise<any> {
   if (typeof (window as any).jspdf !== 'undefined') {
@@ -42,30 +45,20 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     const pageWidth = 297;
     const pageHeight = 210;
 
-    // ========== FOND BEIGE CLAIR (comme le modèle) ==========
-    pdf.setFillColor(240, 248, 240); // Vert très très clair
+    // ========== FOND VERT TRÈS CLAIR ==========
+    pdf.setFillColor(240, 248, 240);
     pdf.rect(0, 0, pageWidth, pageHeight, 'F');
 
-    // ========== FILIGRANE TEXTUEL (simulant le hibou) ==========
-    pdf.setTextColor(230, 240, 235);
-    pdf.setFontSize(80);
-    pdf.setFont('helvetica', 'bold');
+    // ========== LOGO HIBOU EN FILIGRANE CENTRAL ==========
+    // Grande taille, opacité réduite via positionnement
+    const logoSize = 140;
+    const logoX = (pageWidth - logoSize) / 2;
+    const logoY = (pageHeight - logoSize) / 2;
     
-    // Filigrane central répété
-    for (let i = 0; i < 4; i++) {
-      const y = 60 + (i * 40);
-      pdf.text('CYBER', pageWidth / 2 - 80 + (i * 20), y, { 
-        angle: 15,
-        align: 'center' 
-      });
-      pdf.text('OSINT', pageWidth / 2 + 20 + (i * 20), y + 20, { 
-        angle: 15,
-        align: 'center' 
-      });
-    }
+    pdf.addImage(OWL_LOGO, 'PNG', logoX, logoY, logoSize, logoSize);
 
-    // ========== BORDURES VERTES (DOUBLE CADRE) ==========
-    // Bordure extérieure épaisse
+    // ========== BORDURES VERTES (TRIPLE CADRE) ==========
+    // Bordure extérieure épaisse verte
     pdf.setDrawColor(0, 255, 156);
     pdf.setLineWidth(4);
     pdf.rect(6, 6, pageWidth - 12, pageHeight - 12);
@@ -80,12 +73,11 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     pdf.setLineWidth(2);
     pdf.rect(14, 14, pageWidth - 28, pageHeight - 28);
 
-    // ========== TITRE "CYBER-OSINT ACADEMY" ==========
+    // ========== TITRE "CYBER-OSINT ACADEMY" (EXACT MODÈLE) ==========
     pdf.setFontSize(36);
     pdf.setFont('helvetica', 'bold');
-    pdf.setTextColor(30, 30, 30);
     
-    // Effet d'ombre (contour vert)
+    // Effet contour vert (ombre)
     pdf.setTextColor(0, 200, 120);
     pdf.text('CYBER-OSINT ACADEMY', pageWidth / 2 + 0.5, 35.5, { align: 'center' });
     
@@ -119,7 +111,7 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     // ========== NOM UTILISATEUR (VERT ITALIC) ==========
     pdf.setFontSize(42);
     pdf.setFont('times', 'bolditalic');
-    pdf.setTextColor(0, 200, 80); // Vert vif comme sur le modèle
+    pdf.setTextColor(0, 200, 80);
     pdf.text(data.username, pageWidth / 2, 100, { align: 'center' });
 
     // Ligne de soulignement verte
@@ -132,13 +124,9 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(40, 40, 40);
     
-    const line1 = 'Pour avoir complété avec succès l\'intégralité du programme de formation comprenant les';
-    const line2 = 'parcours (débutant, intermédiaire, avancé), exercices pratiques, études de cas réel, quiz';
-    const line3 = 'd\'évaluation et challenges CTF.';
-    
-    pdf.text(line1, pageWidth / 2, 120, { align: 'center' });
-    pdf.text(line2, pageWidth / 2, 127, { align: 'center' });
-    pdf.text(line3, pageWidth / 2, 134, { align: 'center' });
+    pdf.text('Pour avoir complété avec succès l\'intégralité du programme de formation comprenant les', pageWidth / 2, 120, { align: 'center' });
+    pdf.text('parcours (débutant, intermédiaire, avancé), exercices pratiques, études de cas réel, quiz', pageWidth / 2, 127, { align: 'center' });
+    pdf.text('d\'évaluation et challenges CTF.', pageWidth / 2, 134, { align: 'center' });
 
     // ========== ENCADRÉ PÉRIODE DE FORMATION ==========
     const formatDate = (isoDate: string) => {
@@ -166,13 +154,13 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(10);
-    pdf.text(`${dateDebut} au ${dateFin}`, pageWidth / 2, 160, { align: 'center' });
+    pdf.text(\`\${dateDebut} au \${dateFin}\`, pageWidth / 2, 160, { align: 'center' });
 
     // ========== DATE DÉLIVRANCE (bas gauche) ==========
     pdf.setFontSize(9);
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(50, 50, 50);
-    pdf.text(`Délivré le ${dateFin}`, 25, 185);
+    pdf.text(\`Délivré le \${dateFin}\`, 25, 185);
 
     // ========== SIGNATURE (bas droite) ==========
     pdf.setFontSize(22);
@@ -193,24 +181,24 @@ export async function generateCertificate(data: CertificateData): Promise<void> 
     pdf.text('CyberOSINT Academy', pageWidth - 60, 193, { align: 'center' });
 
     // ========== NUMÉRO DE CERTIFICAT (FOOTER) ==========
-    const certificateId = btoa(`${data.username}-${data.dateFin}`).substring(0, 12).toUpperCase();
+    const certificateId = btoa(\`\${data.username}-\${data.dateFin}\`).substring(0, 12).toUpperCase();
     
     pdf.setFontSize(7);
     pdf.setTextColor(120, 120, 120);
     pdf.setFont('courier', 'normal');
-    pdf.text(`Certificat N° ${certificateId}`, pageWidth / 2, pageHeight - 8, { align: 'center' });
+    pdf.text(\`Certificat N° \${certificateId}\`, pageWidth / 2, pageHeight - 8, { align: 'center' });
     
     pdf.setFontSize(6);
-    pdf.text(`[ Validation: ${certificateId} | cyberosint-academy.com/verify ]`, pageWidth / 2, pageHeight - 4, { align: 'center' });
+    pdf.text(\`[ Validation: \${certificateId} | cyberosint-academy.com/verify ]\`, pageWidth / 2, pageHeight - 4, { align: 'center' });
 
     // ========== TÉLÉCHARGEMENT ==========
-    const fileName = `Certificat_CyberOSINT_${data.username.replace(/\s+/g, '_')}.pdf`;
+    const fileName = \`Certificat_CyberOSINT_\${data.username.replace(/\s+/g, '_')}.pdf\`;
     pdf.save(fileName);
 
-    console.log(`✅ Certificat généré: ${fileName}`);
+    console.log(\`✅ Certificat généré: \${fileName}\`);
   } catch (error) {
     console.error('Erreur lors de la génération du certificat:', error);
-    alert(`Erreur: ${error instanceof Error ? error.message : 'Impossible de générer le certificat'}`);
+    alert(\`Erreur: \${error instanceof Error ? error.message : 'Impossible de générer le certificat'}\`);
   }
 }
 
