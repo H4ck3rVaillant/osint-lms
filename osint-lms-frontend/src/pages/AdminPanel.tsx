@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useThemeColors } from "../context/ThemeContext";
-import { useAuth } from "../context/AuthContext";
 
 interface LocalUser {
   username: string;
@@ -15,17 +14,19 @@ interface LocalUser {
 export default function AdminPanel() {
   const colors = useThemeColors();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  
+  // Récupérer le user depuis localStorage au lieu d'AuthContext
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
 
   const [users, setUsers] = useState<LocalUser[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Protection: rediriger si pas admin
   useEffect(() => {
-    if (user?.username !== "Cyber_Admin") {
+    if (currentUser?.username !== "Cyber_Admin") {
       navigate("/dashboard");
     }
-  }, [user, navigate]);
+  }, [currentUser, navigate]);
 
   // Charger les users depuis localStorage
   useEffect(() => {
@@ -83,7 +84,7 @@ export default function AdminPanel() {
     }).length,
   };
 
-  if (user?.username !== "Cyber_Admin") {
+  if (currentUser?.username !== "Cyber_Admin") {
     return null;
   }
 
