@@ -227,7 +227,14 @@ export default function Header() {
                   🚩 CTF Challenge
                 </Link>
 
-                <Link to="/challenges" style={dropdownItemStyle}
+                <Link to="/challenges" onClick={() => setShowQuizMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = colors.bgSecondary;
                   e.currentTarget.style.color = colors.accent;
