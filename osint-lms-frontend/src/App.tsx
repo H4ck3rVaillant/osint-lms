@@ -42,6 +42,7 @@ import BadgesOSINT from "./pages/BadgesOSINT";
 import CertificatPage from "./pages/CertificatPage";
 import YouTubePage from "./pages/YouTubePage";
 import ChallengesPage from "./pages/ChallengesPage";
+import AdminPanel from "./pages/AdminPanel";
 /* NOUVEAUX OUTILS & RESSOURCES */
 import HackerAI from "./pages/HackerAI";
 import DependencyTrack from "./pages/DependencyTrack";
@@ -168,6 +169,7 @@ export default function App() {
         <Route path="/certificat" element={<Protected><Layout><CertificatPage /></Layout></Protected>} />
         <Route path="/youtube" element={<Protected><Layout><YouTubePage /></Layout></Protected>} />
         <Route path="/challenges" element={<Protected><Layout><ChallengesPage /></Layout></Protected>} />
+        <Route path="/admin" element={<Protected><Layout><AdminPanel /></Layout></Protected>} />
 
         {/* OUTILS & RESSOURCES */}
         <Route path="/hacker-ai" element={<Protected><Layout><HackerAI /></Layout></Protected>} />
