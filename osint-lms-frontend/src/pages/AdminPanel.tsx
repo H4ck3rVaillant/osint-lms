@@ -11,17 +11,29 @@ interface LocalUser {
   level: number;
 }
 
+// Décoder le JWT payload (base64)
+function decodeToken(token: string) {
+  try {
+    const payload = token.split('.')[1];
+    const decoded = atob(payload);
+    return JSON.parse(decoded);
+  } catch {
+    return null;
+  }
+}
+
 export default function AdminPanel() {
   const colors = useThemeColors();
   const navigate = useNavigate();
   
-  // Récupérer le user depuis localStorage au lieu d'AuthContext
-  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+  // Récupérer le username depuis le token JWT
+  const token = localStorage.getItem("token");
+  const currentUser = token ? decodeToken(token) : null;
 
   const [users, setUsers] = useState<LocalUser[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Protection: rediriger si pas admin
+  // Protection: rediriger si pas Cyber_Admin
   useEffect(() => {
     if (currentUser?.username !== "Cyber_Admin") {
       navigate("/dashboard");
@@ -63,13 +75,14 @@ export default function AdminPanel() {
 
   const filteredUsers = users.filter(u => 
     u.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    u.email.toLowerCase().includes(searchTerm.toLowerCase())
+    u.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Stats
   const stats = {
     total: users.length,
     newThisWeek: users.filter(u => {
+      if (!u.createdAt) return false;
       const created = new Date(u.createdAt);
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
@@ -111,9 +124,16 @@ export default function AdminPanel() {
         <p style={{
           fontSize: "1.1rem",
           color: colors.textSecondary,
-          marginBottom: "40px",
+          marginBottom: "10px",
         }}>
           Gestion des utilisateurs (localStorage)
+        </p>
+        <p style={{
+          fontSize: "0.9rem",
+          color: colors.accent,
+          marginBottom: "40px",
+        }}>
+          👤 Connecté en tant que : <strong>{currentUser?.username}</strong>
         </p>
 
         {/* Stats Cards */}
@@ -231,10 +251,10 @@ export default function AdminPanel() {
                         {u.username === "Cyber_Admin" && " 👑"}
                       </td>
                       <td style={{ padding: "15px", color: colors.textSecondary }}>
-                        {u.email}
+                        {u.email || "N/A"}
                       </td>
                       <td style={{ padding: "15px", color: colors.textSecondary, fontSize: "0.9rem" }}>
-                        {new Date(u.createdAt).toLocaleDateString('fr-FR')}
+                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : "N/A"}
                       </td>
                       <td style={{ padding: "15px", color: colors.accent, fontWeight: "600" }}>
                         {u.xp || 0}
@@ -296,7 +316,8 @@ export default function AdminPanel() {
         }}>
           <p style={{ color: colors.textSecondary, margin: 0, fontSize: "0.95rem" }}>
             ℹ️ <strong>Note :</strong> Cette version utilise localStorage pour la gestion des utilisateurs. 
-            Pour une gestion avancée avec base de données, contactez l'administrateur système.
+            Les utilisateurs enregistrés dans Neon ne sont pas visibles ici. Pour une gestion complète avec base de données, 
+            il faudra créer des API routes Vercel.
           </p>
         </div>
       </div>
