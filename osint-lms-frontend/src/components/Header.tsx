@@ -606,6 +606,8 @@ export default function Header() {
               { label: "Etudes de cas", to: "/etudes-osint" },
               { label: "🎓 Quiz", to: "/quiz" },
               { label: "🚩 CTF Challenge", to: "/ctf" },
+              { label: "🔥 Challenges Hebdo", to: "/challenges" },
+              { label: "📹 Vidéos YouTube", to: "/youtube" },
             ].map((item) => (
               <Link key={item.to} to={item.to} onClick={() => setShowMobileMenu(false)} style={{
                 color: colors.textPrimary,
@@ -633,8 +635,13 @@ export default function Header() {
               { label: "🧪 Labo OSINT", to: "/labo-osint" },
               { label: "🤖 HackerAI", to: "/hacker-ai" },
               { label: "🔍 Argus V2.0", to: "/outils/argus" },
+              { label: "🖥️ Argus Console", to: "/outils/argus/console" },
               { label: "📦 Dependency Track", to: "/dependency-track" },
+              { label: "🔧 Outils Cyber", to: "/outils-cyber" },
+              { label: "📚 Référentiels", to: "/referentiels" },
               { label: "💻 VM Access", to: "/vm-access" },
+              { label: "🐉 Kali Linux", to: "/vm-kali" },
+              { label: "🦜 Parrot OS", to: "/vm-parrot" },
             ].map((item) => (
               <Link key={item.to} to={item.to} onClick={() => setShowMobileMenu(false)} style={{
                 color: colors.textPrimary,
@@ -662,6 +669,7 @@ export default function Header() {
               { label: "🏆 Leaderboard", to: "/leaderboard" },
               { label: "⭐ Progression", to: "/progression" },
               { label: "🏅 Badges", to: "/badges-osint" },
+              { label: "🎓 Certificat", to: "/certificat" },
             ].map((item) => (
               <Link key={item.to} to={item.to} onClick={() => setShowMobileMenu(false)} style={{
                 color: colors.textPrimary,
