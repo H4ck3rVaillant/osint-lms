@@ -226,6 +226,18 @@ export default function Header() {
                 }}>
                   🚩 CTF Challenge
                 </Link>
+
+                <Link to="/challenges" style={dropdownItemStyle}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  🔥 Challenges Hebdo
+                </Link>
               </div>
             )}
           </div>

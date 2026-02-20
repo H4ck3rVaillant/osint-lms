@@ -41,6 +41,7 @@ import ExercicesOSINT from "./pages/ExercicesOSINT";
 import BadgesOSINT from "./pages/BadgesOSINT";
 import CertificatPage from "./pages/CertificatPage";
 import YouTubePage from "./pages/YouTubePage";
+import ChallengesPage from "./pages/ChallengesPage";
 /* NOUVEAUX OUTILS & RESSOURCES */
 import HackerAI from "./pages/HackerAI";
 import DependencyTrack from "./pages/DependencyTrack";
@@ -166,6 +167,7 @@ export default function App() {
         <Route path="/badges-osint" element={<Protected><Layout><BadgesOSINT /></Layout></Protected>} />
         <Route path="/certificat" element={<Protected><Layout><CertificatPage /></Layout></Protected>} />
         <Route path="/youtube" element={<Protected><Layout><YouTubePage /></Layout></Protected>} />
+        <Route path="/challenges" element={<Protected><Layout><ChallengesPage /></Layout></Protected>} />
 
         {/* OUTILS & RESSOURCES */}
         <Route path="/hacker-ai" element={<Protected><Layout><HackerAI /></Layout></Protected>} />
