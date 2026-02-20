@@ -760,11 +760,25 @@ export default function ChallengesPage() {
     const now = new Date();
     const diff = now.getTime() - startDate.getTime();
     const weeksPassed = Math.floor(diff / (7 * 24 * 60 * 60 * 1000));
+    
+    // S'assurer que le numéro est toujours valide (0-51)
+    if (weeksPassed < 0) return 0; // Avant le début
     return weeksPassed % CHALLENGES.length;
   };
 
   const [currentWeek, setCurrentWeek] = useState(getWeekNumber());
   const currentChallenge = CHALLENGES[currentWeek];
+
+  // Sécurité : si currentChallenge est undefined, utiliser le premier
+  if (!currentChallenge) {
+    console.error("Challenge undefined, using first challenge");
+    return <div style={{ minHeight: "100vh", background: colors.bgPrimary, paddingTop: "80px" }}>
+      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "40px 20px", textAlign: "center" }}>
+        <h1 style={{ color: colors.textPrimary }}>Erreur de chargement</h1>
+        <p style={{ color: colors.textSecondary }}>Le challenge n'a pas pu être chargé. Réessayez.</p>
+      </div>
+    </div>;
+  }
 
   // Compte à rebours jusqu'au prochain lundi
   const getTimeUntilNextMonday = () => {
