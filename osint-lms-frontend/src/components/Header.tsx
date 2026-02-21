@@ -537,7 +537,7 @@ export default function Header() {
                 </Link>
 
                 {/* Panel Admin - Visible uniquement pour Cyber_Admin */}
-                {username === "Cyber_Admin" && (
+                {user?.username === "Cyber_Admin" && (
                   <>
                     <div style={{ height: "1px", background: colors.border, margin: "8px 0" }} />
                     
