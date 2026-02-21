@@ -2,16 +2,21 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useThemeColors } from "../context/ThemeContext";
 
-interface LocalUser {
+interface User {
+  id: number;
   username: string;
-  email: string;
-  createdAt: string;
-  lastLogin?: string;
-  xp: number;
-  level: number;
+  role: string;
+  created_at: string;
+  last_login: string;
 }
 
-// Décoder le JWT payload (base64)
+interface Stats {
+  total: number;
+  newThisWeek: number;
+  activeToday: number;
+}
+
+// Décoder le JWT payload
 function decodeToken(token: string) {
   try {
     const payload = token.split('.')[1];
@@ -26,76 +31,86 @@ export default function AdminPanel() {
   const colors = useThemeColors();
   const navigate = useNavigate();
   
-  // Récupérer le username depuis le token JWT
   const token = localStorage.getItem("token");
   const currentUser = token ? decodeToken(token) : null;
 
-  const [users, setUsers] = useState<LocalUser[]>([]);
+  const [stats, setStats] = useState<Stats>({ total: 0, newThisWeek: 0, activeToday: 0 });
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Protection: rediriger si pas Cyber_Admin
+  // Protection
   useEffect(() => {
     if (currentUser?.username !== "Cyber_Admin") {
       navigate("/dashboard");
     }
   }, [currentUser, navigate]);
 
-  // Charger les users depuis localStorage
+  // Charger les données
   useEffect(() => {
-    loadUsers();
-  }, []);
+    if (currentUser?.username === "Cyber_Admin") {
+      fetchStats();
+      fetchUsers();
+    }
+  }, [currentUser]);
 
-  const loadUsers = () => {
-    const storedUsers = localStorage.getItem("registered_users");
-    if (storedUsers) {
-      setUsers(JSON.parse(storedUsers));
+  const fetchStats = async () => {
+    try {
+      const res = await fetch('/api/admin/stats');
+      if (res.ok) {
+        const data = await res.json();
+        setStats(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
     }
   };
 
-  const handleDeleteUser = (username: string) => {
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/admin/users');
+      if (res.ok) {
+        const data = await res.json();
+        setUsers(data.users);
+      }
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteUser = async (userId: number, username: string) => {
     if (!confirm(`⚠️ Supprimer définitivement "${username}" ?`)) {
       return;
     }
 
-    if (username === "Cyber_Admin") {
-      alert("❌ Impossible de supprimer le compte admin !");
-      return;
+    try {
+      const res = await fetch('/api/admin/delete-user', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert('✅ Utilisateur supprimé');
+        fetchUsers();
+        fetchStats();
+      } else {
+        alert(`❌ ${data.error || 'Erreur'}`);
+      }
+    } catch (error) {
+      alert('❌ Erreur lors de la suppression');
+      console.error(error);
     }
-
-    const updatedUsers = users.filter(u => u.username !== username);
-    localStorage.setItem("registered_users", JSON.stringify(updatedUsers));
-    setUsers(updatedUsers);
-    alert("✅ Utilisateur supprimé");
-  };
-
-  const handleResetPassword = (username: string) => {
-    const tempPassword = `Temp${Math.random().toString(36).slice(2, 10)}!`;
-    alert(`🔑 Nouveau mot de passe pour ${username}:\n\n${tempPassword}\n\nCommuniquez-le à l'utilisateur.`);
   };
 
   const filteredUsers = users.filter(u => 
-    u.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    u.email?.toLowerCase().includes(searchTerm.toLowerCase())
+    u.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  // Stats
-  const stats = {
-    total: users.length,
-    newThisWeek: users.filter(u => {
-      if (!u.createdAt) return false;
-      const created = new Date(u.createdAt);
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return created >= weekAgo;
-    }).length,
-    activeToday: users.filter(u => {
-      if (!u.lastLogin) return false;
-      const lastLogin = new Date(u.lastLogin);
-      const dayAgo = new Date();
-      dayAgo.setDate(dayAgo.getDate() - 1);
-      return lastLogin >= dayAgo;
-    }).length,
-  };
 
   if (currentUser?.username !== "Cyber_Admin") {
     return null;
@@ -126,17 +141,17 @@ export default function AdminPanel() {
           color: colors.textSecondary,
           marginBottom: "10px",
         }}>
-          Gestion des utilisateurs (localStorage)
+          Gestion des utilisateurs (Base Neon PostgreSQL)
         </p>
         <p style={{
           fontSize: "0.9rem",
           color: colors.accent,
           marginBottom: "40px",
         }}>
-          👤 Connecté en tant que : <strong>{currentUser?.username}</strong>
+          👤 Connecté : <strong>{currentUser?.username}</strong>
         </p>
 
-        {/* Stats Cards */}
+        {/* Stats */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
@@ -146,7 +161,7 @@ export default function AdminPanel() {
           {[
             { label: "Total Utilisateurs", value: stats.total, icon: "👥", color: "#3b82f6" },
             { label: "Nouveaux (7j)", value: stats.newThisWeek, icon: "✨", color: "#10b981" },
-            { label: "Actifs récents", value: stats.activeToday, icon: "🟢", color: "#8b5cf6" },
+            { label: "Actifs (24h)", value: stats.activeToday, icon: "🟢", color: "#8b5cf6" },
           ].map((stat) => (
             <div key={stat.label} style={{
               background: colors.bgSecondary,
@@ -170,11 +185,11 @@ export default function AdminPanel() {
           ))}
         </div>
 
-        {/* Search Bar */}
+        {/* Search */}
         <div style={{ marginBottom: "25px" }}>
           <input
             type="text"
-            placeholder="🔍 Rechercher un utilisateur..."
+            placeholder="🔍 Rechercher..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
@@ -189,7 +204,7 @@ export default function AdminPanel() {
           />
         </div>
 
-        {/* Users Table */}
+        {/* Table */}
         <div style={{
           background: colors.bgSecondary,
           border: `1px solid ${colors.border}`,
@@ -206,104 +221,83 @@ export default function AdminPanel() {
               color: colors.textPrimary,
               margin: 0,
             }}>
-              📋 Utilisateurs Enregistrés ({filteredUsers.length})
+              📋 Utilisateurs ({filteredUsers.length})
             </h2>
           </div>
 
-          <div style={{ overflowX: "auto" }}>
-            <table style={{
-              width: "100%",
-              borderCollapse: "collapse",
-            }}>
-              <thead>
-                <tr style={{ background: colors.bgPrimary }}>
-                  {["Username", "Email", "Inscrit le", "XP", "Niveau", "Actions"].map((header) => (
-                    <th key={header} style={{
-                      padding: "15px",
-                      textAlign: "left",
-                      color: colors.textSecondary,
-                      fontSize: "0.9rem",
-                      fontWeight: "600",
-                    }}>
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} style={{
-                      padding: "40px",
-                      textAlign: "center",
-                      color: colors.textSecondary,
-                    }}>
-                      Aucun utilisateur trouvé
-                    </td>
+          {loading ? (
+            <div style={{ padding: "40px", textAlign: "center", color: colors.textSecondary }}>
+              Chargement...
+            </div>
+          ) : (
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr style={{ background: colors.bgPrimary }}>
+                    {["ID", "Username", "Rôle", "Inscrit le", "Dernière connexion", "Actions"].map((h) => (
+                      <th key={h} style={{
+                        padding: "15px",
+                        textAlign: "left",
+                        color: colors.textSecondary,
+                        fontSize: "0.9rem",
+                        fontWeight: "600",
+                      }}>
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                ) : (
-                  filteredUsers.map((u) => (
-                    <tr key={u.username} style={{
-                      borderBottom: `1px solid ${colors.border}`,
-                    }}>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((u) => (
+                    <tr key={u.id} style={{ borderBottom: `1px solid ${colors.border}` }}>
+                      <td style={{ padding: "15px", color: colors.textSecondary }}>
+                        #{u.id}
+                      </td>
                       <td style={{ padding: "15px", color: colors.textPrimary, fontWeight: "600" }}>
                         {u.username}
                         {u.username === "Cyber_Admin" && " 👑"}
                       </td>
-                      <td style={{ padding: "15px", color: colors.textSecondary }}>
-                        {u.email || "N/A"}
+                      <td style={{ padding: "15px" }}>
+                        <span style={{
+                          padding: "4px 12px",
+                          background: u.role === "admin" ? "#3b82f6" : colors.accent,
+                          color: "#fff",
+                          borderRadius: "12px",
+                          fontSize: "0.85rem",
+                        }}>
+                          {u.role || "user"}
+                        </span>
                       </td>
                       <td style={{ padding: "15px", color: colors.textSecondary, fontSize: "0.9rem" }}>
-                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : "N/A"}
+                        {u.created_at ? new Date(u.created_at).toLocaleDateString('fr-FR') : "N/A"}
                       </td>
-                      <td style={{ padding: "15px", color: colors.accent, fontWeight: "600" }}>
-                        {u.xp || 0}
-                      </td>
-                      <td style={{ padding: "15px", color: colors.accent, fontWeight: "600" }}>
-                        {u.level || 1}
+                      <td style={{ padding: "15px", color: colors.textSecondary, fontSize: "0.9rem" }}>
+                        {u.last_login ? new Date(u.last_login).toLocaleDateString('fr-FR') : "Jamais"}
                       </td>
                       <td style={{ padding: "15px" }}>
-                        <div style={{ display: "flex", gap: "10px" }}>
-                          {u.username !== "Cyber_Admin" && (
-                            <>
-                              <button
-                                onClick={() => handleResetPassword(u.username)}
-                                style={{
-                                  padding: "6px 12px",
-                                  background: "#3b82f6",
-                                  color: "#fff",
-                                  border: "none",
-                                  borderRadius: "6px",
-                                  cursor: "pointer",
-                                  fontSize: "0.85rem",
-                                }}
-                              >
-                                Reset MDP
-                              </button>
-                              <button
-                                onClick={() => handleDeleteUser(u.username)}
-                                style={{
-                                  padding: "6px 12px",
-                                  background: "#ef4444",
-                                  color: "#fff",
-                                  border: "none",
-                                  borderRadius: "6px",
-                                  cursor: "pointer",
-                                  fontSize: "0.85rem",
-                                }}
-                              >
-                                Supprimer
-                              </button>
-                            </>
-                          )}
-                        </div>
+                        {u.username !== "Cyber_Admin" && (
+                          <button
+                            onClick={() => handleDeleteUser(u.id, u.username)}
+                            style={{
+                              padding: "6px 12px",
+                              background: "#ef4444",
+                              color: "#fff",
+                              border: "none",
+                              borderRadius: "6px",
+                              cursor: "pointer",
+                              fontSize: "0.85rem",
+                            }}
+                          >
+                            Supprimer
+                          </button>
+                        )}
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* Info */}
@@ -315,9 +309,7 @@ export default function AdminPanel() {
           borderRadius: "12px",
         }}>
           <p style={{ color: colors.textSecondary, margin: 0, fontSize: "0.95rem" }}>
-            ℹ️ <strong>Note :</strong> Cette version utilise localStorage pour la gestion des utilisateurs. 
-            Les utilisateurs enregistrés dans Neon ne sont pas visibles ici. Pour une gestion complète avec base de données, 
-            il faudra créer des API routes Vercel.
+            ✅ <strong>Connecté à Neon PostgreSQL</strong> - Les utilisateurs affichés proviennent de la base de données réelle.
           </p>
         </div>
       </div>
