@@ -46,13 +46,13 @@ export default function AdminPanel() {
     }
   }, [currentUser, navigate]);
 
-  // Charger les données
+  // Charger les données UNE SEULE FOIS au montage
   useEffect(() => {
     if (currentUser?.username === "Cyber_Admin") {
       fetchStats();
       fetchUsers();
     }
-  }, [currentUser]);
+  }, []); // Dépendances vides = ne s'exécute qu'une fois
 
   const fetchStats = async () => {
     try {
