@@ -536,6 +536,31 @@ export default function Header() {
                   📧 Contact Admin
                 </Link>
 
+                {/* Panel Admin - Visible uniquement pour Cyber_Admin */}
+                {username === "Cyber_Admin" && (
+                  <>
+                    <div style={{ height: "1px", background: colors.border, margin: "8px 0" }} />
+                    
+                    <Link to="/admin" onClick={() => setShowUserMenu(false)} style={{
+                      display: "block",
+                      color: colors.accent,
+                      textDecoration: "none",
+                      padding: "10px 18px",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                      transition: "all 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = colors.bgSecondary;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "transparent";
+                    }}>
+                      🛡️ Panel Admin
+                    </Link>
+                  </>
+                )}
+
                 <div style={{ height: "1px", background: colors.border, margin: "8px 0" }} />
 
                 <button onClick={handleLogout} style={{
