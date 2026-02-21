@@ -8,6 +8,7 @@ interface User {
   role: string;
   created_at: string;
   last_login: string;
+  blocked: boolean;
 }
 
 interface Stats {
@@ -104,6 +105,55 @@ export default function AdminPanel() {
       }
     } catch (error) {
       alert('❌ Erreur lors de la suppression');
+      console.error(error);
+    }
+  };
+
+  const handleBlockUser = async (userId: number, username: string, currentBlocked: boolean) => {
+    if (!confirm(`${currentBlocked ? 'Débloquer' : 'Bloquer'} "${username}" ?`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/admin/block-user', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, blocked: !currentBlocked }),
+      });
+
+      if (res.ok) {
+        alert(`✅ Utilisateur ${currentBlocked ? 'débloqué' : 'bloqué'}`);
+        fetchUsers();
+      } else {
+        alert('❌ Erreur');
+      }
+    } catch (error) {
+      alert('❌ Erreur lors du blocage');
+      console.error(error);
+    }
+  };
+
+  const handleResetPassword = async (userId: number, username: string) => {
+    if (!confirm(`Réinitialiser le mot de passe de "${username}" ?`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/admin/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(`✅ Mot de passe réinitialisé !\n\nNouveau MDP temporaire :\n${data.tempPassword}\n\nCommuniquez-le à l'utilisateur.`);
+      } else {
+        alert('❌ Erreur');
+      }
+    } catch (error) {
+      alert('❌ Erreur lors de la réinitialisation');
       console.error(error);
     }
   };
@@ -234,7 +284,7 @@ export default function AdminPanel() {
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: colors.bgPrimary }}>
-                    {["ID", "Username", "Rôle", "Inscrit le", "Dernière connexion", "Actions"].map((h) => (
+                    {["ID", "Username", "Rôle", "Inscrit le", "Dernière connexion", "Statut", "Actions"].map((h) => (
                       <th key={h} style={{
                         padding: "15px",
                         textAlign: "left",
@@ -275,21 +325,74 @@ export default function AdminPanel() {
                         {u.last_login ? new Date(u.last_login).toLocaleDateString('fr-FR') : "Jamais"}
                       </td>
                       <td style={{ padding: "15px" }}>
+                        {u.blocked ? (
+                          <span style={{
+                            padding: "4px 12px",
+                            background: "#ef4444",
+                            color: "#fff",
+                            borderRadius: "12px",
+                            fontSize: "0.85rem",
+                          }}>
+                            🚫 Bloqué
+                          </span>
+                        ) : (
+                          <span style={{
+                            padding: "4px 12px",
+                            background: "#10b981",
+                            color: "#fff",
+                            borderRadius: "12px",
+                            fontSize: "0.85rem",
+                          }}>
+                            ✅ Actif
+                          </span>
+                        )}
+                      </td>
+                      <td style={{ padding: "15px" }}>
                         {u.username !== "Cyber_Admin" && (
-                          <button
-                            onClick={() => handleDeleteUser(u.id, u.username)}
-                            style={{
-                              padding: "6px 12px",
-                              background: "#ef4444",
-                              color: "#fff",
-                              border: "none",
-                              borderRadius: "6px",
-                              cursor: "pointer",
-                              fontSize: "0.85rem",
-                            }}
-                          >
-                            Supprimer
-                          </button>
+                          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                            <button
+                              onClick={() => handleBlockUser(u.id, u.username, u.blocked)}
+                              style={{
+                                padding: "6px 12px",
+                                background: u.blocked ? "#10b981" : "#f59e0b",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "6px",
+                                cursor: "pointer",
+                                fontSize: "0.85rem",
+                              }}
+                            >
+                              {u.blocked ? "Débloquer" : "Bloquer"}
+                            </button>
+                            <button
+                              onClick={() => handleResetPassword(u.id, u.username)}
+                              style={{
+                                padding: "6px 12px",
+                                background: "#3b82f6",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "6px",
+                                cursor: "pointer",
+                                fontSize: "0.85rem",
+                              }}
+                            >
+                              Reset MDP
+                            </button>
+                            <button
+                              onClick={() => handleDeleteUser(u.id, u.username)}
+                              style={{
+                                padding: "6px 12px",
+                                background: "#ef4444",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "6px",
+                                cursor: "pointer",
+                                fontSize: "0.85rem",
+                              }}
+                            >
+                              Supprimer
+                            </button>
+                          </div>
                         )}
                       </td>
                     </tr>

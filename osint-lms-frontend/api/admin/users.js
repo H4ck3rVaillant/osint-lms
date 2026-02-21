@@ -22,7 +22,8 @@ module.exports = async function handler(req, res) {
         username,
         role,
         created_at,
-        last_login
+        last_login,
+        blocked
       FROM users
       ORDER BY created_at DESC
     `;
