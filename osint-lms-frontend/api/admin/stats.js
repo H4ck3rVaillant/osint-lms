@@ -28,20 +28,20 @@ module.exports = async function handler(req, res) {
       WHERE created_at >= ${weekAgo.toISOString()}
     `;
 
-    // Utilisateurs connectés MAINTENANT (< 2 minutes)
-    const twoMinutesAgo = new Date();
-    twoMinutesAgo.setMinutes(twoMinutesAgo.getMinutes() - 2);
+    // Utilisateurs actifs (connectés dans les 24h)
+    const dayAgo = new Date();
+    dayAgo.setDate(dayAgo.getDate() - 1);
     
-    const activeNow = await sql`
+    const activeUsers = await sql`
       SELECT COUNT(*) as count 
       FROM users 
-      WHERE last_login >= ${twoMinutesAgo.toISOString()}
+      WHERE last_login >= ${dayAgo.toISOString()}
     `;
 
     return res.status(200).json({
       total: parseInt(totalUsers[0].count),
       newThisWeek: parseInt(newUsers[0].count),
-      activeNow: parseInt(activeNow[0].count),
+      activeToday: parseInt(activeUsers[0].count),
     });
 
   } catch (error) {

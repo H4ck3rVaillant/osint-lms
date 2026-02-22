@@ -14,7 +14,7 @@ interface User {
 interface Stats {
   total: number;
   newThisWeek: number;
-  activeNow: number;
+  activeToday: number;
 }
 
 // Décoder le JWT payload
@@ -35,7 +35,7 @@ export default function AdminPanel() {
   const token = localStorage.getItem("token");
   const currentUser = token ? decodeToken(token) : null;
 
-  const [stats, setStats] = useState<Stats>({ total: 0, newThisWeek: 0, activeNow: 0 });
+  const [stats, setStats] = useState<Stats>({ total: 0, newThisWeek: 0, activeToday: 0 });
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -211,7 +211,7 @@ export default function AdminPanel() {
           {[
             { label: "Total Utilisateurs", value: stats.total, icon: "👥", color: "#3b82f6" },
             { label: "Nouveaux (7j)", value: stats.newThisWeek, icon: "✨", color: "#10b981" },
-            { label: "Connectés maintenant", value: stats.activeNow, icon: "🟢", color: "#22c55e" },
+            { label: "Actifs (24h)", value: stats.activeToday, icon: "🟢", color: "#8b5cf6" },
           ].map((stat) => (
             <div key={stat.label} style={{
               background: colors.bgSecondary,

@@ -6,7 +6,7 @@ let pool;
 function getPool() {
   if (!pool) {
     pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: process.env.DATABASE_URL, // ✅ CHANGÉ DE POSTGRES_URL EN DATABASE_URL
       ssl: { rejectUnauthorized: false }
     });
   }
