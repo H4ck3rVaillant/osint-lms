@@ -43,7 +43,6 @@ export default function Header() {
   const [showOutilsMenu, setShowOutilsMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [language, setLanguage] = useState("FR");
 
   if (!auth.user) return null;
 
@@ -52,13 +51,6 @@ export default function Header() {
   const handleLogout = () => {
     logout();
     window.location.href = "/";
-  };
-
-  const toggleLanguage = () => {
-    const langs = ["FR", "EN", "ES", "DE"];
-    const currentIndex = langs.indexOf(language);
-    setLanguage(langs[(currentIndex + 1) % langs.length]);
-    // TODO: Implémenter le changement de langue réel
   };
 
   const linkStyle = {
@@ -411,37 +403,6 @@ export default function Header() {
             }}
           >
             {theme === "dark" ? "🌞" : "🌙"}
-          </button>
-
-          {/* Language Selector */}
-          <button
-            onClick={toggleLanguage}
-            title="Changer la langue"
-            style={{
-              background: colors.bgSecondary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "50%",
-              width: "36px",
-              height: "36px",
-              cursor: "pointer",
-              fontSize: "0.75rem",
-              fontWeight: "700",
-              color: colors.accent,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "all 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = colors.accent;
-              e.currentTarget.style.transform = "scale(1.1)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = colors.border;
-              e.currentTarget.style.transform = "scale(1)";
-            }}
-          >
-            {language}
           </button>
 
           {/* Avatar + User Menu */}
