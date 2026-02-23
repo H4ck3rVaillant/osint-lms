@@ -30,7 +30,7 @@ const CHALLENGES: Challenge[] = [
     solution: "La Tour Eiffel à Paris. Les coordonnées peuvent être vérifiées sur Google Maps.",
     points: 10
   },
-  
+
   // SEMAINE 2
   {
     id: 2,
@@ -753,14 +753,14 @@ export default function ChallengesPage() {
   const [feedback, setFeedback] = useState<{ type: "success" | "error" | ""; message: string }>({ type: "", message: "" });
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
-  
+
   // Calculer le challenge actuel basé sur la semaine
   const getWeekNumber = () => {
     const startDate = new Date("2026-02-23"); // Date de début (lundi)
     const now = new Date();
     const diff = now.getTime() - startDate.getTime();
     const weeksPassed = Math.floor(diff / (7 * 24 * 60 * 60 * 1000));
-    
+
     // S'assurer que le numéro est toujours valide (0-51)
     if (weeksPassed < 0) return 0; // Avant le début
     return weeksPassed % CHALLENGES.length;
@@ -786,11 +786,11 @@ export default function ChallengesPage() {
     const nextMonday = new Date(now);
     nextMonday.setDate(now.getDate() + ((1 + 7 - now.getDay()) % 7 || 7));
     nextMonday.setHours(0, 0, 0, 0);
-    
+
     const diff = nextMonday.getTime() - now.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    
+
     return { days, hours };
   };
 
@@ -816,14 +816,14 @@ export default function ChallengesPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (isSolved) {
       setFeedback({ type: "error", message: "Vous avez déjà résolu ce challenge !" });
       return;
     }
 
     const normalized = userAnswer.toLowerCase().trim();
-    const isCorrect = currentChallenge.answers.some(answer => 
+    const isCorrect = currentChallenge.answers.some(answer =>
       normalized === answer.toLowerCase() || normalized.includes(answer.toLowerCase())
     );
 
@@ -831,11 +831,11 @@ export default function ChallengesPage() {
       const newSolved = [...solvedChallenges, currentChallenge.id];
       localStorage.setItem("challenges_solved", JSON.stringify(newSolved));
       setSolvedChallenges(newSolved);
-      
+
       addXP(currentChallenge.points, `Challenge ${currentChallenge.title}`);
-      setFeedback({ 
-        type: "success", 
-        message: `🎉 Correct ! +${currentChallenge.points} XP` 
+      setFeedback({
+        type: "success",
+        message: `🎉 Correct ! +${currentChallenge.points} XP`
       });
       setShowSolution(true);
 
@@ -844,10 +844,23 @@ export default function ChallengesPage() {
         unlockBadge("challenge_master", "Challenge Master - 10 challenges résolus");
       }
     } else {
-      setFeedback({ 
-        type: "error", 
-        message: "❌ Réponse incorrecte. Essayez encore !" 
+      setFeedback({
+        type: "error",
+        message: "❌ Réponse incorrecte. Essayez encore !"
       });
+    }
+  };
+
+  // Fonction pour réinitialiser la progression
+  const handleReset = () => {
+    if (window.confirm("⚠️ ATTENTION : Cette action va supprimer TOUTE votre progression des challenges ! Êtes-vous sûr(e) de vouloir continuer ?")) {
+      localStorage.removeItem("challenges_solved");
+      setSolvedChallenges([]);
+      setUserAnswer("");
+      setFeedback({ type: "", message: "" });
+      setShowHint(false);
+      setShowSolution(false);
+      alert("✅ Votre progression a été réinitialisée !");
     }
   };
 
@@ -1094,6 +1107,7 @@ export default function ChallengesPage() {
           borderRadius: "12px",
           padding: "25px",
           textAlign: "center",
+          marginBottom: "30px",
         }}>
           <h3 style={{
             fontSize: "1.3rem",
@@ -1133,6 +1147,55 @@ export default function ChallengesPage() {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Bouton Réinitialiser - Style TryHackMe */}
+        <div style={{
+          background: colors.bgSecondary,
+          border: `2px solid #ef4444`,
+          borderRadius: "12px",
+          padding: "25px",
+          textAlign: "center",
+        }}>
+          <h3 style={{
+            fontSize: "1.2rem",
+            fontWeight: "600",
+            color: "#ef4444",
+            marginBottom: "10px",
+          }}>
+            ⚠️ Zone Dangereuse
+          </h3>
+          <p style={{
+            color: colors.textSecondary,
+            marginBottom: "20px",
+            fontSize: "0.95rem",
+          }}>
+            Réinitialiser votre progression supprimera TOUS vos challenges résolus.
+          </p>
+          <button
+            onClick={handleReset}
+            style={{
+              padding: "14px 28px",
+              background: "transparent",
+              border: "2px solid #ef4444",
+              borderRadius: "8px",
+              color: "#ef4444",
+              fontSize: "1rem",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#ef4444";
+              e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "#ef4444";
+            }}
+          >
+            🔄 Réinitialiser ma progression
+          </button>
         </div>
       </div>
     </div>
