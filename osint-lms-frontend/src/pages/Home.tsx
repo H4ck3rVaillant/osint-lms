@@ -32,7 +32,6 @@ export default function Home() {
       overflow: "hidden"
     }}>
 
-      {/* Grille matricielle arrière-plan */}
       <div style={{
         position: "absolute" as const,
         inset: 0,
@@ -46,7 +45,6 @@ export default function Home() {
 
       <div style={{ maxWidth: "1200px", width: "100%", zIndex: 1, textAlign: "center" }}>
 
-        {/* Logo */}
         <div style={{ marginBottom: "30px" }}>
           <img
             src={Logo}
@@ -68,7 +66,6 @@ export default function Home() {
           />
         </div>
 
-        {/* Titre */}
         <h1 style={{
           color: "#00ff9c",
           fontSize: "3rem",
@@ -81,7 +78,6 @@ export default function Home() {
           CyberOSINT Academy
         </h1>
 
-        {/* Sous-titre machine à écrire */}
         <div style={{ minHeight: "50px", marginBottom: "25px" }}>
           <p style={{
             color: "#00ff9c",
@@ -98,7 +94,6 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Description */}
         <p style={{
           maxWidth: "750px",
           margin: "0 auto 50px",
@@ -113,7 +108,6 @@ export default function Home() {
           et une bibliothèque de 22+ outils professionnels.
         </p>
 
-        {/* FONCTIONNALITES */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
@@ -128,6 +122,7 @@ export default function Home() {
             { icon: "🔎", title: "5 Études de cas réels",   desc: "Investigations type Bellingcat" },
             { icon: "🏅", title: "Système de badges",       desc: "Progression et récompenses déblocables" },
             { icon: "🚩", title: "Mini-CTF intégrés",       desc: "11 défis OSINT, Crypto et Web Hacking" },
+            { icon: "🔥", title: "52 Challenges Hebdo",     desc: "Un nouveau challenge OSINT chaque semaine" },
             { icon: "🏆", title: "Leaderboard",             desc: "Classement mondial en temps réel" },
             { icon: "⭐", title: "Système XP et Niveaux",   desc: "Newbie vers Script Kiddie vers Elite Hacker" },
             { icon: "🔥", title: "Streak et Calendrier",    desc: "Activité quotidienne style GitHub" },
@@ -135,6 +130,7 @@ export default function Home() {
             { icon: "🦜", title: "Parrot OS Lab",           desc: "Anonymat Tor, GPG, WiFi audit" },
             { icon: "🧪", title: "Labo OSINT",              desc: "Terminal web et code playground" },
             { icon: "🤖", title: "HackerAI",                desc: "Assistant IA spécialisé cybersécurité" },
+            { icon: "🔍", title: "Argus V2.0",              desc: "OSINT Automation & Threat Intelligence" },
             { icon: "🔧", title: "22+ Outils référencés",   desc: "Catalogue complet d'outils OSINT" },
             { icon: "📚", title: "Référentiels",            desc: "ANSSI, RGPD, NIS2, ISO 27001" },
             { icon: "📦", title: "Dependency Track",        desc: "Supply chain security et SBOM" },
@@ -170,7 +166,6 @@ export default function Home() {
           ))}
         </div>
 
-        {/* STATS */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
@@ -187,6 +182,7 @@ export default function Home() {
             { number: "9",   label: "Modules de formation" },
             { number: "20",  label: "Exercices pratiques" },
             { number: "5",   label: "Études de cas OSINT" },
+            { number: "52",  label: "Challenges Hebdo" },
             { number: "11",  label: "Défis CTF" },
             { number: "20",  label: "Badges à débloquer" },
             { number: "22+", label: "Outils référencés" },
@@ -208,7 +204,6 @@ export default function Home() {
           ))}
         </div>
 
-        {/* NIVEAUX XP */}
         <div style={{
           maxWidth: "900px",
           margin: "0 auto 55px",
@@ -247,7 +242,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* CTA */}
         <div style={{ animation: "fadeInUp 1s ease-out 1.2s backwards" }}>
           <Link
             to="/login"
@@ -279,7 +273,6 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Footer */}
         <div style={{
           marginTop: "80px",
           padding: "25px 0",
@@ -292,7 +285,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Animations */}
       <style>{`
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(30px); }
