@@ -22,6 +22,7 @@ const quizThemes: QuizTheme[] = [
     questions: 20,
     duration: "15 min"
   },
+  const [showResetModal, setShowResetModal] = useState(false);
   {
     id: "search-techniques",
     title: "Techniques de Recherche Avancées",
@@ -73,17 +74,16 @@ export default function QuizPage() {
   const navigate = useNavigate();
   const colors = useThemeColors();
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
-  const [showResetModal, setShowResetModal] = useState(false);
 
   const handleStartQuiz = (themeId: string) => {
-    navigate(`/quiz/${themeId}`);
-  };
 
   const handleReset = () => {
     localStorage.removeItem("quiz_results");
     localStorage.removeItem("quiz_badges");
     setShowResetModal(false);
-    alert("✅ Progression des quiz réinitialisée !");
+    alert("✅ Quiz réinitialisés !");
+  };
+    navigate(`/quiz/${themeId}`);
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -114,10 +114,10 @@ export default function QuizPage() {
           }}>
             <div style={{ fontSize: "4rem", textAlign: "center", marginBottom: "20px" }}>⚠️</div>
             <h2 style={{ color: "#00ff9c", fontSize: "1.8rem", textAlign: "center", marginBottom: "15px" }}>
-              Réinitialiser les quiz
+              Réinitialiser
             </h2>
             <p style={{ color: "#9ca3af", textAlign: "center", marginBottom: "30px", lineHeight: "1.6" }}>
-              Cette action va <strong style={{ color: "#00ff9c" }}>supprimer DÉFINITIVEMENT</strong> tous vos résultats et badges de quiz !
+              <strong style={{ color: "#00ff9c" }}>SUPPRIMER</strong> tous vos quiz ?
             </p>
             <div style={{ display: "flex", gap: "15px" }}>
               <button onClick={() => setShowResetModal(false)} style={{
@@ -312,6 +312,13 @@ export default function QuizPage() {
                 onClick={(e) => {
                   e.stopPropagation();
                   handleStartQuiz(theme.id);
+
+  const handleReset = () => {
+    localStorage.removeItem("quiz_results");
+    localStorage.removeItem("quiz_badges");
+    setShowResetModal(false);
+    alert("✅ Quiz réinitialisés !");
+  };
                 }}
                 style={{
                   width: "100%",
@@ -361,7 +368,7 @@ export default function QuizPage() {
             ⚠️ Zone Dangereuse
           </h3>
           <p style={{ color: "#9ca3af", marginBottom: "20px", fontSize: "0.95rem" }}>
-            Réinitialiser votre progression supprimera TOUS vos résultats de quiz.
+            Réinitialiser = tout supprimer
           </p>
           <button onClick={() => setShowResetModal(true)} style={{
             padding: "14px 28px",
@@ -371,18 +378,9 @@ export default function QuizPage() {
             color: "#00ff9c",
             fontSize: "1rem",
             fontWeight: "600",
-            cursor: "pointer",
-            transition: "all 0.3s"
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#00ff9c";
-            e.currentTarget.style.color = "#0b0f1a";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "#00ff9c";
+            cursor: "pointer"
           }}>
-            🔄 Réinitialiser ma progression
+            🔄 Réinitialiser
           </button>
         </div>
 

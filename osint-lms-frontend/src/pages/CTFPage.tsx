@@ -72,10 +72,10 @@ export default function CTFPage() {
           }}>
             <div style={{ fontSize: "4rem", textAlign: "center", marginBottom: "20px" }}>⚠️</div>
             <h2 style={{ color: "#00ff9c", fontSize: "1.8rem", textAlign: "center", marginBottom: "15px" }}>
-              Réinitialiser le CTF
+              Réinitialiser
             </h2>
             <p style={{ color: "#9ca3af", textAlign: "center", marginBottom: "30px", lineHeight: "1.6" }}>
-              Cette action va <strong style={{ color: "#00ff9c" }}>supprimer DÉFINITIVEMENT</strong> tous vos flags validés !
+              <strong style={{ color: "#00ff9c" }}>SUPPRIMER</strong> tous vos flags ?
             </p>
             <div style={{ display: "flex", gap: "15px" }}>
               <button onClick={() => setShowResetModal(false)} style={{
@@ -90,6 +90,7 @@ export default function CTFPage() {
           </div>
         </>
       )}
+
 
       {/* Header */}
       <div style={{ marginBottom: "35px" }}>
@@ -446,7 +447,7 @@ export default function CTFPage() {
           ⚠️ Zone Dangereuse
         </h3>
         <p style={{ color: "#9ca3af", marginBottom: "20px", fontSize: "0.95rem" }}>
-          Réinitialiser votre progression supprimera TOUS vos flags CTF validés.
+          Réinitialiser = tout supprimer
         </p>
         <button onClick={() => setShowResetModal(true)} style={{
           padding: "14px 28px",
@@ -456,18 +457,9 @@ export default function CTFPage() {
           color: "#00ff9c",
           fontSize: "1rem",
           fontWeight: "600",
-          cursor: "pointer",
-          transition: "all 0.3s"
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = "#00ff9c";
-          e.currentTarget.style.color = "#0b0f1a";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = "transparent";
-          e.currentTarget.style.color = "#00ff9c";
+          cursor: "pointer"
         }}>
-          🔄 Réinitialiser ma progression
+          🔄 Réinitialiser
         </button>
       </div>
 
