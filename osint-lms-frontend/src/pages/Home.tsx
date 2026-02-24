@@ -32,6 +32,7 @@ export default function Home() {
       overflow: "hidden"
     }}>
 
+      {/* Grille matricielle arrière-plan */}
       <div style={{
         position: "absolute" as const,
         inset: 0,
@@ -45,6 +46,7 @@ export default function Home() {
 
       <div style={{ maxWidth: "1200px", width: "100%", zIndex: 1, textAlign: "center" }}>
 
+        {/* Logo */}
         <div style={{ marginBottom: "30px" }}>
           <img
             src={Logo}
@@ -66,6 +68,7 @@ export default function Home() {
           />
         </div>
 
+        {/* Titre */}
         <h1 style={{
           color: "#00ff9c",
           fontSize: "3rem",
@@ -78,6 +81,7 @@ export default function Home() {
           CyberOSINT Academy
         </h1>
 
+        {/* Sous-titre machine à écrire */}
         <div style={{ minHeight: "50px", marginBottom: "25px" }}>
           <p style={{
             color: "#00ff9c",
@@ -94,6 +98,7 @@ export default function Home() {
           </p>
         </div>
 
+        {/* Description */}
         <p style={{
           maxWidth: "750px",
           margin: "0 auto 50px",
@@ -108,6 +113,7 @@ export default function Home() {
           et une bibliothèque de 22+ outils professionnels.
         </p>
 
+        {/* FONCTIONNALITES */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
@@ -166,6 +172,7 @@ export default function Home() {
           ))}
         </div>
 
+        {/* STATS */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
@@ -204,6 +211,7 @@ export default function Home() {
           ))}
         </div>
 
+        {/* NIVEAUX XP */}
         <div style={{
           maxWidth: "900px",
           margin: "0 auto 55px",
@@ -242,6 +250,7 @@ export default function Home() {
           </div>
         </div>
 
+        {/* CTA */}
         <div style={{ animation: "fadeInUp 1s ease-out 1.2s backwards" }}>
           <Link
             to="/login"
@@ -273,6 +282,7 @@ export default function Home() {
           </p>
         </div>
 
+        {/* Footer */}
         <div style={{
           marginTop: "80px",
           padding: "25px 0",
@@ -285,6 +295,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Animations */}
       <style>{`
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(30px); }
