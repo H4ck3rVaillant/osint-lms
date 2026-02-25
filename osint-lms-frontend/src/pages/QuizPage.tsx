@@ -83,7 +83,6 @@ export default function QuizPage() {
     localStorage.removeItem("quiz_results");
     localStorage.removeItem("quiz_badges");
     setShowResetModal(false);
-    alert("✅ Quiz réinitialisés !");
   };
 
   const getDifficultyColor = (difficulty: string) => {

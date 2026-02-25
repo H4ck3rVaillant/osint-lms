@@ -378,6 +378,30 @@ export default function Dashboard() {
         </h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
           
+          <Link to="/quiz" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: "0 0 12px 0", fontSize: "1.3rem" }}>
+              🎓 Quiz OSINT
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              6 quiz thématiques. Gagnez des badges !
+            </p>
+            <p style={{ color: "#3b82f6", fontSize: "0.9rem", fontWeight: "bold" }}>
+              → Tester vos connaissances
+            </p>
+          </Link>
+
+          <Link to="/challenges" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: "0 0 12px 0", fontSize: "1.3rem" }}>
+              🔥 Challenge Hebdo
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "15px", lineHeight: "1.6" }}>
+              52 challenges. Un nouveau chaque semaine !
+            </p>
+            <p style={{ color: "#f59e0b", fontSize: "0.9rem", fontWeight: "bold" }}>
+              → Challenge de la semaine
+            </p>
+          </Link>
+
           <Link to="/ctf" style={cardStyle}>
             <h3 style={{ color: "#00ff9c", margin: "0 0 12px 0", fontSize: "1.3rem" }}>
               🚩 Mini-CTF
