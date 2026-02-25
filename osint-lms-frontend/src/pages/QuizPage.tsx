@@ -22,7 +22,6 @@ const quizThemes: QuizTheme[] = [
     questions: 20,
     duration: "15 min"
   },
-  const [showResetModal, setShowResetModal] = useState(false);
   {
     id: "search-techniques",
     title: "Techniques de Recherche Avancées",
@@ -74,16 +73,17 @@ export default function QuizPage() {
   const navigate = useNavigate();
   const colors = useThemeColors();
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const handleStartQuiz = (themeId: string) => {
+    navigate(`/quiz/${themeId}`);
+  };
 
   const handleReset = () => {
     localStorage.removeItem("quiz_results");
     localStorage.removeItem("quiz_badges");
     setShowResetModal(false);
     alert("✅ Quiz réinitialisés !");
-  };
-    navigate(`/quiz/${themeId}`);
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -139,7 +139,6 @@ export default function QuizPage() {
         padding: "40px 20px" 
       }}>
         
-        {/* Header */}
         <div style={{ 
           textAlign: "center", 
           marginBottom: "60px" 
@@ -164,7 +163,6 @@ export default function QuizPage() {
           </p>
         </div>
 
-        {/* Légende badges */}
         <div style={{
           display: "flex",
           justifyContent: "center",
@@ -189,7 +187,6 @@ export default function QuizPage() {
           </div>
         </div>
 
-        {/* Quiz Cards */}
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
@@ -225,7 +222,6 @@ export default function QuizPage() {
                 }
               }}
             >
-              {/* Icon + Difficulty Badge */}
               <div style={{ 
                 display: "flex", 
                 justifyContent: "space-between", 
@@ -245,7 +241,6 @@ export default function QuizPage() {
                 </div>
               </div>
 
-              {/* Title */}
               <h3 style={{
                 fontSize: "1.4rem",
                 fontWeight: "700",
@@ -255,7 +250,6 @@ export default function QuizPage() {
                 {theme.title}
               </h3>
 
-              {/* Description */}
               <p style={{
                 color: colors.textPrimarySecondary,
                 fontSize: "0.95rem",
@@ -265,7 +259,6 @@ export default function QuizPage() {
                 {theme.description}
               </p>
 
-              {/* Stats */}
               <div style={{
                 display: "flex",
                 gap: "20px",
@@ -307,18 +300,10 @@ export default function QuizPage() {
                 </div>
               </div>
 
-              {/* Start Button */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleStartQuiz(theme.id);
-
-  const handleReset = () => {
-    localStorage.removeItem("quiz_results");
-    localStorage.removeItem("quiz_badges");
-    setShowResetModal(false);
-    alert("✅ Quiz réinitialisés !");
-  };
                 }}
                 style={{
                   width: "100%",
@@ -355,7 +340,6 @@ export default function QuizPage() {
           ))}
         </div>
 
-        {/* Bouton Reset VERT */}
         <div style={{
           marginTop: "50px",
           background: "#0b0f1a",
@@ -384,7 +368,6 @@ export default function QuizPage() {
           </button>
         </div>
 
-        {/* Info Box */}
         <div style={{
           marginTop: "60px",
           background: `${colors.accent}10`,
