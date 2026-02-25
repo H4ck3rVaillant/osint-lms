@@ -34,35 +34,132 @@ export function initDateDebut() {
   }
 }
 
-// Récupérer la progression actuelle
-export function getProgression(): ProgressionData {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  
-  if (stored) {
-    return JSON.parse(stored);
-  }
+// NOUVELLE FONCTION : Vérifier les badges réels dans localStorage
+function checkBadgesFromLocalStorage(): ProgressionData["parcours"] {
+  // Parcours Débutant (3 badges)
+  const debIntro = localStorage.getItem("badge_deb_intro") === "true";
+  const debMethodo = localStorage.getItem("badge_deb_methodo") === "true";
+  const debOutils = localStorage.getItem("badge_deb_outils") === "true";
+  const debutantComplete = debIntro && debMethodo && debOutils;
 
-  // Initialisation par défaut
+  // Parcours Intermédiaire (3 badges)
+  const intIntro = localStorage.getItem("badge_int_intro") === "true";
+  const intMethodo = localStorage.getItem("badge_int_methodo") === "true";
+  const intOutils = localStorage.getItem("badge_int_outils") === "true";
+  const intermediaireComplete = intIntro && intMethodo && intOutils;
+
+  // Parcours Avancé (3 badges)
+  const advIntro = localStorage.getItem("badge_adv_intro") === "true";
+  const advMethodo = localStorage.getItem("badge_adv_methodo") === "true";
+  const advOutils = localStorage.getItem("badge_adv_outils") === "true";
+  const avanceComplete = advIntro && advMethodo && advOutils;
+
   return {
-    dateDebut: localStorage.getItem(DATE_DEBUT_KEY),
-    dateFin: null,
-    parcours: {
-      debutant: false,
-      intermediaire: false,
-      avance: false,
-    },
-    exercices: false,
-    etudesDeCas: false,
-    quiz: {
+    debutant: debutantComplete,
+    intermediaire: intermediaireComplete,
+    avance: avanceComplete,
+  };
+}
+
+// NOUVELLE FONCTION : Vérifier les études de cas
+function checkEtudesDeCasFromLocalStorage(): boolean {
+  const caseGeo = localStorage.getItem("badge_case_geo") === "true";
+  const caseMedia = localStorage.getItem("badge_case_media") === "true";
+  const caseAttr = localStorage.getItem("badge_case_attr") === "true";
+  const caseChrono = localStorage.getItem("badge_case_chrono") === "true";
+  const caseFinal = localStorage.getItem("badge_cases_osint") === "true";
+  
+  return caseGeo && caseMedia && caseAttr && caseChrono && caseFinal;
+}
+
+// NOUVELLE FONCTION : Vérifier les exercices
+function checkExercicesFromLocalStorage(): boolean {
+  const exercicesCompleted = parseInt(localStorage.getItem("exercices_completed") || "0");
+  return exercicesCompleted >= 20;
+}
+
+// NOUVELLE FONCTION : Vérifier les quiz
+function checkQuizFromLocalStorage(): ProgressionData["quiz"] {
+  const quizResults = localStorage.getItem("quiz_results");
+  
+  if (!quizResults) {
+    return {
       osintBasics: false,
       searchTechniques: false,
       geolocation: false,
       socialMedia: false,
       cryptoBlockchain: false,
       darkweb: false,
-    },
-    ctfChallenge: false,
+    };
+  }
+
+  const results = JSON.parse(quizResults);
+  
+  return {
+    osintBasics: results["osint-basics"]?.score >= 60,
+    searchTechniques: results["search-techniques"]?.score >= 60,
+    geolocation: results["geolocation"]?.score >= 60,
+    socialMedia: results["social-media"]?.score >= 60,
+    cryptoBlockchain: results["crypto-blockchain"]?.score >= 60,
+    darkweb: results["darkweb"]?.score >= 60,
   };
+}
+
+// NOUVELLE FONCTION : Vérifier le CTF
+function checkCTFFromLocalStorage(): boolean {
+  const ctfProgress = localStorage.getItem("ctf_progress");
+  if (!ctfProgress) return false;
+  
+  const progress = JSON.parse(ctfProgress);
+  const solvedCount = progress.filter((ch: any) => ch.solved).length;
+  
+  return solvedCount >= 11; // Tous les CTF résolus
+}
+
+// Récupérer la progression actuelle EN TEMPS RÉEL
+export function getProgression(): ProgressionData {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  let progression: ProgressionData;
+  
+  if (stored) {
+    progression = JSON.parse(stored);
+  } else {
+    progression = {
+      dateDebut: localStorage.getItem(DATE_DEBUT_KEY),
+      dateFin: null,
+      parcours: {
+        debutant: false,
+        intermediaire: false,
+        avance: false,
+      },
+      exercices: false,
+      etudesDeCas: false,
+      quiz: {
+        osintBasics: false,
+        searchTechniques: false,
+        geolocation: false,
+        socialMedia: false,
+        cryptoBlockchain: false,
+        darkweb: false,
+      },
+      ctfChallenge: false,
+    };
+  }
+
+  // MISE À JOUR EN TEMPS RÉEL depuis le localStorage
+  progression.parcours = checkBadgesFromLocalStorage();
+  progression.etudesDeCas = checkEtudesDeCasFromLocalStorage();
+  progression.exercices = checkExercicesFromLocalStorage();
+  progression.quiz = checkQuizFromLocalStorage();
+  progression.ctfChallenge = checkCTFFromLocalStorage();
+
+  // Vérifier si tout est complété
+  checkAndMarkComplete(progression);
+  
+  // Sauvegarder la progression mise à jour
+  saveProgression(progression);
+
+  return progression;
 }
 
 // Sauvegarder la progression
@@ -70,7 +167,7 @@ function saveProgression(data: ProgressionData) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-// Marquer un parcours comme complété
+// Marquer un parcours comme complété (DEPRECATED - détection auto maintenant)
 export function markParcoursComplete(niveau: "debutant" | "intermediaire" | "avance") {
   initDateDebut();
   const progression = getProgression();
@@ -80,7 +177,7 @@ export function markParcoursComplete(niveau: "debutant" | "intermediaire" | "ava
   console.log(`✅ Parcours ${niveau} complété`);
 }
 
-// Marquer les exercices comme complétés
+// Marquer les exercices comme complétés (DEPRECATED)
 export function markExercicesComplete() {
   initDateDebut();
   const progression = getProgression();
@@ -90,7 +187,7 @@ export function markExercicesComplete() {
   console.log("✅ Exercices complétés");
 }
 
-// Marquer les études de cas comme complétées
+// Marquer les études de cas comme complétées (DEPRECATED)
 export function markEtudesDeCasComplete() {
   initDateDebut();
   const progression = getProgression();
@@ -100,7 +197,7 @@ export function markEtudesDeCasComplete() {
   console.log("✅ Études de cas complétées");
 }
 
-// Marquer un quiz comme complété (appelé automatiquement si score ≥60%)
+// Marquer un quiz comme complété (DEPRECATED - détection auto)
 export function markQuizComplete(quizId: string) {
   initDateDebut();
   const progression = getProgression();
@@ -123,7 +220,7 @@ export function markQuizComplete(quizId: string) {
   }
 }
 
-// Marquer le CTF Challenge comme complété
+// Marquer le CTF Challenge comme complété (DEPRECATED)
 export function markCTFComplete() {
   initDateDebut();
   const progression = getProgression();
