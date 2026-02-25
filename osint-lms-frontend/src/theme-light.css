@@ -1,0 +1,286 @@
+/* ============================================
+   THEME CLAIR - CyberOSINT Academy
+   ============================================ */
+
+:root[data-theme="light"] {
+  /* Couleurs principales */
+  --color-primary: #00ff9c;
+  --color-accent: #00cc7a;
+  --color-accent-dark: #009959;
+  
+  /* Backgrounds INVERSÉS (clair) */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8f9fa;
+  --color-bg-tertiary: #e9ecef;
+  
+  /* Textes INVERSÉS (sombres) */
+  --color-text-primary: #1a1f2e;
+  --color-text-secondary: #4a5568;
+  --color-text-tertiary: #718096;
+  
+  /* Bordures */
+  --color-border: #e2e8f0;
+  --color-border-hover: #cbd5e0;
+  
+  /* États */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* Ombres adaptées au clair */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  /* Accent avec opacité pour backgrounds */
+  --accent-10: rgba(0, 255, 156, 0.1);
+  --accent-20: rgba(0, 255, 156, 0.2);
+  --accent-30: rgba(0, 255, 156, 0.3);
+  
+  /* Couleurs spécifiques composants */
+  --color-card-bg: #ffffff;
+  --color-card-hover: #f1f5f9;
+  --color-input-bg: #ffffff;
+  --color-input-border: #d1d5db;
+  --color-button-primary: #00ff9c;
+  --color-button-hover: #00cc7a;
+  
+  /* Navigation */
+  --color-nav-bg: rgba(255, 255, 255, 0.95);
+  --color-nav-border: rgba(0, 0, 0, 0.1);
+  
+  /* Code blocks */
+  --color-code-bg: #f1f5f9;
+  --color-code-text: #1e293b;
+}
+
+/* ============================================
+   SURCHARGES GLOBALES EN MODE CLAIR
+   ============================================ */
+
+[data-theme="light"] body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+[data-theme="light"] ::selection {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+/* ============================================
+   HEADERS & NAVIGATION
+   ============================================ */
+
+[data-theme="light"] header {
+  background: var(--color-nav-bg);
+  border-bottom: 1px solid var(--color-nav-border);
+  backdrop-filter: blur(10px);
+}
+
+/* ============================================
+   CARDS & CONTAINERS
+   ============================================ */
+
+[data-theme="light"] .card,
+[data-theme="light"] [class*="card"],
+[data-theme="light"] [style*="background"][style*="#0b0f1a"],
+[data-theme="light"] [style*="background"][style*="#1a1f2e"] {
+  background: var(--color-card-bg) !important;
+  border-color: var(--color-border) !important;
+}
+
+[data-theme="light"] .card:hover,
+[data-theme="light"] [class*="card"]:hover {
+  background: var(--color-card-hover) !important;
+}
+
+/* ============================================
+   INPUTS & FORMS
+   ============================================ */
+
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  background: var(--color-input-bg);
+  color: var(--color-text-primary);
+  border-color: var(--color-input-border);
+}
+
+[data-theme="light"] input:focus,
+[data-theme="light"] textarea:focus,
+[data-theme="light"] select:focus {
+  border-color: var(--color-accent);
+  outline: 2px solid var(--accent-20);
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+[data-theme="light"] button:not([style*="background: #00ff9c"]):not([style*="background:#00ff9c"]) {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+[data-theme="light"] button:hover:not([style*="background: #00ff9c"]) {
+  background: var(--color-bg-tertiary);
+}
+
+/* Boutons primaires (gardent le vert) */
+[data-theme="light"] button[style*="background: #00ff9c"],
+[data-theme="light"] button[style*="background:#00ff9c"] {
+  background: var(--color-button-primary) !important;
+  color: #1a1f2e !important;
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+
+[data-theme="light"] a {
+  color: var(--color-accent);
+}
+
+[data-theme="light"] a:hover {
+  color: var(--color-accent-dark);
+}
+
+/* ============================================
+   CODE BLOCKS
+   ============================================ */
+
+[data-theme="light"] code,
+[data-theme="light"] pre {
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+}
+
+/* ============================================
+   SCROLLBAR (optionnel)
+   ============================================ */
+
+[data-theme="light"] ::-webkit-scrollbar {
+  width: 10px;
+  background: var(--color-bg-secondary);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: var(--color-border-hover);
+  border-radius: 5px;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+
+/* ============================================
+   SHADOWS & ELEVATION
+   ============================================ */
+
+[data-theme="light"] [style*="boxShadow"],
+[data-theme="light"] [class*="shadow"] {
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   BADGES & TAGS
+   ============================================ */
+
+[data-theme="light"] .badge,
+[data-theme="light"] [class*="badge"] {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+/* ============================================
+   ALERTS & NOTIFICATIONS
+   ============================================ */
+
+[data-theme="light"] .alert-success {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--color-success);
+  color: #065f46;
+}
+
+[data-theme="light"] .alert-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: var(--color-warning);
+  color: #92400e;
+}
+
+[data-theme="light"] .alert-error {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--color-error);
+  color: #991b1b;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+[data-theme="light"] table {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+[data-theme="light"] th {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+[data-theme="light"] td {
+  border-color: var(--color-border);
+}
+
+[data-theme="light"] tr:hover {
+  background: var(--color-bg-secondary);
+}
+
+/* ============================================
+   MODALS & OVERLAYS
+   ============================================ */
+
+[data-theme="light"] .modal,
+[data-theme="light"] [role="dialog"] {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+[data-theme="light"] .modal-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   PROGRESSION BARS
+   ============================================ */
+
+[data-theme="light"] .progress-bar {
+  background: var(--color-bg-tertiary);
+}
+
+[data-theme="light"] .progress-fill {
+  background: var(--color-accent);
+}
+
+/* ============================================
+   SPECIAL: Conserver les couleurs accent VERT
+   ============================================ */
+
+[data-theme="light"] [style*="color: #00ff9c"],
+[data-theme="light"] [style*="color:#00ff9c"] {
+  color: var(--color-accent) !important;
+}
+
+[data-theme="light"] [style*="border"][style*="#00ff9c"] {
+  border-color: var(--color-accent) !important;
+}

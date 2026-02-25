@@ -10,6 +10,7 @@ import './animations.css'
 import { ThemeProvider } from './context/ThemeContext'
 import './theme.css'
 import './theme-override.css'
+import './theme-light.css'
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
