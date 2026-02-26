@@ -1,69 +1,99 @@
 /* ============================================
-   THÈME CLAIR "MODERN TERMINAL" - TryHackMe Style
-   Fond beige clair + Accent vert menthe
+   THÈME CLAIR "HACKER GAMIFIED"
+   Fond gris-vert clair + Cards vert clair + Gaming style
    ============================================ */
 
 :root[data-theme="light"] {
-  /* Backgrounds - Beige/blanc cassé */
-  --color-bg-primary: #f5f5f0;
-  --color-bg-secondary: #ffffff;
-  --color-bg-tertiary: #e8e8e0;
+  /* Backgrounds - Gris-vert clair (Gaming style) */
+  --color-bg-primary: #e8f5f0;          /* Fond principal gris-vert clair */
+  --color-bg-secondary: #d4ede3;        /* Cards vert clair */
+  --color-bg-tertiary: #c0e5d6;         /* Hover/accent backgrounds */
   
-  /* Textes - Noir profond */
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #4a4a4a;
-  --color-text-tertiary: #6a6a6a;
+  /* Textes - Noir + Vert foncé */
+  --color-text-primary: #1a1a1a;        /* Texte principal noir */
+  --color-text-secondary: #2d5f4d;      /* Texte secondaire vert foncé */
+  --color-text-tertiary: #4a7f68;       /* Texte tertiaire vert moyen */
   
-  /* Accent VERT menthe TryHackMe */
-  --color-accent: #00ff9c;
-  --color-accent-hover: #00cc7a;
-  --color-accent-dark: #e0fff5;
+  /* Accent VERT Gaming */
+  --color-accent: #00ff9c;              /* Vert néon gaming */
+  --color-accent-hover: #00cc7a;        /* Vert hover */
+  --color-accent-dark: #1a4d3a;         /* Vert très foncé */
   
   /* Bordures */
-  --color-border: #d0d0c8;
-  --color-border-hover: #b0b0a8;
+  --color-border: #9fd4bf;              /* Bordures vert clair */
+  --color-border-hover: #00ff9c;        /* Bordures hover vert néon */
   
-  /* Status */
+  /* Status - Gaming colors */
   --color-success: #00ff9c;
   --color-warning: #fbbf24;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
+  --color-error: #ff4466;
+  --color-info: #66d9ff;
   
-  /* Ombres */
-  --shadow: rgba(0, 0, 0, 0.08);
+  /* Ombres Gaming */
+  --shadow: rgba(0, 255, 156, 0.15);
+  --shadow-glow: 0 0 20px rgba(0, 255, 156, 0.3);
 }
 
 /* ============================================
-   GLOBAL - ÉCRASER TOUS LES FONDS NOIRS
+   GLOBAL - FOND GRIS-VERT PARTOUT
    ============================================ */
 
-[data-theme="light"] body,
-[data-theme="light"] #root,
-[data-theme="light"] main,
-[data-theme="light"] div {
+[data-theme="light"] body {
   background: var(--color-bg-primary) !important;
   color: var(--color-text-primary) !important;
 }
 
-/* Cards et containers */
+[data-theme="light"] #root,
+[data-theme="light"] main {
+  background: var(--color-bg-primary) !important;
+}
+
+/* TOUS LES DIV prennent le fond par défaut */
+[data-theme="light"] div {
+  background: transparent !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ============================================
+   ÉCRASER TOUS LES FONDS NOIRS HARDCODÉS
+   ============================================ */
+
 [data-theme="light"] [style*="background: #0b0f1a"],
 [data-theme="light"] [style*="background:#0b0f1a"],
 [data-theme="light"] [style*="background: #1a1f2e"],
 [data-theme="light"] [style*="background:#1a1f2e"],
 [data-theme="light"] [style*="background: #2a3f3f"],
 [data-theme="light"] [style*="background:#2a3f3f"],
+[data-theme="light"] [style*="background: rgb(11, 15, 26)"],
+[data-theme="light"] [style*="background: rgb(26, 31, 46)"],
 [data-theme="light"] [style*="background: rgba(11, 15, 26"],
 [data-theme="light"] [style*="background: rgba(26, 31, 46"] {
   background: var(--color-bg-secondary) !important;
 }
 
-/* Textes - Forcer noir sur tous les textes */
+/* Cards et containers - VERT CLAIR */
+[data-theme="light"] [style*="background"][style*="Secondary"],
+[data-theme="light"] .card {
+  background: var(--color-bg-secondary) !important;
+  border: 2px solid var(--color-border) !important;
+}
+
+/* ============================================
+   TEXTES - NOIR + VERT FONCÉ
+   ============================================ */
+
 [data-theme="light"] h1,
 [data-theme="light"] h2,
-[data-theme="light"] h3,
+[data-theme="light"] h3 {
+  color: var(--color-text-primary) !important;
+}
+
 [data-theme="light"] h4,
 [data-theme="light"] h5,
-[data-theme="light"] h6,
+[data-theme="light"] h6 {
+  color: var(--color-text-secondary) !important;
+}
+
 [data-theme="light"] p,
 [data-theme="light"] span,
 [data-theme="light"] div,
@@ -72,45 +102,62 @@
   color: var(--color-text-primary) !important;
 }
 
+/* Textes gris clair → VERT FONCÉ */
 [data-theme="light"] [style*="color: #e5e7eb"],
 [data-theme="light"] [style*="color:#e5e7eb"],
 [data-theme="light"] [style*="color: #9ca3af"],
-[data-theme="light"] [style*="color:#9ca3af"],
-[data-theme="light"] [style*="color: #6b7280"],
-[data-theme="light"] [style*="color:#6b7280"] {
+[data-theme="light"] [style*="color:#9ca3af"] {
   color: var(--color-text-secondary) !important;
 }
 
-/* Bordures - Remplacer les bordures sombres */
-[data-theme="light"] [style*="border"][style*="#2a3f3f"],
-[data-theme="light"] [style*="border"][style*="#1a1f2e"] {
-  border-color: var(--color-border) !important;
+[data-theme="light"] [style*="color: #6b7280"],
+[data-theme="light"] [style*="color:#6b7280"] {
+  color: var(--color-text-tertiary) !important;
 }
 
-/* Accent VERT - Conserver */
+/* Textes VERTS - garder */
 [data-theme="light"] [style*="color: #00ff9c"],
-[data-theme="light"] [style*="color:#00ff9c"],
-[data-theme="light"] [style*="border"][style*="#00ff9c"],
-[data-theme="light"] [style*="background"][style*="#00ff9c"] {
-  /* Garder tel quel - déjà vert */
+[data-theme="light"] [style*="color:#00ff9c"] {
+  color: var(--color-accent) !important;
 }
 
 /* ============================================
-   HEADER / NAVIGATION
+   HEADER GAMING
    ============================================ */
 
 [data-theme="light"] header {
   background: var(--color-bg-secondary) !important;
-  border-bottom: 2px solid var(--color-accent) !important;
-  box-shadow: 0 2px 10px var(--shadow) !important;
+  border-bottom: 3px solid var(--color-accent) !important;
+  box-shadow: var(--shadow-glow) !important;
 }
 
 [data-theme="light"] nav a {
   color: var(--color-text-primary) !important;
+  transition: all 0.3s ease !important;
 }
 
 [data-theme="light"] nav a:hover {
   color: var(--color-accent) !important;
+  text-shadow: 0 0 10px rgba(0, 255, 156, 0.5) !important;
+}
+
+/* ============================================
+   CARDS GAMING STYLE
+   ============================================ */
+
+[data-theme="light"] [class*="card"],
+[data-theme="light"] .card {
+  background: var(--color-bg-secondary) !important;
+  border: 2px solid var(--color-border) !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+}
+
+[data-theme="light"] [class*="card"]:hover,
+[data-theme="light"] .card:hover {
+  border-color: var(--color-accent) !important;
+  box-shadow: var(--shadow-glow) !important;
+  transform: translateY(-2px) !important;
 }
 
 /* ============================================
@@ -123,13 +170,14 @@
   background: var(--color-bg-secondary) !important;
   color: var(--color-text-primary) !important;
   border: 2px solid var(--color-border) !important;
+  border-radius: 8px !important;
 }
 
 [data-theme="light"] input:focus,
 [data-theme="light"] textarea:focus,
 [data-theme="light"] select:focus {
   border-color: var(--color-accent) !important;
-  outline: 2px solid var(--color-accent-dark) !important;
+  box-shadow: 0 0 10px rgba(0, 255, 156, 0.3) !important;
 }
 
 [data-theme="light"] input::placeholder,
@@ -138,56 +186,59 @@
 }
 
 /* ============================================
-   BUTTONS
+   BUTTONS GAMING
    ============================================ */
 
 [data-theme="light"] button {
   color: var(--color-text-primary) !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
 }
 
+/* Boutons secondaires */
 [data-theme="light"] button[style*="background: transparent"],
 [data-theme="light"] button[style*="background:transparent"] {
-  background: var(--color-bg-secondary) !important;
-  border-color: var(--color-border) !important;
+  background: var(--color-bg-tertiary) !important;
+  border: 2px solid var(--color-border) !important;
 }
 
-/* Boutons primaires VERTS - garder */
+[data-theme="light"] button[style*="background: transparent"]:hover,
+[data-theme="light"] button[style*="background:transparent"]:hover {
+  border-color: var(--color-accent) !important;
+  box-shadow: var(--shadow-glow) !important;
+}
+
+/* Boutons primaires VERTS - Gaming style */
 [data-theme="light"] button[style*="background: #00ff9c"],
 [data-theme="light"] button[style*="background:#00ff9c"] {
   background: var(--color-accent) !important;
-  color: #1a1a1a !important;
+  color: var(--color-accent-dark) !important;
   border: none !important;
+  box-shadow: 0 4px 15px rgba(0, 255, 156, 0.4) !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] button[style*="background: #00ff9c"]:hover {
+  box-shadow: 0 6px 25px rgba(0, 255, 156, 0.6) !important;
+  transform: translateY(-2px) !important;
 }
 
 /* ============================================
-   CARDS & CONTAINERS
-   ============================================ */
-
-[data-theme="light"] [class*="card"],
-[data-theme="light"] .card {
-  background: var(--color-bg-secondary) !important;
-  border: 2px solid var(--color-border) !important;
-  box-shadow: 0 2px 8px var(--shadow) !important;
-}
-
-[data-theme="light"] [class*="card"]:hover {
-  border-color: var(--color-accent) !important;
-  box-shadow: 0 4px 12px rgba(0, 255, 156, 0.2) !important;
-}
-
-/* ============================================
-   TABLES
+   TABLES GAMING
    ============================================ */
 
 [data-theme="light"] table {
   background: var(--color-bg-secondary) !important;
   border: 2px solid var(--color-border) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
 }
 
 [data-theme="light"] th {
   background: var(--color-bg-tertiary) !important;
   color: var(--color-text-primary) !important;
-  border-bottom: 2px solid var(--color-accent) !important;
+  border-bottom: 3px solid var(--color-accent) !important;
+  font-weight: 700 !important;
 }
 
 [data-theme="light"] td {
@@ -200,29 +251,48 @@
 }
 
 /* ============================================
-   MODALS & OVERLAYS
+   MODALS GAMING
    ============================================ */
 
-[data-theme="light"] [style*="position: fixed"],
-[data-theme="light"] [role="dialog"] {
+[data-theme="light"] [role="dialog"],
+[data-theme="light"] [style*="position: fixed"][style*="transform"] {
   background: var(--color-bg-secondary) !important;
   border: 3px solid var(--color-accent) !important;
+  box-shadow: 0 0 40px rgba(0, 255, 156, 0.5) !important;
 }
 
+/* Overlay modal */
 [data-theme="light"] [style*="background: rgba(0,0,0,0.8)"],
-[data-theme="light"] [style*="background: rgba(0,0,0,0.9)"] {
-  background: rgba(0, 0, 0, 0.5) !important;
+[data-theme="light"] [style*="background: rgba(0,0,0,0.9)"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.8)"] {
+  background: rgba(45, 95, 77, 0.7) !important;
 }
 
 /* ============================================
-   BADGES & TAGS
+   BADGES GAMING
    ============================================ */
 
 [data-theme="light"] [class*="badge"],
 [data-theme="light"] .badge {
   background: var(--color-bg-tertiary) !important;
   color: var(--color-text-primary) !important;
-  border: 1px solid var(--color-border) !important;
+  border: 2px solid var(--color-accent) !important;
+  border-radius: 20px !important;
+  padding: 6px 14px !important;
+  font-weight: 700 !important;
+}
+
+/* ============================================
+   BORDURES - REMPLACER LES SOMBRES
+   ============================================ */
+
+[data-theme="light"] [style*="border"][style*="#2a3f3f"],
+[data-theme="light"] [style*="border"][style*="#1a1f2e"] {
+  border-color: var(--color-border) !important;
+}
+
+[data-theme="light"] [style*="border"][style*="#00ff9c"] {
+  border-color: var(--color-accent) !important;
 }
 
 /* ============================================
@@ -234,24 +304,27 @@
   background: var(--color-bg-tertiary) !important;
   color: var(--color-text-primary) !important;
   border: 1px solid var(--color-border) !important;
+  border-radius: 6px !important;
 }
 
 /* ============================================
-   SCROLLBAR
+   SCROLLBAR GAMING
    ============================================ */
 
 [data-theme="light"] ::-webkit-scrollbar {
-  width: 10px;
+  width: 12px;
   background: var(--color-bg-tertiary);
 }
 
 [data-theme="light"] ::-webkit-scrollbar-thumb {
   background: var(--color-accent);
-  border-radius: 5px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 255, 156, 0.5);
 }
 
 [data-theme="light"] ::-webkit-scrollbar-thumb:hover {
   background: var(--color-accent-hover);
+  box-shadow: 0 0 15px rgba(0, 255, 156, 0.8);
 }
 
 /* ============================================
@@ -260,43 +333,50 @@
 
 [data-theme="light"] a {
   color: var(--color-accent) !important;
+  transition: all 0.3s ease !important;
 }
 
 [data-theme="light"] a:hover {
   color: var(--color-accent-hover) !important;
-  text-decoration: underline;
+  text-shadow: 0 0 10px rgba(0, 255, 156, 0.5) !important;
 }
 
 /* ============================================
-   ALERTS & NOTIFICATIONS
+   PROGRESSION BARS GAMING
+   ============================================ */
+
+[data-theme="light"] [style*="background: #1a1f2e"][style*="height"][style*="border-radius"] {
+  background: var(--color-bg-tertiary) !important;
+  border: 2px solid var(--color-border) !important;
+}
+
+/* Barre de progression VERTE - garder + glow */
+[data-theme="light"] [style*="background"][style*="linear-gradient"][style*="#00ff9c"] {
+  box-shadow: 0 0 15px rgba(0, 255, 156, 0.6) !important;
+}
+
+/* ============================================
+   ALERTS GAMING
    ============================================ */
 
 [data-theme="light"] .alert {
   background: var(--color-bg-secondary) !important;
   border: 2px solid var(--color-border) !important;
+  border-radius: 12px !important;
   color: var(--color-text-primary) !important;
 }
 
 [data-theme="light"] .alert-success {
   border-color: var(--color-success) !important;
+  box-shadow: 0 0 15px rgba(0, 255, 156, 0.3) !important;
 }
 
 [data-theme="light"] .alert-error {
   border-color: var(--color-error) !important;
+  box-shadow: 0 0 15px rgba(255, 68, 102, 0.3) !important;
 }
 
 [data-theme="light"] .alert-warning {
   border-color: var(--color-warning) !important;
-}
-
-/* ============================================
-   PROGRESSION BARS
-   ============================================ */
-
-[data-theme="light"] [style*="background: #1a1f2e"][style*="height"][style*="border-radius"] {
-  background: var(--color-bg-tertiary) !important;
-}
-
-[data-theme="light"] [style*="background"][style*="linear-gradient"][style*="#00ff9c"] {
-  /* Garder le gradient vert */
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.3) !important;
 }
