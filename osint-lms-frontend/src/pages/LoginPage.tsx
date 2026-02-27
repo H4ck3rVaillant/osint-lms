@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import Logo from "../assets/images/Logo.png";
+import { checkRateLimit, resetRateLimit } from "../utils/rateLimiter";
 
 export default function LoginPage() {
   const { login, verify2FA } = useAuth();
@@ -34,16 +35,39 @@ export default function LoginPage() {
       return;
     }
 
+    // ✅ VÉRIFIER RATE LIMIT AVANT DE TENTER LE LOGIN
+    const rateLimitCheck = checkRateLimit(username);
+    
+    if (!rateLimitCheck.allowed) {
+      setError(rateLimitCheck.message || "Trop de tentatives. Réessayez plus tard.");
+      return;
+    }
+
     setIsLoading(true);
 
     const result = await login(username, password);
     setIsLoading(false);
 
     if (result.success && result.tempToken) {
+      // ✅ LOGIN RÉUSSI - RESET LE RATE LIMIT
+      resetRateLimit(username);
       setTempToken(result.tempToken);
       setStep("2fa");
     } else {
-      setError(result.error || "Identifiants invalides");
+      // ❌ LOGIN ÉCHOUÉ - AFFICHER MESSAGE + TENTATIVES RESTANTES
+      const message = result.error || "Identifiants invalides";
+      const attemptsMsg = rateLimitCheck.remainingAttempts !== undefined
+        ? ` (${rateLimitCheck.remainingAttempts} tentative${rateLimitCheck.remainingAttempts > 1 ? 's' : ''} restante${rateLimitCheck.remainingAttempts > 1 ? 's' : ''})`
+        : '';
+      
+      setError(message + attemptsMsg);
+      
+      // Afficher warning si dernière tentative
+      if (rateLimitCheck.message) {
+        setTimeout(() => {
+          alert(rateLimitCheck.message);
+        }, 100);
+      }
     }
   };
 
