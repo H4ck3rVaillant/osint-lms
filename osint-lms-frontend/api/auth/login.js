@@ -29,6 +29,11 @@ module.exports = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: "Identifiants invalides" });
     }
+
+    // ✅ VÉRIFIER SI L'UTILISATEUR EST BLOQUÉ
+    if (user.blocked) {
+      return res.status(403).json({ message: "Compte bloqué. Contactez l'administrateur." });
+    }
     
     const isPasswordValid = await bcrypt.compare(password, user.password);
     
@@ -36,12 +41,11 @@ module.exports = async (req, res) => {
       return res.status(401).json({ message: "Identifiants invalides" });
     }
 
-    // ✅ NOUVEAU : Mettre à jour last_login
+    // ✅ Mettre à jour last_login
     try {
       await updateLastLogin(user.id);
     } catch (updateError) {
       console.warn('Failed to update last_login:', updateError);
-      // Continue même si l'update échoue
     }
     
     // Token temporaire pour 2FA
