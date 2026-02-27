@@ -2,7 +2,7 @@
 // Survit au refresh de la page
 
 const STORAGE_KEY = 'rate_limit_store';
-const MAX_ATTEMPTS = 3;
+const MAX_ATTEMPTS = 5;
 const BLOCK_DURATION = 15 * 60 * 1000; // 15 minutes
 const ATTEMPT_WINDOW = 5 * 60 * 1000;  // 5 minutes
 
