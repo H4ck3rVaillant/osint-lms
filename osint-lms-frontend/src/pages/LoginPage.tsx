@@ -15,6 +15,11 @@ export default function LoginPage() {
   const [otpCode, setOtpCode] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  
+  // États pour les modals
+  const [showBlockedModal, setShowBlockedModal] = useState(false);
+  const [showWarningModal, setShowWarningModal] = useState(false);
+  const [blockTimeLeft, setBlockTimeLeft] = useState(0);
 
   // Réinitialiser les champs au chargement de la page
   useEffect(() => {
@@ -24,6 +29,33 @@ export default function LoginPage() {
     setError("");
     setStep("credentials");
   }, []);
+
+  // Vérifier si l'utilisateur est déjà bloqué quand il entre son username
+  useEffect(() => {
+    if (username && username.length > 0) {
+      const check = checkRateLimit(username);
+      if (!check.allowed && check.secondsLeft) {
+        setBlockTimeLeft(check.secondsLeft);
+        setShowBlockedModal(true);
+      }
+    }
+  }, [username]);
+
+  // Chrono pour le compte bloqué
+  useEffect(() => {
+    if (blockTimeLeft > 0) {
+      const timer = setInterval(() => {
+        setBlockTimeLeft(prev => {
+          if (prev <= 1) {
+            setShowBlockedModal(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [blockTimeLeft]);
 
   // Étape 1 : Soumettre username/password
   const handleCredentialsSubmit = async (e: React.FormEvent) => {
@@ -39,6 +71,8 @@ export default function LoginPage() {
     const rateLimitCheck = checkRateLimit(username);
     
     if (!rateLimitCheck.allowed) {
+      setBlockTimeLeft(rateLimitCheck.secondsLeft || 0);
+      setShowBlockedModal(true);
       setError(rateLimitCheck.message || "Trop de tentatives. Réessayez plus tard.");
       return;
     }
@@ -62,11 +96,10 @@ export default function LoginPage() {
       
       setError(message + attemptsMsg);
       
-      // Afficher warning si dernière tentative
-      if (rateLimitCheck.message) {
-        setTimeout(() => {
-          alert(rateLimitCheck.message);
-        }, 100);
+      // Afficher modal warning si dernière tentative
+      if (rateLimitCheck.showWarning && rateLimitCheck.message) {
+        setShowWarningModal(true);
+        setTimeout(() => setShowWarningModal(false), 5000);
       }
     }
   };
@@ -319,6 +352,119 @@ export default function LoginPage() {
           </Link>
         </div>
       </div>
+
+      {/* MODAL COMPTE BLOQUÉ */}
+      {showBlockedModal && (
+        <>
+          <div style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.8)",
+            zIndex: 9998,
+          }} />
+          <div style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "#0b0f1a",
+            border: "3px solid #ef4444",
+            borderRadius: "16px",
+            padding: "40px",
+            maxWidth: "500px",
+            width: "90%",
+            zIndex: 9999,
+            boxShadow: "0 0 50px rgba(239, 68, 68, 0.5)",
+          }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "4rem", marginBottom: "20px" }}>⛔</div>
+              <h2 style={{ color: "#ef4444", fontSize: "1.5rem", marginBottom: "15px", fontWeight: "700" }}>
+                Compte Temporairement Bloqué
+              </h2>
+              <p style={{ color: "#e5e7eb", marginBottom: "20px", lineHeight: "1.6", fontSize: "0.95rem" }}>
+                Trop de tentatives de connexion échouées ont été détectées.
+                Pour votre sécurité, ce compte est <strong style={{ color: "#ef4444" }}>BLOQUÉ</strong>.
+              </p>
+              <div style={{
+                background: "rgba(239, 68, 68, 0.1)",
+                border: "2px solid #ef4444",
+                borderRadius: "12px",
+                padding: "20px",
+                marginBottom: "20px",
+              }}>
+                <div style={{
+                  fontSize: "3rem",
+                  color: "#ef4444",
+                  fontWeight: "700",
+                  fontFamily: "monospace",
+                  marginBottom: "10px",
+                }}>
+                  {Math.floor(blockTimeLeft / 60)}:{String(blockTimeLeft % 60).padStart(2, '0')}
+                </div>
+                <p style={{ color: "#9ca3af", fontSize: "0.9rem", margin: 0 }}>
+                  Temps restant avant déblocage
+                </p>
+              </div>
+              <button
+                onClick={() => setShowBlockedModal(false)}
+                style={{
+                  background: "transparent",
+                  border: "2px solid #2a3f3f",
+                  color: "#9ca3af",
+                  padding: "12px 30px",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                }}
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* MODAL WARNING DERNIÈRE TENTATIVE */}
+      {showWarningModal && (
+        <>
+          <div style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.7)",
+            zIndex: 9998,
+          }} />
+          <div style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "#0b0f1a",
+            border: "3px solid #fbbf24",
+            borderRadius: "16px",
+            padding: "30px",
+            maxWidth: "450px",
+            width: "90%",
+            zIndex: 9999,
+            boxShadow: "0 0 40px rgba(251, 191, 36, 0.4)",
+          }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "3rem", marginBottom: "15px" }}>⚠️</div>
+              <h3 style={{ color: "#fbbf24", fontSize: "1.3rem", marginBottom: "10px", fontWeight: "700" }}>
+                Dernière Tentative !
+              </h3>
+              <p style={{ color: "#e5e7eb", fontSize: "0.95rem", lineHeight: "1.5", margin: 0 }}>
+                Une seule tentative restante avant le <strong style={{ color: "#ef4444" }}>blocage de 15 minutes</strong>.
+              </p>
+            </div>
+          </div>
+        </>
+      )}
     </main>
   );
 }
