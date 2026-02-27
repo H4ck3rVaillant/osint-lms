@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import Logo from "../assets/images/Logo.png";
-import { checkRateLimit, resetRateLimit } from "../utils/rateLimiter";
 
 export default function LoginPage() {
   const { login, verify2FA } = useAuth();
@@ -30,17 +29,6 @@ export default function LoginPage() {
     setStep("credentials");
   }, []);
 
-  // Vérifier si l'utilisateur est déjà bloqué quand il entre son username
-  useEffect(() => {
-    if (username && username.length > 0) {
-      const check = checkRateLimit(username);
-      if (!check.allowed && check.secondsLeft) {
-        setBlockTimeLeft(check.secondsLeft);
-        setShowBlockedModal(true);
-      }
-    }
-  }, [username]);
-
   // Chrono pour le compte bloqué
   useEffect(() => {
     if (blockTimeLeft > 0) {
@@ -67,37 +55,36 @@ export default function LoginPage() {
       return;
     }
 
-    // ✅ VÉRIFIER RATE LIMIT AVANT DE TENTER LE LOGIN
-    const rateLimitCheck = checkRateLimit(username);
-    
-    if (!rateLimitCheck.allowed) {
-      setBlockTimeLeft(rateLimitCheck.secondsLeft || 0);
-      setShowBlockedModal(true);
-      setError(rateLimitCheck.message || "Trop de tentatives. Réessayez plus tard.");
-      return;
-    }
-
     setIsLoading(true);
 
     const result = await login(username, password);
     setIsLoading(false);
 
     if (result.success && result.tempToken) {
-      // ✅ LOGIN RÉUSSI - RESET LE RATE LIMIT
-      resetRateLimit(username);
+      // ✅ LOGIN RÉUSSI
       setTempToken(result.tempToken);
       setStep("2fa");
     } else {
-      // ❌ LOGIN ÉCHOUÉ - AFFICHER MESSAGE + TENTATIVES RESTANTES
+      // ❌ LOGIN ÉCHOUÉ
+      
+      // Si bloqué (status 429 du serveur)
+      if (result.blocked && result.secondsLeft) {
+        setBlockTimeLeft(result.secondsLeft);
+        setShowBlockedModal(true);
+        setError(result.error || "Compte temporairement bloqué");
+        return;
+      }
+      
+      // Afficher message d'erreur + tentatives restantes
       const message = result.error || "Identifiants invalides";
-      const attemptsMsg = rateLimitCheck.remainingAttempts !== undefined
-        ? ` (${rateLimitCheck.remainingAttempts} tentative${rateLimitCheck.remainingAttempts > 1 ? 's' : ''} restante${rateLimitCheck.remainingAttempts > 1 ? 's' : ''})`
+      const attemptsMsg = result.remainingAttempts !== undefined
+        ? ` (${result.remainingAttempts} tentative${result.remainingAttempts > 1 ? 's' : ''} restante${result.remainingAttempts > 1 ? 's' : ''})`
         : '';
       
       setError(message + attemptsMsg);
       
       // Afficher modal warning si dernière tentative
-      if (rateLimitCheck.showWarning && rateLimitCheck.message) {
+      if (result.showWarning) {
         setShowWarningModal(true);
         setTimeout(() => setShowWarningModal(false), 5000);
       }
@@ -385,7 +372,7 @@ export default function LoginPage() {
                 Compte Temporairement Bloqué
               </h2>
               <p style={{ color: "#e5e7eb", marginBottom: "20px", lineHeight: "1.6", fontSize: "0.95rem" }}>
-                Trop de tentatives de connexion échouées ont été détectées.
+                Trop de tentatives de connexion échouées ont été détectées sur <strong>TOUS vos appareils</strong>.
                 Pour votre sécurité, ce compte est <strong style={{ color: "#ef4444" }}>BLOQUÉ</strong>.
               </p>
               <div style={{
@@ -459,7 +446,7 @@ export default function LoginPage() {
                 Dernière Tentative !
               </h3>
               <p style={{ color: "#e5e7eb", fontSize: "0.95rem", lineHeight: "1.5", margin: 0 }}>
-                Une seule tentative restante avant le <strong style={{ color: "#ef4444" }}>blocage de 15 minutes</strong>.
+                Une seule tentative restante avant le <strong style={{ color: "#ef4444" }}>blocage de 15 minutes sur TOUS vos appareils</strong>.
               </p>
             </div>
           </div>
