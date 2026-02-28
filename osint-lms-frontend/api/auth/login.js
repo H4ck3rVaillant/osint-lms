@@ -1,23 +1,9 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { getUserByUsername, updateLastLogin } = require("../_lib/database");
-const { Pool } = require("pg");
-
-let pool;
-function getPool() {
-  if (!pool) {
-    pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }
-    });
-  }
-  return pool;
-}
-
-const MAX_ATTEMPTS = 5;
-const BLOCK_DURATION = 30 * 60 * 1000; // ✅ 30 MINUTES
 
 module.exports = async (req, res) => {
+  // CORS
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
@@ -38,84 +24,24 @@ module.exports = async (req, res) => {
   }
   
   try {
-    const dbPool = getPool();
-    const now = new Date();
-
-    // ✅ VÉRIFIER LES TENTATIVES DANS NEON
-    const attemptsResult = await dbPool.query(
-      'SELECT attempts, blocked_until FROM login_attempts WHERE username = $1',
-      [username]
-    );
-
-    let attempts = 0;
-    let blockedUntil = null;
-
-    if (attemptsResult.rows.length > 0) {
-      attempts = attemptsResult.rows[0].attempts;
-      blockedUntil = attemptsResult.rows[0].blocked_until;
-    }
-
-    // ✅ SI BLOQUÉ, VÉRIFIER SI LE BLOCAGE EST ENCORE ACTIF
-    if (blockedUntil && new Date(blockedUntil) > now) {
-      const secondsLeft = Math.ceil((new Date(blockedUntil) - now) / 1000);
-      const minutesLeft = Math.ceil(secondsLeft / 60);
-      
-      return res.status(429).json({
-        message: `Trop de tentatives échouées. Réessayez dans ${minutesLeft} minute${minutesLeft > 1 ? 's' : ''}.`,
-        blocked: true,
-        secondsLeft,
-        minutesLeft
-      });
-    }
-
-    // ✅ SI BLOCAGE EXPIRÉ, RESET
-    if (blockedUntil && new Date(blockedUntil) <= now) {
-      await dbPool.query(
-        'DELETE FROM login_attempts WHERE username = $1',
-        [username]
-      );
-      attempts = 0;
-    }
-
-    // ✅ VÉRIFIER L'UTILISATEUR
     const user = await getUserByUsername(username);
     
     if (!user) {
-      // Incrémenter tentatives
-      await incrementAttempts(dbPool, username, attempts);
-      return res.status(401).json({ 
-        message: "Identifiants invalides",
-        remainingAttempts: Math.max(0, MAX_ATTEMPTS - attempts - 1)
-      });
+      return res.status(401).json({ message: "Identifiants invalides" });
     }
 
-    // ✅ VÉRIFIER SI BLOQUÉ (colonne users.blocked)
+    // ✅ VÉRIFIER SI BLOQUÉ PAR L'ADMIN
     if (user.blocked) {
       return res.status(403).json({ message: "Compte bloqué. Contactez l'administrateur." });
     }
     
-    // ✅ VÉRIFIER LE MOT DE PASSE
     const isPasswordValid = await bcrypt.compare(password, user.password);
     
     if (!isPasswordValid) {
-      // Incrémenter tentatives
-      const newAttempts = await incrementAttempts(dbPool, username, attempts);
-      const remaining = Math.max(0, MAX_ATTEMPTS - newAttempts);
-      
-      return res.status(401).json({ 
-        message: "Identifiants invalides",
-        remainingAttempts: remaining,
-        showWarning: true
-      });
+      return res.status(401).json({ message: "Identifiants invalides" });
     }
 
-    // ✅ LOGIN RÉUSSI - RESET COMPLET LES TENTATIVES
-    await dbPool.query(
-      'DELETE FROM login_attempts WHERE username = $1',
-      [username]
-    );
-
-    // Mettre à jour last_login
+    // ✅ Mettre à jour last_login
     try {
       await updateLastLogin(user.id);
     } catch (updateError) {
@@ -140,30 +66,3 @@ module.exports = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
-
-// Fonction pour incrémenter les tentatives
-async function incrementAttempts(dbPool, username, currentAttempts) {
-  const newAttempts = currentAttempts + 1;
-  const now = new Date();
-  
-  if (newAttempts >= MAX_ATTEMPTS) {
-    // ✅ Bloquer pour 30 minutes
-    const blockedUntil = new Date(now.getTime() + BLOCK_DURATION);
-    
-    await dbPool.query(`
-      INSERT INTO login_attempts (username, attempts, last_attempt, blocked_until)
-      VALUES ($1, $2, $3, $4)
-      ON CONFLICT (username) 
-      DO UPDATE SET attempts = $2, last_attempt = $3, blocked_until = $4
-    `, [username, newAttempts, now, blockedUntil]);
-  } else {
-    await dbPool.query(`
-      INSERT INTO login_attempts (username, attempts, last_attempt)
-      VALUES ($1, $2, $3)
-      ON CONFLICT (username) 
-      DO UPDATE SET attempts = $2, last_attempt = $3
-    `, [username, newAttempts, now]);
-  }
-  
-  return newAttempts;
-}
