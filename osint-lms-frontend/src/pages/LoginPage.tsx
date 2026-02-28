@@ -19,8 +19,8 @@ export default function LoginPage() {
   const [showBlockedModal, setShowBlockedModal] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [blockTimeLeft, setBlockTimeLeft] = useState(0);
+  const [remainingAttempts, setRemainingAttempts] = useState(0);
 
-  // Réinitialiser les champs au chargement de la page
   useEffect(() => {
     setUsername("");
     setPassword("");
@@ -45,7 +45,16 @@ export default function LoginPage() {
     }
   }, [blockTimeLeft]);
 
-  // Étape 1 : Soumettre username/password
+  // ✅ AUTO-FERMETURE POP-UP WARNING APRÈS 4 SECONDES
+  useEffect(() => {
+    if (showWarningModal) {
+      const timer = setTimeout(() => {
+        setShowWarningModal(false);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [showWarningModal]);
+
   const handleCredentialsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -56,7 +65,6 @@ export default function LoginPage() {
     }
 
     setIsLoading(true);
-
     const result = await login(username, password);
     setIsLoading(false);
 
@@ -75,23 +83,22 @@ export default function LoginPage() {
         return;
       }
       
-      // Afficher message d'erreur + tentatives restantes
+      // ✅ AFFICHER POP-UP WARNING À CHAQUE ÉCHEC
+      if (result.remainingAttempts !== undefined) {
+        setRemainingAttempts(result.remainingAttempts);
+        setShowWarningModal(true);
+      }
+      
+      // Message d'erreur
       const message = result.error || "Identifiants invalides";
       const attemptsMsg = result.remainingAttempts !== undefined
         ? ` (${result.remainingAttempts} tentative${result.remainingAttempts > 1 ? 's' : ''} restante${result.remainingAttempts > 1 ? 's' : ''})`
         : '';
       
       setError(message + attemptsMsg);
-      
-      // Afficher modal warning si dernière tentative
-      if (result.showWarning) {
-        setShowWarningModal(true);
-        setTimeout(() => setShowWarningModal(false), 5000);
-      }
     }
   };
 
-  // Étape 2 : Soumettre le code 2FA
   const handle2FASubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -108,7 +115,6 @@ export default function LoginPage() {
     }
 
     setIsLoading(true);
-
     const result = await verify2FA(tempToken, otpCode);
     setIsLoading(false);
 
@@ -340,7 +346,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* MODAL COMPTE BLOQUÉ */}
+      {/* MODAL COMPTE BLOQUÉ (30 MINUTES) */}
       {showBlockedModal && (
         <>
           <div style={{
@@ -372,8 +378,7 @@ export default function LoginPage() {
                 Compte Temporairement Bloqué
               </h2>
               <p style={{ color: "#e5e7eb", marginBottom: "20px", lineHeight: "1.6", fontSize: "0.95rem" }}>
-                Trop de tentatives de connexion échouées ont été détectées sur <strong>TOUS vos appareils</strong>.
-                Pour votre sécurité, ce compte est <strong style={{ color: "#ef4444" }}>BLOQUÉ</strong>.
+                Trop de tentatives de connexion échouées. Votre compte est <strong style={{ color: "#ef4444" }}>BLOQUÉ pendant 30 minutes</strong> sur TOUS vos appareils.
               </p>
               <div style={{
                 background: "rgba(239, 68, 68, 0.1)",
@@ -414,7 +419,7 @@ export default function LoginPage() {
         </>
       )}
 
-      {/* MODAL WARNING DERNIÈRE TENTATIVE */}
+      {/* MODAL WARNING TENTATIVES RESTANTES */}
       {showWarningModal && (
         <>
           <div style={{
@@ -432,21 +437,31 @@ export default function LoginPage() {
             left: "50%",
             transform: "translate(-50%, -50%)",
             background: "#0b0f1a",
-            border: "3px solid #fbbf24",
+            border: remainingAttempts === 1 ? "3px solid #ef4444" : "3px solid #fbbf24",
             borderRadius: "16px",
             padding: "30px",
             maxWidth: "450px",
             width: "90%",
             zIndex: 9999,
-            boxShadow: "0 0 40px rgba(251, 191, 36, 0.4)",
+            boxShadow: remainingAttempts === 1 ? "0 0 40px rgba(239, 68, 68, 0.5)" : "0 0 40px rgba(251, 191, 36, 0.4)",
           }}>
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "3rem", marginBottom: "15px" }}>⚠️</div>
-              <h3 style={{ color: "#fbbf24", fontSize: "1.3rem", marginBottom: "10px", fontWeight: "700" }}>
-                Dernière Tentative !
+              <div style={{ fontSize: "3rem", marginBottom: "15px" }}>
+                {remainingAttempts === 1 ? "🚨" : "⚠️"}
+              </div>
+              <h3 style={{ 
+                color: remainingAttempts === 1 ? "#ef4444" : "#fbbf24", 
+                fontSize: "1.3rem", 
+                marginBottom: "10px", 
+                fontWeight: "700" 
+              }}>
+                {remainingAttempts === 1 ? "DERNIÈRE TENTATIVE !" : "Attention !"}
               </h3>
               <p style={{ color: "#e5e7eb", fontSize: "0.95rem", lineHeight: "1.5", margin: 0 }}>
-                Une seule tentative restante avant le <strong style={{ color: "#ef4444" }}>blocage de 15 minutes sur TOUS vos appareils</strong>.
+                {remainingAttempts === 1 
+                  ? "Une seule tentative restante avant le blocage de 30 minutes sur TOUS vos appareils !"
+                  : `Il vous reste ${remainingAttempts} tentative${remainingAttempts > 1 ? 's' : ''} avant que votre compte ne soit temporairement bloqué pendant 30 minutes.`
+                }
               </p>
             </div>
           </div>

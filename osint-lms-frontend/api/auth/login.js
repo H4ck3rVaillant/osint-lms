@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const { getUserByUsername, updateLastLogin } = require("../_lib/database");
 const { Pool } = require("pg");
 
-// Pool PostgreSQL pour login_attempts
 let pool;
 function getPool() {
   if (!pool) {
@@ -16,10 +15,9 @@ function getPool() {
 }
 
 const MAX_ATTEMPTS = 5;
-const BLOCK_DURATION = 15 * 60 * 1000; // 15 minutes en ms
+const BLOCK_DURATION = 30 * 60 * 1000; // ✅ 30 MINUTES
 
 module.exports = async (req, res) => {
-  // CORS
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
@@ -73,7 +71,7 @@ module.exports = async (req, res) => {
     // ✅ SI BLOCAGE EXPIRÉ, RESET
     if (blockedUntil && new Date(blockedUntil) <= now) {
       await dbPool.query(
-        'UPDATE login_attempts SET attempts = 0, blocked_until = NULL WHERE username = $1',
+        'DELETE FROM login_attempts WHERE username = $1',
         [username]
       );
       attempts = 0;
@@ -107,11 +105,11 @@ module.exports = async (req, res) => {
       return res.status(401).json({ 
         message: "Identifiants invalides",
         remainingAttempts: remaining,
-        showWarning: remaining === 1
+        showWarning: true
       });
     }
 
-    // ✅ LOGIN RÉUSSI - RESET LES TENTATIVES
+    // ✅ LOGIN RÉUSSI - RESET COMPLET LES TENTATIVES
     await dbPool.query(
       'DELETE FROM login_attempts WHERE username = $1',
       [username]
@@ -149,7 +147,7 @@ async function incrementAttempts(dbPool, username, currentAttempts) {
   const now = new Date();
   
   if (newAttempts >= MAX_ATTEMPTS) {
-    // Bloquer pour 15 minutes
+    // ✅ Bloquer pour 30 minutes
     const blockedUntil = new Date(now.getTime() + BLOCK_DURATION);
     
     await dbPool.query(`
