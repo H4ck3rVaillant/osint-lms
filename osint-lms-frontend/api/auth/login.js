@@ -15,7 +15,7 @@ function getPool() {
   return pool;
 }
 
-const MAX_ATTEMPTS = 3;
+const MAX_ATTEMPTS = 5;
 const BLOCK_DURATION = 15 * 60 * 1000; // 15 minutes en ms
 
 module.exports = async (req, res) => {

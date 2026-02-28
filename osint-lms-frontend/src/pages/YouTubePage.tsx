@@ -10,46 +10,45 @@ export default function YouTubePage() {
     { id: "chaines", label: "📺 Chaînes Recommandées", icon: "⭐" },
   ];
 
-  // ✅ PLAYLISTS COMPLÈTES OSINT (vérifiées 28/02/2025)
+  // ✅ 5 PLAYLISTS QUI FONCTIONNENT (vérifiées)
   const playlists = [
     {
       title: "OSINT At Home - Complete Series",
       channel: "Ben Strick",
       url: "https://www.youtube.com/playlist?list=PLrFPX1Vfqk3ehZKSFeb9pVIHqxqrNW8Sy",
-      description: "Série complète sur investigations digitales, géolocalisation et vérification",
+      description: "Série complète sur investigations digitales et géolocalisation",
       videos: "30+ vidéos"
     },
     {
       title: "OSINT Dojo - Tutorials",
-      channel: "OSINT Dojo",
+      channel: "OSINT Dojo",  
       url: "https://www.youtube.com/playlist?list=PL423I_gHbWUUOs09899rex4t2l5py9YIk",
       description: "Tutoriels pratiques et démonstrations d'outils OSINT",
       videos: "50+ vidéos"
     },
     {
-      title: "Sofia Santos - OSINT Exercises",
-      channel: "Sofia Santos",
-      url: "https://www.youtube.com/@osintdojo/playlists",
-      description: "Exercices pratiques OSINT avec solutions détaillées",
-      videos: "40+ vidéos"
+      title: "The Cyber Mentor - OSINT Course",
+      channel: "The Cyber Mentor",
+      url: "https://www.youtube.com/playlist?list=PLLKT__MCUeixqHJ1TRqrHsEd6_EdEvo47",
+      description: "Formation OSINT complète avec exercices pratiques",
+      videos: "20+ vidéos"
     },
     {
-      title: "Bellingcat Investigations",
-      channel: "Bellingcat",
-      url: "https://www.youtube.com/@bellingcat/videos",
-      description: "Investigations OSINT professionnelles et techniques avancées",
+      title: "David Bombal - OSINT Tools",
+      channel: "David Bombal",
+      url: "https://www.youtube.com/@davidbombal/videos",
+      description: "Outils OSINT et tutoriels techniques",
       videos: "100+ vidéos"
     },
     {
-      title: "Trace Labs OSINT Training",
-      channel: "Trace Labs",
-      url: "https://www.youtube.com/@TraceLabsOrg/videos",
-      description: "CTF OSINT et training de recherche de personnes disparues",
-      videos: "25+ vidéos"
+      title: "Hackers Arise - OSINT Techniques",
+      channel: "Hackers Arise",
+      url: "https://www.youtube.com/@HackersArise/videos",
+      description: "Techniques OSINT avancées et méthodologie",
+      videos: "80+ vidéos"
     },
   ];
 
-  // Chaînes YouTube OSINT recommandées
   const chaines = [
     {
       name: "The Cyber Mentor",
@@ -70,22 +69,10 @@ export default function YouTubePage() {
       subscribers: "45K+"
     },
     {
-      name: "Sofia Santos",
-      url: "https://www.youtube.com/@osintdojo",
-      description: "Exercices OSINT challenges et walkthroughs",
-      subscribers: "20K+"
-    },
-    {
-      name: "Bellingcat",
-      url: "https://www.youtube.com/@bellingcat",
-      description: "Journalisme d'investigation OSINT de niveau mondial",
-      subscribers: "250K+"
-    },
-    {
-      name: "Trace Labs",
-      url: "https://www.youtube.com/@TraceLabsOrg",
-      description: "OSINT CTF challenges et competitions",
-      subscribers: "10K+"
+      name: "The OSINT Curious Project",
+      url: "https://www.youtube.com/@OSINTCurious",
+      description: "Webcasts, interviews et ressources communautaires",
+      subscribers: "15K+"
     },
     {
       name: "Hackers Arise",
@@ -112,7 +99,6 @@ export default function YouTubePage() {
         margin: "0 auto",
         padding: "40px 20px",
       }}>
-        {/* Header */}
         <div style={{ textAlign: "center", marginBottom: "50px" }}>
           <div style={{ fontSize: "4rem", marginBottom: "15px" }}>📹</div>
           <h1 style={{
@@ -133,7 +119,6 @@ export default function YouTubePage() {
           </p>
         </div>
 
-        {/* Tabs */}
         <div style={{
           display: "flex",
           justifyContent: "center",
@@ -163,7 +148,6 @@ export default function YouTubePage() {
           ))}
         </div>
 
-        {/* Playlists */}
         {selectedCategory === "playlists" && (
           <div style={{
             display: "grid",
@@ -196,7 +180,6 @@ export default function YouTubePage() {
                   e.currentTarget.style.borderColor = colors.border;
                 }}
               >
-                {/* Visual Icon */}
                 <div style={{
                   background: `linear-gradient(135deg, ${colors.accent}20, ${colors.bgPrimary})`,
                   padding: "60px 20px",
@@ -246,7 +229,6 @@ export default function YouTubePage() {
           </div>
         )}
 
-        {/* Chaînes */}
         {selectedCategory === "chaines" && (
           <div style={{
             display: "grid",
@@ -336,7 +318,6 @@ export default function YouTubePage() {
           </div>
         )}
 
-        {/* Note */}
         <div style={{
           marginTop: "60px",
           padding: "25px",
@@ -351,7 +332,7 @@ export default function YouTubePage() {
             lineHeight: "1.6",
             margin: 0,
           }}>
-            💡 <strong>Astuce :</strong> Ces playlists complètes contiennent des dizaines de vidéos OSINT.
+            💡 <strong>Astuce :</strong> Ces playlists contiennent des dizaines de vidéos OSINT.
             Cliquez pour explorer tout le contenu sur YouTube !
           </p>
         </div>
