@@ -6,41 +6,51 @@ export default function YouTubePage() {
   const [selectedCategory, setSelectedCategory] = useState("playlists");
 
   const categories = [
-    { id: "playlists", label: "📚 Playlists OSINT", icon: "🎬" },
+    { id: "playlists", label: "📚 Vidéos OSINT", icon: "🎬" },
     { id: "chaines", label: "📺 Chaînes Recommandées", icon: "⭐" },
   ];
 
-  // ✅ PLAYLISTS VÉRIFIÉES ET FONCTIONNELLES
-  const playlists = [
+  // ✅ VIDÉOS OSINT AVEC LIENS DIRECTS YOUTUBE
+  const videos = [
     {
       title: "OSINT Fundamentals - Complete Course",
       channel: "The Cyber Mentor",
-      videoId: "qwA6MmbeGNo", // Vidéo unique valide
-      description: "Introduction complète à l'OSINT avec démonstrations pratiques"
+      url: "https://www.youtube.com/watch?v=qwA6MmbeGNo",
+      thumbnail: "https://img.youtube.com/vi/qwA6MmbeGNo/maxresdefault.jpg",
+      description: "Introduction complète à l'OSINT avec démonstrations pratiques",
+      duration: "5h 12min"
     },
     {
       title: "OSINT At Home #1 - Introduction",
       channel: "Ben Strick",
-      videoId: "nYa3ix5tvgQ",
-      description: "Série OSINT At Home - Investigations digitales et géolocalisation"
+      url: "https://www.youtube.com/watch?v=nYa3ix5tvgQ",
+      thumbnail: "https://img.youtube.com/vi/nYa3ix5tvgQ/maxresdefault.jpg",
+      description: "Série OSINT At Home - Investigations digitales et géolocalisation",
+      duration: "42min"
     },
     {
       title: "Google Dorking for OSINT",
       channel: "OSINT Dojo",
-      videoId: "u_gOnwWEXiA",
-      description: "Maîtriser Google Dorks pour des recherches OSINT avancées"
+      url: "https://www.youtube.com/watch?v=u_gOnwWEXiA",
+      thumbnail: "https://img.youtube.com/vi/u_gOnwWEXiA/maxresdefault.jpg",
+      description: "Maîtriser Google Dorks pour des recherches OSINT avancées",
+      duration: "28min"
     },
     {
-      title: "Social Media OSINT",
+      title: "Social Media OSINT Investigation",
       channel: "NetworkChuck",
-      videoId: "9Uy5SGELYd4",
-      description: "Techniques OSINT pour les réseaux sociaux"
+      url: "https://www.youtube.com/watch?v=9Uy5SGELYd4",
+      thumbnail: "https://img.youtube.com/vi/9Uy5SGELYd4/maxresdefault.jpg",
+      description: "Techniques OSINT pour les réseaux sociaux",
+      duration: "35min"
     },
     {
       title: "Maltego Tutorial for Beginners",
       channel: "David Bombal",
-      videoId: "46st98FUf8s",
-      description: "Guide complet de Maltego pour l'OSINT"
+      url: "https://www.youtube.com/watch?v=46st98FUf8s",
+      thumbnail: "https://img.youtube.com/vi/46st98FUf8s/maxresdefault.jpg",
+      description: "Guide complet de Maltego pour l'OSINT",
+      duration: "1h 15min"
     },
   ];
 
@@ -165,46 +175,84 @@ export default function YouTubePage() {
             gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
             gap: "30px",
           }}>
-            {playlists.map((video, index) => (
-              <div
+            {videos.map((video, index) => (
+              <a
                 key={index}
+                href={video.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   background: colors.bgSecondary,
                   border: `1px solid ${colors.border}`,
                   borderRadius: "12px",
                   overflow: "hidden",
                   transition: "all 0.3s ease",
+                  textDecoration: "none",
+                  display: "block",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-5px)";
                   e.currentTarget.style.boxShadow = `0 10px 30px ${colors.shadow}`;
+                  e.currentTarget.style.borderColor = colors.accent;
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "translateY(0)";
                   e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.borderColor = colors.border;
                 }}
               >
-                {/* Player Vidéo */}
+                {/* Thumbnail avec overlay */}
                 <div style={{
                   position: "relative" as const,
                   paddingBottom: "56.25%",
                   height: 0,
                   overflow: "hidden",
+                  background: "#000",
                 }}>
-                  <iframe
-                    src={`https://www.youtube.com/embed/${video.videoId}`}
-                    title={video.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
                     style={{
                       position: "absolute" as const,
                       top: 0,
                       left: 0,
                       width: "100%",
                       height: "100%",
+                      objectFit: "cover",
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.src = "https://via.placeholder.com/640x360/1a1f2e/00ff9c?text=Video+Thumbnail";
                     }}
                   />
+                  <div style={{
+                    position: "absolute" as const,
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "70px",
+                    height: "70px",
+                    background: "rgba(0, 255, 156, 0.9)",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "2rem",
+                  }}>
+                    ▶
+                  </div>
+                  <div style={{
+                    position: "absolute" as const,
+                    bottom: "10px",
+                    right: "10px",
+                    background: "rgba(0, 0, 0, 0.8)",
+                    color: "#fff",
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    fontSize: "0.85rem",
+                    fontWeight: "600",
+                  }}>
+                    {video.duration}
+                  </div>
                 </div>
 
                 <div style={{ padding: "20px" }}>
@@ -231,8 +279,16 @@ export default function YouTubePage() {
                   }}>
                     {video.description}
                   </p>
+                  <div style={{
+                    marginTop: "15px",
+                    fontSize: "0.9rem",
+                    color: colors.accent,
+                    fontWeight: "600",
+                  }}>
+                    Regarder sur YouTube →
+                  </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         )}
@@ -342,8 +398,8 @@ export default function YouTubePage() {
             lineHeight: "1.6",
             margin: 0,
           }}>
-            💡 <strong>Astuce :</strong> Ces ressources vidéo complètent votre formation mais ne sont pas 
-            obligatoires pour obtenir le certificat. Explorez à votre rythme !
+            💡 <strong>Astuce :</strong> Cliquez sur les vidéos pour les regarder directement sur YouTube.
+            Ces ressources complètent votre formation !
           </p>
         </div>
       </div>
