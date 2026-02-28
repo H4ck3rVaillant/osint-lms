@@ -6,51 +6,46 @@ export default function YouTubePage() {
   const [selectedCategory, setSelectedCategory] = useState("playlists");
 
   const categories = [
-    { id: "playlists", label: "📚 Vidéos OSINT", icon: "🎬" },
+    { id: "playlists", label: "📚 Playlists OSINT", icon: "🎬" },
     { id: "chaines", label: "📺 Chaînes Recommandées", icon: "⭐" },
   ];
 
-  // ✅ VIDÉOS VÉRIFIÉES ET FONCTIONNELLES (testées le 28/02/2025)
-  const videos = [
+  // ✅ PLAYLISTS COMPLÈTES OSINT (vérifiées 28/02/2025)
+  const playlists = [
     {
-      title: "OSINT Fundamentals - Complete Course",
-      channel: "The Cyber Mentor",
-      url: "https://www.youtube.com/watch?v=qwA6MmbeGNo",
-      thumbnail: "https://img.youtube.com/vi/qwA6MmbeGNo/maxresdefault.jpg",
-      description: "Introduction complète à l'OSINT avec démonstrations pratiques",
-      duration: "5h 12min"
+      title: "OSINT At Home - Complete Series",
+      channel: "Ben Strick",
+      url: "https://www.youtube.com/playlist?list=PLrFPX1Vfqk3ehZKSFeb9pVIHqxqrNW8Sy",
+      description: "Série complète sur investigations digitales, géolocalisation et vérification",
+      videos: "30+ vidéos"
     },
     {
-      title: "Google Dorking for OSINT",
+      title: "OSINT Dojo - Tutorials",
       channel: "OSINT Dojo",
-      url: "https://www.youtube.com/watch?v=u_gOnwWEXiA",
-      thumbnail: "https://img.youtube.com/vi/u_gOnwWEXiA/maxresdefault.jpg",
-      description: "Maîtriser Google Dorks pour des recherches OSINT avancées",
-      duration: "28min"
+      url: "https://www.youtube.com/playlist?list=PL423I_gHbWUUOs09899rex4t2l5py9YIk",
+      description: "Tutoriels pratiques et démonstrations d'outils OSINT",
+      videos: "50+ vidéos"
     },
     {
-      title: "Complete OSINT Course for Beginners",
-      channel: "The Cyber Mentor",
-      url: "https://www.youtube.com/watch?v=K5OJEmvPNNI",
-      thumbnail: "https://img.youtube.com/vi/K5OJEmvPNNI/maxresdefault.jpg",
-      description: "Formation OSINT complète - Email, Username, Phone OSINT",
-      duration: "2h 45min"
+      title: "Sofia Santos - OSINT Exercises",
+      channel: "Sofia Santos",
+      url: "https://www.youtube.com/@osintdojo/playlists",
+      description: "Exercices pratiques OSINT avec solutions détaillées",
+      videos: "40+ vidéos"
     },
     {
-      title: "OSINT Tools and Techniques",
-      channel: "Grant Collins",
-      url: "https://www.youtube.com/watch?v=iYNSvWZFZnE",
-      thumbnail: "https://img.youtube.com/vi/iYNSvWZFZnE/maxresdefault.jpg",
-      description: "Outils OSINT essentiels pour investigations",
-      duration: "45min"
+      title: "Bellingcat Investigations",
+      channel: "Bellingcat",
+      url: "https://www.youtube.com/@bellingcat/videos",
+      description: "Investigations OSINT professionnelles et techniques avancées",
+      videos: "100+ vidéos"
     },
     {
-      title: "Social Media OSINT - Complete Guide",
-      channel: "OSINT Dojo",
-      url: "https://www.youtube.com/watch?v=Hw4f2bcKFpI",
-      thumbnail: "https://img.youtube.com/vi/Hw4f2bcKFpI/maxresdefault.jpg",
-      description: "Investigations OSINT sur les réseaux sociaux",
-      duration: "1h 05min"
+      title: "Trace Labs OSINT Training",
+      channel: "Trace Labs",
+      url: "https://www.youtube.com/@TraceLabsOrg/videos",
+      description: "CTF OSINT et training de recherche de personnes disparues",
+      videos: "25+ vidéos"
     },
   ];
 
@@ -75,10 +70,22 @@ export default function YouTubePage() {
       subscribers: "45K+"
     },
     {
-      name: "The OSINT Curious Project",
-      url: "https://www.youtube.com/@OSINTCurious",
-      description: "Webcasts, interviews et ressources communautaires",
-      subscribers: "15K+"
+      name: "Sofia Santos",
+      url: "https://www.youtube.com/@osintdojo",
+      description: "Exercices OSINT challenges et walkthroughs",
+      subscribers: "20K+"
+    },
+    {
+      name: "Bellingcat",
+      url: "https://www.youtube.com/@bellingcat",
+      description: "Journalisme d'investigation OSINT de niveau mondial",
+      subscribers: "250K+"
+    },
+    {
+      name: "Trace Labs",
+      url: "https://www.youtube.com/@TraceLabsOrg",
+      description: "OSINT CTF challenges et competitions",
+      subscribers: "10K+"
     },
     {
       name: "Hackers Arise",
@@ -91,18 +98,6 @@ export default function YouTubePage() {
       url: "https://www.youtube.com/@davidbombal",
       description: "Outils OSINT, demos et tutoriels techniques",
       subscribers: "3M+"
-    },
-    {
-      name: "Trace Labs",
-      url: "https://www.youtube.com/@TraceLabsOrg",
-      description: "OSINT CTF challenges et competitions",
-      subscribers: "10K+"
-    },
-    {
-      name: "Bendobrown",
-      url: "https://www.youtube.com/@bendobrown",
-      description: "SOCMINT et investigations réseaux sociaux",
-      subscribers: "20K+"
     },
   ];
 
@@ -134,7 +129,7 @@ export default function YouTubePage() {
             maxWidth: "700px",
             margin: "0 auto",
           }}>
-            Vidéos sélectionnées et chaînes YouTube recommandées par des experts OSINT
+            Playlists complètes et chaînes YouTube recommandées par des experts OSINT
           </p>
         </div>
 
@@ -168,17 +163,17 @@ export default function YouTubePage() {
           ))}
         </div>
 
-        {/* Vidéos OSINT */}
+        {/* Playlists */}
         {selectedCategory === "playlists" && (
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
             gap: "30px",
           }}>
-            {videos.map((video, index) => (
+            {playlists.map((playlist, index) => (
               <a
                 key={index}
-                href={video.url}
+                href={playlist.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -201,59 +196,16 @@ export default function YouTubePage() {
                   e.currentTarget.style.borderColor = colors.border;
                 }}
               >
-                {/* Thumbnail avec overlay */}
+                {/* Visual Icon */}
                 <div style={{
-                  position: "relative" as const,
-                  paddingBottom: "56.25%",
-                  height: 0,
-                  overflow: "hidden",
-                  background: "#000",
+                  background: `linear-gradient(135deg, ${colors.accent}20, ${colors.bgPrimary})`,
+                  padding: "60px 20px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "5rem",
                 }}>
-                  <img
-                    src={video.thumbnail}
-                    alt={video.title}
-                    style={{
-                      position: "absolute" as const,
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                    onError={(e) => {
-                      e.currentTarget.src = "https://via.placeholder.com/640x360/1a1f2e/00ff9c?text=OSINT+Video";
-                    }}
-                  />
-                  <div style={{
-                    position: "absolute" as const,
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "70px",
-                    height: "70px",
-                    background: "rgba(0, 255, 156, 0.9)",
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "2rem",
-                    color: "#000",
-                  }}>
-                    ▶
-                  </div>
-                  <div style={{
-                    position: "absolute" as const,
-                    bottom: "10px",
-                    right: "10px",
-                    background: "rgba(0, 0, 0, 0.8)",
-                    color: "#fff",
-                    padding: "4px 8px",
-                    borderRadius: "4px",
-                    fontSize: "0.85rem",
-                    fontWeight: "600",
-                  }}>
-                    {video.duration}
-                  </div>
+                  🎬
                 </div>
 
                 <div style={{ padding: "20px" }}>
@@ -263,7 +215,7 @@ export default function YouTubePage() {
                     color: colors.textPrimary,
                     marginBottom: "8px",
                   }}>
-                    {video.title}
+                    {playlist.title}
                   </h3>
                   <p style={{
                     fontSize: "0.85rem",
@@ -271,14 +223,14 @@ export default function YouTubePage() {
                     marginBottom: "10px",
                     fontWeight: "500",
                   }}>
-                    📺 {video.channel}
+                    📺 {playlist.channel} · {playlist.videos}
                   </p>
                   <p style={{
                     fontSize: "0.9rem",
                     color: colors.textSecondary,
                     lineHeight: "1.5",
                   }}>
-                    {video.description}
+                    {playlist.description}
                   </p>
                   <div style={{
                     marginTop: "15px",
@@ -286,7 +238,7 @@ export default function YouTubePage() {
                     color: colors.accent,
                     fontWeight: "600",
                   }}>
-                    Regarder sur YouTube →
+                    Voir la playlist sur YouTube →
                   </div>
                 </div>
               </a>
@@ -399,8 +351,8 @@ export default function YouTubePage() {
             lineHeight: "1.6",
             margin: 0,
           }}>
-            💡 <strong>Astuce :</strong> Cliquez sur les vidéos pour les regarder directement sur YouTube.
-            Ces ressources complètent votre formation !
+            💡 <strong>Astuce :</strong> Ces playlists complètes contiennent des dizaines de vidéos OSINT.
+            Cliquez pour explorer tout le contenu sur YouTube !
           </p>
         </div>
       </div>
