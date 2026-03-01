@@ -43,6 +43,11 @@ import CertificatPage from "./pages/CertificatPage";
 import YouTubePage from "./pages/YouTubePage";
 import ChallengesPage from "./pages/ChallengesPage";
 import AdminPanel from "./pages/AdminPanel";
+/* MODULES OSINT SPÉCIALISÉS */
+import ShodanModule from "./pages/ShodanModule";
+import LinkedInModule from "./pages/LinkedInModule";
+import TelegramModule from "./pages/TelegramModule";
+import DiscordModule from "./pages/DiscordModule";
 /* NOUVEAUX OUTILS & RESSOURCES */
 import HackerAI from "./pages/HackerAI";
 import DependencyTrack from "./pages/DependencyTrack";
@@ -71,7 +76,6 @@ function ScrollToTop() {
 function Protected({ children }: { children: JSX.Element }) {
   const { user, isLoading } = useAuth();
 
-  // ✅ FIX F5: Attendre que le token soit vérifié avant de rediriger
   if (isLoading) {
     return (
       <div style={{
@@ -162,6 +166,12 @@ export default function App() {
         {/* QUIZ */}
         <Route path="/quiz" element={<Protected><Layout><QuizPage /></Layout></Protected>} />
         <Route path="/quiz/:themeId" element={<Protected><Layout><QuizSession /></Layout></Protected>} />
+
+        {/* MODULES OSINT SPÉCIALISÉS */}
+        <Route path="/modules/shodan" element={<Protected><Layout><ShodanModule /></Layout></Protected>} />
+        <Route path="/modules/linkedin" element={<Protected><Layout><LinkedInModule /></Layout></Protected>} />
+        <Route path="/modules/telegram" element={<Protected><Layout><TelegramModule /></Layout></Protected>} />
+        <Route path="/modules/discord" element={<Protected><Layout><DiscordModule /></Layout></Protected>} />
 
         {/* AUTRES */}
         <Route path="/exercices-osint" element={<Protected><Layout><ExercicesOSINT /></Layout></Protected>} />

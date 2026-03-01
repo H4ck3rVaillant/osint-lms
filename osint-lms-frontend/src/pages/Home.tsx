@@ -32,7 +32,6 @@ export default function Home() {
       overflow: "hidden"
     }}>
 
-      {/* Grille matricielle arrière-plan */}
       <div style={{
         position: "absolute" as const,
         inset: 0,
@@ -46,7 +45,6 @@ export default function Home() {
 
       <div style={{ maxWidth: "1200px", width: "100%", zIndex: 1, textAlign: "center" }}>
 
-        {/* Logo */}
         <div style={{ marginBottom: "30px" }}>
           <img
             src={Logo}
@@ -68,7 +66,6 @@ export default function Home() {
           />
         </div>
 
-        {/* Titre */}
         <h1 style={{
           color: "#00ff9c",
           fontSize: "3rem",
@@ -81,7 +78,6 @@ export default function Home() {
           CyberOSINT Academy
         </h1>
 
-        {/* Sous-titre machine à écrire */}
         <div style={{ minHeight: "50px", marginBottom: "25px" }}>
           <p style={{
             color: "#00ff9c",
@@ -98,7 +94,6 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Description */}
         <p style={{
           maxWidth: "750px",
           margin: "0 auto 50px",
@@ -124,6 +119,7 @@ export default function Home() {
         }}>
           {[
             { icon: "🎓", title: "Parcours progressifs",    desc: "3 niveaux : Débutant, Intermédiaire, Avancé" },
+            { icon: "🎯", title: "4 Modules spécialisés",   desc: "Shodan, LinkedIn, Telegram, Discord" },
             { icon: "✏️", title: "20 Exercices pratiques",  desc: "Entraînements OSINT guidés et corrigés" },
             { icon: "🔎", title: "5 Études de cas réels",   desc: "Investigations type Bellingcat" },
             { icon: "🏅", title: "Système de badges",       desc: "Progression et récompenses déblocables" },
@@ -186,7 +182,7 @@ export default function Home() {
           animation: "fadeInUp 1s ease-out 1s backwards"
         }}>
           {[
-            { number: "9",   label: "Modules de formation" },
+            { number: "13",  label: "Modules de formation" },
             { number: "20",  label: "Exercices pratiques" },
             { number: "5",   label: "Études de cas OSINT" },
             { number: "52",  label: "Challenges Hebdo" },
@@ -295,7 +291,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Animations */}
       <style>{`
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(30px); }
