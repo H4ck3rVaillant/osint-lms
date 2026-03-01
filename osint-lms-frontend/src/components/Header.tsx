@@ -55,11 +55,13 @@ export default function Header() {
         justifyContent: "space-between",
         height: "70px",
       }}>
+        {/* Logo */}
         <Link to="/dashboard" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none" }}>
           <img src={Logo} alt="Logo" style={{ width: "40px", filter: "drop-shadow(0 0 8px rgba(0, 255, 156, 0.5))" }} />
           <span style={{ color: colors.accent, fontSize: "1.3rem", fontWeight: "bold" }}>CyberOSINT Academy</span>
         </Link>
 
+        {/* Menu burger mobile */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           style={{
@@ -74,21 +76,40 @@ export default function Header() {
           ☰
         </button>
 
+        {/* Navigation */}
         <div style={{
           display: "flex",
           alignItems: "center",
-          gap: "25px",
+          gap: "0px",
         }}>
-          <Link to="/dashboard" style={{ color: colors.textSecondary, textDecoration: "none", fontSize: "0.95rem", fontWeight: "500" }}>
+          <Link to="/dashboard" style={{ 
+            color: colors.textSecondary, 
+            textDecoration: "none", 
+            fontSize: "0.95rem", 
+            fontWeight: "500",
+            padding: "0 15px",
+            borderRight: `1px solid ${colors.border}`,
+          }}>
             🏠 Dashboard
           </Link>
           
-          <Link to="/parcours" style={{ color: colors.textSecondary, textDecoration: "none", fontSize: "0.95rem", fontWeight: "500" }}>
+          <Link to="/parcours" style={{ 
+            color: colors.textSecondary, 
+            textDecoration: "none", 
+            fontSize: "0.95rem", 
+            fontWeight: "500",
+            padding: "0 15px",
+            borderRight: `1px solid ${colors.border}`,
+          }}>
             📚 Parcours
           </Link>
 
           {/* DROPDOWN MODULES OSINT */}
-          <div ref={modulesRef} style={{ position: "relative" }}>
+          <div ref={modulesRef} style={{ 
+            position: "relative",
+            padding: "0 15px",
+            borderRight: `1px solid ${colors.border}`,
+          }}>
             <button
               onClick={() => setIsModulesDropdownOpen(!isModulesDropdownOpen)}
               style={{
@@ -101,6 +122,7 @@ export default function Header() {
                 display: "flex",
                 alignItems: "center",
                 gap: "5px",
+                padding: 0,
               }}
             >
               🎓 Modules OSINT {isModulesDropdownOpen ? "▲" : "▼"}
@@ -170,16 +192,34 @@ export default function Header() {
             )}
           </div>
 
-          <Link to="/exercices-osint" style={{ color: colors.textSecondary, textDecoration: "none", fontSize: "0.95rem", fontWeight: "500" }}>
+          <Link to="/exercices-osint" style={{ 
+            color: colors.textSecondary, 
+            textDecoration: "none", 
+            fontSize: "0.95rem", 
+            fontWeight: "500",
+            padding: "0 15px",
+            borderRight: `1px solid ${colors.border}`,
+          }}>
             📝 Exercices
           </Link>
 
-          <Link to="/etudes-osint" style={{ color: colors.textSecondary, textDecoration: "none", fontSize: "0.95rem", fontWeight: "500" }}>
+          <Link to="/etudes-osint" style={{ 
+            color: colors.textSecondary, 
+            textDecoration: "none", 
+            fontSize: "0.95rem", 
+            fontWeight: "500",
+            padding: "0 15px",
+            borderRight: `1px solid ${colors.border}`,
+          }}>
             🛰️ Cas Réels
           </Link>
 
           {/* DROPDOWN OUTILS */}
-          <div ref={toolsRef} style={{ position: "relative" }}>
+          <div ref={toolsRef} style={{ 
+            position: "relative",
+            padding: "0 15px",
+            borderRight: `1px solid ${colors.border}`,
+          }}>
             <button
               onClick={() => setIsToolsDropdownOpen(!isToolsDropdownOpen)}
               style={{
@@ -192,6 +232,7 @@ export default function Header() {
                 display: "flex",
                 alignItems: "center",
                 gap: "5px",
+                padding: 0,
               }}
             >
               🔧 Outils {isToolsDropdownOpen ? "▲" : "▼"}
@@ -273,28 +314,77 @@ export default function Header() {
             )}
           </div>
 
-          <Link to="/progression" style={{ color: colors.textSecondary, textDecoration: "none", fontSize: "0.95rem", fontWeight: "500" }}>
+          <Link to="/progression" style={{ 
+            color: colors.textSecondary, 
+            textDecoration: "none", 
+            fontSize: "0.95rem", 
+            fontWeight: "500",
+            padding: "0 15px",
+            borderRight: `1px solid ${colors.border}`,
+          }}>
             📊 Progression
           </Link>
 
-          <Link to="/streak" style={{ color: colors.textSecondary, textDecoration: "none", fontSize: "0.95rem", fontWeight: "500" }}>
+          <Link to="/streak" style={{ 
+            color: colors.textSecondary, 
+            textDecoration: "none", 
+            fontSize: "0.95rem", 
+            fontWeight: "500",
+            padding: "0 15px",
+            borderRight: `1px solid ${colors.border}`,
+          }}>
             🔥 Streak
           </Link>
 
-          <Link to="/badges-osint" style={{ color: colors.textSecondary, textDecoration: "none", fontSize: "0.95rem", fontWeight: "500" }}>
+          <Link to="/badges-osint" style={{ 
+            color: colors.textSecondary, 
+            textDecoration: "none", 
+            fontSize: "0.95rem", 
+            fontWeight: "500",
+            padding: "0 15px",
+            borderRight: `1px solid ${colors.border}`,
+          }}>
             🏅 Badges
           </Link>
 
+          {/* Avatar utilisateur */}
           <Link to="/profil" style={{
-            padding: "8px 20px",
-            background: colors.accent,
-            color: "#020617",
-            borderRadius: "6px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "6px 16px",
+            marginLeft: "15px",
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.border}`,
+            borderRadius: "20px",
             textDecoration: "none",
-            fontSize: "0.9rem",
-            fontWeight: "600",
+            transition: "all 0.3s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = colors.accent;
+            e.currentTarget.style.background = colors.accent + "10";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = colors.border;
+            e.currentTarget.style.background = colors.bgSecondary;
           }}>
-            👤 {user.username}
+            <div style={{
+              width: "28px",
+              height: "28px",
+              borderRadius: "50%",
+              background: colors.accent,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "bold",
+              fontSize: "0.9rem",
+              color: "#020617",
+            }}>
+              {user.username.charAt(0).toUpperCase()}
+            </div>
+            <span style={{ color: colors.textPrimary, fontSize: "0.9rem", fontWeight: "500" }}>
+              {user.username}
+            </span>
           </Link>
         </div>
       </nav>
