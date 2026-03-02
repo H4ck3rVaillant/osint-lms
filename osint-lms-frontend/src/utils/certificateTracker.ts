@@ -8,6 +8,12 @@ interface ProgressionData {
     intermediaire: boolean;
     avance: boolean;
   };
+  modulesSpecialises: {
+    shodan: boolean;
+    linkedin: boolean;
+    telegram: boolean;
+    discord: boolean;
+  };
   exercices: boolean;
   etudesDeCas: boolean;
   quiz: {
@@ -24,7 +30,6 @@ interface ProgressionData {
 const STORAGE_KEY = "certificat_progression";
 const DATE_DEBUT_KEY = "formation_date_debut";
 
-// Initialiser la date de début si première activité
 export function initDateDebut() {
   const existing = localStorage.getItem(DATE_DEBUT_KEY);
   if (!existing) {
@@ -34,21 +39,17 @@ export function initDateDebut() {
   }
 }
 
-// NOUVELLE FONCTION : Vérifier les badges réels dans localStorage
 function checkBadgesFromLocalStorage(): ProgressionData["parcours"] {
-  // Parcours Débutant (3 badges)
   const debIntro = localStorage.getItem("badge_deb_intro") === "true";
   const debMethodo = localStorage.getItem("badge_deb_methodo") === "true";
   const debOutils = localStorage.getItem("badge_deb_outils") === "true";
   const debutantComplete = debIntro && debMethodo && debOutils;
 
-  // Parcours Intermédiaire (3 badges)
   const intIntro = localStorage.getItem("badge_int_intro") === "true";
   const intMethodo = localStorage.getItem("badge_int_methodo") === "true";
   const intOutils = localStorage.getItem("badge_int_outils") === "true";
   const intermediaireComplete = intIntro && intMethodo && intOutils;
 
-  // Parcours Avancé (3 badges)
   const advIntro = localStorage.getItem("badge_adv_intro") === "true";
   const advMethodo = localStorage.getItem("badge_adv_methodo") === "true";
   const advOutils = localStorage.getItem("badge_adv_outils") === "true";
@@ -61,7 +62,15 @@ function checkBadgesFromLocalStorage(): ProgressionData["parcours"] {
   };
 }
 
-// NOUVELLE FONCTION : Vérifier les études de cas
+function checkModulesFromLocalStorage(): ProgressionData["modulesSpecialises"] {
+  return {
+    shodan: localStorage.getItem("badge_module_shodan") === "true",
+    linkedin: localStorage.getItem("badge_module_linkedin") === "true",
+    telegram: localStorage.getItem("badge_module_telegram") === "true",
+    discord: localStorage.getItem("badge_module_discord") === "true",
+  };
+}
+
 function checkEtudesDeCasFromLocalStorage(): boolean {
   const caseGeo = localStorage.getItem("badge_case_geo") === "true";
   const caseMedia = localStorage.getItem("badge_case_media") === "true";
@@ -72,13 +81,11 @@ function checkEtudesDeCasFromLocalStorage(): boolean {
   return caseGeo && caseMedia && caseAttr && caseChrono && caseFinal;
 }
 
-// NOUVELLE FONCTION : Vérifier les exercices
 function checkExercicesFromLocalStorage(): boolean {
   const exercicesCompleted = parseInt(localStorage.getItem("exercices_completed") || "0");
   return exercicesCompleted >= 20;
 }
 
-// NOUVELLE FONCTION : Vérifier les quiz
 function checkQuizFromLocalStorage(): ProgressionData["quiz"] {
   const quizResults = localStorage.getItem("quiz_results");
   
@@ -105,7 +112,6 @@ function checkQuizFromLocalStorage(): ProgressionData["quiz"] {
   };
 }
 
-// NOUVELLE FONCTION : Vérifier le CTF
 function checkCTFFromLocalStorage(): boolean {
   const ctfProgress = localStorage.getItem("ctf_progress");
   if (!ctfProgress) return false;
@@ -113,10 +119,9 @@ function checkCTFFromLocalStorage(): boolean {
   const progress = JSON.parse(ctfProgress);
   const solvedCount = progress.filter((ch: any) => ch.solved).length;
   
-  return solvedCount >= 11; // Tous les CTF résolus
+  return solvedCount >= 11;
 }
 
-// Récupérer la progression actuelle EN TEMPS RÉEL
 export function getProgression(): ProgressionData {
   const stored = localStorage.getItem(STORAGE_KEY);
   let progression: ProgressionData;
@@ -132,6 +137,12 @@ export function getProgression(): ProgressionData {
         intermediaire: false,
         avance: false,
       },
+      modulesSpecialises: {
+        shodan: false,
+        linkedin: false,
+        telegram: false,
+        discord: false,
+      },
       exercices: false,
       etudesDeCas: false,
       quiz: {
@@ -146,28 +157,23 @@ export function getProgression(): ProgressionData {
     };
   }
 
-  // MISE À JOUR EN TEMPS RÉEL depuis le localStorage
   progression.parcours = checkBadgesFromLocalStorage();
+  progression.modulesSpecialises = checkModulesFromLocalStorage();
   progression.etudesDeCas = checkEtudesDeCasFromLocalStorage();
   progression.exercices = checkExercicesFromLocalStorage();
   progression.quiz = checkQuizFromLocalStorage();
   progression.ctfChallenge = checkCTFFromLocalStorage();
 
-  // Vérifier si tout est complété
   checkAndMarkComplete(progression);
-  
-  // Sauvegarder la progression mise à jour
   saveProgression(progression);
 
   return progression;
 }
 
-// Sauvegarder la progression
 function saveProgression(data: ProgressionData) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-// Marquer un parcours comme complété (DEPRECATED - détection auto maintenant)
 export function markParcoursComplete(niveau: "debutant" | "intermediaire" | "avance") {
   initDateDebut();
   const progression = getProgression();
@@ -177,7 +183,6 @@ export function markParcoursComplete(niveau: "debutant" | "intermediaire" | "ava
   console.log(`✅ Parcours ${niveau} complété`);
 }
 
-// Marquer les exercices comme complétés (DEPRECATED)
 export function markExercicesComplete() {
   initDateDebut();
   const progression = getProgression();
@@ -187,7 +192,6 @@ export function markExercicesComplete() {
   console.log("✅ Exercices complétés");
 }
 
-// Marquer les études de cas comme complétées (DEPRECATED)
 export function markEtudesDeCasComplete() {
   initDateDebut();
   const progression = getProgression();
@@ -197,7 +201,6 @@ export function markEtudesDeCasComplete() {
   console.log("✅ Études de cas complétées");
 }
 
-// Marquer un quiz comme complété (DEPRECATED - détection auto)
 export function markQuizComplete(quizId: string) {
   initDateDebut();
   const progression = getProgression();
@@ -220,7 +223,6 @@ export function markQuizComplete(quizId: string) {
   }
 }
 
-// Marquer le CTF Challenge comme complété (DEPRECATED)
 export function markCTFComplete() {
   initDateDebut();
   const progression = getProgression();
@@ -230,12 +232,17 @@ export function markCTFComplete() {
   console.log("✅ CTF Challenge complété");
 }
 
-// Vérifier si TOUT est complété et marquer la date de fin
 function checkAndMarkComplete(progression: ProgressionData) {
   const allParcoursComplete = 
     progression.parcours.debutant &&
     progression.parcours.intermediaire &&
     progression.parcours.avance;
+
+  const allModulesComplete =
+    progression.modulesSpecialises.shodan &&
+    progression.modulesSpecialises.linkedin &&
+    progression.modulesSpecialises.telegram &&
+    progression.modulesSpecialises.discord;
 
   const allQuizComplete = 
     progression.quiz.osintBasics &&
@@ -247,6 +254,7 @@ function checkAndMarkComplete(progression: ProgressionData) {
 
   const everythingComplete = 
     allParcoursComplete &&
+    allModulesComplete &&
     progression.exercices &&
     progression.etudesDeCas &&
     allQuizComplete &&
@@ -258,22 +266,24 @@ function checkAndMarkComplete(progression: ProgressionData) {
   }
 }
 
-// Vérifier si le certificat est disponible
 export function isCertificatAvailable(): boolean {
   const progression = getProgression();
   return progression.dateFin !== null;
 }
 
-// Obtenir le pourcentage de complétion
 export function getCompletionPercentage(): number {
   const progression = getProgression();
   
   let completed = 0;
-  let total = 11; // 3 parcours + 1 exercices + 1 études + 6 quiz + 1 CTF
+  let total = 15; // 3 parcours + 4 modules + 1 exercices + 1 études + 6 quiz + 1 CTF
 
   if (progression.parcours.debutant) completed++;
   if (progression.parcours.intermediaire) completed++;
   if (progression.parcours.avance) completed++;
+  if (progression.modulesSpecialises.shodan) completed++;
+  if (progression.modulesSpecialises.linkedin) completed++;
+  if (progression.modulesSpecialises.telegram) completed++;
+  if (progression.modulesSpecialises.discord) completed++;
   if (progression.exercices) completed++;
   if (progression.etudesDeCas) completed++;
   if (progression.quiz.osintBasics) completed++;
@@ -287,7 +297,6 @@ export function getCompletionPercentage(): number {
   return Math.round((completed / total) * 100);
 }
 
-// Obtenir les détails de complétion pour l'affichage
 export function getCompletionDetails() {
   const progression = getProgression();
   
@@ -297,6 +306,13 @@ export function getCompletionDetails() {
       intermediaire: progression.parcours.intermediaire,
       avance: progression.parcours.avance,
       allComplete: progression.parcours.debutant && progression.parcours.intermediaire && progression.parcours.avance,
+    },
+    modulesSpecialises: {
+      shodan: progression.modulesSpecialises.shodan,
+      linkedin: progression.modulesSpecialises.linkedin,
+      telegram: progression.modulesSpecialises.telegram,
+      discord: progression.modulesSpecialises.discord,
+      allComplete: progression.modulesSpecialises.shodan && progression.modulesSpecialises.linkedin && progression.modulesSpecialises.telegram && progression.modulesSpecialises.discord,
     },
     exercices: progression.exercices,
     etudesDeCas: progression.etudesDeCas,
@@ -321,7 +337,6 @@ export function getCompletionDetails() {
   };
 }
 
-// Reset (pour debug/admin uniquement)
 export function resetProgression() {
   localStorage.removeItem(STORAGE_KEY);
   localStorage.removeItem(DATE_DEBUT_KEY);

@@ -36,6 +36,16 @@ export default function BadgesOSINT() {
       ],
     },
     {
+      title: "🎯 Modules OSINT Spécialisés",
+      description: "Expertise sur plateformes et outils ciblés",
+      badges: [
+        { key: "badge_module_shodan", label: "Expert Shodan", desc: "Maîtriser la recherche d'objets connectés et IoT" },
+        { key: "badge_module_linkedin", label: "Expert LinkedIn", desc: "Investigations professionnelles et reconnaissance" },
+        { key: "badge_module_telegram", label: "Expert Telegram", desc: "Analyse de canaux et groupes Telegram" },
+        { key: "badge_module_discord", label: "Expert Discord", desc: "Investigation de serveurs et communautés Discord" },
+      ],
+    },
+    {
       title: "🛰️ Études de Cas OSINT",
       description: "Investigations réelles type Bellingcat",
       badges: [
@@ -293,19 +303,16 @@ export default function BadgesOSINT() {
         </h3>
         <ul style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px", margin: 0 }}>
           <li>
-            <strong>Parcours de formation :</strong> Complétez les modules Introduction, Méthodologie et Outils de chaque niveau (Débutant, Intermédiaire, Avancé)
+            <strong>Parcours de formation :</strong> Complétez les modules Introduction, Méthodologie et Outils de chaque niveau
           </li>
           <li>
-            <strong>Exercices pratiques :</strong> Résolvez 5 exercices par niveau de difficulté pour débloquer les badges de praticien (Débutant, Intermédiaire, Avancé, Expert)
+            <strong>Modules spécialisés :</strong> Validez les quiz des modules Shodan, LinkedIn, Telegram et Discord avec 80% minimum
+          </li>
+          <li>
+            <strong>Exercices pratiques :</strong> Résolvez 5 exercices par niveau de difficulté
           </li>
           <li>
             <strong>Études de cas :</strong> Résolvez les cas d'investigation OSINT inspirés de situations réelles
-          </li>
-          <li>
-            <strong>Badge ultime :</strong> Complétez tous les cas d'étude pour obtenir le badge "Analyste OSINT Certifié"
-          </li>
-          <li>
-            <strong>Progression permanente :</strong> Vos badges sont sauvegardés et restent débloqués même après fermeture du navigateur
           </li>
         </ul>
       </div>
