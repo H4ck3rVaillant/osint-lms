@@ -36,6 +36,11 @@ import CasFinalOSINT from "./pages/CasFinalOSINT";
 /* QUIZ */
 import QuizPage from "./pages/QuizPage";
 import QuizSession from "./pages/QuizSession";
+/* MODULES OSINT SPÉCIALISÉS */
+import ShodanModule from "./pages/ShodanModule";
+import LinkedInModule from "./pages/LinkedInModule";
+import TelegramModule from "./pages/TelegramModule";
+import DiscordModule from "./pages/DiscordModule";
 /* AUTRES */
 import ExercicesOSINT from "./pages/ExercicesOSINT";
 import BadgesOSINT from "./pages/BadgesOSINT";
@@ -43,11 +48,6 @@ import CertificatPage from "./pages/CertificatPage";
 import YouTubePage from "./pages/YouTubePage";
 import ChallengesPage from "./pages/ChallengesPage";
 import AdminPanel from "./pages/AdminPanel";
-/* MODULES OSINT SPÉCIALISÉS */
-import ShodanModule from "./pages/ShodanModule";
-import LinkedInModule from "./pages/LinkedInModule";
-import TelegramModule from "./pages/TelegramModule";
-import DiscordModule from "./pages/DiscordModule";
 /* NOUVEAUX OUTILS & RESSOURCES */
 import HackerAI from "./pages/HackerAI";
 import DependencyTrack from "./pages/DependencyTrack";
@@ -61,6 +61,7 @@ import LabOSINT from "./pages/LabOSINT";
 import CTFPage from "./pages/CTFPage";
 import Leaderboard from "./pages/Leaderboard";
 import Gamification from "./pages/Gamification";
+import StreakCalendar from "./pages/StreakCalendar";
 /* ARGUS V2.0 */
 import ArgusRecon from "./pages/ArgusRecon";
 import ArgusConsole from "./pages/ArgusConsole";
@@ -195,6 +196,7 @@ export default function App() {
         <Route path="/ctf" element={<Protected><Layout><CTFPage /></Layout></Protected>} />
         <Route path="/leaderboard" element={<Protected><Layout><Leaderboard /></Layout></Protected>} />
         <Route path="/progression" element={<Protected><Layout><Gamification /></Layout></Protected>} />
+        <Route path="/streak" element={<Protected><Layout><StreakCalendar /></Layout></Protected>} />
 
         {/* ARGUS V2.0 */}
         <Route path="/outils/argus" element={<Protected><Layout><ArgusRecon /></Layout></Protected>} />

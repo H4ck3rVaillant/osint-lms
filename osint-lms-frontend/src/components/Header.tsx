@@ -58,7 +58,7 @@ export default function Header() {
     color: colors.textPrimary,
     textDecoration: "none" as const,
     fontWeight: "500" as const,
-    padding: "6px 8px",
+    padding: "6px 6px",
     borderRadius: "6px",
     fontSize: "0.8rem",
     whiteSpace: "nowrap" as const,
@@ -89,9 +89,9 @@ export default function Header() {
         display: "flex",
         alignItems: "center",
         padding: "8px 15px",
-        gap: "12px",
+        gap: "8px",
         minHeight: "60px",
-        flexWrap: "wrap" as const,
+        flexWrap: "nowrap" as const,
       }}>
         
         {/* 📱 MENU HAMBURGER (mobile only) */}
@@ -136,7 +136,7 @@ export default function Header() {
         <nav style={{
           display: "flex",
           alignItems: "center",
-          gap: "3px",
+          gap: "2px",
         }}
         className="desktop-nav">
           {[
