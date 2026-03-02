@@ -404,49 +404,49 @@ export default function ShodanModule() {
                 </div>
               ))}
 
-              <button
-                onClick={handleQuizSubmit}
-                disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
-                style={{
-                  padding: "15px 40px",
-                  background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border,
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "8px",
-                  fontSize: "1.1rem",
-                  fontWeight: "600",
-                  cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed",
-                }}
-              >
-                Valider le quiz
+              <div style={{ display: "flex", gap: "15px" }}>
+                <button
+                  onClick={handleQuizSubmit}
+                  disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
+                  style={{
+                    padding: "15px 40px",
+                    background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border,
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontSize: "1.1rem",
+                    fontWeight: "600",
+                    cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed",
+                  }}
+                >
+                  Valider le quiz
+                </button>
 
-              <button
-                onClick={() => setShowResetModal(true)}
-                style={{
-                  padding: "15px 40px",
-                  marginLeft: "15px",
-                  background: "#0b0f1a",
-                  color: "#00ff9c",
-                  border: "2px solid #00ff9c",
-                  borderRadius: "8px",
-                  fontSize: "1.1rem",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#00ff9c";
-                  e.currentTarget.style.color = "#0b0f1a";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#0b0f1a";
-                  e.currentTarget.style.color = "#00ff9c";
-                }}
-              >
-                🔄 Réinitialiser
-              </button>
-              </button>
-
+                <button
+                  onClick={() => setShowResetModal(true)}
+                  style={{
+                    padding: "15px 40px",
+                    background: "#0b0f1a",
+                    color: "#00ff9c",
+                    border: "2px solid #00ff9c",
+                    borderRadius: "8px",
+                    fontSize: "1.1rem",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#00ff9c";
+                    e.currentTarget.style.color = "#0b0f1a";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#0b0f1a";
+                    e.currentTarget.style.color = "#00ff9c";
+                  }}
+                >
+                  🔄 Réinitialiser
+                </button>
+              </div>
               {showResults && (
                 <div style={{
                   marginTop: "30px",
