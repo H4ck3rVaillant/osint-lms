@@ -6,6 +6,7 @@ export default function DiscordModule() {
   const [activeTab, setActiveTab] = useState("theory");
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const tabs = [
     { id: "theory", label: "📖 Théorie", icon: "📚" },
@@ -17,56 +18,56 @@ export default function DiscordModule() {
   const quizQuestions = [
     {
       id: 1,
-      question: "Qu'est-ce qu'un serveur Discord ?",
+      question: "Qu'est-ce que Discord ?",
       options: [
-        "Un espace communautaire avec canaux texte et vocaux",
-        "Un ordinateur de jeu en ligne",
+        "Un moteur de recherche pour objets connectés",
+        "Un outil de scan de ports",
         "Un VPN gratuit",
-        "Un hébergeur de site web"
+        "Un antivirus"
       ],
       correct: 0
     },
     {
       id: 2,
-      question: "Comment rejoindre un serveur Discord public ?",
+      question: "Quelle commande Discord permet de filtrer par pays ?",
       options: [
-        "Via un lien d'invitation discord.gg/CODE",
-        "Il faut demander l'autorisation à Discord",
-        "Uniquement via recherche Google",
-        "C'est impossible"
+        "country:US",
+        "location:US",
+        "geo:US",
+        "nation:US"
       ],
       correct: 0
     },
     {
       id: 3,
-      question: "Les messages Discord sont-ils indexés par Google ?",
+      question: "Quel port est utilisé par défaut pour les webcams IP ?",
       options: [
-        "Non, Discord n'est pas indexé publiquement",
-        "Oui, tous les messages",
-        "Uniquement les serveurs publics",
-        "Seulement les messages vocaux"
+        "80",
+        "443",
+        "8080",
+        "554"
       ],
       correct: 0
     },
     {
       id: 4,
-      question: "Quel est le format d'un Discord ID ?",
+      question: "Que signifie le filtre 'product:' dans Discord ?",
       options: [
-        "Un nombre à 18 chiffres",
-        "Un email",
-        "Un pseudo",
-        "Une adresse IP"
+        "Recherche par nom de produit/service",
+        "Recherche par prix",
+        "Recherche par fabricant",
+        "Recherche par version"
       ],
       correct: 0
     },
     {
       id: 5,
-      question: "Peut-on récupérer des messages supprimés sur Discord ?",
+      question: "Discord peut-il détecter des appareils IoT vulnérables ?",
       options: [
-        "Oui, avec des bots présents au moment de l'envoi",
-        "Non, impossible",
-        "Oui, Discord les garde 30 jours",
-        "Uniquement les admins"
+        "Oui, c'est une de ses fonctions principales",
+        "Non, seulement les sites web",
+        "Oui, mais uniquement avec un compte payant",
+        "Non, il ne fait que scanner les ports"
       ],
       correct: 0
     }
@@ -74,6 +75,12 @@ export default function DiscordModule() {
 
   const handleQuizSubmit = () => {
     setShowResults(true);
+  };
+
+  const handleReset = () => {
+    setQuizAnswers({});
+    setShowResults(false);
+    setShowResetModal(false);
   };
 
   const getScore = () => {
@@ -113,7 +120,7 @@ export default function DiscordModule() {
             maxWidth: "700px",
             margin: "0 auto",
           }}>
-            Investigation et reconnaissance sur les serveurs Discord
+            Maîtrisez Discord, le moteur de recherche pour serveurs et communautés
           </p>
         </div>
 
@@ -131,7 +138,7 @@ export default function DiscordModule() {
               style={{
                 padding: "12px 24px",
                 background: activeTab === tab.id ? colors.accent : colors.bgSecondary,
-                color: activeTab === tab.id ? "#fff" : colors.textPrimary,
+                color: activeTab === tab.id ? "#020617" : colors.textPrimary,
                 border: `2px solid ${activeTab === tab.id ? colors.accent : colors.border}`,
                 borderRadius: "12px",
                 fontSize: "1rem",
@@ -154,151 +161,22 @@ export default function DiscordModule() {
           {activeTab === "theory" && (
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
-                📖 Discord OSINT : Introduction
+                📖 Qu'est-ce que Discord ?
               </h2>
-              
-              <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "20px" }}>
-                Discord est une plateforme de communication initialement créée pour les gamers, mais désormais utilisée par des millions de communautés (crypto, dev, éducation, activisme, etc.). Avec plus de <strong>150 millions d'utilisateurs actifs mensuels</strong>, Discord est devenu un terrain fertile pour l'OSINT.
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
+                Discord est le moteur de recherche pour objets connectés...
               </p>
-
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
-                🎯 Pourquoi Discord en OSINT ?
-              </h3>
-
-              <ul style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
-                <li><strong>Communautés fermées :</strong> Beaucoup d'informations sensibles circulent dans des serveurs privés</li>
-                <li><strong>Pas d'indexation Google :</strong> Les messages ne sont pas publiquement accessibles</li>
-                <li><strong>Activisme et whistleblowing :</strong> Des fuites y sont parfois partagées</li>
-                <li><strong>Crypto et NFT :</strong> Nombreuses arnaques et projets douteux</li>
-                <li><strong>Gaming et e-sport :</strong> Informations sur des joueurs, équipes, sponsors</li>
-              </ul>
-
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
-                🔑 Structure de Discord
-              </h3>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Serveurs (Guilds)</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  Espaces communautaires regroupant des canaux textuels et vocaux. Chaque serveur a un <strong>Server ID unique</strong> (18 chiffres).
-                </p>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Canaux (Channels)</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  Salons de discussion à l'intérieur d'un serveur. Peuvent être textuels (#general), vocaux, ou forums. Chacun a un <strong>Channel ID</strong>.
-                </p>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Utilisateurs</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  Identifiés par un <strong>User ID</strong> (18 chiffres) et un pseudo (Username#1234). Les avatars, bios, et statuts peuvent révéler des informations.
-                </p>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>⚠️ Limites de l'OSINT Discord</h4>
-                <ul style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  <li>Les serveurs privés nécessitent une invitation</li>
-                  <li>Les messages ne sont pas indexés par les moteurs de recherche</li>
-                  <li>Discord supprime les serveurs illégaux régulièrement</li>
-                  <li>Les utilisateurs peuvent masquer leur présence en ligne</li>
-                </ul>
-              </div>
             </div>
           )}
 
           {activeTab === "tools" && (
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
-                🔧 Outils et Techniques
+                🔧 Outils Discord
               </h2>
-
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>
-                📌 Recherche de serveurs Discord
-              </h3>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>1. Annuaires Discord</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Sites listant des serveurs publics par catégorie :
-                </p>
-                <ul style={{ color: colors.textSecondary, lineHeight: "1.6", marginLeft: "20px" }}>
-                  <li><strong>https://disboard.org</strong> - Plus de 800 000 serveurs</li>
-                  <li><strong>https://discord.me</strong> - Serveurs populaires</li>
-                  <li><strong>https://top.gg</strong> - Bots et serveurs</li>
-                  <li><strong>https://discordservers.com</strong> - Communautés diverses</li>
-                </ul>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>2. Google Dorks</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Bien que Discord ne soit pas indexé, on peut trouver des liens d'invitation :
-                </p>
-                <div style={{ fontFamily: "monospace", fontSize: "0.9rem" }}>
-                  <div style={{ marginBottom: "10px", color: colors.textSecondary }}>
-                    <code style={{ color: colors.accent }}>site:discord.gg "OSINT"</code>
-                  </div>
-                  <div style={{ marginBottom: "10px", color: colors.textSecondary }}>
-                    <code style={{ color: colors.accent }}>inurl:discord.gg "crypto"</code>
-                  </div>
-                  <div style={{ color: colors.textSecondary }}>
-                    <code style={{ color: colors.accent }}>"discord.gg" "hack" site:reddit.com</code>
-                  </div>
-                </div>
-              </div>
-
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
-                🛠️ Outils OSINT pour Discord
-              </h3>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Discord ID Lookup</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Site : <strong>https://discord.id</strong>
-                </p>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6" }}>
-                  Permet de récupérer des informations sur un utilisateur via son ID : date de création du compte, avatar, badge.
-                </p>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Discord Lookup (discord.id)</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Entrez un User ID ou Server ID pour obtenir :
-                </p>
-                <ul style={{ color: colors.textSecondary, lineHeight: "1.6", marginLeft: "20px" }}>
-                  <li>Date de création</li>
-                  <li>Avatar et bannière</li>
-                  <li>Badges (Nitro, Early Supporter, etc.)</li>
-                </ul>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Discord.py (Python Bot)</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Créer un bot Discord pour automatiser la collecte d'informations :
-                </p>
-                <code style={{ background: colors.bgSecondary, padding: "10px", borderRadius: "4px", display: "block", fontSize: "0.85rem" }}>
-                  pip install discord.py<br/>
-                  # Log tous les messages d'un serveur<br/>
-                  import discord<br/>
-                  client = discord.Client()<br/>
-                  @client.event<br/>
-                  async def on_message(message):<br/>
-                  {"    "}print(f"{'{'}message.author{'}'}: {'{'}message.content{'}'}")
-                </code>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>⚠️ Considérations éthiques</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  Créer des bots pour logger les messages sans consentement viole les CGU de Discord et peut être illégal dans certains pays. Utilisez ces techniques uniquement dans un cadre légal (pentest autorisé, investigation légitime).
-                </p>
-              </div>
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
+                Commandes et filtres...
+              </p>
             </div>
           )}
 
@@ -307,66 +185,9 @@ export default function DiscordModule() {
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
                 💡 Exercices Pratiques
               </h2>
-
-              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
-                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-                  Exercice 1 : Trouver des serveurs Discord d'une communauté
-                </h3>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-                  <strong>Objectif :</strong> Identifier tous les serveurs Discord liés à la cybersécurité.
-                </p>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "10px" }}>
-                  <strong>Méthode :</strong>
-                </p>
-                <ol style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-                  <li>Allez sur https://disboard.org</li>
-                  <li>Recherchez "cybersecurity" ou "OSINT"</li>
-                  <li>Rejoignez 3-5 serveurs</li>
-                  <li>Observez les canaux, la structure, les règles</li>
-                  <li>Notez les serveurs partenaires (souvent listés)</li>
-                </ol>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
-                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-                  Exercice 2 : Extraction d'un User ID
-                </h3>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-                  <strong>Objectif :</strong> Récupérer l'ID d'un utilisateur Discord et analyser son profil.
-                </p>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "10px" }}>
-                  <strong>Étapes :</strong>
-                </p>
-                <ol style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-                  <li>Activez le "Developer Mode" dans Discord (Paramètres → Avancé)</li>
-                  <li>Clic droit sur un utilisateur → "Copier l'identifiant"</li>
-                  <li>Allez sur https://discord.id</li>
-                  <li>Collez l'ID et récupérez : date de création, avatar, badges</li>
-                  <li>Croisez avec d'autres plateformes (Twitter, GitHub) via le pseudo</li>
-                </ol>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px" }}>
-                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-                  Exercice 3 : Analyse d'un serveur suspect
-                </h3>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-                  <strong>Objectif :</strong> Identifier les red flags d'un serveur Discord potentiellement malveillant.
-                </p>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "10px" }}>
-                  <strong>Critères à analyser :</strong>
-                </p>
-                <ul style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-                  <li>Nombre de membres (bot farms ?)</li>
-                  <li>Date de création (récent = suspect)</li>
-                  <li>Ratio membres/messages (inactive ?)</li>
-                  <li>Présence de bots de modération</li>
-                  <li>Contenu des discussions (scam, phishing ?)</li>
-                </ul>
-                <p style={{ color: "#ef4444", marginTop: "15px", fontWeight: "600" }}>
-                  ⚠️ Si vous identifiez un serveur malveillant, signalez-le à Discord !
-                </p>
-              </div>
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
+                Exercices guidés...
+              </p>
             </div>
           )}
 
@@ -409,20 +230,21 @@ export default function DiscordModule() {
                 </div>
               ))}
 
-              <button
-                onClick={handleQuizSubmit}
-                disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
-                style={{
-                  padding: "15px 40px",
-                  background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border,
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "8px",
-                  fontSize: "1.1rem",
-                  fontWeight: "600",
-                  cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed",
-                }}
-              >
+              <div style={{ display: "flex", gap: "15px" }}>
+                <button
+                  onClick={handleQuizSubmit}
+                  disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
+                  style={{
+                    padding: "15px 40px",
+                    background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border,
+                    color: "#020617",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontSize: "1.1rem",
+                    fontWeight: "600",
+                    cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed",
+                  }}
+                >
                   Valider le quiz
                 </button>
 
@@ -430,20 +252,28 @@ export default function DiscordModule() {
                   onClick={() => setShowResetModal(true)}
                   style={{
                     padding: "15px 40px",
-                    background: "#000",
-                    color: colors.accent,
-                    border: `2px solid ${colors.accent}`,
+                    background: "#0b0f1a",
+                    color: "#00ff9c",
+                    border: "2px solid #00ff9c",
                     borderRadius: "8px",
                     fontSize: "1.1rem",
                     fontWeight: "600",
                     cursor: "pointer",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#00ff9c";
+                    e.currentTarget.style.color = "#0b0f1a";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#0b0f1a";
+                    e.currentTarget.style.color = "#00ff9c";
                   }}
                 >
                   🔄 Réinitialiser
                 </button>
               </div>
 
-              {/* RESULTS */}
               {showResults && (
                 <div style={{
                   marginTop: "30px",
@@ -469,6 +299,77 @@ export default function DiscordModule() {
           )}
         </div>
       </div>
+
+      {/* MODAL RESET TRYHACKME */}
+      {showResetModal && (
+        <>
+          <div 
+            onClick={() => setShowResetModal(false)}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0, 0, 0, 0.8)",
+              zIndex: 9998,
+            }} 
+          />
+          <div style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "#0b0f1a",
+            border: "3px solid #00ff9c",
+            borderRadius: "12px",
+            padding: "40px",
+            maxWidth: "500px",
+            width: "90%",
+            zIndex: 9999,
+            boxShadow: "0 0 40px rgba(0, 255, 156, 0.5)",
+          }}>
+            <h3 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px", textAlign: "center" }}>
+              ⚠️ Réinitialiser le Quiz
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "30px", textAlign: "center", lineHeight: "1.6" }}>
+              Êtes-vous sûr de vouloir réinitialiser ce quiz ? Toutes vos réponses seront effacées.
+            </p>
+            <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
+              <button
+                onClick={() => setShowResetModal(false)}
+                style={{
+                  padding: "12px 30px",
+                  background: "transparent",
+                  color: "#9ca3af",
+                  border: "2px solid #2a3f3f",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleReset}
+                style={{
+                  padding: "12px 30px",
+                  background: "#00ff9c",
+                  color: "#0b0f1a",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
