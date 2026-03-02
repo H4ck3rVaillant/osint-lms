@@ -414,6 +414,38 @@ export default function ShodanModule() {
                 Valider le quiz
               </button>
 
+              <button
+                onClick={() => {
+                  if (window.confirm("Voulez-vous vraiment réinitialiser ce quiz ?")) {
+                    setQuizAnswers({});
+                    setShowResults(false);
+                    alert("✅ Quiz réinitialisé !");
+                  }
+                }}
+                style={{
+                  padding: "15px 40px",
+                  marginLeft: "15px",
+                  background: "#0b0f1a",
+                  color: "#00ff9c",
+                  border: "2px solid #00ff9c",
+                  borderRadius: "8px",
+                  fontSize: "1.1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#00ff9c";
+                  e.currentTarget.style.color = "#0b0f1a";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#0b0f1a";
+                  e.currentTarget.style.color = "#00ff9c";
+                }}
+              >
+                🔄 Réinitialiser
+              </button>
+
               {showResults && (
                 <div style={{
                   marginTop: "30px",
