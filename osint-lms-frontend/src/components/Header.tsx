@@ -40,6 +40,7 @@ export default function Header() {
   const { theme, toggleTheme } = useTheme();
   const colors = useThemeColors();
   const [showQuizMenu, setShowQuizMenu] = useState(false);
+  const [showModulesMenu, setShowModulesMenu] = useState(false);
   const [showOutilsMenu, setShowOutilsMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -141,6 +142,122 @@ export default function Header() {
           {[
             { label: "Dashboard", to: "/dashboard" },
             { label: "Parcours", to: "/parcours" },
+          ].map((item) => (
+            <Link key={item.to} to={item.to} style={linkStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = colors.accent;
+              e.currentTarget.style.background = colors.bgSecondary;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = colors.textPrimary;
+              e.currentTarget.style.background = "transparent";
+            }}>
+              {item.label}
+            </Link>
+          ))}
+
+          {/* Menu Modules OSINT */}
+          <div style={{ position: "relative" as const }}>
+            <span onClick={() => setShowModulesMenu(!showModulesMenu)} style={{
+              ...linkStyle,
+              cursor: "pointer",
+              display: "block",
+              color: showModulesMenu ? colors.accent : colors.textPrimary,
+              background: showModulesMenu ? colors.bgSecondary : "transparent",
+            }}>
+              Modules OSINT ▾
+            </span>
+
+            {showModulesMenu && (
+              <div style={{
+                position: "absolute" as const,
+                top: "36px",
+                left: 0,
+                background: colors.bgPrimary,
+                border: `1px solid ${colors.accent}`,
+                borderRadius: "8px",
+                padding: "8px 0",
+                minWidth: "180px",
+                zIndex: 1000,
+                boxShadow: `0 4px 20px ${colors.shadow}`,
+              }}>
+                <Link to="/modules/shodan" onClick={() => setShowModulesMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  🔍 Shodan
+                </Link>
+                <Link to="/modules/linkedin" onClick={() => setShowModulesMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  💼 LinkedIn
+                </Link>
+                <Link to="/modules/telegram" onClick={() => setShowModulesMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  ✈️ Telegram
+                </Link>
+                <Link to="/modules/discord" onClick={() => setShowModulesMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  🎮 Discord
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {[
             { label: "Exercices", to: "/exercices-osint" },
             { label: "Etudes de cas", to: "/etudes-osint" },
           ].map((item) => (
@@ -348,6 +465,7 @@ export default function Header() {
           {[
             { label: "Leaderboard", to: "/leaderboard" },
             { label: "Progression", to: "/progression" },
+            { label: "Streak", to: "/streak" },
             { label: "Badges", to: "/badges-osint" },
             { label: "Certificat", to: "/certificat" },
           ].map((item) => (
