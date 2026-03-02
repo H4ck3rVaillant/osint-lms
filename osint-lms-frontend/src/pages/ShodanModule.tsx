@@ -6,6 +6,7 @@ export default function ShodanModule() {
   const [activeTab, setActiveTab] = useState("theory");
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const tabs = [
     { id: "theory", label: "📖 Théorie", icon: "📚" },
@@ -84,6 +85,12 @@ export default function ShodanModule() {
       }
     });
     return correct;
+  };
+
+  const handleReset = () => {
+    setQuizAnswers({});
+    setShowResults(false);
+    setShowResetModal(false);
   };
 
   return (
@@ -412,16 +419,9 @@ export default function ShodanModule() {
                 }}
               >
                 Valider le quiz
-              </button>
 
               <button
-                onClick={() => {
-                  if (window.confirm("Voulez-vous vraiment réinitialiser ce quiz ?")) {
-                    setQuizAnswers({});
-                    setShowResults(false);
-                    alert("✅ Quiz réinitialisé !");
-                  }
-                }}
+                onClick={() => setShowResetModal(true)}
                 style={{
                   padding: "15px 40px",
                   marginLeft: "15px",
@@ -444,6 +444,7 @@ export default function ShodanModule() {
                 }}
               >
                 🔄 Réinitialiser
+              </button>
               </button>
 
               {showResults && (
@@ -471,6 +472,77 @@ export default function ShodanModule() {
           )}
         </div>
       </div>
+
+      {/* MODAL RESET TRYHACKME */}
+      {showResetModal && (
+        <>
+          <div 
+            onClick={() => setShowResetModal(false)}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0, 0, 0, 0.8)",
+              zIndex: 9998,
+            }} 
+          />
+          <div style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "#0b0f1a",
+            border: "3px solid #00ff9c",
+            borderRadius: "12px",
+            padding: "40px",
+            maxWidth: "500px",
+            width: "90%",
+            zIndex: 9999,
+            boxShadow: "0 0 40px rgba(0, 255, 156, 0.5)",
+          }}>
+            <h3 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px", textAlign: "center" }}>
+              ⚠️ Réinitialiser le Quiz
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "30px", textAlign: "center", lineHeight: "1.6" }}>
+              Êtes-vous sûr de vouloir réinitialiser ce quiz ? Toutes vos réponses seront effacées.
+            </p>
+            <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
+              <button
+                onClick={() => setShowResetModal(false)}
+                style={{
+                  padding: "12px 30px",
+                  background: "transparent",
+                  color: "#9ca3af",
+                  border: "2px solid #2a3f3f",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleReset}
+                style={{
+                  padding: "12px 30px",
+                  background: "#00ff9c",
+                  color: "#0b0f1a",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

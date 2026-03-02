@@ -6,6 +6,7 @@ export default function TelegramModule() {
   const [activeTab, setActiveTab] = useState("theory");
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const tabs = [
     { id: "theory", label: "📖 Théorie", icon: "📚" },
@@ -17,56 +18,56 @@ export default function TelegramModule() {
   const quizQuestions = [
     {
       id: 1,
-      question: "Qu'est-ce qu'un canal Telegram ?",
+      question: "Qu'est-ce que Telegram ?",
       options: [
-        "Un moyen de diffusion public ou privé",
-        "Un groupe de discussion privé",
-        "Un bot automatisé",
-        "Un service de VPN"
+        "Un moteur de recherche pour objets connectés",
+        "Un outil de scan de ports",
+        "Un VPN gratuit",
+        "Un antivirus"
       ],
       correct: 0
     },
     {
       id: 2,
-      question: "Comment accéder à un canal Telegram public ?",
+      question: "Quelle commande Telegram permet de filtrer par pays ?",
       options: [
-        "Via un lien t.me/NomCanal",
-        "Il faut une invitation",
-        "Uniquement via l'application mobile",
-        "Impossible sans compte premium"
+        "country:US",
+        "location:US",
+        "geo:US",
+        "nation:US"
       ],
       correct: 0
     },
     {
       id: 3,
-      question: "Quel outil permet de rechercher dans l'historique d'un canal Telegram ?",
+      question: "Quel port est utilisé par défaut pour les webcams IP ?",
       options: [
-        "Telegram Desktop avec la fonction recherche",
-        "Google",
-        "Shodan",
-        "Maltego"
+        "80",
+        "443",
+        "8080",
+        "554"
       ],
       correct: 0
     },
     {
       id: 4,
-      question: "Les messages Telegram sont-ils indexés par les moteurs de recherche ?",
+      question: "Que signifie le filtre 'product:' dans Telegram ?",
       options: [
-        "Oui, si le canal est public",
-        "Non, jamais",
-        "Seulement avec un compte premium",
-        "Uniquement les images"
+        "Recherche par nom de produit/service",
+        "Recherche par prix",
+        "Recherche par fabricant",
+        "Recherche par version"
       ],
       correct: 0
     },
     {
       id: 5,
-      question: "Est-il possible de récupérer l'historique complet d'un canal ?",
+      question: "Telegram peut-il détecter des appareils IoT vulnérables ?",
       options: [
-        "Oui, via Telegram Desktop ou des outils de scraping",
-        "Non, c'est impossible",
-        "Uniquement les 100 derniers messages",
-        "Seulement si on est admin"
+        "Oui, c'est une de ses fonctions principales",
+        "Non, seulement les sites web",
+        "Oui, mais uniquement avec un compte payant",
+        "Non, il ne fait que scanner les ports"
       ],
       correct: 0
     }
@@ -86,6 +87,12 @@ export default function TelegramModule() {
     return correct;
   };
 
+  const handleReset = () => {
+    setQuizAnswers({});
+    setShowResults(false);
+    setShowResetModal(false);
+  };
+
   return (
     <div style={{
       minHeight: "100vh",
@@ -97,6 +104,7 @@ export default function TelegramModule() {
         margin: "0 auto",
         padding: "40px 20px",
       }}>
+        {/* Header */}
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
           <div style={{ fontSize: "4rem", marginBottom: "15px" }}>✈️</div>
           <h1 style={{
@@ -113,10 +121,11 @@ export default function TelegramModule() {
             maxWidth: "700px",
             margin: "0 auto",
           }}>
-            Recherche et analyse de groupes, canaux et utilisateurs Telegram
+            Maîtrisez Telegram, le moteur de recherche pour objets connectés et appareils IoT
           </p>
         </div>
 
+        {/* Tabs */}
         <div style={{
           display: "flex",
           justifyContent: "center",
@@ -145,159 +154,154 @@ export default function TelegramModule() {
           ))}
         </div>
 
+        {/* Content */}
         <div style={{
           background: colors.bgSecondary,
           border: `1px solid ${colors.border}`,
           borderRadius: "12px",
           padding: "40px",
         }}>
+          {/* THÉORIE */}
           {activeTab === "theory" && (
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
-                📖 Telegram OSINT : Vue d'ensemble
+                📖 Qu'est-ce que Telegram ?
               </h2>
               
               <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "20px" }}>
-                Telegram est une application de messagerie chiffrée avec plus de 700 millions d'utilisateurs actifs. Contrairement à WhatsApp, Telegram permet la création de <strong>canaux publics</strong> et de <strong>groupes de discussion massifs</strong> (jusqu'à 200 000 membres), ce qui en fait une plateforme riche pour l'OSINT.
+                Telegram est souvent appelé <strong>"le Google des hackers"</strong>. Contrairement aux moteurs de recherche traditionnels qui indexent des pages web, Telegram scanne l'ensemble d'Internet pour identifier tous les appareils connectés : serveurs, webcams, routeurs, systèmes industriels, etc.
               </p>
 
               <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
-                🎯 Pourquoi Telegram est important en OSINT ?
+                🎯 Pourquoi utiliser Telegram en OSINT ?
               </h3>
 
               <ul style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
-                <li><strong>Canaux publics indexés :</strong> Des milliers de canaux partagent des informations publiquement</li>
-                <li><strong>Pas de fact-checking :</strong> Beaucoup de désinformation et de leaks y circulent</li>
-                <li><strong>Communautés spécialisées :</strong> Hacking, crypto, whistleblowing, journalisme</li>
-                <li><strong>Anonymat relatif :</strong> Moins de contraintes qu'Instagram ou Facebook</li>
-                <li><strong>Archives accessibles :</strong> Tout l'historique d'un canal est consultable</li>
+                <li>Identifier les infrastructures d'une entreprise cible</li>
+                <li>Découvrir des appareils IoT mal configurés</li>
+                <li>Détecter des vulnérabilités exposées publiquement</li>
+                <li>Cartographier les services en ligne d'une organisation</li>
+                <li>Trouver des webcams, imprimantes, bases de données ouvertes</li>
               </ul>
 
               <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
-                🔑 Structure de Telegram
+                🔑 Concepts clés
               </h3>
 
               <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Canaux (Channels)</h4>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Bannière (Banner)</h4>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  Diffusion unidirectionnelle où seuls les administrateurs peuvent poster. Peuvent être publics (accessibles via t.me/nom) ou privés (sur invitation).
+                  Information renvoyée par un service lorsqu'on s'y connecte. Elle contient généralement le type de serveur, sa version, et d'autres métadonnées.
                 </p>
               </div>
 
               <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Groupes (Groups)</h4>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Filtres Telegram</h4>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  Discussions où tous les membres peuvent échanger. Limités à 200 000 membres. Peuvent être publics ou privés.
-                </p>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Bots</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  Comptes automatisés programmables. Utilisés pour diffuser des infos, modérer, ou effectuer des tâches automatiques.
+                  Critères de recherche comme <code style={{ background: colors.bgSecondary, padding: "2px 6px", borderRadius: "4px" }}>country:</code>, <code style={{ background: colors.bgSecondary, padding: "2px 6px", borderRadius: "4px" }}>port:</code>, <code style={{ background: colors.bgSecondary, padding: "2px 6px", borderRadius: "4px" }}>product:</code> qui permettent d'affiner les résultats.
                 </p>
               </div>
 
               <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>⚠️ Limites de l'OSINT sur Telegram</h4>
-                <ul style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  <li>Les conversations privées sont chiffrées de bout en bout (inaccessibles)</li>
-                  <li>Les numéros de téléphone ne sont pas visibles publiquement</li>
-                  <li>Pas d'API publique pour scraper les membres d'un groupe</li>
-                  <li>Telegram supprime les canaux illégaux régulièrement</li>
-                </ul>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Honeypot</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Système piège déployé pour attirer les attaquants. Telegram les détecte parfois dans ses résultats.
+                </p>
               </div>
             </div>
           )}
 
+          {/* OUTILS */}
           {activeTab === "tools" && (
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
-                🔧 Outils et Techniques
+                🔧 Commandes et Filtres Telegram
               </h2>
 
               <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>
-                📌 Recherche de canaux
+                📌 Filtres essentiels
               </h3>
 
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>1. Telegram Search</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Fonction intégrée dans Telegram Desktop : recherchez par mots-clés pour trouver canaux et groupes publics.
-                </p>
-                <code style={{ background: colors.bgSecondary, padding: "10px", borderRadius: "4px", display: "block" }}>
-                  Ouvrir Telegram → Icône Recherche → Entrer mot-clé (ex: "OSINT")
-                </code>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>2. Google Dorks</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Les canaux publics sont indexés par Google :
-                </p>
-                <div style={{ fontFamily: "monospace", fontSize: "0.9rem" }}>
-                  <div style={{ marginBottom: "10px", color: colors.textSecondary }}>
-                    <code style={{ color: colors.accent }}>site:t.me "cybersecurity"</code> → Canaux cybersécurité
-                  </div>
-                  <div style={{ marginBottom: "10px", color: colors.textSecondary }}>
-                    <code style={{ color: colors.accent }}>site:t.me inurl:s/ "leak"</code> → Canaux de leaks
-                  </div>
-                  <div style={{ color: colors.textSecondary }}>
-                    <code style={{ color: colors.accent }}>site:t.me "OSINT" -inurl:s/</code> → Groupes OSINT
-                  </div>
+              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", marginBottom: "15px", fontFamily: "monospace" }}>
+                <div style={{ marginBottom: "10px" }}>
+                  <strong style={{ color: colors.accent }}>country:FR</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par pays (code ISO)</p>
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <strong style={{ color: colors.accent }}>city:"Paris"</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par ville</p>
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <strong style={{ color: colors.accent }}>port:80</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par port</p>
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <strong style={{ color: colors.accent }}>product:"Apache"</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par produit/service</p>
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <strong style={{ color: colors.accent }}>org:"Amazon"</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par organisation</p>
+                </div>
+                <div>
+                  <strong style={{ color: colors.accent }}>hostname:"example.com"</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par nom de domaine</p>
                 </div>
               </div>
 
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>3. Annuaires Telegram</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6" }}>
-                  Sites répertoriant des canaux par catégorie :
-                </p>
-                <ul style={{ color: colors.textSecondary, lineHeight: "1.6", marginLeft: "20px" }}>
-                  <li>https://telegramchannels.me</li>
-                  <li>https://tchannels.me</li>
-                  <li>https://telemetr.io</li>
-                  <li>https://tgstat.com</li>
-                </ul>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
+                💎 Requêtes avancées
+              </h3>
+
+              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", marginBottom: "15px", fontFamily: "monospace", fontSize: "0.95rem" }}>
+                <div style={{ marginBottom: "15px" }}>
+                  <code style={{ color: colors.accent }}>port:3389 country:US</code>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Serveurs RDP aux États-Unis</p>
+                </div>
+                <div style={{ marginBottom: "15px" }}>
+                  <code style={{ color: colors.accent }}>product:"MySQL" port:3306</code>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Bases MySQL exposées</p>
+                </div>
+                <div style={{ marginBottom: "15px" }}>
+                  <code style={{ color: colors.accent }}>"default password" port:80</code>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Appareils avec mots de passe par défaut</p>
+                </div>
+                <div>
+                  <code style={{ color: colors.accent }}>webcam country:FR</code>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Webcams en France</p>
+                </div>
               </div>
 
               <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
-                🛠️ Outils de scraping
+                🌐 Accès à Telegram
               </h3>
 
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Telethon (Python)</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Bibliothèque Python pour automatiser Telegram. Permet de récupérer messages, membres, médias.
-                </p>
-                <code style={{ background: colors.bgSecondary, padding: "10px", borderRadius: "4px", display: "block", fontSize: "0.85rem" }}>
-                  pip install telethon<br/>
-                  # Scraper un canal :<br/>
-                  from telethon.sync import TelegramClient<br/>
-                  client = TelegramClient('session', api_id, api_hash)<br/>
-                  messages = client.get_messages('NomCanal', limit=1000)
-                </code>
-              </div>
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
+                <strong>Site web :</strong> <a href="https://www.telegram.io" target="_blank" rel="noopener noreferrer" style={{ color: colors.accent }}>https://www.telegram.io</a>
+              </p>
 
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Telegram Export Tool</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6" }}>
-                  Outil officiel intégré à Telegram Desktop pour exporter l'historique complet d'un chat.
-                </p>
-                <p style={{ color: colors.textSecondary, fontSize: "0.9rem", marginTop: "10px" }}>
-                  📁 Formats : JSON, HTML
-                </p>
-              </div>
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
+                <strong>CLI (ligne de commande) :</strong>
+              </p>
 
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Telegram Analytics</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6" }}>
-                  Outils comme <strong>TGStat</strong> et <strong>Telemetr</strong> proposent des statistiques sur les canaux : croissance, engagement, top posts.
-                </p>
+              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", fontFamily: "monospace", fontSize: "0.9rem" }}>
+                <div style={{ marginBottom: "10px", color: colors.textSecondary }}>
+                  # Installation<br/>
+                  <span style={{ color: colors.accent }}>pip install telegram</span>
+                </div>
+                <div style={{ marginBottom: "10px", color: colors.textSecondary }}>
+                  # Configuration API<br/>
+                  <span style={{ color: colors.accent }}>telegram init YOUR_API_KEY</span>
+                </div>
+                <div style={{ color: colors.textSecondary }}>
+                  # Recherche<br/>
+                  <span style={{ color: colors.accent }}>telegram search "apache country:FR"</span>
+                </div>
               </div>
             </div>
           )}
 
+          {/* EXERCICES */}
           {activeTab === "exercises" && (
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
@@ -306,64 +310,61 @@ export default function TelegramModule() {
 
               <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
                 <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-                  Exercice 1 : Trouver des canaux de leaks
+                  Exercice 1 : Découverte des serveurs d'une organisation
                 </h3>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-                  <strong>Objectif :</strong> Identifier des canaux Telegram partageant des bases de données compromises.
+                  <strong>Objectif :</strong> Identifier tous les serveurs web appartenant à "Amazon" en France.
                 </p>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "10px" }}>
-                  <strong>Méthode :</strong>
+                  <strong>Requête :</strong>
                 </p>
-                <ol style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-                  <li>Utilisez Google : <code>site:t.me "database leak"</code></li>
-                  <li>Rejoignez 3-5 canaux trouvés</li>
-                  <li>Analysez le type de contenu partagé</li>
-                  <li>Notez les patterns (fréquence, format, sources)</li>
-                </ol>
-                <p style={{ color: "#ef4444", marginTop: "15px", fontWeight: "600" }}>
-                  ⚠️ N'utilisez JAMAIS ces données compromises !
+                <code style={{ background: colors.bgSecondary, padding: "10px 15px", borderRadius: "8px", display: "block", color: colors.accent }}>
+                  org:"Amazon" country:FR port:443
+                </code>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginTop: "15px" }}>
+                  <strong>Analyse :</strong> Notez le nombre de résultats, les villes, et les versions de serveurs utilisées.
                 </p>
               </div>
 
               <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
                 <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-                  Exercice 2 : Export d'historique
+                  Exercice 2 : Webcams publiques
                 </h3>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-                  <strong>Objectif :</strong> Exporter l'historique complet d'un canal public.
+                  <strong>Objectif :</strong> Trouver des webcams IP accessibles publiquement à Paris.
                 </p>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "10px" }}>
-                  <strong>Étapes :</strong>
+                  <strong>Requête :</strong>
                 </p>
-                <ol style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-                  <li>Ouvrez Telegram Desktop</li>
-                  <li>Rejoignez un canal OSINT public (ex: @OSINTtechnical)</li>
-                  <li>Clic droit sur le canal → Export chat history</li>
-                  <li>Sélectionnez format JSON</li>
-                  <li>Analysez le fichier JSON avec un éditeur</li>
-                </ol>
+                <code style={{ background: colors.bgSecondary, padding: "10px 15px", borderRadius: "8px", display: "block", color: colors.accent }}>
+                  "Server: IP Webcam Server" city:"Paris"
+                </code>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginTop: "15px" }}>
+                  <strong>⚠️ Éthique :</strong> Ne tentez jamais d'accéder à ces webcams. Cet exercice est uniquement pour comprendre les risques d'exposition.
+                </p>
               </div>
 
               <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px" }}>
                 <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-                  Exercice 3 : Recherche par mot-clé
+                  Exercice 3 : Recherche de vulnérabilités
                 </h3>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-                  <strong>Objectif :</strong> Trouver toutes les mentions d'une entreprise dans les canaux Telegram.
+                  <strong>Objectif :</strong> Identifier des serveurs Apache vulnérables (anciennes versions).
                 </p>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "10px" }}>
-                  <strong>Méthode :</strong>
+                  <strong>Requête :</strong>
                 </p>
-                <ol style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-                  <li>Identifiez des canaux pertinents (cybersec, tech news)</li>
-                  <li>Utilisez la recherche intégrée Telegram : "#NomEntreprise"</li>
-                  <li>Notez les conversations, rumeurs, ou incidents mentionnés</li>
-                  <li>Croisez avec Google News pour vérifier</li>
-                </ol>
+                <code style={{ background: colors.bgSecondary, padding: "10px 15px", borderRadius: "8px", display: "block", color: colors.accent }}>
+                  product:"Apache" "2.2" port:80
+                </code>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginTop: "15px" }}>
+                  <strong>Analyse :</strong> Apache 2.2 n'est plus maintenu depuis 2017. Ces serveurs sont potentiellement vulnérables.
+                </p>
               </div>
             </div>
           )}
 
+          {/* QUIZ */}
           {activeTab === "quiz" && (
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
@@ -418,6 +419,32 @@ export default function TelegramModule() {
                 }}
               >
                 Valider le quiz
+
+              <button
+                onClick={() => setShowResetModal(true)}
+                style={{
+                  padding: "15px 40px",
+                  marginLeft: "15px",
+                  background: "#0b0f1a",
+                  color: "#00ff9c",
+                  border: "2px solid #00ff9c",
+                  borderRadius: "8px",
+                  fontSize: "1.1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#00ff9c";
+                  e.currentTarget.style.color = "#0b0f1a";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#0b0f1a";
+                  e.currentTarget.style.color = "#00ff9c";
+                }}
+              >
+                🔄 Réinitialiser
+              </button>
               </button>
 
               {showResults && (
@@ -445,6 +472,77 @@ export default function TelegramModule() {
           )}
         </div>
       </div>
+
+      {/* MODAL RESET TRYHACKME */}
+      {showResetModal && (
+        <>
+          <div 
+            onClick={() => setShowResetModal(false)}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0, 0, 0, 0.8)",
+              zIndex: 9998,
+            }} 
+          />
+          <div style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "#0b0f1a",
+            border: "3px solid #00ff9c",
+            borderRadius: "12px",
+            padding: "40px",
+            maxWidth: "500px",
+            width: "90%",
+            zIndex: 9999,
+            boxShadow: "0 0 40px rgba(0, 255, 156, 0.5)",
+          }}>
+            <h3 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px", textAlign: "center" }}>
+              ⚠️ Réinitialiser le Quiz
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "30px", textAlign: "center", lineHeight: "1.6" }}>
+              Êtes-vous sûr de vouloir réinitialiser ce quiz ? Toutes vos réponses seront effacées.
+            </p>
+            <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
+              <button
+                onClick={() => setShowResetModal(false)}
+                style={{
+                  padding: "12px 30px",
+                  background: "transparent",
+                  color: "#9ca3af",
+                  border: "2px solid #2a3f3f",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleReset}
+                style={{
+                  padding: "12px 30px",
+                  background: "#00ff9c",
+                  color: "#0b0f1a",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

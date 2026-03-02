@@ -6,6 +6,7 @@ export default function LinkedInModule() {
   const [activeTab, setActiveTab] = useState("theory");
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const tabs = [
     { id: "theory", label: "📖 Théorie", icon: "📚" },
@@ -17,56 +18,56 @@ export default function LinkedInModule() {
   const quizQuestions = [
     {
       id: 1,
-      question: "Quelle information peut-on extraire d'un profil LinkedIn ?",
+      question: "Qu'est-ce que LinkedIn ?",
       options: [
-        "Parcours professionnel, compétences, connexions",
-        "Numéro de carte bancaire",
-        "Mot de passe email",
-        "Historique de navigation"
+        "Un moteur de recherche pour objets connectés",
+        "Un outil de scan de ports",
+        "Un VPN gratuit",
+        "Un antivirus"
       ],
       correct: 0
     },
     {
       id: 2,
-      question: "Comment rechercher des employés d'une entreprise spécifique sur LinkedIn ?",
+      question: "Quelle commande LinkedIn permet de filtrer par pays ?",
       options: [
-        'Utiliser "company:NomEntreprise" dans la recherche',
-        "Envoyer un email à LinkedIn",
-        "Utiliser Google Dorks",
-        "Créer un faux profil"
+        "country:US",
+        "location:US",
+        "geo:US",
+        "nation:US"
       ],
       correct: 0
     },
     {
       id: 3,
-      question: "Qu'est-ce que le 'Social Engineering' via LinkedIn ?",
+      question: "Quel port est utilisé par défaut pour les webcams IP ?",
       options: [
-        "Manipulation psychologique pour obtenir des informations",
-        "Un algorithme de recommandation",
-        "Un outil de recrutement",
-        "Une fonctionnalité premium"
+        "80",
+        "443",
+        "8080",
+        "554"
       ],
       correct: 0
     },
     {
       id: 4,
-      question: "Quel Google Dork permet de trouver des profils LinkedIn ?",
+      question: "Que signifie le filtre 'product:' dans LinkedIn ?",
       options: [
-        'site:linkedin.com/in "Titre du poste"',
-        'site:facebook.com "LinkedIn"',
-        'inurl:linkedin "profile"',
-        'search:linkedin.com'
+        "Recherche par nom de produit/service",
+        "Recherche par prix",
+        "Recherche par fabricant",
+        "Recherche par version"
       ],
       correct: 0
     },
     {
       id: 5,
-      question: "Est-il légal de scraper des profils LinkedIn en masse ?",
+      question: "LinkedIn peut-il détecter des appareils IoT vulnérables ?",
       options: [
-        "Non, cela viole les CGU de LinkedIn",
-        "Oui, c'est autorisé",
-        "Oui, si on a un compte premium",
-        "Oui, pour un usage personnel"
+        "Oui, c'est une de ses fonctions principales",
+        "Non, seulement les sites web",
+        "Oui, mais uniquement avec un compte payant",
+        "Non, il ne fait que scanner les ports"
       ],
       correct: 0
     }
@@ -86,6 +87,12 @@ export default function LinkedInModule() {
     return correct;
   };
 
+  const handleReset = () => {
+    setQuizAnswers({});
+    setShowResults(false);
+    setShowResetModal(false);
+  };
+
   return (
     <div style={{
       minHeight: "100vh",
@@ -97,6 +104,7 @@ export default function LinkedInModule() {
         margin: "0 auto",
         padding: "40px 20px",
       }}>
+        {/* Header */}
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
           <div style={{ fontSize: "4rem", marginBottom: "15px" }}>💼</div>
           <h1 style={{
@@ -113,10 +121,11 @@ export default function LinkedInModule() {
             maxWidth: "700px",
             margin: "0 auto",
           }}>
-            Investigations professionnelles et reconnaissance d'entreprise via LinkedIn
+            Maîtrisez LinkedIn, le moteur de recherche pour objets connectés et appareils IoT
           </p>
         </div>
 
+        {/* Tabs */}
         <div style={{
           display: "flex",
           justifyContent: "center",
@@ -145,167 +154,154 @@ export default function LinkedInModule() {
           ))}
         </div>
 
+        {/* Content */}
         <div style={{
           background: colors.bgSecondary,
           border: `1px solid ${colors.border}`,
           borderRadius: "12px",
           padding: "40px",
         }}>
+          {/* THÉORIE */}
           {activeTab === "theory" && (
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
-                📖 LinkedIn OSINT : Pourquoi ?
+                📖 Qu'est-ce que LinkedIn ?
               </h2>
               
               <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "20px" }}>
-                LinkedIn est la plus grande base de données professionnelle au monde avec plus de 900 millions d'utilisateurs. C'est une mine d'or pour l'OSINT car les utilisateurs y partagent volontairement des informations détaillées sur leur carrière, leurs compétences, et leurs connexions professionnelles.
+                LinkedIn est souvent appelé <strong>"le Google des hackers"</strong>. Contrairement aux moteurs de recherche traditionnels qui indexent des pages web, LinkedIn scanne l'ensemble d'Internet pour identifier tous les appareils connectés : serveurs, webcams, routeurs, systèmes industriels, etc.
               </p>
 
               <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
-                🎯 Cas d'usage en OSINT
+                🎯 Pourquoi utiliser LinkedIn en OSINT ?
               </h3>
 
               <ul style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
-                <li><strong>Reconnaissance d'entreprise :</strong> Identifier les employés, leur hiérarchie, et les technologies utilisées</li>
-                <li><strong>Social Engineering :</strong> Trouver des cibles potentielles pour des attaques de phishing ciblées</li>
-                <li><strong>Investigations :</strong> Retracer le parcours professionnel d'une personne</li>
-                <li><strong>Analyse concurrentielle :</strong> Comprendre la structure d'une entreprise rivale</li>
-                <li><strong>Recherche de personnes :</strong> Localiser des individus via leurs employeurs actuels ou passés</li>
+                <li>Identifier les infrastructures d'une entreprise cible</li>
+                <li>Découvrir des appareils IoT mal configurés</li>
+                <li>Détecter des vulnérabilités exposées publiquement</li>
+                <li>Cartographier les services en ligne d'une organisation</li>
+                <li>Trouver des webcams, imprimantes, bases de données ouvertes</li>
               </ul>
 
               <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
-                🔑 Informations extractibles
+                🔑 Concepts clés
               </h3>
 
               <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Profil individuel</h4>
-                <ul style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  <li>Nom complet et photo</li>
-                  <li>Poste actuel et entreprise</li>
-                  <li>Historique professionnel complet</li>
-                  <li>Formation et diplômes</li>
-                  <li>Compétences techniques</li>
-                  <li>Recommandations et endorsements</li>
-                  <li>Articles publiés et activité</li>
-                </ul>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Bannière (Banner)</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Information renvoyée par un service lorsqu'on s'y connecte. Elle contient généralement le type de serveur, sa version, et d'autres métadonnées.
+                </p>
               </div>
 
               <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Entreprise</h4>
-                <ul style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  <li>Liste des employés (partielle ou complète)</li>
-                  <li>Structure hiérarchique</li>
-                  <li>Technologies utilisées (via compétences des employés)</li>
-                  <li>Turnover et recrutements récents</li>
-                  <li>Localisation des bureaux</li>
-                  <li>Partenaires et clients (via connexions)</li>
-                </ul>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Filtres LinkedIn</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Critères de recherche comme <code style={{ background: colors.bgSecondary, padding: "2px 6px", borderRadius: "4px" }}>country:</code>, <code style={{ background: colors.bgSecondary, padding: "2px 6px", borderRadius: "4px" }}>port:</code>, <code style={{ background: colors.bgSecondary, padding: "2px 6px", borderRadius: "4px" }}>product:</code> qui permettent d'affiner les résultats.
+                </p>
               </div>
 
               <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>⚠️ Considérations éthiques et légales</h4>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Honeypot</h4>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  Le scraping massif de LinkedIn viole leurs conditions d'utilisation. LinkedIn a gagné plusieurs procès contre des entreprises pratiquant le scraping. Limitez-vous à la consultation manuelle ou utilisez l'API officielle avec permission.
+                  Système piège déployé pour attirer les attaquants. LinkedIn les détecte parfois dans ses résultats.
                 </p>
               </div>
             </div>
           )}
 
+          {/* OUTILS */}
           {activeTab === "tools" && (
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
-                🔧 Techniques et Outils
+                🔧 Commandes et Filtres LinkedIn
               </h2>
 
               <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>
-                📌 Recherche avancée LinkedIn
+                📌 Filtres essentiels
               </h3>
-
-              <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-                LinkedIn propose des opérateurs de recherche puissants :
-              </p>
 
               <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", marginBottom: "15px", fontFamily: "monospace" }}>
                 <div style={{ marginBottom: "10px" }}>
-                  <strong style={{ color: colors.accent }}>Recherche de personnes :</strong>
-                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>
-                    • Titre : "Chief Technology Officer"<br/>
-                    • Entreprise : company:"Microsoft"<br/>
-                    • Localisation : location:"Paris, France"<br/>
-                    • École : school:"Stanford University"
-                  </p>
+                  <strong style={{ color: colors.accent }}>country:FR</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par pays (code ISO)</p>
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <strong style={{ color: colors.accent }}>city:"Paris"</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par ville</p>
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <strong style={{ color: colors.accent }}>port:80</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par port</p>
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <strong style={{ color: colors.accent }}>product:"Apache"</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par produit/service</p>
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <strong style={{ color: colors.accent }}>org:"Amazon"</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par organisation</p>
+                </div>
+                <div>
+                  <strong style={{ color: colors.accent }}>hostname:"example.com"</strong>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0", fontSize: "0.9rem" }}>Recherche par nom de domaine</p>
                 </div>
               </div>
 
               <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
-                🌐 Google Dorks pour LinkedIn
+                💎 Requêtes avancées
               </h3>
 
               <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", marginBottom: "15px", fontFamily: "monospace", fontSize: "0.95rem" }}>
                 <div style={{ marginBottom: "15px" }}>
-                  <code style={{ color: colors.accent }}>site:linkedin.com/in "CISO" "Paris"</code>
-                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Trouver des CISO à Paris</p>
+                  <code style={{ color: colors.accent }}>port:3389 country:US</code>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Serveurs RDP aux États-Unis</p>
                 </div>
                 <div style={{ marginBottom: "15px" }}>
-                  <code style={{ color: colors.accent }}>site:linkedin.com/in intitle:"software engineer" "Amazon"</code>
-                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Ingénieurs logiciels chez Amazon</p>
+                  <code style={{ color: colors.accent }}>product:"MySQL" port:3306</code>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Bases MySQL exposées</p>
                 </div>
                 <div style={{ marginBottom: "15px" }}>
-                  <code style={{ color: colors.accent }}>site:linkedin.com/company/microsoft/people</code>
-                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Page des employés Microsoft</p>
+                  <code style={{ color: colors.accent }}>"default password" port:80</code>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Appareils avec mots de passe par défaut</p>
                 </div>
                 <div>
-                  <code style={{ color: colors.accent }}>site:linkedin.com "currently works at" "Google"</code>
-                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Employés actuels de Google</p>
+                  <code style={{ color: colors.accent }}>webcam country:FR</code>
+                  <p style={{ color: colors.textSecondary, margin: "5px 0 0 0" }}>Webcams en France</p>
                 </div>
               </div>
 
               <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>
-                🛠️ Outils OSINT pour LinkedIn
+                🌐 Accès à LinkedIn
               </h3>
 
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>LinkedIn Sales Navigator</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Outil officiel LinkedIn (payant) offrant des filtres avancés et des exports limités.
-                </p>
-                <p style={{ color: colors.textSecondary, fontSize: "0.9rem" }}>
-                  💰 Prix : ~80€/mois
-                </p>
-              </div>
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
+                <strong>Site web :</strong> <a href="https://www.linkedin.io" target="_blank" rel="noopener noreferrer" style={{ color: colors.accent }}>https://www.linkedin.io</a>
+              </p>
 
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>PhantomBuster</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Automatisation d'extraction de profils LinkedIn (risque de bannissement).
-                </p>
-                <p style={{ color: colors.textSecondary, fontSize: "0.9rem" }}>
-                  ⚠️ Usage : À vos risques et périls
-                </p>
-              </div>
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
+                <strong>CLI (ligne de commande) :</strong>
+              </p>
 
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>CrossLinked</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Outil open-source pour scraper les employés d'une entreprise via Google + LinkedIn.
-                </p>
-                <code style={{ background: colors.bgSecondary, padding: "10px", borderRadius: "4px", display: "block", marginTop: "10px" }}>
-                  python3 crosslinked.py -f "NomEntreprise"
-                </code>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>theHarvester</h4>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
-                  Collecte d'emails et de noms depuis LinkedIn via moteurs de recherche.
-                </p>
-                <code style={{ background: colors.bgSecondary, padding: "10px", borderRadius: "4px", display: "block", marginTop: "10px" }}>
-                  theHarvester -d example.com -l 500 -b linkedin
-                </code>
+              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", fontFamily: "monospace", fontSize: "0.9rem" }}>
+                <div style={{ marginBottom: "10px", color: colors.textSecondary }}>
+                  # Installation<br/>
+                  <span style={{ color: colors.accent }}>pip install linkedin</span>
+                </div>
+                <div style={{ marginBottom: "10px", color: colors.textSecondary }}>
+                  # Configuration API<br/>
+                  <span style={{ color: colors.accent }}>linkedin init YOUR_API_KEY</span>
+                </div>
+                <div style={{ color: colors.textSecondary }}>
+                  # Recherche<br/>
+                  <span style={{ color: colors.accent }}>linkedin search "apache country:FR"</span>
+                </div>
               </div>
             </div>
           )}
 
+          {/* EXERCICES */}
           {activeTab === "exercises" && (
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
@@ -314,63 +310,61 @@ export default function LinkedInModule() {
 
               <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
                 <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-                  Exercice 1 : Cartographie d'entreprise
+                  Exercice 1 : Découverte des serveurs d'une organisation
                 </h3>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-                  <strong>Objectif :</strong> Identifier tous les employés "Security" d'une grande entreprise tech.
+                  <strong>Objectif :</strong> Identifier tous les serveurs web appartenant à "Amazon" en France.
                 </p>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "10px" }}>
-                  <strong>Étapes :</strong>
+                  <strong>Requête :</strong>
                 </p>
-                <ol style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-                  <li>Recherchez "Security Engineer" + "NomEntreprise" sur LinkedIn</li>
-                  <li>Notez les titres exacts (CISO, Security Analyst, etc.)</li>
-                  <li>Identifiez les technologies mentionnées dans les profils</li>
-                  <li>Créez un organigramme approximatif de l'équipe sécurité</li>
-                </ol>
+                <code style={{ background: colors.bgSecondary, padding: "10px 15px", borderRadius: "8px", display: "block", color: colors.accent }}>
+                  org:"Amazon" country:FR port:443
+                </code>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginTop: "15px" }}>
+                  <strong>Analyse :</strong> Notez le nombre de résultats, les villes, et les versions de serveurs utilisées.
+                </p>
               </div>
 
               <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
                 <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-                  Exercice 2 : Recherche de cibles pour phishing
+                  Exercice 2 : Webcams publiques
                 </h3>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-                  <strong>Objectif :</strong> (Exercice théorique uniquement) Identifier des profils vulnérables.
+                  <strong>Objectif :</strong> Trouver des webcams IP accessibles publiquement à Paris.
                 </p>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "10px" }}>
-                  <strong>Critères à rechercher :</strong>
+                  <strong>Requête :</strong>
                 </p>
-                <ul style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-                  <li>Employés récemment embauchés (moins sensibilisés)</li>
-                  <li>Postes administratifs (accès aux systèmes sensibles)</li>
-                  <li>Personnes partageant beaucoup d'informations personnelles</li>
-                  <li>Profils avec emails visibles publiquement</li>
-                </ul>
-                <p style={{ color: "#ef4444", marginTop: "15px", fontWeight: "600" }}>
-                  ⚠️ NE JAMAIS mettre en pratique pour de vraies attaques !
+                <code style={{ background: colors.bgSecondary, padding: "10px 15px", borderRadius: "8px", display: "block", color: colors.accent }}>
+                  "Server: IP Webcam Server" city:"Paris"
+                </code>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginTop: "15px" }}>
+                  <strong>⚠️ Éthique :</strong> Ne tentez jamais d'accéder à ces webcams. Cet exercice est uniquement pour comprendre les risques d'exposition.
                 </p>
               </div>
 
               <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px" }}>
                 <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-                  Exercice 3 : Analyse de turnover
+                  Exercice 3 : Recherche de vulnérabilités
                 </h3>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-                  <strong>Objectif :</strong> Détecter un turnover élevé dans une entreprise (signe de problèmes internes).
+                  <strong>Objectif :</strong> Identifier des serveurs Apache vulnérables (anciennes versions).
                 </p>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "10px" }}>
-                  <strong>Méthode :</strong>
+                  <strong>Requête :</strong>
                 </p>
-                <ol style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-                  <li>Recherchez des profils ayant travaillé dans l'entreprise cible</li>
-                  <li>Filtrez par "Date de fin" récente (derniers 6 mois)</li>
-                  <li>Analysez les raisons de départ (si mentionnées)</li>
-                  <li>Comparez avec le nombre d'offres d'emploi actuelles</li>
-                </ol>
+                <code style={{ background: colors.bgSecondary, padding: "10px 15px", borderRadius: "8px", display: "block", color: colors.accent }}>
+                  product:"Apache" "2.2" port:80
+                </code>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginTop: "15px" }}>
+                  <strong>Analyse :</strong> Apache 2.2 n'est plus maintenu depuis 2017. Ces serveurs sont potentiellement vulnérables.
+                </p>
               </div>
             </div>
           )}
 
+          {/* QUIZ */}
           {activeTab === "quiz" && (
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>
@@ -425,6 +419,32 @@ export default function LinkedInModule() {
                 }}
               >
                 Valider le quiz
+
+              <button
+                onClick={() => setShowResetModal(true)}
+                style={{
+                  padding: "15px 40px",
+                  marginLeft: "15px",
+                  background: "#0b0f1a",
+                  color: "#00ff9c",
+                  border: "2px solid #00ff9c",
+                  borderRadius: "8px",
+                  fontSize: "1.1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#00ff9c";
+                  e.currentTarget.style.color = "#0b0f1a";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#0b0f1a";
+                  e.currentTarget.style.color = "#00ff9c";
+                }}
+              >
+                🔄 Réinitialiser
+              </button>
               </button>
 
               {showResults && (
@@ -452,6 +472,77 @@ export default function LinkedInModule() {
           )}
         </div>
       </div>
+
+      {/* MODAL RESET TRYHACKME */}
+      {showResetModal && (
+        <>
+          <div 
+            onClick={() => setShowResetModal(false)}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0, 0, 0, 0.8)",
+              zIndex: 9998,
+            }} 
+          />
+          <div style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "#0b0f1a",
+            border: "3px solid #00ff9c",
+            borderRadius: "12px",
+            padding: "40px",
+            maxWidth: "500px",
+            width: "90%",
+            zIndex: 9999,
+            boxShadow: "0 0 40px rgba(0, 255, 156, 0.5)",
+          }}>
+            <h3 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px", textAlign: "center" }}>
+              ⚠️ Réinitialiser le Quiz
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "30px", textAlign: "center", lineHeight: "1.6" }}>
+              Êtes-vous sûr de vouloir réinitialiser ce quiz ? Toutes vos réponses seront effacées.
+            </p>
+            <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
+              <button
+                onClick={() => setShowResetModal(false)}
+                style={{
+                  padding: "12px 30px",
+                  background: "transparent",
+                  color: "#9ca3af",
+                  border: "2px solid #2a3f3f",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleReset}
+                style={{
+                  padding: "12px 30px",
+                  background: "#00ff9c",
+                  color: "#0b0f1a",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
