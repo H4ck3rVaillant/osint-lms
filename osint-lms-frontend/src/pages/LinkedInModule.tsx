@@ -97,7 +97,7 @@ export default function LinkedInModule() {
             Investigations professionnelles et reconnaissance d'entreprise
           </p>
           {localStorage.getItem(BADGE_KEY) === "true" && (
-            <div style={{ marginTop: "15px", display: "inline-block", padding: "8px 20px", background: colors.accent + "20", border: \`2px solid \${colors.accent}\`, borderRadius: "20px", color: colors.accent, fontWeight: "600", fontSize: "0.9rem" }}>
+            <div style={{ marginTop: "15px", display: "inline-block", padding: "8px 20px", background: colors.accent + "20", border: `2px solid ${colors.accent}`, borderRadius: "20px", color: colors.accent, fontWeight: "600", fontSize: "0.9rem" }}>
               ✓ Badge débloqué
             </div>
           )}
@@ -105,13 +105,13 @@ export default function LinkedInModule() {
 
         <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "40px", flexWrap: "wrap" }}>
           {tabs.map((tab) => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: "12px 24px", background: activeTab === tab.id ? colors.accent : colors.bgSecondary, color: activeTab === tab.id ? "#020617" : colors.textPrimary, border: \`2px solid \${activeTab === tab.id ? colors.accent : colors.border}\`, borderRadius: "12px", fontSize: "1rem", fontWeight: "600", cursor: "pointer", transition: "all 0.3s ease" }}>
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: "12px 24px", background: activeTab === tab.id ? colors.accent : colors.bgSecondary, color: activeTab === tab.id ? "#020617" : colors.textPrimary, border: `2px solid ${activeTab === tab.id ? colors.accent : colors.border}`, borderRadius: "12px", fontSize: "1rem", fontWeight: "600", cursor: "pointer", transition: "all 0.3s ease" }}>
               {tab.icon} {tab.label}
             </button>
           ))}
         </div>
 
-        <div style={{ background: colors.bgSecondary, border: \`1px solid \${colors.border}\`, borderRadius: "12px", padding: "40px" }}>
+        <div style={{ background: colors.bgSecondary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "40px" }}>
           
           {activeTab === "theory" && (
             <div>
@@ -169,8 +169,8 @@ export default function LinkedInModule() {
                     {index + 1}. {q.question}
                   </h3>
                   {q.options.map((option, optIndex) => (
-                    <label key={optIndex} style={{ display: "block", padding: "12px", marginBottom: "8px", background: quizAnswers[q.id] === optIndex.toString() ? colors.accent + "30" : colors.bgSecondary, border: \`2px solid \${quizAnswers[q.id] === optIndex.toString() ? colors.accent : colors.border}\`, borderRadius: "8px", cursor: "pointer" }}>
-                      <input type="radio" name={\`question-\${q.id}\`} value={optIndex} checked={quizAnswers[q.id] === optIndex.toString()} onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })} style={{ marginRight: "10px" }} />
+                    <label key={optIndex} style={{ display: "block", padding: "12px", marginBottom: "8px", background: quizAnswers[q.id] === optIndex.toString() ? colors.accent + "30" : colors.bgSecondary, border: `2px solid ${quizAnswers[q.id] === optIndex.toString() ? colors.accent : colors.border}`, borderRadius: "8px", cursor: "pointer" }}>
+                      <input type="radio" name={`question-${q.id}`} value={optIndex} checked={quizAnswers[q.id] === optIndex.toString()} onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })} style={{ marginRight: "10px" }} />
                       <span style={{ color: colors.textPrimary }}>{option}</span>
                     </label>
                   ))}
@@ -187,7 +187,7 @@ export default function LinkedInModule() {
               </div>
 
               {showResults && (
-                <div style={{ marginTop: "30px", padding: "25px", background: getScore() >= 4 ? colors.accent + "20" : "#ef444420", border: \`2px solid \${getScore() >= 4 ? colors.accent : "#ef4444"}\`, borderRadius: "12px" }}>
+                <div style={{ marginTop: "30px", padding: "25px", background: getScore() >= 4 ? colors.accent + "20" : "#ef444420", border: `2px solid ${getScore() >= 4 ? colors.accent : "#ef4444"}`, borderRadius: "12px" }}>
                   <h3 style={{ color: getScore() >= 4 ? colors.accent : "#ef4444", fontSize: "1.5rem" }}>
                     {getScore() >= 4 ? "✅ Validé !" : "❌ Réessayez"}
                   </h3>
