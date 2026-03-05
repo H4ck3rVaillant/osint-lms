@@ -253,6 +253,42 @@ export default function Header() {
                 }}>
                   🎮 Discord
                 </Link>
+                <Link to="/modules/theharvester" onClick={() => setShowModulesMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  🌾 theHarvester
+                </Link>
+                <Link to="/modules/maltego" onClick={() => setShowModulesMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  🕸️ Maltego
+                </Link>
               </div>
             )}
           </div>

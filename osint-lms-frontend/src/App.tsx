@@ -45,6 +45,8 @@ import DiscordModule from "./pages/DiscordModule";
 import ExercicesOSINT from "./pages/ExercicesOSINT";
 import BadgesOSINT from "./pages/BadgesOSINT";
 import CertificatPage from "./pages/CertificatPage";
+import theHarvesterModule from "./pages/theHarvesterModule";
+import MaltegoModule from "./pages/MaltegoModule";
 import YouTubePage from "./pages/YouTubePage";
 import ChallengesPage from "./pages/ChallengesPage";
 import AdminPanel from "./pages/AdminPanel";
@@ -160,6 +162,8 @@ export default function App() {
         <Route path="/etudes-osint" element={<Protected><Layout><EtudesOSINT /></Layout></Protected>} />
         <Route path="/cas/geolocalisation" element={<Protected><Layout><CasGeoLocalisation /></Layout></Protected>} />
         <Route path="/cas/verification-media" element={<Protected><Layout><CasVerificationMedia /></Layout></Protected>} />
+        <Route path="/modules/theharvester" element={<Protected><Layout><theHarvesterModule /></Layout></Protected>} />
+        <Route path="/modules/maltego" element={<Protected><Layout><MaltegoModule /></Layout></Protected>} />
         <Route path="/cas/attribution" element={<Protected><Layout><CasAttribution /></Layout></Protected>} />
         <Route path="/cas/chronologie" element={<Protected><Layout><CasChronologie /></Layout></Protected>} />
         <Route path="/cas/final" element={<Protected><Layout><CasFinalOSINT /></Layout></Protected>} />

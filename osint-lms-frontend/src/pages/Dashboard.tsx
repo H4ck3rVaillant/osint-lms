@@ -38,10 +38,10 @@ export default function Dashboard() {
     const exercicesCompleted = parseInt(localStorage.getItem("exercices_completed") || "0");
     const totalExercices = 20;
 
-    const totalBadges = 20;
+    const totalBadges = 26; // 20 + 6 modules
     const badgesEarned = debutantCount + intermediaireCount + avanceCount + etudesCasCount;
 
-    const totalModules = 13 + 5; // 13 modules (9 parcours + 4 spécialisés) + 5 études de cas
+    const totalModules = 13 + 5 + 6; // 13 modules parcours + 5 études + 6 modules spécialisés
     const totalCompleted = badgesEarned;
 
     setStats({
@@ -194,7 +194,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* MODULES OSINT SPÉCIALISÉS */}
+      {/* MODULES OSINT SPÉCIALISÉS - 6 MODULES */}
       <section style={{ marginBottom: "40px" }}>
         <h2 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "20px" }}>
           🎓 Modules OSINT Spécialisés
@@ -234,6 +234,24 @@ export default function Dashboard() {
             </h3>
             <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6" }}>
               Investigation et reconnaissance de serveurs
+            </p>
+          </Link>
+
+          <Link to="/modules/theharvester" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
+              🌾 theHarvester
+            </h3>
+            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6" }}>
+              Collecte emails, sous-domaines et IPs
+            </p>
+          </Link>
+
+          <Link to="/modules/maltego" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
+              🕸️ Maltego Basics
+            </h3>
+            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6" }}>
+              Visualisation graphique de relations OSINT
             </p>
           </Link>
         </div>
@@ -360,7 +378,7 @@ export default function Dashboard() {
               🏅 Badges
             </h3>
             <p style={{ color: "#9ca3af", fontSize: "0.95rem" }}>
-              {Math.round((stats.badges / 100) * 20)}/20 badges débloqués
+              {Math.round((stats.badges / 100) * 26)}/26 badges débloqués
             </p>
           </Link>
 
