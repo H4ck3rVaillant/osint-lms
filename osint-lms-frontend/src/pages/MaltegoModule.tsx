@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useThemeColors } from "../context/ThemeContext";
 
-export default function DiscordModule() {
+export default function MaltegoModule() {
   const colors = useThemeColors();
   const [activeTab, setActiveTab] = useState("theory");
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
 
-  const BADGE_KEY = "badge_module_discord";
-  const ANSWERS_KEY = "quiz_answers_discord";
-  const RESULTS_KEY = "quiz_results_discord";
+  const BADGE_KEY = "badge_module_maltego";
+  const ANSWERS_KEY = "quiz_answers_maltego";
+  const RESULTS_KEY = "quiz_results_maltego";
 
   useState(() => {
     const savedAnswers = localStorage.getItem(ANSWERS_KEY);
@@ -27,11 +27,11 @@ export default function DiscordModule() {
   ];
 
   const quizQuestions = [
-    { id: 1, question: "Combien d'utilisateurs actifs Discord a-t-il ?", options: ["150+ millions", "100 millions", "200 millions", "50 millions"], correct: 0 },
-    { id: 2, question: "Combien de chiffres contient un Discord Server ID ?", options: ["18 chiffres", "16 chiffres", "12 chiffres", "20 chiffres"], correct: 0 },
-    { id: 3, question: "Les serveurs Discord sont-ils indexés par Google ?", options: ["Non par défaut", "Oui tous", "Seulement publics", "Avec autorisation"], correct: 0 },
-    { id: 4, question: "Quel site trouve serveurs Discord publics ?", options: ["disboard.org", "discordfinder.com", "serverlist.io", "discorddb.com"], correct: 0 },
-    { id: 5, question: "Peut-on récupérer messages supprimés sur Discord ?", options: ["Non, sauf loggés par bot", "Oui toujours", "Avec Nitro", "Via support"], correct: 0 }
+    { id: 1, question: "Qu'est-ce que Maltego ?", options: ["Outil de visualisation graphique de relations", "Scanner de ports", "Cracker de mots de passe", "Éditeur de texte"], correct: 0 },
+    { id: 2, question: "Quel élément de base dans Maltego ?", options: ["Entity (entité)", "Node", "Object", "Item"], correct: 0 },
+    { id: 3, question: "Maltego utilise quoi pour collecter données ?", options: ["Transforms", "Scripts", "Plugins", "Modules"], correct: 0 },
+    { id: 4, question: "Version gratuite de Maltego ?", options: ["Maltego CE (Community Edition)", "Maltego Free", "Maltego Lite", "Maltego Basic"], correct: 0 },
+    { id: 5, question: "Maltego est utile pour ?", options: ["Visualiser réseaux complexes", "Éditer photos", "Coder en Python", "Gérer bases SQL"], correct: 0 }
   ];
 
   const handleQuizSubmit = () => {
@@ -61,9 +61,9 @@ export default function DiscordModule() {
     <div style={{ minHeight: "100vh", background: colors.bgPrimary, paddingTop: "80px" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 20px" }}>
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
-          <div style={{ fontSize: "4rem", marginBottom: "15px" }}>🎮</div>
-          <h1 style={{ fontSize: "2.5rem", fontWeight: "700", color: colors.textPrimary, marginBottom: "15px" }}>Module Discord OSINT</h1>
-          <p style={{ fontSize: "1.1rem", color: colors.textSecondary, maxWidth: "700px", margin: "0 auto" }}>Investigation de serveurs et communautés Discord</p>
+          <div style={{ fontSize: "4rem", marginBottom: "15px" }}>🕸️</div>
+          <h1 style={{ fontSize: "2.5rem", fontWeight: "700", color: colors.textPrimary, marginBottom: "15px" }}>Module Maltego Basics</h1>
+          <p style={{ fontSize: "1.1rem", color: colors.textSecondary, maxWidth: "700px", margin: "0 auto" }}>Visualisation graphique et analyse de relations OSINT</p>
           {localStorage.getItem(BADGE_KEY) === "true" && (
             <div style={{ marginTop: "15px", display: "inline-block", padding: "8px 20px", background: colors.accent + "20", border: `2px solid ${colors.accent}`, borderRadius: "20px", color: colors.accent, fontWeight: "600" }}>✓ Badge débloqué</div>
           )}
@@ -80,70 +80,77 @@ export default function DiscordModule() {
         <div style={{ background: colors.bgSecondary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "40px" }}>
           {activeTab === "theory" && (
             <div>
-              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>📖 Discord OSINT</h2>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>📖 Maltego OSINT</h2>
               <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "20px" }}>
-                Discord est une plateforme de communication VoIP/texte avec <strong>150+ millions d'utilisateurs actifs</strong>. Initialement pour gamers, elle héberge maintenant communautés crypto, NFT, hacking, activisme, trading. Serveurs souvent fermés mais annuaires publics existent.
+                <strong>Maltego</strong> est un outil de data mining et visualisation graphique développé par Paterva. Il permet de cartographier visuellement les relations entre personnes, entreprises, domaines, IPs, emails, réseaux sociaux et autres entités en utilisant des <strong>transforms</strong> (requêtes automatisées).
               </p>
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>🎯 Pourquoi Discord en OSINT ?</h3>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>🎯 Pourquoi Maltego ?</h3>
               <ul style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px", marginBottom: "25px" }}>
-                <li><strong>Surveillance crypto/NFT :</strong> Détecter scams, rug pulls, pompes & dumps</li>
-                <li><strong>Monitoring extrémisme :</strong> Groupes radicaux, coordination attaques</li>
-                <li><strong>Investigation gaming :</strong> Serveurs cheating, hacks, piratage</li>
-                <li><strong>Analyse ransomware :</strong> Certains groupes utilisent Discord pour coordination</li>
-                <li><strong>Reconnaissance communautés :</strong> Identifier influenceurs, modérateurs, structures</li>
+                <li><strong>Visualisation intuitive :</strong> Graphes interactifs montrant connexions entre entités</li>
+                <li><strong>Automatisation :</strong> Transforms collectent données depuis sources publiques</li>
+                <li><strong>Investigations complexes :</strong> Identifier liens cachés, pivots, patterns</li>
+                <li><strong>Collaboration :</strong> Partage de graphes entre analystes</li>
+                <li><strong>OSINT passif :</strong> Collecte sans interaction directe avec cibles</li>
               </ul>
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>📊 Structure Discord</h3>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>🧩 Concepts clés</h3>
               <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Serveurs (Guilds)</h4>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Entities (Entités)</h4>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  Communautés avec Server ID unique (18 chiffres). Contient canaux textuels/vocaux, rôles, membres. Peut être privé ou public via lien d'invitation (discord.gg/... ou discord.com/invite/...)
+                  Objets graphiques représentant : Personne, Entreprise, Domaine, IP, Email, Téléphone, Adresse, Document, Hashtag, etc. Chaque entity a des propriétés (metadata).
                 </p>
               </div>
               <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Canaux (Channels)</h4>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Transforms</h4>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  Textuels (#general, #annonces...) ou vocaux. Chaque canal a Channel ID unique. Permissions par rôle contrôlent accès.
+                  Scripts/requêtes automatisées qui enrichissent une entity en ajoutant des entities liées. Exemple : Transform "Domain → Email Addresses" récupère tous les emails associés à un domaine.
                 </p>
               </div>
               <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
-                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Utilisateurs</h4>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Machines</h4>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
-                  User ID (18 chiffres) + discriminateur (#1234). Avatar, bio, statut, activité (jeu en cours). Profils publics via discord.id
+                  Séquences automatisées de transforms pour investigations complexes. Exemple : Machine "Company Stalker" cartographie structure complète d'une entreprise.
                 </p>
               </div>
-              <div style={{ background: "#ef444420", border: "2px solid #ef4444", padding: "20px", borderRadius: "8px", marginTop: "20px" }}>
-                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}><strong style={{ color: "#ef4444" }}>⚠️ Éthique :</strong> Logging sans consentement viole CGU Discord. Scraping massif interdit. Infiltration serveurs privés = illégal sauf cadre légal.</p>
-              </div>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "20px" }}>🆚 Versions Maltego</h3>
+              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Maltego CE (Community Edition) :</strong> Gratuite, limitée (12 entities par transform, transforms limités)</p>
+              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Maltego Classic :</strong> Payante (~999$/an), illimitée</p>
+              <p style={{ color: colors.textSecondary }}><strong>Maltego XL :</strong> Entreprise, collaboration équipe</p>
             </div>
           )}
 
           {activeTab === "tools" && (
             <div>
-              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>🔧 Outils Discord</h2>
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>Annuaires de serveurs</h3>
-              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>disboard.org :</strong> 800K+ serveurs publics, recherche par catégorie/tags</p>
-              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>discord.me :</strong> Annuaire avec classement popularité</p>
-              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>top.gg :</strong> Serveurs et bots, statistiques, reviews</p>
-              <p style={{ color: colors.textSecondary, marginBottom: "20px" }}><strong>discordservers.com :</strong> Listing par thématique</p>
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>Google Dorks</h3>
-              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", marginBottom: "20px", fontFamily: "monospace", fontSize: "0.9rem" }}>
-                <div style={{ marginBottom: "10px", color: colors.textSecondary }}><strong style={{ color: colors.accent }}>site:discord.gg "OSINT"</strong></div>
-                <div style={{ marginBottom: "10px", color: colors.textSecondary }}><strong style={{ color: colors.accent }}>site:discord.com/invite crypto</strong></div>
-                <div style={{ color: colors.textSecondary }}><strong style={{ color: colors.accent }}>"discord.gg" "NFT" -site:discord.com</strong></div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>🔧 Utilisation Maltego</h2>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>Installation</h3>
+              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", marginBottom: "20px" }}>
+                <p style={{ color: colors.textSecondary, marginBottom: "10px" }}>1. Télécharger : <a href="https://www.maltego.com/downloads/" target="_blank" style={{ color: colors.accent }}>maltego.com/downloads</a></p>
+                <p style={{ color: colors.textSecondary, marginBottom: "10px" }}>2. Créer compte gratuit pour Maltego CE</p>
+                <p style={{ color: colors.textSecondary }}>3. Installer et lancer Maltego Desktop</p>
               </div>
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>Lookup d'IDs</h3>
-              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>discord.id :</strong> Info sur User ID, Server ID (création, avatar...)</p>
-              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Developer Mode :</strong> Activer dans Settings → Advanced → Developer Mode. Permet copier IDs via clic droit</p>
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "20px" }}>Bots de logging/modération</h3>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>Workflow de base</h3>
+              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", marginBottom: "15px" }}>
+                <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
+                  <li><strong>Créer nouveau graphe :</strong> File → New Graph</li>
+                  <li><strong>Ajouter entity :</strong> Glisser-déposer depuis Entity Palette (Domain, Person, Email...)</li>
+                  <li><strong>Configurer entity :</strong> Double-clic pour éditer propriétés (nom, valeur)</li>
+                  <li><strong>Lancer transform :</strong> Clic droit sur entity → Run Transform → Choisir transform</li>
+                  <li><strong>Analyser résultats :</strong> Nouvelles entities apparaissent avec liens graphiques</li>
+                  <li><strong>Pivoter :</strong> Répéter transforms sur nouvelles entities pour approfondir</li>
+                </ol>
+              </div>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "20px" }}>Transforms courants</h3>
               <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", fontFamily: "monospace", fontSize: "0.85rem" }}>
-                <div style={{ color: colors.textSecondary, marginBottom: "8px" }}>pip install discord.py</div>
-                <div style={{ color: colors.textSecondary, marginBottom: "8px" }}>import discord</div>
-                <div style={{ color: colors.textSecondary }}>bot = discord.Client()</div>
+                <div style={{ marginBottom: "10px", color: colors.textSecondary }}><strong style={{ color: colors.accent }}>Domain → DNS Name</strong> : Sous-domaines</div>
+                <div style={{ marginBottom: "10px", color: colors.textSecondary }}><strong style={{ color: colors.accent }}>Domain → Email Address</strong> : Emails associés</div>
+                <div style={{ marginBottom: "10px", color: colors.textSecondary }}><strong style={{ color: colors.accent }}>Email → Person</strong> : Profils réseaux sociaux</div>
+                <div style={{ marginBottom: "10px", color: colors.textSecondary }}><strong style={{ color: colors.accent }}>Domain → IP Address</strong> : Résolution DNS</div>
+                <div style={{ color: colors.textSecondary }}><strong style={{ color: colors.accent }}>Person → Phone Number</strong> : Numéros associés</div>
               </div>
-              <p style={{ color: "#ef4444", marginTop: "15px", fontWeight: "600" }}>⚠️ Logging sans consentement = violation CGU + potentiellement illégal</p>
-              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "20px" }}>Outils tiers</h3>
-              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>DiscordLookup :</strong> Résolution User/Server ID, historique</p>
-              <p style={{ color: colors.textSecondary }}><strong>Discord History Tracker :</strong> Extension Chrome pour sauvegarder conversations localement</p>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "20px" }}>Transform Hubs (sources)</h3>
+              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Paterva CTAS :</strong> Transforms officiels (DNS, whois, recherche)</p>
+              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Shodan :</strong> Enrichissement IoT/infrastructure</p>
+              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>VirusTotal :</strong> Analyse malware, domaines malveillants</p>
+              <p style={{ color: colors.textSecondary }}><strong>Social Links :</strong> Réseaux sociaux (nécessite API keys payantes)</p>
             </div>
           )}
 
@@ -151,39 +158,40 @@ export default function DiscordModule() {
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>💡 Exercices Pratiques</h2>
               <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
-                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 1 : Serveur crypto suspect</h3>
-                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}><strong>Objectif :</strong> Analyser serveur Discord lié à projet NFT/crypto</p>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 1 : Cartographie domaine</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}><strong>Objectif :</strong> Mapper infrastructure d'un domaine</p>
                 <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
                 <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
-                  <li>Trouver serveur NFT sur disboard.org ou annuaires</li>
-                  <li>Rejoindre et observer : nombre membres, canaux actifs, modération</li>
-                  <li>Red flags : promesses irréalistes, pas de roadmap, dev anonymes</li>
-                  <li>Vérifier : whitepaper, contrat smart contract, audit</li>
-                  <li>Croiser : Twitter, site web, équipe LinkedIn</li>
+                  <li>Créer entity Domain (ex: example.com)</li>
+                  <li>Run Transform: "To DNS Name - NS (name server)"</li>
+                  <li>Run Transform: "To IP Address"</li>
+                  <li>Run Transform: "To Email Addresses"</li>
+                  <li>Analyser graphe: serveurs DNS, IPs hébergement, contacts</li>
                 </ol>
               </div>
               <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
-                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 2 : Cartographie modération</h3>
-                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}><strong>Objectif :</strong> Identifier structure hiérarchique serveur</p>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 2 : Profil personne</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}><strong>Objectif :</strong> Investiguer empreinte numérique d'une personne</p>
                 <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
                 <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
-                  <li>Lister membres avec rôles : Owner, Admin, Moderator</li>
-                  <li>Analyser permissions : qui peut ban, delete, manage channels</li>
-                  <li>Observer patterns : fuseaux horaires actifs, langues</li>
-                  <li>Identifier influenceurs : membres les plus actifs, respectés</li>
+                  <li>Entity Person (nom + prénom)</li>
+                  <li>Transform: "To Email Addresses [using Search Engine]"</li>
+                  <li>Sur emails: Transform "To Social Network Profile"</li>
+                  <li>Identifier: LinkedIn, Twitter, Facebook, Instagram</li>
+                  <li>Documenter: employeur, localisation, connexions</li>
                 </ol>
               </div>
               <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px" }}>
-                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 3 : Monitoring activité</h3>
-                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}><strong>Objectif :</strong> Suivre évolution d'un serveur dans le temps</p>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 3 : Infrastructure partagée</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}><strong>Objectif :</strong> Trouver autres domaines sur même serveur</p>
                 <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
                 <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
-                  <li>Noter nombre membres jour J, puis J+7, J+30</li>
-                  <li>Tracker nouveaux canaux créés/supprimés</li>
-                  <li>Observer pics d'activité (événements, annonces...)</li>
-                  <li>Détecter : départs massifs = red flag, croissance = engagement</li>
+                  <li>Entity Domain → Transform "To IP Address"</li>
+                  <li>Sur IP obtenue → Transform "To Domains [Sharing this IP]"</li>
+                  <li>Identifier: sites partageant même hébergement</li>
+                  <li>Analyser: entreprises liées, mutualisations suspectes</li>
                 </ol>
-                <p style={{ color: "#ef4444", marginTop: "15px", fontWeight: "600" }}>⚠️ Ne pas spammer ni violer règles serveur</p>
+                <p style={{ color: "#ef4444", marginTop: "15px", fontWeight: "600" }}>⚠️ Respecter vie privée et lois locales</p>
               </div>
             </div>
           )}
