@@ -45,7 +45,7 @@ import DiscordModule from "./pages/DiscordModule";
 import ExercicesOSINT from "./pages/ExercicesOSINT";
 import BadgesOSINT from "./pages/BadgesOSINT";
 import CertificatPage from "./pages/CertificatPage";
-import theHarvesterModule from "./pages/theHarvesterModule";
+import TheHarvesterModule from "./pages/TheHarvesterModule";
 import MaltegoModule from "./pages/MaltegoModule";
 import YouTubePage from "./pages/YouTubePage";
 import ChallengesPage from "./pages/ChallengesPage";
@@ -161,9 +161,7 @@ export default function App() {
         {/* CAS RÉELS */}
         <Route path="/etudes-osint" element={<Protected><Layout><EtudesOSINT /></Layout></Protected>} />
         <Route path="/cas/geolocalisation" element={<Protected><Layout><CasGeoLocalisation /></Layout></Protected>} />
-        <Route path="/cas/verification-media" element={<Protected><Layout><CasVerificationMedia /></Layout></Protected>} />
-        <Route path="/modules/theharvester" element={<Protected><Layout><theHarvesterModule /></Layout></Protected>} />
-        <Route path="/modules/maltego" element={<Protected><Layout><MaltegoModule /></Layout></Protected>} />
+        <Route path="/cas/verification-media" element={<Protected><Layout><CasVerificationMedia /></Layout></Protected>} />        
         <Route path="/cas/attribution" element={<Protected><Layout><CasAttribution /></Layout></Protected>} />
         <Route path="/cas/chronologie" element={<Protected><Layout><CasChronologie /></Layout></Protected>} />
         <Route path="/cas/final" element={<Protected><Layout><CasFinalOSINT /></Layout></Protected>} />
@@ -177,7 +175,8 @@ export default function App() {
         <Route path="/modules/linkedin" element={<Protected><Layout><LinkedInModule /></Layout></Protected>} />
         <Route path="/modules/telegram" element={<Protected><Layout><TelegramModule /></Layout></Protected>} />
         <Route path="/modules/discord" element={<Protected><Layout><DiscordModule /></Layout></Protected>} />
-
+        <Route path="/modules/Theharvester" element={<Protected><Layout><TheHarvesterModule /></Layout></Protected>} />
+        <Route path="/modules/maltego" element={<Protected><Layout><MaltegoModule /></Layout></Protected>} />
         {/* AUTRES */}
         <Route path="/exercices-osint" element={<Protected><Layout><ExercicesOSINT /></Layout></Protected>} />
         <Route path="/badges-osint" element={<Protected><Layout><BadgesOSINT /></Layout></Protected>} />
