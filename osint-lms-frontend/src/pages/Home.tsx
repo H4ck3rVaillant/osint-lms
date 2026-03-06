@@ -119,7 +119,7 @@ export default function Home() {
         }}>
           {[
             { icon: "🎓", title: "Parcours progressifs",    desc: "3 niveaux : Débutant, Intermédiaire, Avancé" },
-            { icon: "🎯", title: "4 Modules spécialisés",   desc: "Shodan, LinkedIn, Telegram, Discord" },
+            { icon: "🎯", title: "6 Modules spécialisés",   desc: "Shodan, LinkedIn, Telegram, Discord, theHarvester, Maltego Basic" },
             { icon: "✏️", title: "20 Exercices pratiques",  desc: "Entraînements OSINT guidés et corrigés" },
             { icon: "🔎", title: "5 Études de cas réels",   desc: "Investigations type Bellingcat" },
             { icon: "🏅", title: "Système de badges",       desc: "Progression et récompenses déblocables" },
