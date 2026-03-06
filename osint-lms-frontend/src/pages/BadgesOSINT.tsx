@@ -43,8 +43,6 @@ export default function BadgesOSINT() {
         { key: "badge_module_linkedin", label: "Expert LinkedIn", desc: "Investigations professionnelles et reconnaissance" },
         { key: "badge_module_telegram", label: "Expert Telegram", desc: "Analyse de canaux et groupes Telegram" },
         { key: "badge_module_discord", label: "Expert Discord", desc: "Investigation de serveurs et communautés Discord" },
-        { key: "badge_module_theharvester", label: "Expert theHarvester", desc: "Collecte emails, sous-domaines et IPs" },
-        { key: "badge_module_maltego", label: "Expert Maltego", desc: "Visualisation graphique de relations OSINT" },
       ],
     },
     {
@@ -308,7 +306,7 @@ export default function BadgesOSINT() {
             <strong>Parcours de formation :</strong> Complétez les modules Introduction, Méthodologie et Outils de chaque niveau
           </li>
           <li>
-            <strong>Modules spécialisés :</strong> Validez les quiz des 6 modules (Shodan, LinkedIn, Telegram, Discord, theHarvester, Maltego) avec 80% minimum
+            <strong>Modules spécialisés :</strong> Validez les quiz des modules Shodan, LinkedIn, Telegram et Discord avec 80% minimum
           </li>
           <li>
             <strong>Exercices pratiques :</strong> Résolvez 5 exercices par niveau de difficulté

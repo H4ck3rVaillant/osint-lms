@@ -13,8 +13,6 @@ interface ProgressionData {
     linkedin: boolean;
     telegram: boolean;
     discord: boolean;
-    theharvester: boolean;
-    maltego: boolean;
   };
   exercices: boolean;
   etudesDeCas: boolean;
@@ -70,8 +68,6 @@ function checkModulesFromLocalStorage(): ProgressionData["modulesSpecialises"] {
     linkedin: localStorage.getItem("badge_module_linkedin") === "true",
     telegram: localStorage.getItem("badge_module_telegram") === "true",
     discord: localStorage.getItem("badge_module_discord") === "true",
-    theharvester: localStorage.getItem("badge_module_theharvester") === "true",
-    maltego: localStorage.getItem("badge_module_maltego") === "true",
   };
 }
 
@@ -146,8 +142,6 @@ export function getProgression(): ProgressionData {
         linkedin: false,
         telegram: false,
         discord: false,
-        theharvester: false,
-        maltego: false,
       },
       exercices: false,
       etudesDeCas: false,
@@ -248,9 +242,7 @@ function checkAndMarkComplete(progression: ProgressionData) {
     progression.modulesSpecialises.shodan &&
     progression.modulesSpecialises.linkedin &&
     progression.modulesSpecialises.telegram &&
-    progression.modulesSpecialises.discord &&
-    progression.modulesSpecialises.theharvester &&
-    progression.modulesSpecialises.maltego;
+    progression.modulesSpecialises.discord;
 
   const allQuizComplete = 
     progression.quiz.osintBasics &&
@@ -283,7 +275,7 @@ export function getCompletionPercentage(): number {
   const progression = getProgression();
   
   let completed = 0;
-  let total = 17; // 3 parcours + 6 modules + 1 exercices + 1 études + 6 quiz + 1 CTF
+  let total = 15; // 3 parcours + 4 modules + 1 exercices + 1 études + 6 quiz + 1 CTF
 
   if (progression.parcours.debutant) completed++;
   if (progression.parcours.intermediaire) completed++;
@@ -292,8 +284,6 @@ export function getCompletionPercentage(): number {
   if (progression.modulesSpecialises.linkedin) completed++;
   if (progression.modulesSpecialises.telegram) completed++;
   if (progression.modulesSpecialises.discord) completed++;
-  if (progression.modulesSpecialises.theharvester) completed++;
-  if (progression.modulesSpecialises.maltego) completed++;
   if (progression.exercices) completed++;
   if (progression.etudesDeCas) completed++;
   if (progression.quiz.osintBasics) completed++;
@@ -322,9 +312,7 @@ export function getCompletionDetails() {
       linkedin: progression.modulesSpecialises.linkedin,
       telegram: progression.modulesSpecialises.telegram,
       discord: progression.modulesSpecialises.discord,
-      theharvester: progression.modulesSpecialises.theharvester,
-      maltego: progression.modulesSpecialises.maltego,
-      allComplete: progression.modulesSpecialises.shodan && progression.modulesSpecialises.linkedin && progression.modulesSpecialises.telegram && progression.modulesSpecialises.discord && progression.modulesSpecialises.theharvester && progression.modulesSpecialises.maltego,
+      allComplete: progression.modulesSpecialises.shodan && progression.modulesSpecialises.linkedin && progression.modulesSpecialises.telegram && progression.modulesSpecialises.discord,
     },
     exercices: progression.exercices,
     etudesDeCas: progression.etudesDeCas,

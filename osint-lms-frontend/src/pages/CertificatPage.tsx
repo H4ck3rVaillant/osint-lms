@@ -254,45 +254,12 @@ export default function CertificatPage() {
               }}
             >
               <span style={{ fontSize: "1.5rem" }}>📚</span>
-              Parcours (3)
+              Parcours
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <CheckItem completed={details.parcours.debutant} label="Parcours Débutant" />
               <CheckItem completed={details.parcours.intermediaire} label="Parcours Intermédiaire" />
               <CheckItem completed={details.parcours.avance} label="Parcours Avancé" />
-            </div>
-          </div>
-
-          {/* Modules Spécialisés */}
-          <div
-            style={{
-              background: colors.bgSecondary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "12px",
-              padding: "25px",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "1.2rem",
-                fontWeight: "600",
-                color: colors.textPrimary,
-                marginBottom: "20px",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-              }}
-            >
-              <span style={{ fontSize: "1.5rem" }}>🎯</span>
-              Modules (6)
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              <CheckItem completed={details.modulesSpecialises.shodan} label="Shodan" />
-              <CheckItem completed={details.modulesSpecialises.linkedin} label="LinkedIn" />
-              <CheckItem completed={details.modulesSpecialises.telegram} label="Telegram" />
-              <CheckItem completed={details.modulesSpecialises.discord} label="Discord" />
-              <CheckItem completed={details.modulesSpecialises.theharvester} label="theHarvester" />
-              <CheckItem completed={details.modulesSpecialises.maltego} label="Maltego" />
             </div>
           </div>
 
