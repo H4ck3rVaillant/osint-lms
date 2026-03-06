@@ -1,150 +1,302 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useThemeColors } from "../context/ThemeContext";
 
-export default function TheHarvesterModule() {
-
+export default function theHarvesterModule() {
   const colors = useThemeColors();
-
   const [activeTab, setActiveTab] = useState("theory");
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
+  const [showResults, setShowResults] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const BADGE_KEY = "badge_module_theharvester";
+  const ANSWERS_KEY = "quiz_answers_theharvester";
+  const RESULTS_KEY = "quiz_results_theharvester";
 
-  useEffect(() => {
-
-    const savedBadge = localStorage.getItem(BADGE_KEY);
-
-  }, []);
+  useState(() => {
+    const savedAnswers = localStorage.getItem(ANSWERS_KEY);
+    const savedResults = localStorage.getItem(RESULTS_KEY);
+    if (savedAnswers) setQuizAnswers(JSON.parse(savedAnswers));
+    if (savedResults === "true") setShowResults(true);
+  });
 
   const tabs = [
-    { id: "theory", label: "📖 Théorie" },
-    { id: "tools", label: "🔧 Outils" },
-    { id: "exercises", label: "💡 Exercices" },
-    { id: "quiz", label: "🎯 Quiz" }
+    { id: "theory", label: "📖 Théorie", icon: "📚" },
+    { id: "tools", label: "🔧 Outils", icon: "⚙️" },
+    { id: "exercises", label: "💡 Exercices", icon: "✍️" },
+    { id: "quiz", label: "🎯 Quiz", icon: "✅" },
   ];
 
+  const quizQuestions = [
+    { id: 1, question: "Que fait theHarvester ?", options: ["Collecte emails/sous-domaines/IPs", "Scan ports", "Crack passwords", "Analyse malware"], correct: 0 },
+    { id: 2, question: "Sources theHarvester ?", options: ["Google, Bing, Shodan, LinkedIn", "Uniquement Google", "Bases SQL", "Fichiers locaux"], correct: 0 },
+    { id: 3, question: "Commande lancement ?", options: ["theHarvester -d domain.com -b all", "harvester --domain", "python harvest.py", "theharvest -t"], correct: 0 },
+    { id: 4, question: "theHarvester légal ?", options: ["Oui si données publiques", "Non jamais", "Oui sans restriction", "Autorisation écrite"], correct: 0 },
+    { id: 5, question: "Format export ?", options: ["JSON, XML, HTML", "PDF uniquement", "SQL", "Texte brut"], correct: 0 }
+  ];
+
+  const handleQuizSubmit = () => {
+    const score = getScore();
+    setShowResults(true);
+    localStorage.setItem(ANSWERS_KEY, JSON.stringify(quizAnswers));
+    localStorage.setItem(RESULTS_KEY, "true");
+    if (score >= 4) localStorage.setItem(BADGE_KEY, "true");
+  };
+
+  const handleReset = () => {
+    setQuizAnswers({});
+    setShowResults(false);
+    setShowResetModal(false);
+    localStorage.removeItem(BADGE_KEY);
+    localStorage.removeItem(ANSWERS_KEY);
+    localStorage.removeItem(RESULTS_KEY);
+  };
+
+  const getScore = () => {
+    let correct = 0;
+    quizQuestions.forEach(q => { if (quizAnswers[q.id] === q.correct.toString()) correct++; });
+    return correct;
+  };
+
   return (
-
     <div style={{ minHeight: "100vh", background: colors.bgPrimary, paddingTop: "80px" }}>
-
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 20px" }}>
-
+        
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
-          <div style={{ fontSize: "4rem" }}>🌾</div>
-
-          <h1 style={{ color: colors.textPrimary }}>
+          <div style={{ fontSize: "4rem", marginBottom: "15px" }}>🌾</div>
+          <h1 style={{ fontSize: "2.5rem", fontWeight: "700", color: colors.textPrimary, marginBottom: "15px" }}>
             Module theHarvester
           </h1>
-
-          <p style={{ color: colors.textSecondary }}>
-            Collecte d'informations OSINT
+          <p style={{ fontSize: "1.1rem", color: colors.textSecondary, maxWidth: "700px", margin: "0 auto" }}>
+            Collecte emails, sous-domaines et IPs
           </p>
+          {localStorage.getItem(BADGE_KEY) === "true" && (
+            <div style={{ marginTop: "15px", display: "inline-block", padding: "8px 20px", background: colors.accent + "20", border: `2px solid ${colors.accent}`, borderRadius: "20px", color: colors.accent, fontWeight: "600" }}>
+              ✓ Badge débloqué
+            </div>
+          )}
         </div>
 
-        <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "40px" }}>
-          {tabs.map(tab => (
-
+        <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "40px", flexWrap: "wrap" }}>
+          {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               style={{
                 padding: "12px 24px",
                 background: activeTab === tab.id ? colors.accent : colors.bgSecondary,
-                border: `2px solid ${colors.border}`,
+                color: activeTab === tab.id ? "#020617" : colors.textPrimary,
+                border: `2px solid ${activeTab === tab.id ? colors.accent : colors.border}`,
                 borderRadius: "12px",
-                cursor: "pointer"
+                fontSize: "1rem",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
               }}
             >
               {tab.label}
             </button>
-
           ))}
         </div>
 
-        <div style={{ background: colors.bgSecondary, padding: "40px", borderRadius: "12px" }}>
-
+        <div style={{ background: colors.bgSecondary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "40px" }}>
+          
           {activeTab === "theory" && (
-
             <div>
-
-              <h2 style={{ color: colors.textPrimary }}>
-                📖 theHarvester OSINT
-              </h2>
-
-              <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-                theHarvester est un outil OSINT open-source permettant
-                de collecter automatiquement des informations publiques
-                sur une organisation.
-
-                Il peut récupérer :
-                emails, sous-domaines, noms d’employés,
-                adresses IP et hôtes exposés sur Internet.
-
-                Cet outil est souvent utilisé pendant la phase de
-                reconnaissance d’un audit de sécurité ou d’un pentest.
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>📖 theHarvester OSINT</h2>
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "20px" }}>
+                <strong>theHarvester</strong> : outil Python open-source collectant emails, noms, sous-domaines, IPs depuis sources publiques.
               </p>
-
-              <h3 style={{ color: colors.accent }}>Cas d’usage</h3>
-
-              <ul style={{ color: colors.textSecondary }}>
-                <li>Reconnaissance passive</li>
-                <li>Collecte d'emails professionnels</li>
-                <li>Découverte de sous-domaines</li>
-                <li>Cartographie de surface d'attaque</li>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>Cas d'usage</h3>
+              <ul style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
+                <li>Reconnaissance pré-attaque</li>
+                <li>Cartographie surface d'attaque</li>
+                <li>OSINT passif</li>
               </ul>
-
             </div>
+          )}
 
+          {activeTab === "tools" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>🔧 Utilisation</h2>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>Installation</h3>
+              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", marginBottom: "20px", fontFamily: "monospace" }}>
+                <div style={{ color: colors.textSecondary, marginBottom: "8px" }}>git clone https://github.com/laramies/theHarvester</div>
+                <div style={{ color: colors.textSecondary }}>pip3 install -r requirements.txt</div>
+              </div>
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>Commandes</h3>
+              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", fontFamily: "monospace" }}>
+                <div style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong style={{ color: colors.accent }}>theHarvester -d example.com -b all</strong></div>
+                <div style={{ color: colors.textSecondary }}><strong style={{ color: colors.accent }}>theHarvester -d example.com -b google,bing</strong></div>
+              </div>
+            </div>
           )}
 
           {activeTab === "exercises" && (
-
             <div>
-
-              <h2 style={{ color: colors.textPrimary }}>💡 Exercices</h2>
-
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>💡 Exercices</h2>
               <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
-                <h3 style={{ color: colors.accent }}>
-                  Exercice 1 : Collecte d'emails
-                </h3>
-
-                <p style={{ color: colors.textSecondary }}>
-                  Utilisez theHarvester pour récupérer
-                  les emails publics associés à un domaine.
-                </p>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 1 : Collecte emails</h3>
+                <p style={{ color: colors.textSecondary }}>Lister emails publics entreprise</p>
               </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
-                <h3 style={{ color: colors.accent }}>
-                  Exercice 2 : Sous-domaines
-                </h3>
-
-                <p style={{ color: colors.textSecondary }}>
-                  Lancez une recherche sur plusieurs moteurs
-                  afin d’identifier les sous-domaines exposés.
-                </p>
-              </div>
-
-              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px" }}>
-                <h3 style={{ color: colors.accent }}>
-                  Exercice 3 : Analyse OSINT
-                </h3>
-
-                <p style={{ color: colors.textSecondary }}>
-                  Analysez les résultats obtenus et identifiez
-                  les informations sensibles.
-                </p>
-              </div>
-
             </div>
-
           )}
 
-        </div>
+          {activeTab === "quiz" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>🎯 Quiz</h2>
+              {quizQuestions.map((q, index) => (
+                <div key={q.id} style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "12px", marginBottom: "20px" }}>
+                  <h3 style={{ color: colors.textPrimary, fontSize: "1.1rem", marginBottom: "15px" }}>
+                    {index + 1}. {q.question}
+                  </h3>
+                  {q.options.map((option, optIndex) => (
+                    <label
+                      key={optIndex}
+                      style={{
+                        display: "block",
+                        padding: "12px",
+                        marginBottom: "8px",
+                        background: quizAnswers[q.id] === optIndex.toString() ? colors.accent + "30" : colors.bgSecondary,
+                        border: `2px solid ${quizAnswers[q.id] === optIndex.toString() ? colors.accent : colors.border}`,
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name={`question-${q.id}`}
+                        value={optIndex}
+                        checked={quizAnswers[q.id] === optIndex.toString()}
+                        onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })}
+                        style={{ marginRight: "10px" }}
+                      />
+                      <span style={{ color: colors.textPrimary }}>{option}</span>
+                    </label>
+                  ))}
+                </div>
+              ))}
+              
+              <div style={{ display: "flex", gap: "15px" }}>
+                <button
+                  onClick={handleQuizSubmit}
+                  disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
+                  style={{
+                    padding: "15px 40px",
+                    background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border,
+                    color: "#020617",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontSize: "1.1rem",
+                    fontWeight: "600",
+                    cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed",
+                  }}
+                >
+                  Valider
+                </button>
+                <button
+                  onClick={() => setShowResetModal(true)}
+                  style={{
+                    padding: "15px 40px",
+                    background: "#0b0f1a",
+                    color: "#00ff9c",
+                    border: "2px solid #00ff9c",
+                    borderRadius: "8px",
+                    fontSize: "1.1rem",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  🔄 Reset
+                </button>
+              </div>
 
+              {showResults && (
+                <div style={{
+                  marginTop: "30px",
+                  padding: "25px",
+                  background: getScore() >= 4 ? colors.accent + "20" : "#ef444420",
+                  border: `2px solid ${getScore() >= 4 ? colors.accent : "#ef4444"}`,
+                  borderRadius: "12px",
+                }}>
+                  <h3 style={{ color: getScore() >= 4 ? colors.accent : "#ef4444", fontSize: "1.5rem" }}>
+                    {getScore() >= 4 ? "✅ Validé !" : "❌ Réessayez"}
+                  </h3>
+                  <p style={{ color: colors.textPrimary, fontSize: "1.2rem" }}>
+                    Score : {getScore()}/{quizQuestions.length}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
+      {showResetModal && (
+        <>
+          <div
+            onClick={() => setShowResetModal(false)}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "rgba(0, 0, 0, 0.8)",
+              zIndex: 9998,
+            }}
+          />
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              background: "#0b0f1a",
+              border: "3px solid #00ff9c",
+              borderRadius: "12px",
+              padding: "40px",
+              maxWidth: "500px",
+              width: "90%",
+              zIndex: 9999,
+            }}
+          >
+            <h3 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px", textAlign: "center" }}>
+              ⚠️ Réinitialiser
+            </h3>
+            <p style={{ color: "#9ca3af", marginBottom: "30px", textAlign: "center" }}>
+              Effacer tout ?
+            </p>
+            <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
+              <button
+                onClick={() => setShowResetModal(false)}
+                style={{
+                  padding: "12px 30px",
+                  background: "transparent",
+                  color: "#9ca3af",
+                  border: "2px solid #2a3f3f",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleReset}
+                style={{
+                  padding: "12px 30px",
+                  background: "#00ff9c",
+                  color: "#0b0f1a",
+                  border: "none",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                }}
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
-
   );
-
 }
