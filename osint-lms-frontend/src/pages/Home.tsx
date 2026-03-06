@@ -1,314 +1,257 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import Logo from "../assets/images/Logo.png";
+import { useAuth } from "../auth/AuthContext";
 
 export default function Home() {
-  const [typedText, setTypedText] = useState("");
-  const fullText = "Maîtrisez l'art de l'investigation numérique";
+  const { user } = useAuth();
 
-  useEffect(() => {
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index <= fullText.length) {
-        setTypedText(fullText.slice(0, index));
-        index++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 50);
-    return () => clearInterval(timer);
-  }, []);
+  if (user) {
+    window.location.href = "/dashboard";
+    return null;
+  }
+
+  const features = [
+    { icon: "🎓", title: "6 Modules OSINT Spécialisés", desc: "Shodan, LinkedIn, Telegram, Discord, theHarvester, Maltego - Formation complète et professionnelle" },
+    { icon: "📚", title: "3 Parcours Progressifs", desc: "Débutant, Intermédiaire, Avancé - Méthodologies et outils" },
+    { icon: "💡", title: "20 Exercices Pratiques", desc: "Mise en pratique avec corrections détaillées" },
+    { icon: "🛰️", title: "5 Études de Cas Réels", desc: "Investigations type Bellingcat" },
+    { icon: "🏅", title: "26 Badges à Débloquer", desc: "Gamification complète de votre progression" },
+    { icon: "🔧", title: "22+ Outils OSINT", desc: "Catalogue complet d'outils professionnels" },
+    { icon: "🐉", title: "Laboratoire Kali", desc: "Terminal interactif avec 30+ commandes" },
+    { icon: "🚩", title: "Mini-CTF & Challenges", desc: "11 défis + challenges hebdomadaires" },
+  ];
 
   return (
-    <main style={{
+    <div style={{
       minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      padding: "60px 20px",
-      background: "radial-gradient(ellipse at top, #0f1419 0%, #020617 100%)",
-      position: "relative" as const,
-      overflow: "hidden"
+      background: "linear-gradient(135deg, #0b0f1a 0%, #1a1f2e 100%)",
+      color: "#fff"
     }}>
-
-      <div style={{
-        position: "absolute" as const,
-        inset: 0,
-        backgroundImage: `
-          linear-gradient(rgba(0, 255, 156, 0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 255, 156, 0.03) 1px, transparent 1px)
-        `,
-        backgroundSize: "50px 50px",
-        pointerEvents: "none" as const
-      }} />
-
-      <div style={{ maxWidth: "1200px", width: "100%", zIndex: 1, textAlign: "center" }}>
-
-        <div style={{ marginBottom: "30px" }}>
-          <img
-            src={Logo}
-            style={{
-              width: "150px",
-              filter: "drop-shadow(0 0 20px rgba(0, 255, 156, 0.5))",
-              transition: "all 0.3s ease",
-              animation: "float 3s ease-in-out infinite"
-            }}
-            alt="CyberOSINT Academy Logo"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.05)";
-              e.currentTarget.style.filter = "drop-shadow(0 0 35px rgba(0, 255, 156, 0.9))";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.filter = "drop-shadow(0 0 20px rgba(0, 255, 156, 0.5))";
-            }}
-          />
-        </div>
-
-        <h1 style={{
-          color: "#00ff9c",
-          fontSize: "3rem",
-          marginBottom: "15px",
-          fontWeight: "bold",
-          letterSpacing: "1px",
-          textShadow: "0 0 20px rgba(0, 255, 156, 0.5)",
-          animation: "fadeInUp 1s ease-out 0.2s backwards"
-        }}>
-          CyberOSINT Academy
+      {/* Header */}
+      <header style={{
+        padding: "20px 40px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderBottom: "2px solid #00ff9c"
+      }}>
+        <h1 style={{ color: "#00ff9c", fontSize: "1.8rem", margin: 0 }}>
+          🔍 OSINT LMS Pro
         </h1>
-
-        <div style={{ minHeight: "50px", marginBottom: "25px" }}>
-          <p style={{
+        <div style={{ display: "flex", gap: "15px" }}>
+          <Link to="/login" style={{
+            padding: "10px 25px",
+            background: "transparent",
+            border: "2px solid #00ff9c",
             color: "#00ff9c",
-            fontSize: "1.3rem",
-            fontWeight: "500",
-            fontFamily: "monospace",
-            animation: "fadeIn 1s ease-out 0.4s backwards"
+            borderRadius: "8px",
+            textDecoration: "none",
+            fontWeight: "600",
+            transition: "all 0.3s"
           }}>
-            {typedText}
-            <span style={{
-              opacity: typedText.length < fullText.length ? 1 : 0,
-              animation: "blink 1s infinite"
-            }}>|</span>
-          </p>
+            Connexion
+          </Link>
+          <Link to="/register" style={{
+            padding: "10px 25px",
+            background: "#00ff9c",
+            border: "2px solid #00ff9c",
+            color: "#020617",
+            borderRadius: "8px",
+            textDecoration: "none",
+            fontWeight: "600",
+            transition: "all 0.3s"
+          }}>
+            S'inscrire
+          </Link>
         </div>
+      </header>
 
-        <p style={{
-          maxWidth: "750px",
-          margin: "0 auto 50px",
-          color: "#9ca3af",
-          fontSize: "1.1rem",
-          lineHeight: "1.8",
-          animation: "fadeInUp 1s ease-out 0.6s backwards"
+      {/* Hero */}
+      <section style={{
+        padding: "80px 40px",
+        textAlign: "center",
+        maxWidth: "1200px",
+        margin: "0 auto"
+      }}>
+        <h2 style={{
+          fontSize: "3.5rem",
+          marginBottom: "25px",
+          background: "linear-gradient(135deg, #00ff9c 0%, #00cc7a 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text"
         }}>
-          Plateforme professionnelle d'apprentissage en cybersécurité et OSINT.
-          Développez vos compétences à travers des parcours structurés, des défis CTF,
-          des laboratoires interactifs (Kali et Parrot), un système de gamification complet
-          et une bibliothèque de 22+ outils professionnels.
+          Maîtrisez l'OSINT comme un Pro
+        </h2>
+        <p style={{
+          fontSize: "1.3rem",
+          color: "#9ca3af",
+          marginBottom: "40px",
+          maxWidth: "800px",
+          margin: "0 auto 40px"
+        }}>
+          Plateforme complète de formation OSINT avec 6 modules spécialisés, 3 parcours progressifs, exercices pratiques et études de cas réels type Bellingcat.
         </p>
+        <Link to="/register" style={{
+          padding: "18px 40px",
+          background: "#00ff9c",
+          color: "#020617",
+          borderRadius: "12px",
+          textDecoration: "none",
+          fontSize: "1.2rem",
+          fontWeight: "700",
+          display: "inline-block",
+          boxShadow: "0 4px 20px rgba(0, 255, 156, 0.3)"
+        }}>
+          🚀 Commencer Gratuitement
+        </Link>
+      </section>
 
-        {/* FONCTIONNALITES */}
+      {/* Features */}
+      <section style={{
+        padding: "60px 40px",
+        maxWidth: "1400px",
+        margin: "0 auto"
+      }}>
+        <h3 style={{
+          fontSize: "2.5rem",
+          textAlign: "center",
+          marginBottom: "50px",
+          color: "#00ff9c"
+        }}>
+          Tout ce dont vous avez besoin pour l'OSINT
+        </h3>
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "18px",
-          maxWidth: "1100px",
-          margin: "0 auto 50px",
-          animation: "fadeInUp 1s ease-out 0.8s backwards"
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "30px"
         }}>
-          {[
-            { icon: "🎓", title: "Parcours progressifs",    desc: "3 niveaux : Débutant, Intermédiaire, Avancé" },
-            { icon: "🎯", title: "4 Modules spécialisés",   desc: "Shodan, LinkedIn, Telegram, Discord" },
-            { icon: "✏️", title: "20 Exercices pratiques",  desc: "Entraînements OSINT guidés et corrigés" },
-            { icon: "🔎", title: "5 Études de cas réels",   desc: "Investigations type Bellingcat" },
-            { icon: "🏅", title: "Système de badges",       desc: "Progression et récompenses déblocables" },
-            { icon: "🚩", title: "Mini-CTF intégrés",       desc: "11 défis OSINT, Crypto et Web Hacking" },
-            { icon: "🔥", title: "52 Challenges Hebdo",     desc: "Un nouveau challenge OSINT chaque semaine" },
-            { icon: "🏆", title: "Leaderboard",             desc: "Classement mondial en temps réel" },
-            { icon: "⭐", title: "Système XP et Niveaux",   desc: "Newbie vers Script Kiddie vers Elite Hacker" },
-            { icon: "🔥", title: "Streak et Calendrier",    desc: "Activité quotidienne style GitHub" },
-            { icon: "🐉", title: "Kali Linux Lab",          desc: "Terminal interactif avec 30+ commandes" },
-            { icon: "🦜", title: "Parrot OS Lab",           desc: "Anonymat Tor, GPG, WiFi audit" },
-            { icon: "🧪", title: "Labo OSINT",              desc: "Terminal web et code playground" },
-            { icon: "🤖", title: "HackerAI",                desc: "Assistant IA spécialisé cybersécurité" },
-            { icon: "🔍", title: "Argus V2.0",              desc: "OSINT Automation & Threat Intelligence" },
-            { icon: "🔧", title: "22+ Outils référencés",   desc: "Catalogue complet d'outils OSINT" },
-            { icon: "📚", title: "Référentiels",            desc: "ANSSI, RGPD, NIS2, ISO 27001" },
-            { icon: "📦", title: "Dependency Track",        desc: "Supply chain security et SBOM" },
-          ].map((feature, i) => (
-            <div
-              key={i}
-              style={{
-                background: "rgba(11, 15, 26, 0.85)",
-                border: "1px solid rgba(0, 255, 156, 0.25)",
-                borderRadius: "12px",
-                padding: "22px 16px",
-                transition: "all 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-5px)";
-                e.currentTarget.style.border = "1px solid #00ff9c";
-                e.currentTarget.style.boxShadow = "0 10px 30px rgba(0, 255, 156, 0.2)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.border = "1px solid rgba(0, 255, 156, 0.25)";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              <div style={{ fontSize: "2.2rem", marginBottom: "10px" }}>{feature.icon}</div>
-              <h3 style={{ color: "#00ff9c", marginBottom: "6px", fontSize: "0.95rem", fontWeight: "bold" }}>
+          {features.map((feature, index) => (
+            <div key={index} style={{
+              background: "#0b0f1a",
+              border: "2px solid #00ff9c",
+              borderRadius: "12px",
+              padding: "30px",
+              transition: "all 0.3s"
+            }}>
+              <div style={{ fontSize: "3rem", marginBottom: "15px" }}>{feature.icon}</div>
+              <h4 style={{
+                fontSize: "1.3rem",
+                color: "#00ff9c",
+                marginBottom: "12px"
+              }}>
                 {feature.title}
-              </h3>
-              <p style={{ color: "#9ca3af", fontSize: "0.82rem", margin: 0, lineHeight: "1.5" }}>
+              </h4>
+              <p style={{
+                color: "#9ca3af",
+                lineHeight: "1.6",
+                fontSize: "1rem"
+              }}>
                 {feature.desc}
               </p>
             </div>
           ))}
         </div>
+      </section>
 
-        {/* STATS */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-          gap: "25px",
-          maxWidth: "900px",
-          margin: "0 auto 55px",
-          padding: "30px",
-          background: "rgba(11, 15, 26, 0.7)",
-          border: "1px solid rgba(0, 255, 156, 0.3)",
-          borderRadius: "14px",
-          animation: "fadeInUp 1s ease-out 1s backwards"
-        }}>
-          {[
-            { number: "13",  label: "Modules de formation" },
-            { number: "20",  label: "Exercices pratiques" },
-            { number: "5",   label: "Études de cas OSINT" },
-            { number: "52",  label: "Challenges Hebdo" },
-            { number: "11",  label: "Défis CTF" },
-            { number: "20",  label: "Badges à débloquer" },
-            { number: "22+", label: "Outils référencés" },
-          ].map((stat, i) => (
-            <div key={i} style={{ textAlign: "center" }}>
-              <div style={{
-                color: "#00ff9c",
-                fontSize: "2.3rem",
-                fontWeight: "bold",
-                marginBottom: "6px",
-                textShadow: "0 0 15px rgba(0, 255, 156, 0.5)"
-              }}>
-                {stat.number}
-              </div>
-              <div style={{ color: "#9ca3af", fontSize: "0.85rem", lineHeight: "1.4" }}>
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* NIVEAUX XP */}
-        <div style={{
-          maxWidth: "900px",
-          margin: "0 auto 55px",
-          animation: "fadeInUp 1s ease-out 1.1s backwards"
-        }}>
-          <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "20px" }}>
-            ⭐ Progressez de Newbie à Zero Day Master
-          </h2>
-          <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>
+      {/* Modules OSINT */}
+      <section style={{
+        padding: "60px 40px",
+        background: "#0b0f1a",
+        borderTop: "2px solid #00ff9c",
+        borderBottom: "2px solid #00ff9c"
+      }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <h3 style={{
+            fontSize: "2.5rem",
+            textAlign: "center",
+            marginBottom: "20px",
+            color: "#00ff9c"
+          }}>
+            🎓 6 Modules OSINT Spécialisés
+          </h3>
+          <p style={{
+            textAlign: "center",
+            color: "#9ca3af",
+            fontSize: "1.1rem",
+            marginBottom: "50px"
+          }}>
+            Formation détaillée sur les outils OSINT les plus puissants
+          </p>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "25px"
+          }}>
             {[
-              { icon: "🐣", name: "Newbie",          color: "#9ca3af" },
-              { icon: "💻", name: "Script Kiddie",   color: "#22c55e" },
-              { icon: "🔓", name: "Hacker",          color: "#3b82f6" },
-              { icon: "🥷", name: "Elite Hacker",    color: "#8b5cf6" },
-              { icon: "⚔️", name: "Cyber Ninja",     color: "#f59e0b" },
-              { icon: "💀", name: "Zero Day Master", color: "#ef4444" },
-            ].map((lvl, i, arr) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <div style={{
-                  background: "rgba(11,15,26,0.8)",
-                  border: `1px solid ${lvl.color}55`,
-                  borderRadius: "8px",
-                  padding: "8px 14px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px"
-                }}>
-                  <span style={{ fontSize: "1.1rem" }}>{lvl.icon}</span>
-                  <span style={{ color: lvl.color, fontSize: "0.85rem", fontWeight: "bold" }}>{lvl.name}</span>
-                </div>
-                {i < arr.length - 1 && (
-                  <span style={{ color: "#2a3f3f", fontSize: "1rem" }}>→</span>
-                )}
+              { icon: "🔍", title: "Shodan OSINT", desc: "Moteur de recherche IoT et appareils connectés" },
+              { icon: "💼", title: "LinkedIn OSINT", desc: "Investigations professionnelles et reconnaissance" },
+              { icon: "✈️", title: "Telegram OSINT", desc: "Recherche de groupes, canaux et utilisateurs" },
+              { icon: "🎮", title: "Discord OSINT", desc: "Investigation et reconnaissance de serveurs" },
+              { icon: "🌾", title: "theHarvester", desc: "Collecte emails, sous-domaines et IPs" },
+              { icon: "🕸️", title: "Maltego Basics", desc: "Visualisation graphique de relations OSINT" },
+            ].map((module, index) => (
+              <div key={index} style={{
+                background: "#1a1f2e",
+                border: "1px solid #00ff9c",
+                borderRadius: "12px",
+                padding: "25px",
+                textAlign: "center"
+              }}>
+                <div style={{ fontSize: "3rem", marginBottom: "15px" }}>{module.icon}</div>
+                <h4 style={{ color: "#00ff9c", fontSize: "1.2rem", marginBottom: "10px" }}>
+                  {module.title}
+                </h4>
+                <p style={{ color: "#9ca3af", fontSize: "0.95rem" }}>
+                  {module.desc}
+                </p>
               </div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* CTA */}
-        <div style={{ animation: "fadeInUp 1s ease-out 1.2s backwards" }}>
-          <Link
-            to="/login"
-            style={{
-              display: "inline-block",
-              background: "#00ff9c",
-              color: "#020617",
-              padding: "18px 55px",
-              borderRadius: "10px",
-              textDecoration: "none",
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              transition: "all 0.3s ease",
-              boxShadow: "0 0 30px rgba(0, 255, 156, 0.3)"
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.05)";
-              e.currentTarget.style.boxShadow = "0 0 50px rgba(0, 255, 156, 0.7)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow = "0 0 30px rgba(0, 255, 156, 0.3)";
-            }}
-          >
-            🚀 Commencer l'aventure
-          </Link>
-          <p style={{ marginTop: "18px", color: "#6b7280", fontSize: "0.9rem" }}>
-            Gratuit · Sans engagement · Progression sauvegardée
-          </p>
-        </div>
-
-        {/* Footer */}
-        <div style={{
-          marginTop: "80px",
-          padding: "25px 0",
-          borderTop: "1px solid rgba(0, 255, 156, 0.15)",
-          animation: "fadeIn 1s ease-out 1.4s backwards"
+      {/* CTA */}
+      <section style={{
+        padding: "80px 40px",
+        textAlign: "center"
+      }}>
+        <h3 style={{
+          fontSize: "2.5rem",
+          marginBottom: "25px",
+          color: "#00ff9c"
         }}>
-          <p style={{ color: "#6b7280", fontSize: "0.85rem" }}>
-            © 2025 CyberOSINT Academy · Plateforme d'apprentissage professionnelle en cybersécurité
-          </p>
-        </div>
-      </div>
+          Prêt à devenir un expert OSINT ?
+        </h3>
+        <p style={{
+          fontSize: "1.2rem",
+          color: "#9ca3af",
+          marginBottom: "40px"
+        }}>
+          Rejoignez des centaines d'apprenants et maîtrisez l'investigation numérique
+        </p>
+        <Link to="/register" style={{
+          padding: "18px 40px",
+          background: "#00ff9c",
+          color: "#020617",
+          borderRadius: "12px",
+          textDecoration: "none",
+          fontSize: "1.2rem",
+          fontWeight: "700",
+          display: "inline-block"
+        }}>
+          Commencer Maintenant →
+        </Link>
+      </section>
 
-      <style>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-        @keyframes blink {
-          0%, 100% { opacity: 1; }
-          50%       { opacity: 0; }
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50%       { transform: translateY(-10px); }
-        }
-      `}</style>
-    </main>
+      {/* Footer */}
+      <footer style={{
+        padding: "30px 40px",
+        textAlign: "center",
+        borderTop: "2px solid #00ff9c",
+        color: "#9ca3af"
+      }}>
+        <p>© 2026 OSINT LMS Pro - Tous droits réservés</p>
+      </footer>
+    </div>
   );
 }
