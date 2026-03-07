@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useThemeColors } from "../context/ThemeContext";
 
-export default function theHarvesterModule() {
+export default function TheHarvesterModule() {
   const colors = useThemeColors();
   const [activeTab, setActiveTab] = useState("theory");
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});

@@ -35,7 +35,7 @@ import ShodanModule from "./pages/ShodanModule";
 import LinkedInModule from "./pages/LinkedInModule";
 import TelegramModule from "./pages/TelegramModule";
 import DiscordModule from "./pages/DiscordModule";
-import theHarvesterModule from "./pages/theHarvesterModule";
+import TheHarvesterModule from "./pages/theHarvesterModule";
 import MaltegoModule from "./pages/MaltegoModule";
 import ExercicesOSINT from "./pages/ExercicesOSINT";
 import BadgesOSINT from "./pages/BadgesOSINT";
@@ -148,7 +148,7 @@ export default function App() {
         <Route path="/modules/linkedin" element={<Protected><Layout><LinkedInModule /></Layout></Protected>} />
         <Route path="/modules/telegram" element={<Protected><Layout><TelegramModule /></Layout></Protected>} />
         <Route path="/modules/discord" element={<Protected><Layout><DiscordModule /></Layout></Protected>} />
-        <Route path="/modules/theharvester" element={<Protected><Layout><theHarvesterModule /></Layout></Protected>} />
+        <Route path="/modules/theharvester" element={<Protected><Layout><TheHarvesterModule /></Layout></Protected>} />
         <Route path="/modules/maltego" element={<Protected><Layout><MaltegoModule /></Layout></Protected>} />
         <Route path="/exercices-osint" element={<Protected><Layout><ExercicesOSINT /></Layout></Protected>} />
         <Route path="/badges-osint" element={<Protected><Layout><BadgesOSINT /></Layout></Protected>} />
