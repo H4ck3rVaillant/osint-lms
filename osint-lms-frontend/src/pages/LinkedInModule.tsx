@@ -316,7 +316,7 @@ export default function LinkedInModule() {
                     # Utilisation basique
                   </div>
                   <div style={{ color: colors.accent }}>
-                    python3 crosslinked.py -f '{'{"f}.{l}"}'@company.com "Company Name"
+                      python3 crosslinked.py -f "{f}.{l}@company.com" "Company Name"
                   </div>
                 </div>
                 <p style={{ color: colors.textSecondary, lineHeight: "1.7", fontSize: "0.95rem" }}>
