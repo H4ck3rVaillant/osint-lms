@@ -98,7 +98,7 @@ function Protected({ children }: { children: JSX.Element }) {
             margin: "0 auto 20px"
           }} />
           <p style={{ color: "#9ca3af" }}>Chargement...</p>
-          <style>{\`@keyframes spin { to { transform: rotate(360deg); } }\`}</style>
+          <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
         </div>
       </div>
     );
