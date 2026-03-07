@@ -4,15 +4,12 @@ import { useAuth } from "./auth/AuthContext";
 import { GameProvider } from "./context/GameContext";
 import Header from "./components/Header";
 import GameNotification from "./components/GameNotification";
-/* PUBLIC */
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
 import ContactPage from "./pages/ContactPage";
-/* CORE */
 import Dashboard from "./pages/Dashboard";
-/* PARCOURS */
 import ParcoursHub from "./pages/ParcoursHub";
 import ParcoursDebutant from "./pages/ParcoursDebutant";
 import ParcoursDebutantIntroduction from "./pages/ParcoursDebutantIntroduction";
@@ -26,31 +23,26 @@ import ParcoursAvance from "./pages/ParcoursAvance";
 import ParcoursAvanceIntroduction from "./pages/ParcoursAvanceIntroduction";
 import ParcoursAvanceMethodologie from "./pages/ParcoursAvanceMethodologie";
 import ParcoursAvanceOutils from "./pages/ParcoursAvanceOutils";
-/* CAS RÉELS */
 import EtudesOSINT from "./pages/EtudesOSINT";
 import CasGeoLocalisation from "./pages/CasGeoLocalisation";
 import CasVerificationMedia from "./pages/CasVerificationMedia";
 import CasAttribution from "./pages/CasAttribution";
 import CasChronologie from "./pages/CasChronologie";
 import CasFinalOSINT from "./pages/CasFinalOSINT";
-/* QUIZ */
 import QuizPage from "./pages/QuizPage";
 import QuizSession from "./pages/QuizSession";
-/* MODULES OSINT SPÉCIALISÉS */
 import ShodanModule from "./pages/ShodanModule";
 import LinkedInModule from "./pages/LinkedInModule";
 import TelegramModule from "./pages/TelegramModule";
 import DiscordModule from "./pages/DiscordModule";
 import theHarvesterModule from "./pages/theHarvesterModule";
 import MaltegoModule from "./pages/MaltegoModule";
-/* AUTRES */
 import ExercicesOSINT from "./pages/ExercicesOSINT";
 import BadgesOSINT from "./pages/BadgesOSINT";
 import CertificatPage from "./pages/CertificatPage";
 import YouTubePage from "./pages/YouTubePage";
 import ChallengesPage from "./pages/ChallengesPage";
 import AdminPanel from "./pages/AdminPanel";
-/* NOUVEAUX OUTILS & RESSOURCES */
 import HackerAI from "./pages/HackerAI";
 import DependencyTrack from "./pages/DependencyTrack";
 import OutilsCyber from "./pages/OutilsCyber";
@@ -59,23 +51,21 @@ import VMAccess from "./pages/VMAccess";
 import VMKali from "./pages/VMKali";
 import VMParrot from "./pages/VMParrot";
 import LabOSINT from "./pages/LabOSINT";
-/* GAMIFICATION */
 import CTFPage from "./pages/CTFPage";
 import Leaderboard from "./pages/Leaderboard";
 import Gamification from "./pages/Gamification";
 import StreakCalendar from "./pages/StreakCalendar";
-/* ARGUS V2.0 */
 import ArgusRecon from "./pages/ArgusRecon";
 import ArgusConsole from "./pages/ArgusConsole";
 
-/* SCROLL TO TOP */
 function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   return null;
 }
 
-/* ROUTE PROTÉGÉE */
 function Protected({ children }: { children: JSX.Element }) {
   const { user, isLoading } = useAuth();
 
@@ -90,7 +80,8 @@ function Protected({ children }: { children: JSX.Element }) {
       }}>
         <div style={{ textAlign: "center" }}>
           <div style={{
-            width: "50px", height: "50px",
+            width: "50px",
+            height: "50px",
             border: "3px solid #2a3f3f",
             borderTop: "3px solid #00ff9c",
             borderRadius: "50%",
@@ -108,7 +99,6 @@ function Protected({ children }: { children: JSX.Element }) {
   return children;
 }
 
-/* LAYOUT */
 function Layout({ children }: { children: JSX.Element }) {
   return (
     <>
@@ -124,69 +114,48 @@ export default function App() {
     <GameProvider>
       <ScrollToTop />
       <Routes>
-        {/* PUBLIC */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-
-        {/* DASHBOARD */}
         <Route path="/dashboard" element={<Protected><Layout><Dashboard /></Layout></Protected>} />
-
-        {/* PROFIL & CONTACT */}
         <Route path="/profil" element={<Protected><Layout><ProfilePage /></Layout></Protected>} />
         <Route path="/contact" element={<Protected><Layout><ContactPage /></Layout></Protected>} />
-
-        {/* PARCOURS HUB */}
         <Route path="/parcours" element={<Protected><Layout><ParcoursHub /></Layout></Protected>} />
-
-        {/* PARCOURS */}
         <Route path="/parcours-debutant" element={<Protected><Layout><ParcoursDebutant /></Layout></Protected>} />
         <Route path="/parcours/debutant" element={<Navigate to="/parcours-debutant" replace />} />
         <Route path="/parcours/debutant/introduction" element={<Protected><Layout><ParcoursDebutantIntroduction /></Layout></Protected>} />
         <Route path="/parcours/debutant/methodologie" element={<Protected><Layout><ParcoursDebutantMethodologie /></Layout></Protected>} />
         <Route path="/parcours/debutant/outils" element={<Protected><Layout><ParcoursDebutantOutils /></Layout></Protected>} />
-
         <Route path="/parcours-intermediaire" element={<Protected><Layout><ParcoursIntermediaire /></Layout></Protected>} />
         <Route path="/parcours/intermediaire" element={<Navigate to="/parcours-intermediaire" replace />} />
         <Route path="/parcours/intermediaire/introduction" element={<Protected><Layout><ParcoursIntermediaireIntroduction /></Layout></Protected>} />
         <Route path="/parcours/intermediaire/methodologie" element={<Protected><Layout><ParcoursIntermediaireMethodologie /></Layout></Protected>} />
         <Route path="/parcours/intermediaire/outils" element={<Protected><Layout><ParcoursIntermediaireOutils /></Layout></Protected>} />
-
         <Route path="/parcours-avance" element={<Protected><Layout><ParcoursAvance /></Layout></Protected>} />
         <Route path="/parcours/avance" element={<Navigate to="/parcours-avance" replace />} />
         <Route path="/parcours/avance/introduction" element={<Protected><Layout><ParcoursAvanceIntroduction /></Layout></Protected>} />
         <Route path="/parcours/avance/methodologie" element={<Protected><Layout><ParcoursAvanceMethodologie /></Layout></Protected>} />
         <Route path="/parcours/avance/outils" element={<Protected><Layout><ParcoursAvanceOutils /></Layout></Protected>} />
-
-        {/* CAS RÉELS */}
         <Route path="/etudes-osint" element={<Protected><Layout><EtudesOSINT /></Layout></Protected>} />
         <Route path="/cas/geolocalisation" element={<Protected><Layout><CasGeoLocalisation /></Layout></Protected>} />
         <Route path="/cas/verification-media" element={<Protected><Layout><CasVerificationMedia /></Layout></Protected>} />
         <Route path="/cas/attribution" element={<Protected><Layout><CasAttribution /></Layout></Protected>} />
         <Route path="/cas/chronologie" element={<Protected><Layout><CasChronologie /></Layout></Protected>} />
         <Route path="/cas/final" element={<Protected><Layout><CasFinalOSINT /></Layout></Protected>} />
-
-        {/* QUIZ */}
         <Route path="/quiz" element={<Protected><Layout><QuizPage /></Layout></Protected>} />
         <Route path="/quiz/:themeId" element={<Protected><Layout><QuizSession /></Layout></Protected>} />
-
-        {/* MODULES OSINT SPÉCIALISÉS */}
         <Route path="/modules/shodan" element={<Protected><Layout><ShodanModule /></Layout></Protected>} />
         <Route path="/modules/linkedin" element={<Protected><Layout><LinkedInModule /></Layout></Protected>} />
         <Route path="/modules/telegram" element={<Protected><Layout><TelegramModule /></Layout></Protected>} />
         <Route path="/modules/discord" element={<Protected><Layout><DiscordModule /></Layout></Protected>} />
         <Route path="/modules/theharvester" element={<Protected><Layout><theHarvesterModule /></Layout></Protected>} />
         <Route path="/modules/maltego" element={<Protected><Layout><MaltegoModule /></Layout></Protected>} />
-
-        {/* AUTRES */}
         <Route path="/exercices-osint" element={<Protected><Layout><ExercicesOSINT /></Layout></Protected>} />
         <Route path="/badges-osint" element={<Protected><Layout><BadgesOSINT /></Layout></Protected>} />
         <Route path="/certificat" element={<Protected><Layout><CertificatPage /></Layout></Protected>} />
         <Route path="/youtube" element={<Protected><Layout><YouTubePage /></Layout></Protected>} />
         <Route path="/challenges" element={<Protected><Layout><ChallengesPage /></Layout></Protected>} />
         <Route path="/admin" element={<Protected><Layout><AdminPanel /></Layout></Protected>} />
-
-        {/* OUTILS & RESSOURCES */}
         <Route path="/hacker-ai" element={<Protected><Layout><HackerAI /></Layout></Protected>} />
         <Route path="/dependency-track" element={<Protected><Layout><DependencyTrack /></Layout></Protected>} />
         <Route path="/outils-cyber" element={<Protected><Layout><OutilsCyber /></Layout></Protected>} />
@@ -195,18 +164,12 @@ export default function App() {
         <Route path="/vm-kali" element={<Protected><Layout><VMKali /></Layout></Protected>} />
         <Route path="/vm-parrot" element={<Protected><Layout><VMParrot /></Layout></Protected>} />
         <Route path="/labo-osint" element={<Protected><Layout><LabOSINT /></Layout></Protected>} />
-
-        {/* GAMIFICATION */}
         <Route path="/ctf" element={<Protected><Layout><CTFPage /></Layout></Protected>} />
         <Route path="/leaderboard" element={<Protected><Layout><Leaderboard /></Layout></Protected>} />
         <Route path="/progression" element={<Protected><Layout><Gamification /></Layout></Protected>} />
         <Route path="/streak" element={<Protected><Layout><StreakCalendar /></Layout></Protected>} />
-
-        {/* ARGUS V2.0 */}
         <Route path="/outils/argus" element={<Protected><Layout><ArgusRecon /></Layout></Protected>} />
         <Route path="/outils/argus/console" element={<Protected><Layout><ArgusConsole /></Layout></Protected>} />
-
-        {/* FALLBACK */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </GameProvider>
