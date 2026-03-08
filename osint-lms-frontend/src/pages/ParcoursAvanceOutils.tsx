@@ -1,383 +1,271 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useThemeColors } from "../context/ThemeContext";
 
 export default function ParcoursAvanceOutils() {
-  const colors = useThemeColors();
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
+  const colors = useThemeColors();
+  const [activeTab, setActiveTab] = useState("theory");
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
+  const [showResults, setShowResults] = useState(false);
 
-  const validate = () => {
-    localStorage.setItem("badge_adv_outils", "true");
-    setShowModal(true);
+  const BADGE_KEY = "badge_adv_outils";
+  const QUIZ_ANSWERS_KEY = "quiz_adv_outils_answers";
+  const QUIZ_COMPLETED_KEY = "quiz_adv_outils_completed";
+
+  if (localStorage.getItem("badge_adv_methodo") !== "true") {
+    return <Navigate to="/parcours/avance" replace />;
+  }
+
+  const quizQuestions = [
+    {
+      id: 1,
+      question: "MITRE ATT&CK est :",
+      options: ["Un jeu vidéo", "Une base de connaissances de TTPs adversaires", "Un antivirus", "Un navigateur"],
+      correct: 1
+    },
+    {
+      id: 2,
+      question: "Elasticsearch + Kibana permettent de :",
+      options: ["Créer des sites", "Indexer et visualiser des données massives", "Envoyer des emails", "Jouer en ligne"],
+      correct: 1
+    },
+    {
+      id: 3,
+      question: "YARA rules servent à :",
+      options: ["Créer des règles de jeu", "Identifier des patterns dans des fichiers/malware", "Bloquer des sites", "Créer des firewalls"],
+      correct: 1
+    },
+    {
+      id: 4,
+      question: "Un SIEM (Security Information and Event Management) permet de :",
+      options: ["Créer des emails", "Corréler des événements de sécurité en temps réel", "Éditer des images", "Créer des bases de données"],
+      correct: 1
+    },
+    {
+      id: 5,
+      question: "Les Threat Intelligence Platforms (TIPs) servent à :",
+      options: ["Créer des menaces", "Centraliser et automatiser la TI", "Envoyer des alertes spam", "Créer des rapports Word"],
+      correct: 1
+    }
+  ];
+
+  useEffect(() => {
+    const savedAnswers = localStorage.getItem(QUIZ_ANSWERS_KEY);
+    const quizCompleted = localStorage.getItem(QUIZ_COMPLETED_KEY);
+    if (savedAnswers) setQuizAnswers(JSON.parse(savedAnswers));
+    if (quizCompleted === "true") setShowResults(true);
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(quizAnswers).length > 0) {
+      localStorage.setItem(QUIZ_ANSWERS_KEY, JSON.stringify(quizAnswers));
+    }
+  }, [quizAnswers]);
+
+  const handleQuizSubmit = () => {
+    const score = getScore();
+    setShowResults(true);
+    localStorage.setItem(QUIZ_COMPLETED_KEY, "true");
+    if (score >= 4) localStorage.setItem(BADGE_KEY, "true");
   };
 
-  const returnToParcours = () => {
-    navigate("/parcours/avance");
+  const handleResetQuiz = () => {
+    setQuizAnswers({});
+    setShowResults(false);
+    localStorage.removeItem(QUIZ_ANSWERS_KEY);
+    localStorage.removeItem(QUIZ_COMPLETED_KEY);
   };
+
+  const getScore = () => {
+    let correct = 0;
+    quizQuestions.forEach((q) => {
+      if (quizAnswers[q.id] === q.correct.toString()) correct++;
+    });
+    return correct;
+  };
+
+  const returnToParcours = () => navigate("/parcours/avance");
+
+  const tabs = [
+    { id: "theory", label: "📖 Théorie", icon: "📚" },
+    { id: "quiz", label: "🎯 Quiz", icon: "✅" },
+  ];
 
   return (
-    <main style={{ maxWidth: "1000px", margin: "0 auto", padding: "40px" }}>
-      <h1 style={{ color: colors.accent, marginBottom: "20px" }}>
-        Module 3: Outils OSINT – Avancé
-      </h1>
-
-      <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>
-          Automatisation et collecte massive
-        </h2>
-        <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
-          Au niveau avancé, l'OSINT nécessite des <strong style={{ color: colors.accent }}>outils d'automatisation</strong> 
-          pour traiter des volumes importants de données, orchestrer des investigations complexes et exploiter 
-          des APIs professionnelles. L'objectif : <strong>scalabilité, efficacité et enrichissement intelligent</strong>.
-        </p>
-      </section>
-
-      <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-          APIs et intégrations OSINT
-        </h2>
+    <div style={{ minHeight: "100vh", background: colors.bgPrimary, paddingTop: "80px" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 20px" }}>
         
-        <div style={{ 
-          background: colors.bgPrimary, 
-          border: `1px solid ${colors.accent}`, 
-          borderRadius: "8px", 
-          padding: "24px",
-          marginBottom: "15px"
-        }}>
-          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
-            🔌 Shodan API
-          </h3>
-          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "12px" }}>
-            L'<strong>API Shodan</strong> permet d'automatiser les recherches d'infrastructures exposées, 
-            de monitorer en continu vos assets et de recevoir des alertes en temps réel.
+        <div style={{ textAlign: "center", marginBottom: "40px" }}>
+          <div style={{ fontSize: "4rem", marginBottom: "15px" }}>⚙️</div>
+          <h1 style={{ fontSize: "2.5rem", fontWeight: "700", color: colors.textPrimary, marginBottom: "15px" }}>
+            Module 3: Outils OSINT Avancé
+          </h1>
+          <p style={{ fontSize: "1.1rem", color: colors.textSecondary, maxWidth: "700px", margin: "0 auto" }}>
+            Plateformes d'intelligence et automation
           </p>
-          <div style={{ 
-            background: colors.bgSecondary, 
-            border: `1px solid ${colors.border}`, 
-            borderRadius: "6px", 
-            padding: "15px",
-            marginTop: "12px"
-          }}>
-            <p style={{ color: colors.accent, fontWeight: "bold", marginBottom: "8px" }}>
-              Exemple d'utilisation Python :
-            </p>
-            <pre style={{ 
-              background: colors.bgPrimary, 
-              padding: "12px", 
-              borderRadius: "6px", 
-              color: colors.accent,
-              overflowX: "auto",
-              fontSize: "0.9rem"
-            }}>
-{`import shodan
-
-api = shodan.Shodan('YOUR_API_KEY')
-results = api.search('apache country:FR')
-
-for result in results['matches']:
-    print(f"IP: {result['ip_str']}")
-    print(f"Port: {result['port']}")
-    print(f"Org: {result.get('org', 'N/A')}")`}
-            </pre>
-          </div>
-        </div>
-
-        <div style={{ 
-          background: colors.bgPrimary, 
-          border: `1px solid ${colors.accent}`, 
-          borderRadius: "8px", 
-          padding: "24px",
-          marginBottom: "15px"
-        }}>
-          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
-            🦠 VirusTotal API
-          </h3>
-          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "12px" }}>
-            <strong>VirusTotal</strong> permet d'analyser des fichiers, URLs et domaines suspects via 70+ antivirus. 
-            L'API offre des fonctionnalités avancées : recherche de hash, analyse comportementale, historique de détection.
-          </p>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li>Analyse de malwares et IOCs (Indicators of Compromise)</li>
-            <li>Relations entre domaines, IPs et fichiers</li>
-            <li>Recherche de similarités (YARA rules)</li>
-            <li>Monitoring de domaines malveillants</li>
-          </ul>
-        </div>
-
-        <div style={{ 
-          background: colors.bgPrimary, 
-          border: `1px solid ${colors.accent}`, 
-          borderRadius: "8px", 
-          padding: "24px"
-        }}>
-          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
-            🐙 GitHub API
-          </h3>
-          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "12px" }}>
-            L'<strong>API GitHub</strong> permet de rechercher du code source, des secrets exposés (clés API, mots de passe), 
-            des vulnérabilités dans les repositories publics, et de monitorer l'activité de développeurs cibles.
-          </p>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li>Recherche de credentials exposés : <code style={{ background: colors.bgSecondary, padding: "2px 6px", borderRadius: "3px" }}>password OR api_key extension:py</code></li>
-            <li>Identification de vulnérabilités : recherche de CVE dans le code</li>
-            <li>Profiling de développeurs et organisations</li>
-            <li>Analyse de dépendances et supply chain</li>
-          </ul>
-        </div>
-      </section>
-
-      <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-          Automatisation Python et pipelines OSINT
-        </h2>
-        
-        <div style={{ 
-          background: colors.bgPrimary, 
-          border: `1px solid ${colors.accent}`, 
-          borderRadius: "8px", 
-          padding: "24px",
-          marginBottom: "15px"
-        }}>
-          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
-            🐍 Scripts Python pour l'automatisation
-          </h3>
-          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "12px" }}>
-            Créez des <strong>pipelines OSINT personnalisés</strong> en Python pour orchestrer plusieurs outils, 
-            enrichir automatiquement des données et générer des rapports structurés.
-          </p>
-          <div style={{ 
-            background: colors.bgSecondary, 
-            border: `1px solid ${colors.border}`, 
-            borderRadius: "6px", 
-            padding: "15px",
-            marginTop: "12px"
-          }}>
-            <p style={{ color: colors.accent, fontWeight: "bold", marginBottom: "8px" }}>
-              Librairies Python essentielles :
-            </p>
-            <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-              <li><strong>requests</strong> : Requêtes HTTP pour consommer des APIs</li>
-              <li><strong>BeautifulSoup / Scrapy</strong> : Web scraping et parsing HTML</li>
-              <li><strong>pandas</strong> : Manipulation et analyse de données structurées</li>
-              <li><strong>networkx</strong> : Création et analyse de graphes de relations</li>
-              <li><strong>tweepy</strong> : Accès à l'API Twitter/X pour analyse de contenus</li>
-              <li><strong>python-whois</strong> : Requêtes WHOIS automatisées</li>
-              <li><strong>dnspython</strong> : Résolution DNS et analyse d'enregistrements</li>
-            </ul>
-          </div>
-        </div>
-
-        <div style={{ 
-          background: colors.bgPrimary, 
-          border: `1px solid ${colors.accent}`, 
-          borderRadius: "8px", 
-          padding: "24px"
-        }}>
-          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
-            ⚙️ Orchestration avec Apache Airflow
-          </h3>
-          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-            Pour des investigations de <strong>grande envergure</strong>, utilisez <strong>Apache Airflow</strong> 
-            pour orchestrer des workflows complexes : collecte programmée, enrichissement en cascade, 
-            génération automatique de rapports, alerting en temps réel.
-          </p>
-        </div>
-      </section>
-
-      <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-          Graphes avancés et bases de données
-        </h2>
-        
-        <div style={{ 
-          background: colors.bgPrimary, 
-          border: `1px solid ${colors.accent}`, 
-          borderRadius: "8px", 
-          padding: "24px",
-          marginBottom: "15px"
-        }}>
-          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
-            🗄️ Neo4j — Base de données graphe
-          </h3>
-          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "12px" }}>
-            <strong>Neo4j</strong> est une base de données orientée graphe puissante pour modéliser 
-            des <strong>relations complexes</strong> entre entités. Idéale pour les investigations impliquant 
-            des réseaux d'acteurs, des infrastructures interconnectées ou des flux financiers.
-          </p>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li>Requêtes en Cypher (langage de requête graphe)</li>
-            <li>Visualisation interactive de réseaux</li>
-            <li>Détection de communautés et de patterns</li>
-            <li>Intégration avec Python (py2neo)</li>
-          </ul>
-        </div>
-
-        <div style={{ 
-          background: colors.bgPrimary, 
-          border: `1px solid ${colors.accent}`, 
-          borderRadius: "8px", 
-          padding: "24px"
-        }}>
-          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
-            🕸️ Maltego Pro
-          </h3>
-          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
-            La version <strong>professionnelle de Maltego</strong> offre des transformations avancées, 
-            l'intégration d'APIs tierces, la collaboration en équipe et des capacités d'export élargies. 
-            Essentiel pour les investigations complexes nécessitant une vue d'ensemble sur des centaines d'entités.
-          </p>
-        </div>
-      </section>
-
-      <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
-          Enrichissement et Machine Learning
-        </h2>
-        
-        <div style={{ 
-          background: colors.bgSecondary, 
-          border: `1px solid ${colors.border}`, 
-          borderRadius: "8px", 
-          padding: "20px"
-        }}>
-          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "12px" }}>
-            L'intégration de <strong>techniques de Machine Learning</strong> permet d'automatiser la classification 
-            de contenus, la détection d'anomalies et la prédiction de tendances :
-          </p>
-          <ul style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
-            <li><strong>NLP (Natural Language Processing)</strong> : Analyse de sentiment, extraction d'entités nommées, classification de textes</li>
-            <li><strong>Computer Vision</strong> : Détection d'objets dans des images, reconnaissance faciale, analyse de géolocalisation</li>
-            <li><strong>Clustering</strong> : Regroupement automatique de données similaires (profils, domaines, contenus)</li>
-            <li><strong>Anomaly Detection</strong> : Identification de comportements suspects ou outliers dans les données</li>
-          </ul>
-        </div>
-      </section>
-
-      <section style={{
-        background: colors.bgSecondary,
-        border: `1px solid ${colors.accent}`,
-        borderRadius: "8px",
-        padding: "20px",
-        marginBottom: "30px"
-      }}>
-        <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
-          💡 Point clé
-        </h3>
-        <p style={{ color: colors.textSecondary, lineHeight: "1.8", margin: 0 }}>
-          Les outils avancés permettent de <strong>passer à l'échelle</strong> : automatisation, collecte massive, 
-          enrichissement intelligent. Mais n'oubliez jamais que <strong>les outils sont des moyens, pas des fins</strong>. 
-          La vraie valeur réside dans votre capacité à <strong>interpréter les données</strong>, 
-          <strong>détecter les patterns</strong> et <strong>produire du renseignement exploitable</strong>. 
-          Maîtrisez les outils, mais gardez toujours un regard critique et humain.
-        </p>
-      </section>
-
-      <button
-        onClick={validate}
-        style={{
-          background: "#00ff9c",
-          color: "#0b0f1a",
-          border: "none",
-          padding: "14px 40px",
-          borderRadius: "8px",
-          fontWeight: "bold",
-          fontSize: "1.1rem",
-          cursor: "pointer",
-          marginTop: "24px",
-          transition: "all 0.3s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "scale(1.05)";
-          e.currentTarget.style.boxShadow = "0 0 20px rgba(0, 255, 156, 0.5)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "scale(1)";
-          e.currentTarget.style.boxShadow = "none";
-        }}
-      >
-        ✓ Valider le module
-      </button>
-
-      {/* Modal de validation */}
-      {showModal && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: colors.overlay,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
-        }}>
-          <div style={{
-            background: colors.bgPrimary,
-            border: `2px solid ${colors.accent}`,
-            borderRadius: "12px",
-            padding: "40px",
-            maxWidth: "500px",
-            textAlign: "center",
-            boxShadow: `0 0 50px ${colors.accent}40`,
-          }}>
-            <div style={{
-              fontSize: "4rem",
-              marginBottom: "20px",
-            }}>
-              🏆
+          {localStorage.getItem(BADGE_KEY) === "true" && (
+            <div style={{ marginTop: "15px", display: "inline-block", padding: "8px 20px", background: colors.accent + "20", border: `2px solid ${colors.accent}`, borderRadius: "20px", color: colors.accent, fontWeight: "600", fontSize: "0.9rem" }}>
+              ✓ Badge débloqué
             </div>
-            <h2 style={{ 
-              color: colors.accent, 
-              marginBottom: "15px",
-              fontSize: "1.8rem"
-            }}>
-              Badge Débloqué !
-            </h2>
-            <p style={{ 
-              color: colors.textSecondary, 
-              fontSize: "1.2rem",
-              marginBottom: "30px",
-              lineHeight: "1.6"
-            }}>
-              <strong style={{ color: colors.accent }}>Outils OSINT (Avancé)</strong> validé avec succès !
-            </p>
-            <p style={{ 
-              color: colors.textSecondary, 
-              marginBottom: "30px",
-              lineHeight: "1.6"
-            }}>
-              Félicitations ! Vous avez complété l'ensemble du parcours avancé. 
-              Vous maîtrisez maintenant les outils et techniques de niveau expert. 
-              Vous êtes prêt pour des investigations professionnelles complexes !
-            </p>
-            <button
-              onClick={returnToParcours}
-              style={{
-                background: "#00ff9c",
-                color: "#0b0f1a",
-                border: "none",
-                padding: "14px 40px",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                fontSize: "1.1rem",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "scale(1.05)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-              }}
-            >
-              → Retour au parcours
-            </button>
-          </div>
+          )}
         </div>
-      )}
-    </main>
+
+        <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "40px", flexWrap: "wrap" }}>
+          {tabs.map((tab) => (
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: "12px 24px", background: activeTab === tab.id ? colors.accent : colors.bgSecondary, color: activeTab === tab.id ? "#020617" : colors.textPrimary, border: `2px solid ${activeTab === tab.id ? colors.accent : colors.border}`, borderRadius: "12px", fontSize: "1rem", fontWeight: "600", cursor: "pointer", transition: "all 0.3s ease" }}>
+              {tab.icon} {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ background: colors.bgSecondary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "40px" }}>
+          
+          {activeTab === "theory" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>⚙️ Plateformes d'intelligence professionnelles</h2>
+              
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "30px" }}>
+                Les outils avancés permettent de <strong style={{ color: colors.accent }}>centraliser</strong>, 
+                <strong style={{ color: colors.accent }}> corréler</strong> et <strong style={{ color: colors.accent }}>automatiser</strong> 
+                l'intelligence à l'échelle de l'entreprise.
+              </p>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>🎯 MITRE ATT&CK Framework</h3>
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "20px" }}>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
+                  Base de connaissances mondiale des <strong>Tactics, Techniques, and Procedures (TTPs)</strong> 
+                  utilisées par les acteurs malveillants. Référence absolue pour la threat intelligence.
+                </p>
+              </div>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>📊 Elasticsearch + Kibana (ELK Stack)</h3>
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "20px" }}>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
+                  Indexation et visualisation de <strong>données massives</strong> en temps réel. 
+                  Permet de créer des dashboards d'intelligence personnalisés et d'identifier des patterns complexes.
+                </p>
+              </div>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>🔬 YARA — Pattern Matching</h3>
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "20px" }}>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
+                  Créer des <strong>règles de détection</strong> pour identifier des malwares, des fichiers suspects, 
+                  ou des patterns spécifiques dans des datasets massifs.
+                </p>
+              </div>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>🚨 SIEM (Splunk, QRadar)</h3>
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "20px" }}>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
+                  <strong>Security Information and Event Management</strong> : corrélation d'événements en temps réel, 
+                  alertes automatiques, visualisation de la posture de sécurité.
+                </p>
+              </div>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>🌐 Threat Intelligence Platforms</h3>
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "20px" }}>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
+                  <strong>MISP, OpenCTI, ThreatConnect</strong> : centraliser les IOCs, automatiser l'enrichissement, 
+                  partager l'intelligence avec la communauté, générer des rapports stratégiques.
+                </p>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.accent}`, borderRadius: "8px", padding: "20px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>💡 Point clé</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8", margin: 0 }}>
+                  Ces plateformes représentent l'<strong>état de l'art</strong> en OSINT professionnel. 
+                  Elles permettent de <strong>passer à l'échelle</strong> et de produire de l'intelligence 
+                  stratégique pour des organisations entières.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "quiz" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>🎯 Quiz de validation</h2>
+              <p style={{ color: colors.textSecondary, marginBottom: "30px" }}>
+                Répondez aux 5 questions pour valider vos connaissances. Badge débloqué si score ≥ 4/5.
+              </p>
+
+              {!showResults && (
+                <>
+                  {quizQuestions.map((q, index) => (
+                    <div key={q.id} style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "12px", marginBottom: "20px" }}>
+                      <h3 style={{ color: colors.textPrimary, fontSize: "1.1rem", marginBottom: "15px" }}>
+                        {index + 1}. {q.question}
+                      </h3>
+                      {q.options.map((option, optIndex) => (
+                        <label key={optIndex} style={{ display: "block", padding: "12px", marginBottom: "8px", background: quizAnswers[q.id] === optIndex.toString() ? colors.accent + "30" : colors.bgSecondary, border: `2px solid ${quizAnswers[q.id] === optIndex.toString() ? colors.accent : colors.border}`, borderRadius: "8px", cursor: "pointer", transition: "all 0.3s ease" }}>
+                          <input type="radio" name={`question-${q.id}`} value={optIndex} checked={quizAnswers[q.id] === optIndex.toString()} onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })} style={{ marginRight: "10px" }} />
+                          <span style={{ color: colors.textPrimary }}>{option}</span>
+                        </label>
+                      ))}
+                    </div>
+                  ))}
+
+                  <button onClick={handleQuizSubmit} disabled={Object.keys(quizAnswers).length !== quizQuestions.length} style={{ padding: "15px 40px", background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border, color: "#020617", border: "none", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "600", cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed" }}>
+                    Valider le quiz
+                  </button>
+                </>
+              )}
+
+              {showResults && (
+                <div>
+                  <div style={{ marginBottom: "30px", padding: "25px", background: getScore() >= 4 ? colors.accent + "20" : "#ef444420", border: `2px solid ${getScore() >= 4 ? colors.accent : "#ef4444"}`, borderRadius: "12px" }}>
+                    <h3 style={{ color: getScore() >= 4 ? colors.accent : "#ef4444", fontSize: "1.5rem", marginBottom: "15px" }}>
+                      {getScore() >= 4 ? "✅ Badge débloqué !" : "❌ Réessayez"}
+                    </h3>
+                    <p style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
+                      Score : {getScore()}/{quizQuestions.length}
+                    </p>
+                    
+                    <div style={{ display: "flex", gap: "15px", marginTop: "20px", flexWrap: "wrap" }}>
+                      {getScore() >= 4 && (
+                        <button onClick={returnToParcours} style={{ padding: "12px 30px", background: colors.accent, color: "#020617", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>
+                          → Retour au parcours
+                        </button>
+                      )}
+                      <button onClick={handleResetQuiz} style={{ padding: "12px 30px", background: colors.bgPrimary, color: colors.textPrimary, border: `2px solid ${colors.border}`, borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>
+                        🔄 Refaire le quiz
+                      </button>
+                    </div>
+                  </div>
+
+                  <h3 style={{ color: colors.textPrimary, fontSize: "1.3rem", marginBottom: "20px" }}>📝 Vos réponses</h3>
+                  {quizQuestions.map((q, index) => {
+                    const userAnswer = parseInt(quizAnswers[q.id]);
+                    const isCorrect = userAnswer === q.correct;
+                    
+                    return (
+                      <div key={q.id} style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "12px", marginBottom: "20px", border: `2px solid ${isCorrect ? colors.accent : "#ef4444"}` }}>
+                        <h4 style={{ color: colors.textPrimary, fontSize: "1.1rem", marginBottom: "15px" }}>
+                          {index + 1}. {q.question}
+                        </h4>
+                        {q.options.map((option, optIndex) => {
+                          const isUserAnswer = userAnswer === optIndex;
+                          const isCorrectAnswer = q.correct === optIndex;
+                          
+                          return (
+                            <div key={optIndex} style={{ padding: "10px", marginBottom: "8px", background: isCorrectAnswer ? colors.accent + "20" : (isUserAnswer ? "#ef444420" : colors.bgSecondary), border: `2px solid ${isCorrectAnswer ? colors.accent : (isUserAnswer ? "#ef4444" : colors.border)}`, borderRadius: "8px" }}>
+                              <span style={{ color: colors.textPrimary }}>
+                                {isCorrectAnswer && "✅ "}
+                                {isUserAnswer && !isCorrectAnswer && "❌ "}
+                                {option}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
-
