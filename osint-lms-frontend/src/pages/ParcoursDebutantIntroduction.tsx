@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useThemeColors } from "../context/ThemeContext";
 
@@ -10,6 +10,8 @@ export default function ParcoursDebutantIntroduction() {
   const [showResults, setShowResults] = useState(false);
 
   const BADGE_KEY = "badge_deb_intro";
+  const QUIZ_ANSWERS_KEY = "quiz_deb_intro_answers";
+  const QUIZ_COMPLETED_KEY = "quiz_deb_intro_completed";
 
   const quizQuestions = [
     {
@@ -69,12 +71,42 @@ export default function ParcoursDebutantIntroduction() {
     }
   ];
 
+  // Charger les réponses sauvegardées au montage
+  useEffect(() => {
+    const savedAnswers = localStorage.getItem(QUIZ_ANSWERS_KEY);
+    const quizCompleted = localStorage.getItem(QUIZ_COMPLETED_KEY);
+    
+    if (savedAnswers) {
+      setQuizAnswers(JSON.parse(savedAnswers));
+    }
+    
+    if (quizCompleted === "true") {
+      setShowResults(true);
+    }
+  }, []);
+
+  // Sauvegarder les réponses à chaque changement
+  useEffect(() => {
+    if (Object.keys(quizAnswers).length > 0) {
+      localStorage.setItem(QUIZ_ANSWERS_KEY, JSON.stringify(quizAnswers));
+    }
+  }, [quizAnswers]);
+
   const handleQuizSubmit = () => {
     const score = getScore();
     setShowResults(true);
+    localStorage.setItem(QUIZ_COMPLETED_KEY, "true");
+    
     if (score >= 4) {
       localStorage.setItem(BADGE_KEY, "true");
     }
+  };
+
+  const handleResetQuiz = () => {
+    setQuizAnswers({});
+    setShowResults(false);
+    localStorage.removeItem(QUIZ_ANSWERS_KEY);
+    localStorage.removeItem(QUIZ_COMPLETED_KEY);
   };
 
   const getScore = () => {
@@ -207,37 +239,78 @@ export default function ParcoursDebutantIntroduction() {
                 Répondez aux 5 questions pour valider vos connaissances. Badge débloqué si score ≥ 4/5.
               </p>
 
-              {quizQuestions.map((q, index) => (
-                <div key={q.id} style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "12px", marginBottom: "20px" }}>
-                  <h3 style={{ color: colors.textPrimary, fontSize: "1.1rem", marginBottom: "15px" }}>
-                    {index + 1}. {q.question}
-                  </h3>
-                  {q.options.map((option, optIndex) => (
-                    <label key={optIndex} style={{ display: "block", padding: "12px", marginBottom: "8px", background: quizAnswers[q.id] === optIndex.toString() ? colors.accent + "30" : colors.bgSecondary, border: `2px solid ${quizAnswers[q.id] === optIndex.toString() ? colors.accent : colors.border}`, borderRadius: "8px", cursor: "pointer", transition: "all 0.3s ease" }}>
-                      <input type="radio" name={`question-${q.id}`} value={optIndex} checked={quizAnswers[q.id] === optIndex.toString()} onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })} style={{ marginRight: "10px" }} />
-                      <span style={{ color: colors.textPrimary }}>{option}</span>
-                    </label>
+              {!showResults && (
+                <>
+                  {quizQuestions.map((q, index) => (
+                    <div key={q.id} style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "12px", marginBottom: "20px" }}>
+                      <h3 style={{ color: colors.textPrimary, fontSize: "1.1rem", marginBottom: "15px" }}>
+                        {index + 1}. {q.question}
+                      </h3>
+                      {q.options.map((option, optIndex) => (
+                        <label key={optIndex} style={{ display: "block", padding: "12px", marginBottom: "8px", background: quizAnswers[q.id] === optIndex.toString() ? colors.accent + "30" : colors.bgSecondary, border: `2px solid ${quizAnswers[q.id] === optIndex.toString() ? colors.accent : colors.border}`, borderRadius: "8px", cursor: "pointer", transition: "all 0.3s ease" }}>
+                          <input type="radio" name={`question-${q.id}`} value={optIndex} checked={quizAnswers[q.id] === optIndex.toString()} onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })} style={{ marginRight: "10px" }} />
+                          <span style={{ color: colors.textPrimary }}>{option}</span>
+                        </label>
+                      ))}
+                    </div>
                   ))}
-                </div>
-              ))}
 
-              <button onClick={handleQuizSubmit} disabled={Object.keys(quizAnswers).length !== quizQuestions.length} style={{ padding: "15px 40px", background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border, color: "#020617", border: "none", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "600", cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed" }}>
-                Valider le quiz
-              </button>
+                  <button onClick={handleQuizSubmit} disabled={Object.keys(quizAnswers).length !== quizQuestions.length} style={{ padding: "15px 40px", background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border, color: "#020617", border: "none", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "600", cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed" }}>
+                    Valider le quiz
+                  </button>
+                </>
+              )}
 
               {showResults && (
-                <div style={{ marginTop: "30px", padding: "25px", background: getScore() >= 4 ? colors.accent + "20" : "#ef444420", border: `2px solid ${getScore() >= 4 ? colors.accent : "#ef4444"}`, borderRadius: "12px" }}>
-                  <h3 style={{ color: getScore() >= 4 ? colors.accent : "#ef4444", fontSize: "1.5rem" }}>
-                    {getScore() >= 4 ? "✅ Badge débloqué !" : "❌ Réessayez"}
-                  </h3>
-                  <p style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-                    Score : {getScore()}/{quizQuestions.length}
-                  </p>
-                  {getScore() >= 4 && (
-                    <button onClick={returnToParcours} style={{ padding: "12px 30px", background: colors.accent, color: "#020617", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>
-                      → Retour au parcours
-                    </button>
-                  )}
+                <div>
+                  <div style={{ marginBottom: "30px", padding: "25px", background: getScore() >= 4 ? colors.accent + "20" : "#ef444420", border: `2px solid ${getScore() >= 4 ? colors.accent : "#ef4444"}`, borderRadius: "12px" }}>
+                    <h3 style={{ color: getScore() >= 4 ? colors.accent : "#ef4444", fontSize: "1.5rem", marginBottom: "15px" }}>
+                      {getScore() >= 4 ? "✅ Badge débloqué !" : "❌ Réessayez"}
+                    </h3>
+                    <p style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
+                      Score : {getScore()}/{quizQuestions.length}
+                    </p>
+                    
+                    <div style={{ display: "flex", gap: "15px", marginTop: "20px", flexWrap: "wrap" }}>
+                      {getScore() >= 4 && (
+                        <button onClick={returnToParcours} style={{ padding: "12px 30px", background: colors.accent, color: "#020617", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>
+                          → Retour au parcours
+                        </button>
+                      )}
+                      <button onClick={handleResetQuiz} style={{ padding: "12px 30px", background: colors.bgPrimary, color: colors.textPrimary, border: `2px solid ${colors.border}`, borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>
+                        🔄 Refaire le quiz
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Afficher les réponses */}
+                  <h3 style={{ color: colors.textPrimary, fontSize: "1.3rem", marginBottom: "20px" }}>📝 Vos réponses</h3>
+                  {quizQuestions.map((q, index) => {
+                    const userAnswer = parseInt(quizAnswers[q.id]);
+                    const isCorrect = userAnswer === q.correct;
+                    
+                    return (
+                      <div key={q.id} style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "12px", marginBottom: "20px", border: `2px solid ${isCorrect ? colors.accent : "#ef4444"}` }}>
+                        <h4 style={{ color: colors.textPrimary, fontSize: "1.1rem", marginBottom: "15px" }}>
+                          {index + 1}. {q.question}
+                        </h4>
+                        {q.options.map((option, optIndex) => {
+                          const isUserAnswer = userAnswer === optIndex;
+                          const isCorrectAnswer = q.correct === optIndex;
+                          
+                          return (
+                            <div key={optIndex} style={{ padding: "10px", marginBottom: "8px", background: isCorrectAnswer ? colors.accent + "20" : (isUserAnswer ? "#ef444420" : colors.bgSecondary), border: `2px solid ${isCorrectAnswer ? colors.accent : (isUserAnswer ? "#ef4444" : colors.border)}`, borderRadius: "8px" }}>
+                              <span style={{ color: colors.textPrimary }}>
+                                {isCorrectAnswer && "✅ "}
+                                {isUserAnswer && !isCorrectAnswer && "❌ "}
+                                {option}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
