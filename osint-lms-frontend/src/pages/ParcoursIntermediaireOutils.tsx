@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useThemeColors } from "../context/ThemeContext";
 
 export default function ParcoursIntermediaireOutils() {
+  const colors = useThemeColors();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
@@ -16,42 +18,42 @@ export default function ParcoursIntermediaireOutils() {
 
   return (
     <main style={{ maxWidth: "1000px", margin: "0 auto", padding: "40px" }}>
-      <h1 style={{ color: "#00ff9c", marginBottom: "20px" }}>
+      <h1 style={{ color: colors.accent, marginBottom: "20px" }}>
         Module 3: Outils OSINT — Intermédiaire
       </h1>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>
           Objectifs du module
         </h2>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "15px" }}>
-          Maîtrisez les <strong style={{ color: "#00ff9c" }}>outils avancés</strong> qui automatisent, 
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
+          Maîtrisez les <strong style={{ color: colors.accent }}>outils avancés</strong> qui automatisent, 
           visualisent et enrichissent vos recherches OSINT. Ces plateformes professionnelles vous permettront 
           de gérer des investigations complexes avec efficacité et précision.
         </p>
       </section>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Outils professionnels
         </h2>
         
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #00ff9c", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.accent}`, 
           borderRadius: "8px", 
           padding: "24px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "12px", fontSize: "1.2rem" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
             🕸️ Maltego : Graphes relationnels et enrichissement
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "12px" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "12px" }}>
             Maltego est la référence pour la <strong>visualisation de relations complexes</strong>. 
             Cet outil permet de créer des graphes d'entités (personnes, domaines, IP, emails) et 
             d'automatiser l'enrichissement via des transformations.
           </p>
-          <ul style={{ color: "#9ca3af", lineHeight: "1.8", paddingLeft: "20px" }}>
+          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
             <li><strong>Entités et transformations</strong> : Ajoutez des nœuds et explorez automatiquement leurs connexions</li>
             <li><strong>Graphes d'investigation</strong> : Visualisez les liens entre cibles, infrastructures et personnes</li>
             <li><strong>Intégration d'APIs</strong> : Shodan, VirusTotal, PassiveTotal, Have I Been Pwned, etc.</li>
@@ -60,20 +62,20 @@ export default function ParcoursIntermediaireOutils() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #00ff9c", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.accent}`, 
           borderRadius: "8px", 
           padding: "24px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "12px", fontSize: "1.2rem" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
             🕷️ SpiderFoot : Automatisation multi-sources
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "12px" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "12px" }}>
             SpiderFoot est un outil d'<strong>automatisation OSINT</strong> qui interroge simultanément 
             des dizaines de sources pour collecter des informations sur une cible.
           </p>
-          <ul style={{ color: "#9ca3af", lineHeight: "1.8", paddingLeft: "20px" }}>
+          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
             <li><strong>Scans automatisés</strong> : Lancez des reconnaissances complètes en un clic</li>
             <li><strong>200+ modules</strong> : DNS, WHOIS, réseaux sociaux, fuites de données, dark web</li>
             <li><strong>Corrélation de données</strong> : Identifiez les patterns et connexions entre sources</li>
@@ -82,21 +84,21 @@ export default function ParcoursIntermediaireOutils() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #00ff9c", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.accent}`, 
           borderRadius: "8px", 
           padding: "24px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "12px", fontSize: "1.2rem" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
             🔍 Shodan avancé : Filtres, historique, API
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "12px" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "12px" }}>
             Shodan est le <strong>moteur de recherche de l'Internet des objets</strong>. 
             Niveau intermédiaire : maîtrisez les filtres avancés et l'automatisation via API.
           </p>
-          <ul style={{ color: "#9ca3af", lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Filtres avancés</strong> : <code style={{ background: "#1a1f2e", padding: "2px 6px", borderRadius: "3px" }}>org:"Target" port:443</code>, <code style={{ background: "#1a1f2e", padding: "2px 6px", borderRadius: "3px" }}>country:FR product:Apache</code></li>
+          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
+            <li><strong>Filtres avancés</strong> : <code style={{ background: colors.bgSecondary, padding: "2px 6px", borderRadius: "3px" }}>org:"Target" port:443</code>, <code style={{ background: colors.bgSecondary, padding: "2px 6px", borderRadius: "3px" }}>country:FR product:Apache</code></li>
             <li><strong>Historique des données</strong> : Suivez l'évolution des infrastructures dans le temps</li>
             <li><strong>API REST</strong> : Automatisez vos recherches et intégrez Shodan dans vos workflows</li>
             <li><strong>Shodan Monitor</strong> : Surveillez vos assets en temps réel et recevez des alertes</li>
@@ -104,19 +106,19 @@ export default function ParcoursIntermediaireOutils() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #00ff9c", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.accent}`, 
           borderRadius: "8px", 
           padding: "24px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "12px", fontSize: "1.2rem" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "12px", fontSize: "1.2rem" }}>
             🗄️ Archivage et preuves horodatées
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "12px" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "12px" }}>
             L'<strong>archivage systématique</strong> est essentiel pour la crédibilité de vos investigations. 
             Conservez des preuves vérifiables et horodatées.
           </p>
-          <ul style={{ color: "#9ca3af", lineHeight: "1.8", paddingLeft: "20px" }}>
+          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
             <li><strong>Wayback Machine</strong> : Consultez l'historique des sites web (archive.org)</li>
             <li><strong>Archive.today</strong> : Créez des captures horodatées de pages web</li>
             <li><strong>Hunchly</strong> : Outil pro pour capturer et organiser automatiquement vos recherches</li>
@@ -127,17 +129,17 @@ export default function ParcoursIntermediaireOutils() {
       </section>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Workflow d'investigation avec outils
         </h2>
         
         <div style={{ 
-          background: "#1a1f2e", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgSecondary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px"
         }}>
-          <ol style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px" }}>
+          <ol style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
             <li><strong>Reconnaissance initiale</strong> : SpiderFoot pour collecter automatiquement les premières données</li>
             <li><strong>Enrichissement</strong> : Maltego pour visualiser les connexions et pivoter vers de nouvelles entités</li>
             <li><strong>Infrastructure</strong> : Shodan pour identifier les serveurs, services et vulnérabilités</li>
@@ -149,16 +151,16 @@ export default function ParcoursIntermediaireOutils() {
       </section>
 
       <section style={{
-        background: "#1a1f2e",
-        border: "1px solid #00ff9c",
+        background: colors.bgSecondary,
+        border: `1px solid ${colors.accent}`,
         borderRadius: "8px",
         padding: "20px",
         marginBottom: "30px"
       }}>
-        <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+        <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
           💡 Point clé
         </h3>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", margin: 0 }}>
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", margin: 0 }}>
           Les outils OSINT avancés ne remplacent pas la méthodologie, ils l'<strong>amplifient</strong>. 
           Automatisez les tâches répétitives, mais gardez toujours un <strong>œil critique</strong> sur les résultats. 
           La validation humaine reste indispensable : les outils fournissent des données, 
@@ -200,20 +202,20 @@ export default function ParcoursIntermediaireOutils() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(0, 0, 0, 0.85)",
+          background: colors.overlay,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 1000,
         }}>
           <div style={{
-            background: "#0b0f1a",
-            border: "2px solid #00ff9c",
+            background: colors.bgPrimary,
+            border: `2px solid ${colors.accent}`,
             borderRadius: "12px",
             padding: "40px",
             maxWidth: "500px",
             textAlign: "center",
-            boxShadow: "0 0 50px rgba(0, 255, 156, 0.3)",
+            boxShadow: `0 0 50px ${colors.accent}40`,
           }}>
             <div style={{
               fontSize: "4rem",
@@ -222,22 +224,22 @@ export default function ParcoursIntermediaireOutils() {
               🏆
             </div>
             <h2 style={{ 
-              color: "#00ff9c", 
+              color: colors.accent, 
               marginBottom: "15px",
               fontSize: "1.8rem"
             }}>
               Badge Débloqué !
             </h2>
             <p style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               fontSize: "1.2rem",
               marginBottom: "30px",
               lineHeight: "1.6"
             }}>
-              <strong style={{ color: "#00ff9c" }}>Outils OSINT (Intermédiaire)</strong> validé avec succès !
+              <strong style={{ color: colors.accent }}>Outils OSINT (Intermédiaire)</strong> validé avec succès !
             </p>
             <p style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               marginBottom: "30px",
               lineHeight: "1.6"
             }}>
@@ -273,3 +275,4 @@ export default function ParcoursIntermediaireOutils() {
     </main>
   );
 }
+

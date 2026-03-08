@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useThemeColors } from "../context/ThemeContext";
 
 export default function ParcoursAvanceIntroduction() {
+  const colors = useThemeColors();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
@@ -16,54 +18,54 @@ export default function ParcoursAvanceIntroduction() {
 
   return (
     <main style={{ maxWidth: "1000px", margin: "0 auto", padding: "40px" }}>
-      <h1 style={{ color: "#00ff9c", marginBottom: "20px" }}>
+      <h1 style={{ color: colors.accent, marginBottom: "20px" }}>
         Module 1: Introduction OSINT – Avancé
       </h1>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>
           L'OSINT stratégique et le renseignement décisionnel
         </h2>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "15px" }}>
-          L'OSINT avancé s'inscrit dans une logique de <strong style={{ color: "#00ff9c" }}>renseignement stratégique</strong> : 
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
+          L'OSINT avancé s'inscrit dans une logique de <strong style={{ color: colors.accent }}>renseignement stratégique</strong> : 
           il ne s'agit plus seulement de collecter des informations, mais de <strong>comprendre l'environnement informationnel</strong>, 
           d'<strong>anticiper les évolutions</strong> et de <strong>produire du renseignement décisionnel</strong> 
           pour les décideurs politiques, militaires ou économiques.
         </p>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "15px" }}>
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
           À ce niveau, l'analyste OSINT doit maîtriser la détection de narratifs, l'analyse d'opérations d'influence, 
           la lecture géopolitique des signaux faibles, et la production de renseignement prévisible et exploitable.
         </p>
       </section>
 
       <section style={{ 
-        background: "#0b0f1a", 
-        border: "1px solid #00ff9c", 
+        background: colors.bgPrimary, 
+        border: `1px solid ${colors.accent}`, 
         borderRadius: "8px", 
         padding: "24px",
         marginBottom: "30px"
       }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Domaines d'expertise avancée
         </h2>
-        <ul style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px" }}>
+        <ul style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
           <li>
-            <strong style={{ color: "#00ff9c" }}>Analyse de l'environnement informationnel</strong> : 
+            <strong style={{ color: colors.accent }}>Analyse de l'environnement informationnel</strong> : 
             Cartographie des acteurs médiatiques, identification des sources primaires vs secondaires, 
             compréhension des flux d'information et des chaînes de diffusion
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>Détection de désinformation et opérations d'influence</strong> : 
+            <strong style={{ color: colors.accent }}>Détection de désinformation et opérations d'influence</strong> : 
             Reconnaissance des campagnes coordonnées (coordinated inauthentic behavior), analyse de réseaux de bots, 
             identification de manipulations médiatiques, traçage d'opérations psychologiques (PSYOPS)
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>Lecture géopolitique des signaux faibles</strong> : 
+            <strong style={{ color: colors.accent }}>Lecture géopolitique des signaux faibles</strong> : 
             Détection d'indicateurs précoces de crises, analyse de tensions géopolitiques via sources ouvertes, 
             surveillance de mouvements de troupes ou d'infrastructures stratégiques
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>Production de renseignement décisionnel</strong> : 
+            <strong style={{ color: colors.accent }}>Production de renseignement décisionnel</strong> : 
             Création de rapports d'intelligence stratégique, briefings exécutifs, évaluations de menaces, 
             et recommandations actionnables pour les décideurs
           </li>
@@ -71,21 +73,21 @@ export default function ParcoursAvanceIntroduction() {
       </section>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Cas d'usage professionnels
         </h2>
         
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             🌍 Analyse géopolitique et conflits
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Utilisation de l'OSINT pour <strong>analyser les conflits armés</strong> en temps réel : 
             géolocalisation de combats via vidéos/photos, identification d'équipements militaires, 
             traçage de mouvements de troupes, analyse de communications interceptées sur Telegram/Twitter. 
@@ -94,16 +96,16 @@ export default function ParcoursAvanceIntroduction() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             🎭 Détection d'opérations d'influence
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Identification de <strong>campagnes de manipulation informationnelle</strong> orchestrées par des États 
             ou organisations : détection de fermes à trolls, analyse de comportements coordonnés sur réseaux sociaux, 
             traçage de narratifs propagandistes, identification de fausses identités et comptes amplificateurs.
@@ -111,16 +113,16 @@ export default function ParcoursAvanceIntroduction() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             💼 Intelligence économique stratégique
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Surveillance concurrentielle avancée, <strong>analyse de fusions-acquisitions</strong>, 
             détection de vulnérabilités dans les chaînes d'approvisionnement, identification de risques 
             géopolitiques affectant les marchés, traçage de flux financiers via sources ouvertes.
@@ -128,15 +130,15 @@ export default function ParcoursAvanceIntroduction() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             🛡️ Cybersécurité et threat intelligence
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Traçage d'<strong>acteurs de menace APT</strong> (Advanced Persistent Threat), 
             analyse d'infrastructures malveillantes, identification de campagnes de phishing massives, 
             surveillance du dark web et des forums de hackers, profiling d'attaquants via leurs TTP 
@@ -146,17 +148,17 @@ export default function ParcoursAvanceIntroduction() {
       </section>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Compétences stratégiques requises
         </h2>
         
         <div style={{
-          background: "#1a1f2e",
-          border: "1px solid #2a3f3f",
+          background: colors.bgSecondary,
+          border: `1px solid ${colors.border}`,
           borderRadius: "8px",
           padding: "20px"
         }}>
-          <ul style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px" }}>
+          <ul style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
             <li><strong>Pensée critique avancée</strong> : Capacité à déconstruire des narratifs complexes et identifier les manipulations</li>
             <li><strong>Connaissance géopolitique</strong> : Compréhension des enjeux internationaux, alliances, tensions régionales</li>
             <li><strong>Maîtrise linguistique</strong> : Capacité à consulter des sources en plusieurs langues (russe, arabe, chinois)</li>
@@ -168,16 +170,16 @@ export default function ParcoursAvanceIntroduction() {
       </section>
 
       <section style={{
-        background: "#1a1f2e",
-        border: "1px solid #00ff9c",
+        background: colors.bgSecondary,
+        border: `1px solid ${colors.accent}`,
         borderRadius: "8px",
         padding: "20px",
         marginBottom: "30px"
       }}>
-        <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+        <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
           💡 Point clé
         </h3>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", margin: 0 }}>
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", margin: 0 }}>
           L'OSINT avancé transforme l'analyste en <strong>expert en renseignement stratégique</strong>. 
           Il ne s'agit plus de "chercher des informations", mais de <strong>comprendre l'environnement</strong>, 
           <strong>anticiper les évolutions</strong>, et <strong>éclairer les décisions</strong> avec du renseignement 
@@ -219,20 +221,20 @@ export default function ParcoursAvanceIntroduction() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(0, 0, 0, 0.85)",
+          background: colors.overlay,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 1000,
         }}>
           <div style={{
-            background: "#0b0f1a",
-            border: "2px solid #00ff9c",
+            background: colors.bgPrimary,
+            border: `2px solid ${colors.accent}`,
             borderRadius: "12px",
             padding: "40px",
             maxWidth: "500px",
             textAlign: "center",
-            boxShadow: "0 0 50px rgba(0, 255, 156, 0.3)",
+            boxShadow: `0 0 50px ${colors.accent}40`,
           }}>
             <div style={{
               fontSize: "4rem",
@@ -241,22 +243,22 @@ export default function ParcoursAvanceIntroduction() {
               🏆
             </div>
             <h2 style={{ 
-              color: "#00ff9c", 
+              color: colors.accent, 
               marginBottom: "15px",
               fontSize: "1.8rem"
             }}>
               Badge Débloqué !
             </h2>
             <p style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               fontSize: "1.2rem",
               marginBottom: "30px",
               lineHeight: "1.6"
             }}>
-              <strong style={{ color: "#00ff9c" }}>Introduction OSINT (Avancé)</strong> validée avec succès !
+              <strong style={{ color: colors.accent }}>Introduction OSINT (Avancé)</strong> validée avec succès !
             </p>
             <p style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               marginBottom: "30px",
               lineHeight: "1.6"
             }}>
@@ -291,3 +293,4 @@ export default function ParcoursAvanceIntroduction() {
     </main>
   );
 }
+

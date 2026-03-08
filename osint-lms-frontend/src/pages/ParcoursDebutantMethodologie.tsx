@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useThemeColors } from "../context/ThemeContext";
 
 export default function ParcoursDebutantMethodologie() {
+  const colors = useThemeColors();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
@@ -20,44 +22,44 @@ export default function ParcoursDebutantMethodologie() {
 
   return (
     <main style={{ maxWidth: "1000px", margin: "0 auto", padding: "40px" }}>
-      <h1 style={{ color: "#00ff9c", marginBottom: "20px" }}>
+      <h1 style={{ color: colors.accent, marginBottom: "20px" }}>
         Module 2: Méthodologie OSINT
       </h1>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>
           L'importance d'une méthode structurée
         </h2>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "15px" }}>
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
           Une enquête OSINT professionnelle ne repose pas sur le hasard ou l'improvisation. 
-          Elle suit une <strong style={{ color: "#00ff9c" }}>méthodologie rigoureuse</strong> qui garantit 
+          Elle suit une <strong style={{ color: colors.accent }}>méthodologie rigoureuse</strong> qui garantit 
           la pertinence, la fiabilité et la reproductibilité des résultats.
         </p>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "15px" }}>
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
           Sans méthode, vous risquez de : perdre du temps sur des pistes non pertinentes, 
           manquer des informations critiques, ou produire des conclusions erronées.
         </p>
       </section>
 
       <section style={{ 
-        background: "#0b0f1a", 
-        border: "1px solid #00ff9c", 
+        background: colors.bgPrimary, 
+        border: `1px solid ${colors.accent}`, 
         borderRadius: "8px", 
         padding: "24px",
         marginBottom: "30px"
       }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Les 6 étapes de la méthodologie OSINT
         </h2>
-        <div style={{ color: "#9ca3af", lineHeight: "2" }}>
+        <div style={{ color: colors.textSecondary, lineHeight: "2" }}>
           <div style={{ 
-            background: "#1a1f2e", 
-            border: "1px solid #2a3f3f", 
+            background: colors.bgSecondary, 
+            border: `1px solid ${colors.border}`, 
             borderRadius: "8px", 
             padding: "20px",
             marginBottom: "15px"
           }}>
-            <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+            <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
               1️⃣ Cadrage
             </h3>
             <p style={{ lineHeight: "1.8" }}>
@@ -70,13 +72,13 @@ export default function ParcoursDebutantMethodologie() {
           </div>
 
           <div style={{ 
-            background: "#1a1f2e", 
-            border: "1px solid #2a3f3f", 
+            background: colors.bgSecondary, 
+            border: `1px solid ${colors.border}`, 
             borderRadius: "8px", 
             padding: "20px",
             marginBottom: "15px"
           }}>
-            <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+            <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
               2️⃣ Hypothèses
             </h3>
             <p style={{ lineHeight: "1.8" }}>
@@ -89,13 +91,13 @@ export default function ParcoursDebutantMethodologie() {
           </div>
 
           <div style={{ 
-            background: "#1a1f2e", 
-            border: "1px solid #2a3f3f", 
+            background: colors.bgSecondary, 
+            border: `1px solid ${colors.border}`, 
             borderRadius: "8px", 
             padding: "20px",
             marginBottom: "15px"
           }}>
-            <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+            <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
               3️⃣ Collecte
             </h3>
             <p style={{ lineHeight: "1.8" }}>
@@ -108,13 +110,13 @@ export default function ParcoursDebutantMethodologie() {
           </div>
 
           <div style={{ 
-            background: "#1a1f2e", 
-            border: "1px solid #2a3f3f", 
+            background: colors.bgSecondary, 
+            border: `1px solid ${colors.border}`, 
             borderRadius: "8px", 
             padding: "20px",
             marginBottom: "15px"
           }}>
-            <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+            <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
               4️⃣ Recoupement
             </h3>
             <p style={{ lineHeight: "1.8" }}>
@@ -127,13 +129,13 @@ export default function ParcoursDebutantMethodologie() {
           </div>
 
           <div style={{ 
-            background: "#1a1f2e", 
-            border: "1px solid #2a3f3f", 
+            background: colors.bgSecondary, 
+            border: `1px solid ${colors.border}`, 
             borderRadius: "8px", 
             padding: "20px",
             marginBottom: "15px"
           }}>
-            <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+            <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
               5️⃣ Analyse
             </h3>
             <p style={{ lineHeight: "1.8" }}>
@@ -147,12 +149,12 @@ export default function ParcoursDebutantMethodologie() {
           </div>
 
           <div style={{ 
-            background: "#1a1f2e", 
-            border: "1px solid #2a3f3f", 
+            background: colors.bgSecondary, 
+            border: `1px solid ${colors.border}`, 
             borderRadius: "8px", 
             padding: "20px"
           }}>
-            <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+            <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
               6️⃣ Restitution
             </h3>
             <p style={{ lineHeight: "1.8" }}>
@@ -168,20 +170,20 @@ export default function ParcoursDebutantMethodologie() {
       </section>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Exemple pratique
         </h2>
         
         <div style={{ 
-          background: "#1a1f2e", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgSecondary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px"
         }}>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "15px" }}>
-            <strong style={{ color: "#00ff9c" }}>Objectif :</strong> Identifier les comptes réseaux sociaux d'un individu
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
+            <strong style={{ color: colors.accent }}>Objectif :</strong> Identifier les comptes réseaux sociaux d'un individu
           </p>
-          <ol style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px" }}>
+          <ol style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
             <li><strong>Cadrage :</strong> Rechercher tous les profils publics de la personne sur les principaux réseaux sociaux</li>
             <li><strong>Hypothèses :</strong> La personne utilise probablement le même pseudonyme sur plusieurs plateformes</li>
             <li><strong>Collecte :</strong> Rechercher sur Google, Twitter, LinkedIn, Facebook, Instagram avec différentes requêtes</li>
@@ -193,16 +195,16 @@ export default function ParcoursDebutantMethodologie() {
       </section>
 
       <section style={{
-        background: "#1a1f2e",
-        border: "1px solid #00ff9c",
+        background: colors.bgSecondary,
+        border: `1px solid ${colors.accent}`,
         borderRadius: "8px",
         padding: "20px",
         marginBottom: "30px"
       }}>
-        <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+        <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
           💡 Point clé
         </h3>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", margin: 0 }}>
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", margin: 0 }}>
           La méthodologie est la <strong>colonne vertébrale</strong> de toute investigation OSINT réussie. 
           Elle vous permet de travailler de manière <strong>structurée, efficace et reproductible</strong>. 
           Plus vous pratiquez, plus ces étapes deviendront naturelles.
@@ -243,20 +245,20 @@ export default function ParcoursDebutantMethodologie() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(0, 0, 0, 0.85)",
+          background: colors.overlay,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 1000,
         }}>
           <div style={{
-            background: "#0b0f1a",
-            border: "2px solid #00ff9c",
+            background: colors.bgPrimary,
+            border: `2px solid ${colors.accent}`,
             borderRadius: "12px",
             padding: "40px",
             maxWidth: "500px",
             textAlign: "center",
-            boxShadow: "0 0 50px rgba(0, 255, 156, 0.3)",
+            boxShadow: `0 0 50px ${colors.accent}40`,
           }}>
             <div style={{
               fontSize: "4rem",
@@ -265,22 +267,22 @@ export default function ParcoursDebutantMethodologie() {
               🏆
             </div>
             <h2 style={{ 
-              color: "#00ff9c", 
+              color: colors.accent, 
               marginBottom: "15px",
               fontSize: "1.8rem"
             }}>
               Badge Débloqué !
             </h2>
             <p style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               fontSize: "1.2rem",
               marginBottom: "30px",
               lineHeight: "1.6"
             }}>
-              <strong style={{ color: "#00ff9c" }}>Méthodologie OSINT (Débutant)</strong> validée avec succès !
+              <strong style={{ color: colors.accent }}>Méthodologie OSINT (Débutant)</strong> validée avec succès !
             </p>
             <p style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               marginBottom: "30px",
               lineHeight: "1.6"
             }}>
@@ -315,3 +317,4 @@ export default function ParcoursDebutantMethodologie() {
     </main>
   );
 }
+

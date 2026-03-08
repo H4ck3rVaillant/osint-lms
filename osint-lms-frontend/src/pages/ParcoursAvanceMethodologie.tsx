@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useThemeColors } from "../context/ThemeContext";
 
 export default function ParcoursAvanceMethodologie() {
+  const colors = useThemeColors();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
@@ -16,16 +18,16 @@ export default function ParcoursAvanceMethodologie() {
 
   return (
     <main style={{ maxWidth: "1000px", margin: "0 auto", padding: "40px" }}>
-      <h1 style={{ color: "#00ff9c", marginBottom: "20px" }}>
+      <h1 style={{ color: colors.accent, marginBottom: "20px" }}>
         Méthodologie OSINT – Avancé
       </h1>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>
           Objectifs du module
         </h2>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "15px" }}>
-          La méthodologie avancée s'inspire des <strong style={{ color: "#00ff9c" }}>cycles professionnels du renseignement</strong> 
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
+          La méthodologie avancée s'inspire des <strong style={{ color: colors.accent }}>cycles professionnels du renseignement</strong> 
           utilisés par les services de renseignement, les analystes en cybersécurité et les enquêteurs spécialisés. 
           Ce niveau requiert une maîtrise complète de la planification stratégique, de l'analyse multi-sources 
           et de la production de renseignement exploitable.
@@ -33,61 +35,61 @@ export default function ParcoursAvanceMethodologie() {
       </section>
 
       <section style={{ 
-        background: "#0b0f1a", 
-        border: "1px solid #00ff9c", 
+        background: colors.bgPrimary, 
+        border: `1px solid ${colors.accent}`, 
         borderRadius: "8px", 
         padding: "24px",
         marginBottom: "30px"
       }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Le cycle de renseignement professionnel
         </h2>
-        <ul style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px" }}>
+        <ul style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
           <li>
-            <strong style={{ color: "#00ff9c" }}>1. Planification stratégique</strong> : 
+            <strong style={{ color: colors.accent }}>1. Planification stratégique</strong> : 
             Définition des besoins en renseignement (PIR - Priority Intelligence Requirements), 
             allocation des ressources et timeline opérationnelle
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>2. Collecte massive multi-sources</strong> : 
+            <strong style={{ color: colors.accent }}>2. Collecte massive multi-sources</strong> : 
             Exploitation simultanée de sources OSINT, HUMINT (Human Intelligence), TECHINT (Technical Intelligence), 
             SIGINT (Signals Intelligence) quand applicable
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>3. Traitement et exploitation avancés</strong> : 
+            <strong style={{ color: colors.accent }}>3. Traitement et exploitation avancés</strong> : 
             Normalisation, déduplication, enrichissement automatisé via ML/AI, stockage sécurisé
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>4. Analyse multi-niveaux</strong> : 
+            <strong style={{ color: colors.accent }}>4. Analyse multi-niveaux</strong> : 
             Analyse tactique (faits immédiats), opérationnelle (patterns), stratégique (tendances long-terme)
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>5. Production de livrables exécutifs</strong> : 
+            <strong style={{ color: colors.accent }}>5. Production de livrables exécutifs</strong> : 
             Rapports adaptés à l'audience (technique, managérial, exécutif), avec recommandations actionnables
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>6. Diffusion ciblée et feedback</strong> : 
+            <strong style={{ color: colors.accent }}>6. Diffusion ciblée et feedback</strong> : 
             Distribution sécurisée selon le principe du "need-to-know", recueil de feedback pour amélioration continue
           </li>
         </ul>
       </section>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Techniques expertes
         </h2>
         
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             🎭 Scénarisation et hypothèses complexes
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Construisez des <strong>scénarios multiples</strong> avec probabilités associées. 
             Utilisez l'<strong>analyse concurrente des hypothèses (ACH)</strong> pour évaluer objectivement 
             quelle hypothèse est la mieux supportée par les preuves disponibles. 
@@ -96,16 +98,16 @@ export default function ParcoursAvanceMethodologie() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             🔗 Fusion OSINT / HUMINT / TECHINT
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Intégrez des sources de renseignement multiples : <strong>OSINT</strong> (sources ouvertes), 
             <strong>HUMINT</strong> (interviews, interrogations), <strong>TECHINT</strong> (analyse technique, 
             forensics, reverse engineering). La corrélation entre ces sources différentes produit du 
@@ -114,16 +116,16 @@ export default function ParcoursAvanceMethodologie() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             ✅ Validation par corrélation forte
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Appliquez le <strong>modèle Admiralty</strong> pour évaluer la fiabilité (A-F pour la source, 1-6 pour l'information). 
             Exigez une <strong>corrélation forte</strong> : au moins 3 sources indépendantes de haute qualité (A1, A2, B1) 
             pour confirmer une information critique. Documentez les <strong>gaps de renseignement</strong> et 
@@ -132,15 +134,15 @@ export default function ParcoursAvanceMethodologie() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             📊 Production de livrables exécutifs
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Créez des rapports <strong>adaptés à l'audience</strong> : 
             Executive Summary (1 page, conclusions et recommandations), 
             Technical Analysis (détails techniques pour spécialistes), 
@@ -152,17 +154,17 @@ export default function ParcoursAvanceMethodologie() {
       </section>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Framework d'investigation avancée
         </h2>
         
         <div style={{ 
-          background: "#1a1f2e", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgSecondary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px"
         }}>
-          <ol style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px" }}>
+          <ol style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
             <li><strong>Intelligence Requirements</strong> : Définir les PIR (Priority Intelligence Requirements) et EEI (Essential Elements of Information)</li>
             <li><strong>Collection Plan</strong> : Mapper les sources disponibles (OSINT, HUMINT, TECHINT), prioriser, allouer ressources</li>
             <li><strong>Multi-source Collection</strong> : Collecte parallèle et coordonnée sur toutes les sources identifiées</li>
@@ -178,16 +180,16 @@ export default function ParcoursAvanceMethodologie() {
       </section>
 
       <section style={{
-        background: "#1a1f2e",
-        border: "1px solid #00ff9c",
+        background: colors.bgSecondary,
+        border: `1px solid ${colors.accent}`,
         borderRadius: "8px",
         padding: "20px",
         marginBottom: "30px"
       }}>
-        <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+        <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
           💡 Point clé
         </h3>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", margin: 0 }}>
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", margin: 0 }}>
           La méthodologie avancée transforme l'analyste OSINT en <strong>professionnel du renseignement</strong>. 
           Elle exige rigueur scientifique, pensée critique, et capacité à produire du renseignement 
           <strong>actionnable, fiable et défendable</strong>. Le but n'est plus de trouver de l'information, 
@@ -229,20 +231,20 @@ export default function ParcoursAvanceMethodologie() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(0, 0, 0, 0.85)",
+          background: colors.overlay,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 1000,
         }}>
           <div style={{
-            background: "#0b0f1a",
-            border: "2px solid #00ff9c",
+            background: colors.bgPrimary,
+            border: `2px solid ${colors.accent}`,
             borderRadius: "12px",
             padding: "40px",
             maxWidth: "500px",
             textAlign: "center",
-            boxShadow: "0 0 50px rgba(0, 255, 156, 0.3)",
+            boxShadow: `0 0 50px ${colors.accent}40`,
           }}>
             <div style={{
               fontSize: "4rem",
@@ -251,22 +253,22 @@ export default function ParcoursAvanceMethodologie() {
               🏆
             </div>
             <h2 style={{ 
-              color: "#00ff9c", 
+              color: colors.accent, 
               marginBottom: "15px",
               fontSize: "1.8rem"
             }}>
               Badge Débloqué !
             </h2>
             <p style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               fontSize: "1.2rem",
               marginBottom: "30px",
               lineHeight: "1.6"
             }}>
-              <strong style={{ color: "#00ff9c" }}>Méthodologie OSINT (Avancé)</strong> validée avec succès !
+              <strong style={{ color: colors.accent }}>Méthodologie OSINT (Avancé)</strong> validée avec succès !
             </p>
             <p style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               marginBottom: "30px",
               lineHeight: "1.6"
             }}>
@@ -301,3 +303,4 @@ export default function ParcoursAvanceMethodologie() {
     </main>
   );
 }
+

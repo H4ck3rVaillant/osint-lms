@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useThemeColors } from "../context/ThemeContext";
 
 export default function ParcoursIntermediaireMethodologie() {
+  const colors = useThemeColors();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
@@ -16,71 +18,71 @@ export default function ParcoursIntermediaireMethodologie() {
 
   return (
     <main style={{ maxWidth: "1000px", margin: "0 auto", padding: "40px" }}>
-      <h1 style={{ color: "#00ff9c", marginBottom: "20px" }}>
+      <h1 style={{ color: colors.accent, marginBottom: "20px" }}>
         Module 2: Méthodologie OSINT — Intermédiaire
       </h1>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>
           Objectifs du module
         </h2>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", marginBottom: "15px" }}>
-          Ce module vous introduit à une <strong style={{ color: "#00ff9c" }}>méthode structurée</strong> inspirée 
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "15px" }}>
+          Ce module vous introduit à une <strong style={{ color: colors.accent }}>méthode structurée</strong> inspirée 
           du cycle de renseignement professionnel. Vous apprendrez à planifier, collecter, analyser et documenter 
           vos recherches OSINT de manière systématique et reproductible.
         </p>
       </section>
 
       <section style={{ 
-        background: "#0b0f1a", 
-        border: "1px solid #00ff9c", 
+        background: colors.bgPrimary, 
+        border: `1px solid ${colors.accent}`, 
         borderRadius: "8px", 
         padding: "24px",
         marginBottom: "30px"
       }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Le cycle de renseignement OSINT
         </h2>
-        <ul style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px" }}>
+        <ul style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
           <li>
-            <strong style={{ color: "#00ff9c" }}>1. Planification et orientation</strong> : 
+            <strong style={{ color: colors.accent }}>1. Planification et orientation</strong> : 
             Définir des objectifs clairs, formuler des hypothèses testables et identifier les sources potentielles
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>2. Collecte orientée et pivoting intelligent</strong> : 
+            <strong style={{ color: colors.accent }}>2. Collecte orientée et pivoting intelligent</strong> : 
             Exploiter les informations découvertes pour rebondir vers de nouvelles pistes de recherche
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>3. Traitement et exploitation</strong> : 
+            <strong style={{ color: colors.accent }}>3. Traitement et exploitation</strong> : 
             Organiser, filtrer et enrichir les données collectées pour en extraire le sens
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>4. Analyse et production</strong> : 
+            <strong style={{ color: colors.accent }}>4. Analyse et production</strong> : 
             Valider par recoupement, appliquer un scoring de fiabilité et produire du renseignement
           </li>
           <li>
-            <strong style={{ color: "#00ff9c" }}>5. Diffusion et archivage</strong> : 
+            <strong style={{ color: colors.accent }}>5. Diffusion et archivage</strong> : 
             Documenter les conclusions et conserver les preuves pour audit ultérieur
           </li>
         </ul>
       </section>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Techniques avancées
         </h2>
         
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             🎯 Hypothèses testables
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Formulez des hypothèses <strong>vérifiables</strong> et <strong>réfutables</strong>. 
             Exemple : "Le compte X est lié à l'organisation Y" plutôt que "Trouvez tout sur X". 
             Définissez les critères qui valideraient ou invalideraient votre hypothèse.
@@ -88,16 +90,16 @@ export default function ParcoursIntermediaireMethodologie() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             🔄 Pivoting intelligent
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Utilisez chaque information découverte comme <strong>point de pivot</strong> pour élargir votre recherche : 
             un email révèle un domaine, un domaine révèle une infrastructure, une infrastructure révèle d'autres entités. 
             Cartographiez ces connexions méthodiquement.
@@ -105,16 +107,16 @@ export default function ParcoursIntermediaireMethodologie() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px",
           marginBottom: "15px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             ✅ Validation croisée
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             <strong>Triangulation des sources</strong> : Une information n'est fiable que si elle est confirmée 
             par au moins deux sources indépendantes. Documentez le niveau de confiance de chaque élément : 
             Confirmé / Probable / Possible / Non vérifié.
@@ -122,15 +124,15 @@ export default function ParcoursIntermediaireMethodologie() {
         </div>
 
         <div style={{ 
-          background: "#0b0f1a", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgPrimary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
             📝 Journal d'enquête
           </h3>
-          <p style={{ color: "#9ca3af", lineHeight: "1.8" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.8" }}>
             Tenez un <strong>journal de recherche détaillé</strong> incluant : horodatage, sources consultées, 
             requêtes effectuées, résultats obtenus, et décisions prises. Cela garantit la reproductibilité 
             et facilite l'audit de votre démarche.
@@ -139,17 +141,17 @@ export default function ParcoursIntermediaireMethodologie() {
       </section>
 
       <section style={{ marginBottom: "30px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.3rem", marginBottom: "15px" }}>
+        <h2 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>
           Exemple de workflow méthodologique
         </h2>
         
         <div style={{ 
-          background: "#1a1f2e", 
-          border: "1px solid #2a3f3f", 
+          background: colors.bgSecondary, 
+          border: `1px solid ${colors.border}`, 
           borderRadius: "8px", 
           padding: "20px"
         }}>
-          <ol style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px" }}>
+          <ol style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px" }}>
             <li><strong>Briefing</strong> : Objectif = Identifier les sites web associés à l'entité X</li>
             <li><strong>Hypothèse</strong> : L'entité X possède des domaines enregistrés entre 2020-2024</li>
             <li><strong>Collecte</strong> : WHOIS, DNS, Google Dorks, recherche par email/nom</li>
@@ -162,16 +164,16 @@ export default function ParcoursIntermediaireMethodologie() {
       </section>
 
       <section style={{
-        background: "#1a1f2e",
-        border: "1px solid #00ff9c",
+        background: colors.bgSecondary,
+        border: `1px solid ${colors.accent}`,
         borderRadius: "8px",
         padding: "20px",
         marginBottom: "30px"
       }}>
-        <h3 style={{ color: "#00ff9c", marginBottom: "10px" }}>
+        <h3 style={{ color: colors.accent, marginBottom: "10px" }}>
           💡 Point clé
         </h3>
-        <p style={{ color: "#9ca3af", lineHeight: "1.8", margin: 0 }}>
+        <p style={{ color: colors.textSecondary, lineHeight: "1.8", margin: 0 }}>
           Une méthodologie rigoureuse transforme une simple recherche en <strong>investigation structurée</strong>. 
           Elle permet de <strong>justifier vos conclusions</strong>, de <strong>détecter vos angles morts</strong>, 
           et d'assurer que votre analyse peut être <strong>reproduite et vérifiée</strong> par d'autres.
@@ -212,20 +214,20 @@ export default function ParcoursIntermediaireMethodologie() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(0, 0, 0, 0.85)",
+          background: colors.overlay,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 1000,
         }}>
           <div style={{
-            background: "#0b0f1a",
-            border: "2px solid #00ff9c",
+            background: colors.bgPrimary,
+            border: `2px solid ${colors.accent}`,
             borderRadius: "12px",
             padding: "40px",
             maxWidth: "500px",
             textAlign: "center",
-            boxShadow: "0 0 50px rgba(0, 255, 156, 0.3)",
+            boxShadow: `0 0 50px ${colors.accent}40`,
           }}>
             <div style={{
               fontSize: "4rem",
@@ -234,22 +236,22 @@ export default function ParcoursIntermediaireMethodologie() {
               🏆
             </div>
             <h2 style={{ 
-              color: "#00ff9c", 
+              color: colors.accent, 
               marginBottom: "15px",
               fontSize: "1.8rem"
             }}>
               Badge Débloqué !
             </h2>
             <p style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               fontSize: "1.2rem",
               marginBottom: "30px",
               lineHeight: "1.6"
             }}>
-              <strong style={{ color: "#00ff9c" }}>Méthodologie OSINT (Intermédiaire)</strong> validée avec succès !
+              <strong style={{ color: colors.accent }}>Méthodologie OSINT (Intermédiaire)</strong> validée avec succès !
             </p>
             <p style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               marginBottom: "30px",
               lineHeight: "1.6"
             }}>
@@ -284,3 +286,4 @@ export default function ParcoursIntermediaireMethodologie() {
     </main>
   );
 }
+
