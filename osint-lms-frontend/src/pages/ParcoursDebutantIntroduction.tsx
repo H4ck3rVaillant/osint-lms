@@ -93,6 +93,7 @@ export default function ParcoursDebutantIntroduction() {
   }, [quizAnswers]);
 
   const handleQuizSubmit = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     const score = getScore();
     setShowResults(true);
     localStorage.setItem(QUIZ_COMPLETED_KEY, "true");
