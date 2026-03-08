@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { useThemeColors } from "../context/ThemeContext";
 
 export default function EtudesOSINT() {
-  const navigate = useNavigate();
   const colors = useThemeColors();
+  const navigate = useNavigate();
   const [showResetPopup, setShowResetPopup] = useState(false);
   const [completedCases, setCompletedCases] = useState({
     geo: false,
@@ -68,7 +68,7 @@ export default function EtudesOSINT() {
     {
       key: "final",
       badgeKey: "badge_cases_osint",
-      title: "🎯 Cas final — Analyse complète",
+      title: "🎯 Cas final – Analyse complète",
       desc: "Enquête OSINT multi-angles type Bellingcat",
       longDesc: "Synthèse de toutes les compétences acquises : géolocalisation, vérification, attribution et chronologie dans une investigation complexe.",
       path: "/cas/final",
@@ -81,6 +81,7 @@ export default function EtudesOSINT() {
   const globalProgress = Math.round((validatedCount / cases.length) * 100);
 
   const resetCases = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     [
       "badge_case_geo",
       "badge_case_media",
@@ -98,11 +99,12 @@ export default function EtudesOSINT() {
     });
     
     setShowResetPopup(false);
+    // Pas de reload : les states React sont déjà remis à zéro ci-dessus
   };
 
   const difficultyColor = (difficulty: string) => {
     switch(difficulty) {
-      case "Intermédiaire": return "#f59e0b";
+      case "Intermédiaire": return "#fbbf24";
       case "Avancé": return "#f97316";
       case "Expert": return "#ef4444";
       default: return colors.accent;
@@ -122,11 +124,10 @@ export default function EtudesOSINT() {
       {/* Barre de progression globale */}
       <div style={{ 
         background: colors.bgPrimary, 
-        border: `1px solid ${colors.accent}`, 
+        border: "1px solid #00ff9c", 
         borderRadius: "8px", 
         padding: "24px",
-        marginBottom: "30px",
-        boxShadow: `0 2px 8px ${colors.shadow}`
+        marginBottom: "30px"
       }}>
         <div style={{ 
           display: "flex", 
@@ -152,17 +153,17 @@ export default function EtudesOSINT() {
           background: colors.bgSecondary,
           borderRadius: "12px",
           overflow: "hidden",
-          border: `1px solid ${colors.border}`
+          border: "1px solid #2a3f3f"
         }}>
           <div style={{
             width: `${globalProgress}%`,
             height: "100%",
-            background: `linear-gradient(90deg, ${colors.accent} 0%, ${colors.accentHover} 100%)`,
+            background: "linear-gradient(90deg, #00ff9c 0%, #00d484 100%)",
             transition: "width 0.5s ease",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#ffffff",
+            color: colors.bgPrimary,
             fontWeight: "bold",
             fontSize: "0.875rem"
           }}>
@@ -186,23 +187,20 @@ export default function EtudesOSINT() {
               onClick={() => navigate(c.path)}
               style={{
                 background: colors.bgPrimary,
-                border: `2px solid ${done ? colors.accent : colors.border}`,
+                border: `1px solid ${done ? colors.accent : colors.border}`,
                 borderRadius: "12px",
                 padding: "24px",
                 cursor: "pointer",
                 transition: "all 0.3s ease",
                 position: "relative" as const,
-                boxShadow: `0 2px 8px ${colors.shadow}`
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px)";
-                e.currentTarget.style.boxShadow = `0 8px 20px ${colors.shadow}`;
-                e.currentTarget.style.borderColor = colors.accent;
+                e.currentTarget.style.boxShadow = "0 0 20px rgba(0,255,156,0.3)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = `0 2px 8px ${colors.shadow}`;
-                e.currentTarget.style.borderColor = done ? colors.accent : colors.border;
+                e.currentTarget.style.boxShadow = "none";
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "10px" }}>
@@ -210,7 +208,7 @@ export default function EtudesOSINT() {
                   {c.title}
                 </h2>
                 <span style={{ 
-                  color: done ? colors.accent : colors.textTertiary,
+                  color: done ? colors.accent : "#6b7280",
                   fontSize: "1.5rem"
                 }}>
                   {done ? "✓" : "○"}
@@ -244,7 +242,7 @@ export default function EtudesOSINT() {
                   padding: "4px 12px",
                   borderRadius: "6px",
                   fontSize: "0.8rem",
-                  border: `1px solid ${colors.border}`
+                  border: "1px solid #2a3f3f"
                 }}>
                   ⏱️ {c.duration}
                 </span>
@@ -269,7 +267,7 @@ export default function EtudesOSINT() {
               </div>
 
               <p style={{ 
-                color: done ? colors.accent : colors.textTertiary,
+                color: done ? colors.accent : "#6b7280",
                 fontSize: "0.9rem",
                 fontWeight: "bold",
                 margin: 0
@@ -284,7 +282,7 @@ export default function EtudesOSINT() {
       {/* Section informative */}
       <div style={{
         background: colors.bgSecondary,
-        border: `1px solid ${colors.border}`,
+        border: "1px solid #2a3f3f",
         borderRadius: "8px",
         padding: "24px",
         marginBottom: "30px"
@@ -312,7 +310,7 @@ export default function EtudesOSINT() {
           style={{
             background: colors.bgPrimary,
             color: colors.accent,
-            border: `2px solid ${colors.accent}`,
+            border: "1px solid #00ff9c",
             padding: "14px 32px",
             borderRadius: "8px",
             fontSize: "1rem",
@@ -322,7 +320,7 @@ export default function EtudesOSINT() {
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = colors.accent;
-            e.currentTarget.style.color = "#ffffff";
+            e.currentTarget.style.color = colors.bgPrimary;
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = colors.bgPrimary;
@@ -333,7 +331,7 @@ export default function EtudesOSINT() {
         </button>
       </div>
 
-      {/* Pop-up de confirmation */}
+      {/* Pop-up de confirmation de réinitialisation */}
       {showResetPopup && (
         <div style={{
           position: "fixed",
@@ -349,12 +347,12 @@ export default function EtudesOSINT() {
         }}>
           <div style={{
             background: colors.bgPrimary,
-            border: `2px solid ${colors.accent}`,
+            border: "2px solid #00ff9c",
             borderRadius: "12px",
             padding: "40px",
             maxWidth: "500px",
             textAlign: "center",
-            boxShadow: `0 10px 40px ${colors.shadow}`,
+            boxShadow: "0 0 50px rgba(0, 255, 156, 0.3)",
           }}>
             <h3 style={{ color: colors.accent, marginBottom: "15px", fontSize: "1.5rem" }}>
               Réinitialiser les études de cas ?
@@ -370,7 +368,7 @@ export default function EtudesOSINT() {
                 style={{
                   padding: "12px 28px",
                   background: colors.accent,
-                  color: "#ffffff",
+                  color: colors.bgPrimary,
                   borderRadius: "8px",
                   cursor: "pointer",
                   border: "none",
@@ -386,7 +384,7 @@ export default function EtudesOSINT() {
                   padding: "12px 28px",
                   background: "transparent",
                   color: colors.accent,
-                  border: `2px solid ${colors.accent}`,
+                  border: "1px solid #00ff9c",
                   borderRadius: "8px",
                   cursor: "pointer",
                   fontWeight: "bold",

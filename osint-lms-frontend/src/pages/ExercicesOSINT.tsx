@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useThemeColors } from "../context/ThemeContext";
 
 type Exercise = {
   id: number;
@@ -302,6 +303,7 @@ const exercises: Exercise[] = [
 ];
 
 export default function ExercicesOSINT() {
+  const colors = useThemeColors();
   const [current, setCurrent] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
   const [showTips, setShowTips] = useState(false);
@@ -358,7 +360,7 @@ export default function ExercicesOSINT() {
       case "Intermédiaire": return "#fbbf24";
       case "Avancé": return "#f97316";
       case "Expert": return "#ef4444";
-      default: return "#00ff9c";
+      default: return colors.accent;
     }
   };
 
@@ -371,22 +373,22 @@ export default function ExercicesOSINT() {
 
   return (
     <main style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
-      <h1 style={{ color: "#00ff9c", fontSize: "2rem", marginBottom: "10px" }}>
+      <h1 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "10px" }}>
         Exercices OSINT Pratiques
       </h1>
-      <p style={{ color: "#9ca3af", marginBottom: "30px", fontSize: "1.1rem" }}>
+      <p style={{ color: colors.textSecondary, marginBottom: "30px", fontSize: "1.1rem" }}>
         20 exercices progressifs couvrant tous les niveaux de compétence OSINT
       </p>
 
       {/* Filtres par difficulté */}
       <div style={{
-        background: "#0b0f1a",
+        background: colors.bgPrimary,
         border: "1px solid #00ff9c",
         borderRadius: "8px",
         padding: "20px",
         marginBottom: "20px"
       }}>
-        <h3 style={{ color: "#00ff9c", marginBottom: "15px", fontSize: "1.1rem" }}>
+        <h3 style={{ color: colors.accent, marginBottom: "15px", fontSize: "1.1rem" }}>
           Filtrer par niveau
         </h3>
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" as const }}>
@@ -394,15 +396,16 @@ export default function ExercicesOSINT() {
             <button
               key={level}
               onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
                 setFilterDifficulty(level);
                 setCurrent(0);
                 setShowSolution(false);
                 setShowTips(false);
               }}
               style={{
-                background: filterDifficulty === level ? "#00ff9c" : "#1a1f2e",
-                color: filterDifficulty === level ? "#0b0f1a" : "#00ff9c",
-                border: `1px solid ${filterDifficulty === level ? "#00ff9c" : "#2a3f3f"}`,
+                background: filterDifficulty === level ? colors.accent : colors.bgSecondary,
+                color: filterDifficulty === level ? colors.bgPrimary : colors.accent,
+                border: `1px solid ${filterDifficulty === level ? colors.accent : colors.border}`,
                 padding: "8px 16px",
                 borderRadius: "6px",
                 cursor: "pointer",
@@ -420,7 +423,7 @@ export default function ExercicesOSINT() {
 
       {/* Barre de progression */}
       <div style={{ 
-        background: "#0b0f1a", 
+        background: colors.bgPrimary, 
         border: "1px solid #00ff9c", 
         borderRadius: "8px", 
         padding: "24px",
@@ -432,11 +435,11 @@ export default function ExercicesOSINT() {
           alignItems: "center",
           marginBottom: "12px"
         }}>
-          <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.1rem" }}>
+          <h3 style={{ color: colors.accent, margin: 0, fontSize: "1.1rem" }}>
             Progression
           </h3>
           <span style={{ 
-            color: "#00ff9c", 
+            color: colors.accent, 
             fontWeight: "bold",
             fontSize: "1.1rem"
           }}>
@@ -447,7 +450,7 @@ export default function ExercicesOSINT() {
         <div style={{
           width: "100%",
           height: "24px",
-          background: "#1a1f2e",
+          background: colors.bgSecondary,
           borderRadius: "12px",
           overflow: "hidden",
           border: "1px solid #2a3f3f"
@@ -460,7 +463,7 @@ export default function ExercicesOSINT() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#0b0f1a",
+            color: colors.bgPrimary,
             fontWeight: "bold",
             fontSize: "0.875rem"
           }}>
@@ -471,7 +474,7 @@ export default function ExercicesOSINT() {
 
       {/* Carte de l'exercice */}
       <section style={{
-        background: "#0b0f1a",
+        background: colors.bgPrimary,
         border: "1px solid #00ff9c",
         borderRadius: "12px",
         padding: "30px",
@@ -479,11 +482,11 @@ export default function ExercicesOSINT() {
       }}>
         <div style={{ marginBottom: "20px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "15px", flexWrap: "wrap" as const }}>
-            <h2 style={{ color: "#00ff9c", margin: 0, fontSize: "1.5rem" }}>
+            <h2 style={{ color: colors.accent, margin: 0, fontSize: "1.5rem" }}>
               {exercise.title}
             </h2>
             <span style={{
-              background: "#1a1f2e",
+              background: colors.bgSecondary,
               color: difficultyColor(exercise.difficulty),
               padding: "4px 12px",
               borderRadius: "6px",
@@ -494,8 +497,8 @@ export default function ExercicesOSINT() {
               {exercise.difficulty}
             </span>
             <span style={{
-              background: "#1a1f2e",
-              color: "#00ff9c",
+              background: colors.bgSecondary,
+              color: colors.accent,
               padding: "4px 12px",
               borderRadius: "6px",
               fontSize: "0.85rem",
@@ -506,20 +509,20 @@ export default function ExercicesOSINT() {
             </span>
           </div>
 
-          <p style={{ color: "#9ca3af", lineHeight: "1.7", marginBottom: "20px" }}>
+          <p style={{ color: colors.textSecondary, lineHeight: "1.7", marginBottom: "20px" }}>
             {exercise.description}
           </p>
         </div>
 
         {/* Question */}
         <div style={{
-          background: "#1a1f2e",
+          background: colors.bgSecondary,
           padding: "20px",
           borderLeft: "4px solid #00ff9c",
           borderRadius: "6px",
           marginBottom: "20px"
         }}>
-          <h3 style={{ color: "#00ff9c", marginBottom: "10px", fontSize: "1.1rem" }}>
+          <h3 style={{ color: colors.accent, marginBottom: "10px", fontSize: "1.1rem" }}>
             ❓ Question
           </h3>
           <p style={{ color: "#e5e7eb", lineHeight: "1.7", margin: 0 }}>
@@ -530,7 +533,7 @@ export default function ExercicesOSINT() {
         {/* Conseils */}
         {showTips && (
           <div style={{
-            background: "#1a1f2e",
+            background: colors.bgSecondary,
             padding: "20px",
             borderLeft: "4px solid #fbbf24",
             borderRadius: "6px",
@@ -539,7 +542,7 @@ export default function ExercicesOSINT() {
             <h3 style={{ color: "#fbbf24", marginBottom: "10px", fontSize: "1.1rem" }}>
               💡 Conseils
             </h3>
-            <ul style={{ color: "#9ca3af", lineHeight: "1.8", paddingLeft: "20px", margin: 0 }}>
+            <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px", margin: 0 }}>
               {exercise.tips.map((tip, index) => (
                 <li key={index}>{tip}</li>
               ))}
@@ -550,7 +553,7 @@ export default function ExercicesOSINT() {
         {/* Solution */}
         {showSolution && (
           <div style={{
-            background: "#1a1f2e",
+            background: colors.bgSecondary,
             padding: "20px",
             borderLeft: "4px solid #22c55e",
             borderRadius: "6px",
@@ -569,8 +572,8 @@ export default function ExercicesOSINT() {
         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" as const }}>
           <button
             style={{
-              background: showTips ? "#1a1f2e" : "#fbbf24",
-              color: showTips ? "#fbbf24" : "#0b0f1a",
+              background: showTips ? colors.bgSecondary : "#fbbf24",
+              color: showTips ? "#fbbf24" : colors.bgPrimary,
               border: showTips ? "1px solid #fbbf24" : "none",
               padding: "12px 24px",
               borderRadius: "8px",
@@ -586,8 +589,8 @@ export default function ExercicesOSINT() {
 
           <button
             style={{
-              background: showSolution ? "#1a1f2e" : "#00ff9c",
-              color: showSolution ? "#00ff9c" : "#0b0f1a",
+              background: showSolution ? colors.bgSecondary : colors.accent,
+              color: showSolution ? colors.accent : colors.bgPrimary,
               border: showSolution ? "1px solid #00ff9c" : "none",
               padding: "12px 24px",
               borderRadius: "8px",
@@ -610,8 +613,8 @@ export default function ExercicesOSINT() {
       <div style={{ display: "flex", gap: "12px", justifyContent: "space-between", flexWrap: "wrap" as const }}>
         <button
           style={{
-            background: current === 0 ? "#1a1f2e" : "#0b0f1a",
-            color: "#00ff9c",
+            background: current === 0 ? colors.bgSecondary : colors.bgPrimary,
+            color: colors.accent,
             border: "1px solid #00ff9c",
             padding: "12px 24px",
             borderRadius: "8px",
@@ -632,8 +635,8 @@ export default function ExercicesOSINT() {
 
         <button
           style={{
-            background: current === filteredExercises.length - 1 ? "#1a1f2e" : "#00ff9c",
-            color: current === filteredExercises.length - 1 ? "#00ff9c" : "#0b0f1a",
+            background: current === filteredExercises.length - 1 ? colors.bgSecondary : colors.accent,
+            color: current === filteredExercises.length - 1 ? colors.accent : colors.bgPrimary,
             border: current === filteredExercises.length - 1 ? "1px solid #00ff9c" : "none",
             padding: "12px 24px",
             borderRadius: "8px",
@@ -655,13 +658,13 @@ export default function ExercicesOSINT() {
 
       {/* Liste des exercices */}
       <section style={{
-        background: "#0b0f1a",
+        background: colors.bgPrimary,
         border: "1px solid #2a3f3f",
         borderRadius: "12px",
         padding: "24px",
         marginTop: "30px"
       }}>
-        <h2 style={{ color: "#00ff9c", marginBottom: "20px", fontSize: "1.3rem" }}>
+        <h2 style={{ color: colors.accent, marginBottom: "20px", fontSize: "1.3rem" }}>
           📋 Liste des exercices {filterDifficulty !== "Tous" && `(${filterDifficulty})`}
         </h2>
         <div style={{ display: "grid", gap: "10px" }}>
@@ -669,13 +672,14 @@ export default function ExercicesOSINT() {
             <div
               key={ex.id}
               onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
                 setCurrent(index);
                 setShowSolution(false);
                 setShowTips(false);
               }}
               style={{
-                background: index === current ? "#1a1f2e" : "transparent",
-                border: `1px solid ${index === current ? "#00ff9c" : "#2a3f3f"}`,
+                background: index === current ? colors.bgSecondary : "transparent",
+                border: `1px solid ${index === current ? colors.accent : colors.border}`,
                 borderRadius: "8px",
                 padding: "12px 16px",
                 cursor: "pointer",
@@ -686,14 +690,14 @@ export default function ExercicesOSINT() {
               }}
             >
               <span style={{ 
-                color: completedExercises.has(ex.id) ? "#00ff9c" : index === current ? "#00ff9c" : "#6b7280",
+                color: completedExercises.has(ex.id) ? colors.accent : index === current ? colors.accent : "#6b7280",
                 fontSize: "1.2rem"
               }}>
                 {completedExercises.has(ex.id) ? "✓" : index === current ? "▶" : "○"}
               </span>
               <div style={{ flex: 1 }}>
                 <p style={{ 
-                  color: completedExercises.has(ex.id) ? "#00ff9c" : index === current ? "#00ff9c" : "#9ca3af",
+                  color: completedExercises.has(ex.id) ? colors.accent : index === current ? colors.accent : colors.textSecondary,
                   fontWeight: index === current ? "bold" : "normal",
                   margin: 0
                 }}>
@@ -717,8 +721,8 @@ export default function ExercicesOSINT() {
         <button
           onClick={() => setShowResetPopup(true)}
           style={{
-            background: "#0b0f1a",
-            color: "#00ff9c",
+            background: colors.bgPrimary,
+            color: colors.accent,
             border: "1px solid #00ff9c",
             padding: "14px 32px",
             borderRadius: "8px",
@@ -728,12 +732,12 @@ export default function ExercicesOSINT() {
             transition: "all 0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#00ff9c";
-            e.currentTarget.style.color = "#0b0f1a";
+            e.currentTarget.style.background = colors.accent;
+            e.currentTarget.style.color = colors.bgPrimary;
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = "#0b0f1a";
-            e.currentTarget.style.color = "#00ff9c";
+            e.currentTarget.style.background = colors.bgPrimary;
+            e.currentTarget.style.color = colors.accent;
           }}
         >
           🔄 Recommencer depuis le début
@@ -748,14 +752,14 @@ export default function ExercicesOSINT() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(0, 0, 0, 0.85)",
+          background: colors.overlay,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 1000,
         }}>
           <div style={{
-            background: "#0b0f1a",
+            background: colors.bgPrimary,
             border: "2px solid #00ff9c",
             borderRadius: "12px",
             padding: "40px",
@@ -763,10 +767,10 @@ export default function ExercicesOSINT() {
             textAlign: "center",
             boxShadow: "0 0 50px rgba(0, 255, 156, 0.3)",
           }}>
-            <h3 style={{ color: "#00ff9c", marginBottom: "15px", fontSize: "1.5rem" }}>
+            <h3 style={{ color: colors.accent, marginBottom: "15px", fontSize: "1.5rem" }}>
               Recommencer les exercices ?
             </h3>
-            <p style={{ color: "#9ca3af", marginBottom: "30px", lineHeight: "1.6" }}>
+            <p style={{ color: colors.textSecondary, marginBottom: "30px", lineHeight: "1.6" }}>
               Vous allez revenir au premier exercice et réinitialiser les filtres. 
               Vous pourrez toujours revenir à n'importe quel exercice via la liste.
             </p>
@@ -774,6 +778,7 @@ export default function ExercicesOSINT() {
             <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
               <button
                 onClick={() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                   setCurrent(0);
                   setFilterDifficulty("Tous");
                   setShowSolution(false);
@@ -790,8 +795,8 @@ export default function ExercicesOSINT() {
                 }}
                 style={{
                   padding: "12px 28px",
-                  background: "#00ff9c",
-                  color: "#0b0f1a",
+                  background: colors.accent,
+                  color: colors.bgPrimary,
                   borderRadius: "8px",
                   cursor: "pointer",
                   border: "none",
@@ -806,7 +811,7 @@ export default function ExercicesOSINT() {
                 style={{
                   padding: "12px 28px",
                   background: "transparent",
-                  color: "#00ff9c",
+                  color: colors.accent,
                   border: "1px solid #00ff9c",
                   borderRadius: "8px",
                   cursor: "pointer",
