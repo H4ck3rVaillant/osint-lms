@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useThemeColors } from "../context/ThemeContext";
 
 export default function CasFinalOSINT() {
+  const colors = useThemeColors();
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
 
   const validateFinal = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     const required = [
       "badge_case_geo",
       "badge_case_media",
@@ -21,12 +24,12 @@ export default function CasFinalOSINT() {
 
   return (
     <main style={{ padding: "40px", maxWidth: "900px", margin: "0 auto" }}>
-      <h1 style={{ color: "#00ff9c", marginBottom: "20px" }}>
+      <h1 style={{ color: colors.accent, marginBottom: "20px" }}>
         🎯 Cas final – Analyse OSINT complète
       </h1>
 
-      <section style={{ color: "#9ca3af", lineHeight: "1.7" }}>
-        <h2 style={{ color: "#00ff9c" }}>Contexte</h2>
+      <section style={{ color: colors.textSecondary, lineHeight: "1.7" }}>
+        <h2 style={{ color: colors.accent }}>Contexte</h2>
         <p>
           Une série d'images, vidéos et messages apparaît sur plusieurs plateformes
           sociales suite à un événement militaire non revendiqué.  
@@ -34,7 +37,7 @@ export default function CasFinalOSINT() {
           reprises par des médias internationaux.
         </p>
 
-        <h2 style={{ color: "#00ff9c" }}>Objectif de l'enquête</h2>
+        <h2 style={{ color: colors.accent }}>Objectif de l'enquête</h2>
         <p>
           Produire une analyse OSINT complète, structurée et vérifiable,
           similaire aux méthodologies employées par des équipes comme Bellingcat :
@@ -46,7 +49,7 @@ export default function CasFinalOSINT() {
           <li>Attribuer l'action à un acteur plausible</li>
         </ul>
 
-        <h2 style={{ color: "#00ff9c" }}>Sources ouvertes utilisées</h2>
+        <h2 style={{ color: colors.accent }}>Sources ouvertes utilisées</h2>
         <ul>
           <li>Réseaux sociaux (X, Telegram, TikTok, YouTube)</li>
           <li>Images satellites et cartes open source</li>
@@ -54,7 +57,7 @@ export default function CasFinalOSINT() {
           <li>Historique d'opérations similaires documentées</li>
         </ul>
 
-        <h2 style={{ color: "#00ff9c" }}>Méthodologie détaillée</h2>
+        <h2 style={{ color: colors.accent }}>Méthodologie détaillée</h2>
         <ol>
           <li>
             <strong>Collecte :</strong> archivage des contenus avant suppression
@@ -78,7 +81,7 @@ export default function CasFinalOSINT() {
           </li>
         </ol>
 
-        <h2 style={{ color: "#00ff9c" }}>Résultat final</h2>
+        <h2 style={{ color: colors.accent }}>Résultat final</h2>
         <p>
           L'ensemble des éléments converge vers une opération coordonnée
           menée par un acteur déjà impliqué dans des actions similaires.
@@ -86,14 +89,14 @@ export default function CasFinalOSINT() {
           bien que certaines zones d'incertitude subsistent.
         </p>
 
-        <h2 style={{ color: "#00ff9c" }}>Ce qui aurait pu être mal interprété</h2>
+        <h2 style={{ color: colors.accent }}>Ce qui aurait pu être mal interprété</h2>
         <ul>
           <li>Réutilisation d'anciennes images sorties de leur contexte</li>
           <li>Biais de confirmation lié aux narratifs dominants</li>
           <li>Confusion volontaire entre acteurs étatiques et proxy</li>
         </ul>
 
-        <h2 style={{ color: "#00ff9c" }}>Conclusion pédagogique</h2>
+        <h2 style={{ color: colors.accent }}>Conclusion pédagogique</h2>
         <p>
           Ce cas illustre l'importance d'une approche rigoureuse,
           documentée et transparente en OSINT.
@@ -102,7 +105,7 @@ export default function CasFinalOSINT() {
         </p>
       </section>
 
-      <p style={{ color: "#9ca3af", fontSize: "17px", lineHeight: 1.7, marginTop: "25px" }}>
+      <p style={{ color: colors.textSecondary, fontSize: "17px", lineHeight: 1.7, marginTop: "25px" }}>
         Ce cas final simule une enquête OSINT multi-sources inspirée des
         méthodologies Bellingcat. Vous devez corréler données visuelles,
         temporelles, techniques et humaines afin de produire une analyse
@@ -110,7 +113,7 @@ export default function CasFinalOSINT() {
       </p>
 
       <div style={{ marginTop: "50px", display: "flex", gap: "30px" }}>
-        <button style={btnSecondary} onClick={() => navigate("/etudes-osint")}>
+        <button style={btnSecondary} onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" }); navigate("/etudes-osint"); }}>
           ⬅ Retour aux cas
         </button>
 
@@ -121,11 +124,11 @@ export default function CasFinalOSINT() {
 
       {validated && (
         <div style={popupStyle}>
-          <h3 style={{ color: "#00ff9c" }}>Cas validé</h3>
+          <h3 style={{ color: colors.accent }}>Cas validé</h3>
           <p>🏆 Badge « Analyste OSINT – Cas réels » débloqué !</p>
           <button
             style={{ ...btnPrimary, marginTop: "20px" }}
-            onClick={() => navigate("/etudes-osint")}
+            onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" }); navigate("/etudes-osint"); }}
           >
             Retour aux études de cas
           </button>
@@ -138,8 +141,8 @@ export default function CasFinalOSINT() {
 /* ===== STYLES TRYHACKME ===== */
 const btnPrimary = {
   padding: "16px 32px",
-  background: "#00ff9c",
-  color: "#020617",
+  background: colors.accent,
+  color: colors.bgPrimary,
   border: "none",
   borderRadius: "12px",
   fontSize: "16px",
@@ -148,8 +151,8 @@ const btnPrimary = {
 
 const btnSecondary = {
   padding: "14px 26px",
-  background: "#0b0f1a",
-  color: "#00ff9c",
+  background: colors.bgPrimary,
+  color: colors.accent,
   border: "1px solid #00ff9c",
   borderRadius: "10px",
   cursor: "pointer",
@@ -160,7 +163,7 @@ const popupStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  background: "#020617",
+  background: colors.bgPrimary,
   border: "2px solid #00ff9c",
   borderRadius: "14px",
   padding: "30px",
