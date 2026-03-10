@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { useThemeColors } from "../context/ThemeContext";
 
 export default function BadgesOSINT() {
+  const colors = useThemeColors();
+  
   const [stats, setStats] = useState({
     totalBadges: 0,
     unlockedBadges: 0,
@@ -35,6 +38,8 @@ export default function BadgesOSINT() {
         { key: "badge_adv_outils", label: "APIs et Automatisation", desc: "Maîtriser Python, Neo4j et ML pour l'OSINT" },
       ],
     },
+    // NOTE: Les modules spécialisés ci-dessous sont déclarés mais pas encore implémentés
+    // Les pages correspondantes seront créées dans une version future
     {
       title: "🎯 Modules OSINT Spécialisés",
       description: "Expertise sur plateformes et outils ciblés",
@@ -72,6 +77,8 @@ export default function BadgesOSINT() {
   ];
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    
     let totalCount = 0;
     let unlockedCount = 0;
 
@@ -92,18 +99,25 @@ export default function BadgesOSINT() {
   }, []);
 
   return (
-    <main style={{ padding: "40px", maxWidth: "1200px", margin: "0 auto" }}>
-      <h1 style={{ color: "#00ff9c", fontSize: "2rem", marginBottom: "10px" }}>
+    <main style={{ 
+      paddingTop: "80px",
+      padding: "40px", 
+      maxWidth: "1200px", 
+      margin: "0 auto",
+      minHeight: "100vh",
+      background: colors.bgPrimary
+    }}>
+      <h1 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "10px" }}>
         🏆 Mes Badges OSINT
       </h1>
-      <p style={{ color: "#9ca3af", marginBottom: "30px", fontSize: "1.1rem" }}>
+      <p style={{ color: colors.textSecondary, marginBottom: "30px", fontSize: "1.1rem" }}>
         Suivez vos accomplissements et débloquez de nouveaux badges en complétant les parcours et études de cas
       </p>
 
       {/* Statistiques globales */}
       <div style={{ 
-        background: "#0b0f1a", 
-        border: "2px solid #00ff9c", 
+        background: colors.bgSecondary, 
+        border: `2px solid ${colors.accent}`, 
         borderRadius: "12px", 
         padding: "30px",
         marginBottom: "40px"
@@ -116,18 +130,18 @@ export default function BadgesOSINT() {
           flexWrap: "wrap" as const,
           gap: "15px"
         }}>
-          <h2 style={{ color: "#00ff9c", margin: 0, fontSize: "1.5rem" }}>
+          <h2 style={{ color: colors.accent, margin: 0, fontSize: "1.5rem" }}>
             📊 Progression Globale
           </h2>
           <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <span style={{ 
-              color: "#9ca3af", 
+              color: colors.textSecondary, 
               fontSize: "1rem"
             }}>
               {stats.unlockedBadges}/{stats.totalBadges} badges débloqués
             </span>
             <span style={{ 
-              color: "#00ff9c", 
+              color: colors.accent, 
               fontWeight: "bold",
               fontSize: "1.3rem"
             }}>
@@ -139,20 +153,20 @@ export default function BadgesOSINT() {
         <div style={{
           width: "100%",
           height: "30px",
-          background: "#1a1f2e",
+          background: colors.bgPrimary,
           borderRadius: "15px",
           overflow: "hidden",
-          border: "1px solid #2a3f3f"
+          border: `1px solid ${colors.border}`
         }}>
           <div style={{
             width: `${stats.progressPercentage}%`,
             height: "100%",
-            background: "linear-gradient(90deg, #00ff9c 0%, #00d484 100%)",
+            background: colors.accent,
             transition: "width 0.5s ease",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#0b0f1a",
+            color: "#020617",
             fontWeight: "bold",
             fontSize: "0.9rem"
           }}>
@@ -164,12 +178,12 @@ export default function BadgesOSINT() {
           <div style={{
             marginTop: "20px",
             padding: "15px",
-            background: "#1a1f2e",
-            border: "1px solid #00ff9c",
+            background: colors.bgPrimary,
+            border: `1px solid ${colors.accent}`,
             borderRadius: "8px",
             textAlign: "center"
           }}>
-            <p style={{ color: "#00ff9c", fontSize: "1.2rem", fontWeight: "bold", margin: 0 }}>
+            <p style={{ color: colors.accent, fontSize: "1.2rem", fontWeight: "bold", margin: 0 }}>
               🎉 Félicitations ! Vous avez débloqué tous les badges OSINT !
             </p>
           </div>
@@ -187,10 +201,10 @@ export default function BadgesOSINT() {
         return (
           <section key={section.title} style={{ marginBottom: "40px" }}>
             <div style={{ marginBottom: "20px" }}>
-              <h2 style={{ color: "#00ff9c", marginBottom: "8px", fontSize: "1.4rem" }}>
+              <h2 style={{ color: colors.accent, marginBottom: "8px", fontSize: "1.4rem" }}>
                 {section.title}
               </h2>
-              <p style={{ color: "#9ca3af", marginBottom: "12px" }}>
+              <p style={{ color: colors.textSecondary, marginBottom: "12px" }}>
                 {section.description}
               </p>
               
@@ -199,20 +213,20 @@ export default function BadgesOSINT() {
                 <div style={{
                   flex: 1,
                   height: "10px",
-                  background: "#1a1f2e",
+                  background: colors.bgPrimary,
                   borderRadius: "5px",
                   overflow: "hidden",
-                  border: "1px solid #2a3f3f"
+                  border: `1px solid ${colors.border}`
                 }}>
                   <div style={{
                     width: `${sectionProgress}%`,
                     height: "100%",
-                    background: "#00ff9c",
+                    background: colors.accent,
                     transition: "width 0.5s ease"
                   }} />
                 </div>
                 <span style={{ 
-                  color: "#9ca3af",
+                  color: colors.textSecondary,
                   fontSize: "0.9rem",
                   minWidth: "60px",
                   textAlign: "right"
@@ -234,8 +248,8 @@ export default function BadgesOSINT() {
                   <div
                     key={b.key}
                     style={{
-                      background: "#0b0f1a",
-                      border: `2px solid ${unlocked ? "#00ff9c" : "#2a3f3f"}`,
+                      background: colors.bgSecondary,
+                      border: `2px solid ${unlocked ? colors.accent : colors.border}`,
                       borderRadius: "12px",
                       padding: "24px",
                       opacity: unlocked ? 1 : 0.5,
@@ -254,7 +268,7 @@ export default function BadgesOSINT() {
                     </div>
 
                     <h3 style={{ 
-                      color: unlocked ? "#00ff9c" : "#6b7280",
+                      color: unlocked ? colors.accent : colors.textSecondary,
                       marginBottom: "10px",
                       fontSize: "1.1rem",
                       paddingRight: "40px"
@@ -263,7 +277,7 @@ export default function BadgesOSINT() {
                     </h3>
                     
                     <p style={{ 
-                      color: "#9ca3af",
+                      color: colors.textSecondary,
                       fontSize: "0.9rem",
                       lineHeight: "1.6",
                       marginBottom: "15px"
@@ -273,11 +287,11 @@ export default function BadgesOSINT() {
 
                     <div style={{
                       paddingTop: "12px",
-                      borderTop: "1px solid #2a3f3f"
+                      borderTop: `1px solid ${colors.border}`
                     }}>
                       <p style={{
                         margin: 0,
-                        color: unlocked ? "#00ff9c" : "#6b7280",
+                        color: unlocked ? colors.accent : colors.textSecondary,
                         fontWeight: "bold",
                         fontSize: "0.9rem"
                       }}>
@@ -294,16 +308,16 @@ export default function BadgesOSINT() {
 
       {/* Section informative */}
       <div style={{
-        background: "#1a1f2e",
-        border: "1px solid #2a3f3f",
+        background: colors.bgSecondary,
+        border: `1px solid ${colors.border}`,
         borderRadius: "8px",
         padding: "24px",
         marginTop: "40px"
       }}>
-        <h3 style={{ color: "#00ff9c", marginBottom: "15px", fontSize: "1.2rem" }}>
+        <h3 style={{ color: colors.accent, marginBottom: "15px", fontSize: "1.2rem" }}>
           💡 Comment débloquer des badges ?
         </h3>
-        <ul style={{ color: "#9ca3af", lineHeight: "2", paddingLeft: "20px", margin: 0 }}>
+        <ul style={{ color: colors.textSecondary, lineHeight: "2", paddingLeft: "20px", margin: 0 }}>
           <li>
             <strong>Parcours de formation :</strong> Complétez les modules Introduction, Méthodologie et Outils de chaque niveau
           </li>
