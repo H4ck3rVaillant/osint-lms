@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useThemeColors } from "../context/ThemeContext";
 
 export default function OutilsCyber() {
@@ -6,6 +6,10 @@ export default function OutilsCyber() {
   const [activeCategory, setActiveCategory] = useState<"osint" | "analyse" | "defense" | "network">("osint");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTool, setSelectedTool] = useState<any>(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   // Base de données complète des outils
   const tools = {
@@ -607,7 +611,14 @@ export default function OutilsCyber() {
   };
 
   return (
-    <main style={{ padding: "40px", maxWidth: "1600px", margin: "0 auto" }}>
+    <main style={{ 
+      paddingTop: "80px",
+      padding: "40px", 
+      maxWidth: "1600px", 
+      margin: "0 auto",
+      minHeight: "100vh",
+      background: colors.bgPrimary
+    }}>
       {/* Header */}
       <div style={{ marginBottom: "40px" }}>
         <h1 style={{ color: colors.accent, fontSize: "2.5rem", marginBottom: "10px" }}>
@@ -629,7 +640,7 @@ export default function OutilsCyber() {
             width: "100%",
             padding: "15px 20px",
             background: colors.bgPrimary,
-            border: "2px solid #00ff9c",
+            border: `2px solid ${colors.accent}`,
             borderRadius: "12px",
             color: colors.textPrimary,
             fontSize: "1rem"
@@ -689,7 +700,7 @@ export default function OutilsCyber() {
             onClick={() => setSelectedTool(tool)}
             style={{
               background: colors.bgPrimary,
-              border: tool.premium ? "2px solid #fbbf24" : "1px solid #2a3f3f",
+              border: tool.premium ? "2px solid #fbbf24" : `1px solid ${colors.border}`,
               borderRadius: "12px",
               padding: "25px",
               cursor: "pointer",
@@ -697,11 +708,11 @@ export default function OutilsCyber() {
               position: "relative" as const
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.border = tool.premium ? "2px solid #fbbf24" : "1px solid #00ff9c";
+              e.currentTarget.style.border = tool.premium ? "2px solid #fbbf24" : `1px solid ${colors.accent}`;
               e.currentTarget.style.transform = "translateY(-5px)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.border = tool.premium ? "2px solid #fbbf24" : "1px solid #2a3f3f";
+              e.currentTarget.style.border = tool.premium ? "2px solid #fbbf24" : `1px solid ${colors.border}`;
               e.currentTarget.style.transform = "translateY(0)";
             }}
           >
@@ -827,7 +838,7 @@ export default function OutilsCyber() {
             onClick={(e) => e.stopPropagation()}
             style={{
               background: colors.bgPrimary,
-              border: "2px solid #00ff9c",
+              border: `2px solid ${colors.accent}`,
               borderRadius: "12px",
               padding: "40px",
               maxWidth: "900px",
