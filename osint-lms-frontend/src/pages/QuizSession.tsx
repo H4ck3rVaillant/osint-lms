@@ -221,6 +221,7 @@ export default function QuizSession() {
   };
 
   const handleNextQuestion = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
@@ -232,6 +233,7 @@ export default function QuizSession() {
   }, [currentQuestion, questions.length]);
 
   const handleFinishQuiz = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setIsFinished(true);
     
     const percentage = (score / questions.length) * 100;
@@ -276,6 +278,18 @@ export default function QuizSession() {
     if (percentage >= 80) return { emoji: "🥈", name: "Argent", color: "#c0c0c0" };
     if (percentage >= 60) return { emoji: "🥉", name: "Bronze", color: "#cd7f32" };
     return { emoji: "❌", name: "Aucun", color: "#ef4444" };
+  };
+
+  const handleResetQuiz = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setScore(0);
+    setShowExplanation(false);
+    setAnsweredQuestions(new Array(questions.length).fill(false));
+    setGlobalTime(15 * 60);
+    setQuestionTime(30);
+    setIsFinished(false);
   };
 
   if (questions.length === 0) {
@@ -397,7 +411,7 @@ export default function QuizSession() {
             justifyContent: "center"
           }}>
             <button
-              onClick={() => window.location.reload()}
+              onClick={handleResetQuiz}
               style={{
                 background: "transparent",
                 color: colors.accent,
