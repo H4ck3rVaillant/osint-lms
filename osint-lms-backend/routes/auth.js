@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const speakeasy = require("speakeasy");
 const QRCode = require("qrcode");
-const db = require("../services/database");
+const db = require("../services/neonDatabase"); // ✨ MODIFIÉ - Utilise PostgreSQL Neon
 
 const router = express.Router();
 
