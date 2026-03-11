@@ -1,6 +1,6 @@
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 
-// Connexion à Neon PostgreSQL
+// Configuration de la connexion PostgreSQL Neon
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -8,224 +8,208 @@ const pool = new Pool({
   }
 });
 
-pool.on('connect', () => {
-  console.log('✅ Connecté à Neon PostgreSQL');
+// Test de connexion au démarrage
+pool.connect((err, client, release) => {
+  if (err) {
+    console.error("❌ Erreur de connexion à Neon PostgreSQL:", err.stack);
+  } else {
+    console.log("✅ Connecté à la base de données Neon PostgreSQL");
+    release();
+  }
 });
 
-pool.on('error', (err) => {
-  console.error('❌ Erreur de connexion Neon:', err);
-});
-
 /* ====================================
-   GAME PROGRESS
+   MÉTHODES DE LA BASE DE DONNÉES
 ==================================== */
 
 /**
- * Sauvegarder la progression du jeu
+ * Exécuter une requête SQL
  */
-async function saveGameProgress(userId, gameState) {
-  const {
-    xp,
-    level,
-    level_name,
-    streak,
-    longest_streak,
-    last_activity,
-    activity_calendar
-  } = gameState;
-
-  const query = `
-    INSERT INTO game_progress (
-      user_id, xp, level, level_name, streak, longest_streak, 
-      last_activity, activity_calendar, updated_at
-    )
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
-    ON CONFLICT (user_id)
-    DO UPDATE SET
-      xp = EXCLUDED.xp,
-      level = EXCLUDED.level,
-      level_name = EXCLUDED.level_name,
-      streak = EXCLUDED.streak,
-      longest_streak = EXCLUDED.longest_streak,
-      last_activity = EXCLUDED.last_activity,
-      activity_calendar = EXCLUDED.activity_calendar,
-      updated_at = NOW()
-    RETURNING *
-  `;
-
-  const values = [
-    userId,
-    xp,
-    level,
-    level_name,
-    streak,
-    longest_streak,
-    last_activity,
-    JSON.stringify(activity_calendar)
-  ];
-
+async function query(text, params) {
+  const start = Date.now();
   try {
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    const res = await pool.query(text, params);
+    const duration = Date.now() - start;
+    console.log('Executed query', { text, duration, rows: res.rowCount });
+    return res;
   } catch (error) {
-    console.error('Erreur saveGameProgress:', error);
+    console.error('Query error:', error);
     throw error;
   }
 }
 
 /**
- * Charger la progression du jeu
+ * Récupérer un utilisateur par son username
  */
-async function loadGameProgress(userId) {
-  const query = 'SELECT * FROM game_progress WHERE user_id = $1';
+async function getUserByUsername(username) {
+  const result = await query(
+    "SELECT * FROM utilisateurs WHERE username = $1",
+    [username]
+  );
+  return result.rows[0];
+}
+
+/**
+ * Récupérer un utilisateur par son ID
+ */
+async function getUserById(id) {
+  const result = await query(
+    "SELECT * FROM utilisateurs WHERE id = $1",
+    [id]
+  );
+  return result.rows[0];
+}
+
+/**
+ * Créer un nouvel utilisateur
+ */
+async function createUser(userData) {
+  const { username, password, role, totp_secret, must_change_password } = userData;
   
-  try {
-    const result = await pool.query(query, [userId]);
-    if (result.rows.length === 0) return null;
-    
-    const progress = result.rows[0];
-    // Parser le JSON activity_calendar
-    if (progress.activity_calendar) {
-      progress.activity_calendar = JSON.parse(progress.activity_calendar);
-    }
-    return progress;
-  } catch (error) {
-    console.error('Erreur loadGameProgress:', error);
-    throw error;
-  }
-}
-
-/* ====================================
-   USER BADGES
-==================================== */
-
-/**
- * Débloquer un badge
- */
-async function unlockBadge(userId, badgeId) {
-  const query = `
-    INSERT INTO user_badges (user_id, badge_id, unlocked_at)
-    VALUES ($1, $2, NOW())
-    ON CONFLICT (user_id, badge_id) DO NOTHING
-    RETURNING *
-  `;
-
-  try {
-    const result = await pool.query(query, [userId, badgeId]);
-    return result.rows[0];
-  } catch (error) {
-    console.error('Erreur unlockBadge:', error);
-    throw error;
-  }
-}
-
-/**
- * Récupérer tous les badges d'un utilisateur
- */
-async function getUserBadges(userId) {
-  const query = 'SELECT * FROM user_badges WHERE user_id = $1 ORDER BY unlocked_at DESC';
+  const result = await query(
+    `INSERT INTO utilisateurs (username, password, role, totp_secret, must_change_password)
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING id`,
+    [username, password, role || 'user', totp_secret, must_change_password || 0]
+  );
   
-  try {
-    const result = await pool.query(query, [userId]);
-    return result.rows;
-  } catch (error) {
-    console.error('Erreur getUserBadges:', error);
-    throw error;
-  }
-}
-
-/* ====================================
-   SOLVED CHALLENGES
-==================================== */
-
-/**
- * Marquer un challenge comme résolu
- */
-async function solveChallenge(userId, challengeId) {
-  const query = `
-    INSERT INTO solve_challenges (user_id, challenge_id, solved_at)
-    VALUES ($1, $2, NOW())
-    ON CONFLICT (user_id, challenge_id) DO NOTHING
-    RETURNING *
-  `;
-
-  try {
-    const result = await pool.query(query, [userId, challengeId]);
-    return result.rows[0];
-  } catch (error) {
-    console.error('Erreur solveChallenge:', error);
-    throw error;
-  }
+  return result.rows[0].id;
 }
 
 /**
- * Récupérer tous les challenges résolus par un utilisateur
+ * Mettre à jour la date de dernière connexion
  */
-async function getSolvedChallenges(userId) {
-  const query = 'SELECT * FROM solve_challenges WHERE user_id = $1 ORDER BY solved_at DESC';
-  
-  try {
-    const result = await pool.query(query, [userId]);
-    return result.rows;
-  } catch (error) {
-    console.error('Erreur getSolvedChallenges:', error);
-    throw error;
-  }
-}
-
-/* ====================================
-   USER PREFERENCES
-==================================== */
-
-/**
- * Sauvegarder les préférences utilisateur (avatar, etc.)
- */
-async function saveUserPreferences(userId, preferences) {
-  const { avatar } = preferences;
-
-  const query = `
-    INSERT INTO user_preferences (user_id, avatar, updated_at)
-    VALUES ($1, $2, NOW())
-    ON CONFLICT (user_id)
-    DO UPDATE SET
-      avatar = EXCLUDED.avatar,
-      updated_at = NOW()
-    RETURNING *
-  `;
-
-  try {
-    const result = await pool.query(query, [userId, avatar]);
-    return result.rows[0];
-  } catch (error) {
-    console.error('Erreur saveUserPreferences:', error);
-    throw error;
-  }
+async function updateLastLogin(userId) {
+  await query(
+    "UPDATE utilisateurs SET last_login = NOW() WHERE id = $1",
+    [userId]
+  );
 }
 
 /**
- * Charger les préférences utilisateur
+ * Mettre à jour le mot de passe d'un utilisateur
  */
-async function loadUserPreferences(userId) {
-  const query = 'SELECT * FROM user_preferences WHERE user_id = $1';
-  
+async function updatePassword(userId, newPasswordHash) {
+  await query(
+    "UPDATE utilisateurs SET password = $1, must_change_password = 0 WHERE id = $2",
+    [newPasswordHash, userId]
+  );
+}
+
+/**
+ * Mettre à jour le secret TOTP
+ */
+async function updateTotpSecret(userId, newSecret) {
+  await query(
+    "UPDATE utilisateurs SET totp_secret = $1 WHERE id = $2",
+    [newSecret, userId]
+  );
+}
+
+/**
+ * Récupérer tous les utilisateurs (admin only)
+ */
+async function getAllUsers() {
+  const result = await query(
+    "SELECT id, username, role, created_at, last_login FROM utilisateurs"
+  );
+  return result.rows;
+}
+
+/**
+ * Supprimer un utilisateur
+ */
+async function deleteUser(userId) {
+  await query(
+    "DELETE FROM utilisateurs WHERE id = $1",
+    [userId]
+  );
+}
+
+/**
+ * Initialiser les tables si elles n'existent pas
+ */
+async function initTables() {
   try {
-    const result = await pool.query(query, [userId]);
-    return result.rows[0] || null;
+    // Table utilisateurs
+    await query(`
+      CREATE TABLE IF NOT EXISTS utilisateurs (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        role VARCHAR(50) DEFAULT 'user',
+        totp_secret VARCHAR(255),
+        must_change_password INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT NOW(),
+        last_login TIMESTAMP
+      )
+    `);
+    console.log("✅ Table users prête (PostgreSQL)");
+
+    // Table game_progress
+    await query(`
+      CREATE TABLE IF NOT EXISTS game_progress (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES utilisateurs(id) ON DELETE CASCADE,
+        xp INTEGER DEFAULT 0,
+        level INTEGER DEFAULT 0,
+        streak INTEGER DEFAULT 0,
+        longest_streak INTEGER DEFAULT 0,
+        last_activity TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+
+    // Table user_badges
+    await query(`
+      CREATE TABLE IF NOT EXISTS user_badges (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES utilisateurs(id) ON DELETE CASCADE,
+        badge_id VARCHAR(50),
+        unlocked_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE(user_id, badge_id)
+      )
+    `);
+
+    // Table solved_challenges
+    await query(`
+      CREATE TABLE IF NOT EXISTS solved_challenges (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES utilisateurs(id) ON DELETE CASCADE,
+        challenge_id VARCHAR(50),
+        solved_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE(user_id, challenge_id)
+      )
+    `);
+
+    // Table user_preferences
+    await query(`
+      CREATE TABLE IF NOT EXISTS user_preferences (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES utilisateurs(id) ON DELETE CASCADE UNIQUE,
+        avatar VARCHAR(50),
+        updated_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+
   } catch (error) {
-    console.error('Erreur loadUserPreferences:', error);
-    throw error;
+    console.error("❌ Erreur lors de l'initialisation des tables:", error);
   }
 }
 
-// Export
+// Initialiser les tables au démarrage
+initTables();
+
+// Export des méthodes
 module.exports = {
   pool,
-  saveGameProgress,
-  loadGameProgress,
-  unlockBadge,
-  getUserBadges,
-  solveChallenge,
-  getSolvedChallenges,
-  saveUserPreferences,
-  loadUserPreferences
+  query, // ✨ IMPORTANT : Exporter la fonction query
+  getUserByUsername,
+  getUserById,
+  createUser,
+  updateLastLogin,
+  updatePassword,
+  updateTotpSecret,
+  getAllUsers,
+  deleteUser
 };
