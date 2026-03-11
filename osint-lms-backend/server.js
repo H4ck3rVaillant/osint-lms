@@ -2,18 +2,22 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
+const gameRoutes = require("./routes/game"); // ✅ NOUVEAU
 
 const app = express();
 
 /* =========================
-   CORS (OBLIGATOIRE)
+   CORS
 ========================= */
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://www.cyberosint-academy.com",
+      "https://cyberosint-academy.vercel.app"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -33,6 +37,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/game", gameRoutes); // ✅ NOUVEAU - Routes de progression du jeu
 
 /* =========================
    SERVER
