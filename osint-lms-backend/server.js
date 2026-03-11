@@ -1,25 +1,42 @@
-require("dotenv").config();
+require("dotenv").config({ debug: process.env.DEBUG === 'true' });
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
-const gameRoutes = require("./routes/game"); // ✅ NOUVEAU
+const gameRoutes = require("./routes/game");
 
 const app = express();
 
 /* =========================
-   CORS
+   CORS (OBLIGATOIRE)
 ========================= */
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:4173",
+  "https://osint-lms-frontend.onrender.com",
+  "https://www.cyberosint-academy.com",           // ✨ NOUVEAU - Vercel
+  "https://cyberosint-academy.vercel.app",        // ✨ NOUVEAU - Vercel
+  "https://cyberosint-academy-git-main-h4ck3rvaillants-projects.vercel.app" // ✨ NOUVEAU - Vercel preview
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://www.cyberosint-academy.com",
-      "https://cyberosint-academy.vercel.app"
-    ],
+    origin: function (origin, callback) {
+      // Autoriser les requêtes sans origin (comme curl, Postman)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        console.log(`❌ CORS bloqué pour : ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
   })
 );
 
@@ -32,17 +49,25 @@ app.use(express.json());
    ROUTES
 ========================= */
 app.get("/", (req, res) => {
-  res.json({ message: "OSINT-LMS backend opérationnel" });
+  res.json({ 
+    message: "OSINT-LMS backend opérationnel",
+    version: "2.0.0",
+    features: ["auth", "admin", "game-persistence"]
+  });
 });
 
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
-app.use("/game", gameRoutes); // ✅ NOUVEAU - Routes de progression du jeu
+app.use("/game", gameRoutes); // ✨ NOUVEAU - Routes pour la persistance
 
 /* =========================
    SERVER
 ========================= */
 const PORT = process.env.PORT || 3000;
+const ENV = process.env.NODE_ENV || "development";
+
 app.listen(PORT, () => {
-  console.log(`✔ Serveur lancé sur http://localhost:${PORT}`);
+  console.log(`✅ Serveur lancé sur le port ${PORT}`);
+  console.log(`   Environnement : ${ENV}`);
+  console.log(`   CORS autorisés : ${allowedOrigins.join(', ')}`);
 });
