@@ -1,181 +1,167 @@
-const express = require('express');
-const authMiddleware = require('../middlewares/authMiddleware');
-const db = require('../services/neonDatabase');
-
+const express = require("express");
 const router = express.Router();
+const db = require("../services/neonDatabase");
+const authMiddleware = require("../middlewares/authMiddleware");
 
-// Toutes les routes nécessitent une authentification
-router.use(authMiddleware);
+/* ====================================
+   GET /game/health (PUBLIC)
+   Vérifier la connexion à la base de données
+==================================== */
+router.get("/health", async (req, res) => {
+  try {
+    // Test simple de connexion
+    await db.query("SELECT 1");
+    res.json({ 
+      status: "ok", 
+      database: "connected",
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error("Health check error:", error);
+    res.status(500).json({ 
+      status: "error", 
+      database: "disconnected",
+      error: error.message 
+    });
+  }
+});
 
 /* ====================================
    POST /game/save
-   Sauvegarder la progression complète
+   Sauvegarder la progression du joueur
 ==================================== */
-router.post('/save', async (req, res) => {
+router.post("/save", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { gameState, badges, solvedChallenges } = req.body;
+    const { xp, level, streak, longestStreak, lastActivity, solvedChallenges } = req.body;
 
-    // 1. Sauvegarder la progression du jeu
-    if (gameState) {
-      await db.saveGameProgress(userId, {
-        xp: gameState.xp || 0,
-        level: gameState.level || 0,
-        level_name: gameState.levelName || 'Newbie',
-        streak: gameState.streak || 0,
-        longest_streak: gameState.longestStreak || 0,
-        last_activity: gameState.lastActivity || new Date().toISOString(),
-        activity_calendar: gameState.activityCalendar || {}
-      });
+    // Vérifier si l'utilisateur a déjà une progression
+    const existing = await db.query(
+      "SELECT * FROM game_progress WHERE user_id = $1",
+      [userId]
+    );
+
+    if (existing.rows.length > 0) {
+      // Mettre à jour
+      await db.query(
+        `UPDATE game_progress 
+         SET xp = $1, level = $2, streak = $3, longest_streak = $4, 
+             last_activity = $5, updated_at = NOW()
+         WHERE user_id = $6`,
+        [xp, level, streak, longestStreak, lastActivity, userId]
+      );
+    } else {
+      // Créer
+      await db.query(
+        `INSERT INTO game_progress (user_id, xp, level, streak, longest_streak, last_activity)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [userId, xp, level, streak, longestStreak, lastActivity]
+      );
     }
 
-    // 2. Sauvegarder les badges débloqués
-    if (badges && Array.isArray(badges)) {
-      for (const badge of badges) {
-        if (badge.unlocked) {
-          await db.unlockBadge(userId, badge.id);
+    // Sauvegarder les challenges résolus
+    if (solvedChallenges && solvedChallenges.length > 0) {
+      for (const challengeId of solvedChallenges) {
+        // Vérifier si déjà résolu
+        const solved = await db.query(
+          "SELECT * FROM solved_challenges WHERE user_id = $1 AND challenge_id = $2",
+          [userId, challengeId]
+        );
+
+        if (solved.rows.length === 0) {
+          await db.query(
+            "INSERT INTO solved_challenges (user_id, challenge_id) VALUES ($1, $2)",
+            [userId, challengeId]
+          );
         }
       }
     }
 
-    // 3. Sauvegarder les challenges résolus
-    if (solvedChallenges && Array.isArray(solvedChallenges)) {
-      for (const challengeId of solvedChallenges) {
-        await db.solveChallenge(userId, challengeId);
-      }
-    }
-
-    res.json({ message: 'Progression sauvegardée avec succès' });
+    res.json({ success: true, message: "Progression sauvegardée" });
   } catch (error) {
-    console.error('Erreur /game/save:', error);
-    res.status(500).json({ message: 'Erreur lors de la sauvegarde' });
+    console.error("Erreur sauvegarde progression:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
 
 /* ====================================
    GET /game/load
-   Charger la progression complète
+   Charger la progression du joueur
 ==================================== */
-router.get('/load', async (req, res) => {
+router.get("/load", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // 1. Charger la progression du jeu
-    const gameProgress = await db.loadGameProgress(userId);
+    // Charger la progression
+    const progress = await db.query(
+      "SELECT * FROM game_progress WHERE user_id = $1",
+      [userId]
+    );
 
-    // 2. Charger les badges
-    const badges = await db.getUserBadges(userId);
+    // Charger les challenges résolus
+    const challenges = await db.query(
+      "SELECT challenge_id FROM solved_challenges WHERE user_id = $1",
+      [userId]
+    );
 
-    // 3. Charger les challenges résolus
-    const solvedChallenges = await db.getSolvedChallenges(userId);
+    // Charger les badges
+    const badges = await db.query(
+      "SELECT badge_id, unlocked_at FROM user_badges WHERE user_id = $1",
+      [userId]
+    );
+
+    // Charger les préférences
+    const prefs = await db.query(
+      "SELECT avatar FROM user_preferences WHERE user_id = $1",
+      [userId]
+    );
 
     res.json({
-      gameState: gameProgress ? {
-        xp: gameProgress.xp,
-        level: gameProgress.level,
-        levelName: gameProgress.level_name,
-        streak: gameProgress.streak,
-        longestStreak: gameProgress.longest_streak,
-        lastActivity: gameProgress.last_activity,
-        activityCalendar: gameProgress.activity_calendar || {},
-        rank: 999 // Calculé côté client ou via une autre query
-      } : null,
-      badges: badges.map(b => b.badge_id),
-      solvedChallenges: solvedChallenges.map(c => c.challenge_id)
+      success: true,
+      data: {
+        progress: progress.rows[0] || null,
+        solvedChallenges: challenges.rows.map(r => r.challenge_id),
+        badges: badges.rows.map(r => ({ id: r.badge_id, unlockedAt: r.unlocked_at })),
+        preferences: prefs.rows[0] || null
+      }
     });
   } catch (error) {
-    console.error('Erreur /game/load:', error);
-    res.status(500).json({ message: 'Erreur lors du chargement' });
+    console.error("Erreur chargement progression:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
 
 /* ====================================
-   POST /game/unlock-badge
-   Débloquer un badge
+   POST /game/preferences
+   Sauvegarder les préférences (avatar, etc.)
 ==================================== */
-router.post('/unlock-badge', async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { badgeId } = req.body;
-
-    if (!badgeId) {
-      return res.status(400).json({ message: 'badgeId requis' });
-    }
-
-    const badge = await db.unlockBadge(userId, badgeId);
-    
-    res.json({ 
-      message: 'Badge débloqué',
-      badge 
-    });
-  } catch (error) {
-    console.error('Erreur /game/unlock-badge:', error);
-    res.status(500).json({ message: 'Erreur lors du déblocage du badge' });
-  }
-});
-
-/* ====================================
-   POST /game/solve-challenge
-   Marquer un challenge comme résolu
-==================================== */
-router.post('/solve-challenge', async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { challengeId } = req.body;
-
-    if (!challengeId) {
-      return res.status(400).json({ message: 'challengeId requis' });
-    }
-
-    const challenge = await db.solveChallenge(userId, challengeId);
-    
-    res.json({ 
-      message: 'Challenge résolu',
-      challenge 
-    });
-  } catch (error) {
-    console.error('Erreur /game/solve-challenge:', error);
-    res.status(500).json({ message: 'Erreur lors de la résolution du challenge' });
-  }
-});
-
-/* ====================================
-   POST /game/preferences/save
-   Sauvegarder les préférences (avatar)
-==================================== */
-router.post('/preferences/save', async (req, res) => {
+router.post("/preferences", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
     const { avatar } = req.body;
 
-    const preferences = await db.saveUserPreferences(userId, { avatar });
-    
-    res.json({ 
-      message: 'Préférences sauvegardées',
-      preferences 
-    });
-  } catch (error) {
-    console.error('Erreur /game/preferences/save:', error);
-    res.status(500).json({ message: 'Erreur lors de la sauvegarde des préférences' });
-  }
-});
+    // Vérifier si existe
+    const existing = await db.query(
+      "SELECT * FROM user_preferences WHERE user_id = $1",
+      [userId]
+    );
 
-/* ====================================
-   GET /game/preferences/load
-   Charger les préférences (avatar)
-==================================== */
-router.get('/preferences/load', async (req, res) => {
-  try {
-    const userId = req.user.id;
+    if (existing.rows.length > 0) {
+      await db.query(
+        "UPDATE user_preferences SET avatar = $1, updated_at = NOW() WHERE user_id = $2",
+        [avatar, userId]
+      );
+    } else {
+      await db.query(
+        "INSERT INTO user_preferences (user_id, avatar) VALUES ($1, $2)",
+        [userId, avatar]
+      );
+    }
 
-    const preferences = await db.loadUserPreferences(userId);
-    
-    res.json({ 
-      preferences: preferences || { avatar: 'hacker' }
-    });
+    res.json({ success: true, message: "Préférences sauvegardées" });
   } catch (error) {
-    console.error('Erreur /game/preferences/load:', error);
-    res.status(500).json({ message: 'Erreur lors du chargement des préférences' });
+    console.error("Erreur sauvegarde préférences:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
 
