@@ -17,7 +17,7 @@ router.get("/health", async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error("Health check error:", error);
+    console.error("❌ Health check error:", error);
     res.status(500).json({ 
       status: "error", 
       database: "disconnected",
@@ -35,6 +35,11 @@ router.post("/save", authMiddleware, async (req, res) => {
     const userId = req.user.id;
     const { xp, level, streak, longestStreak, lastActivity, solvedChallenges } = req.body;
 
+    console.log("📊 Sauvegarde pour user", userId, "- XP:", xp, "Level:", level, "Streak:", streak);
+
+    // Utiliser NOW() si lastActivity n'est pas fourni
+    const activity = lastActivity || new Date().toISOString();
+
     // Vérifier si l'utilisateur a déjà une progression
     const existing = await db.query(
       "SELECT * FROM game_progress WHERE user_id = $1",
@@ -48,15 +53,17 @@ router.post("/save", authMiddleware, async (req, res) => {
          SET xp = $1, level = $2, streak = $3, longest_streak = $4, 
              last_activity = $5, updated_at = NOW()
          WHERE user_id = $6`,
-        [xp, level, streak, longestStreak, lastActivity, userId]
+        [xp || 0, level || 0, streak || 0, longestStreak || 0, activity, userId]
       );
+      console.log("✅ Progression mise à jour pour user", userId);
     } else {
       // Créer
       await db.query(
         `INSERT INTO game_progress (user_id, xp, level, streak, longest_streak, last_activity)
          VALUES ($1, $2, $3, $4, $5, $6)`,
-        [userId, xp, level, streak, longestStreak, lastActivity]
+        [userId, xp || 0, level || 0, streak || 0, longestStreak || 0, activity]
       );
+      console.log("✅ Nouvelle progression créée pour user", userId);
     }
 
     // Sauvegarder les challenges résolus
@@ -73,14 +80,16 @@ router.post("/save", authMiddleware, async (req, res) => {
             "INSERT INTO solved_challenges (user_id, challenge_id) VALUES ($1, $2)",
             [userId, challengeId]
           );
+          console.log("✅ Challenge", challengeId, "sauvegardé pour user", userId);
         }
       }
     }
 
     res.json({ success: true, message: "Progression sauvegardée" });
   } catch (error) {
-    console.error("Erreur sauvegarde progression:", error);
-    res.status(500).json({ success: false, message: "Erreur serveur" });
+    console.error("❌ Erreur sauvegarde progression:", error);
+    console.error("Stack:", error.stack);
+    res.status(500).json({ success: false, message: "Erreur serveur", error: error.message });
   }
 });
 
@@ -91,6 +100,8 @@ router.post("/save", authMiddleware, async (req, res) => {
 router.get("/load", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
+
+    console.log("📥 Chargement progression pour user", userId);
 
     // Charger la progression
     const progress = await db.query(
@@ -116,6 +127,8 @@ router.get("/load", authMiddleware, async (req, res) => {
       [userId]
     );
 
+    console.log("✅ Progression chargée:", progress.rows[0] ? "trouvée" : "vide");
+
     res.json({
       success: true,
       data: {
@@ -126,8 +139,9 @@ router.get("/load", authMiddleware, async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Erreur chargement progression:", error);
-    res.status(500).json({ success: false, message: "Erreur serveur" });
+    console.error("❌ Erreur chargement progression:", error);
+    console.error("Stack:", error.stack);
+    res.status(500).json({ success: false, message: "Erreur serveur", error: error.message });
   }
 });
 
@@ -140,6 +154,8 @@ router.post("/preferences", authMiddleware, async (req, res) => {
     const userId = req.user.id;
     const { avatar } = req.body;
 
+    console.log("💾 Sauvegarde préférences pour user", userId, "- Avatar:", avatar);
+
     // Vérifier si existe
     const existing = await db.query(
       "SELECT * FROM user_preferences WHERE user_id = $1",
@@ -151,17 +167,20 @@ router.post("/preferences", authMiddleware, async (req, res) => {
         "UPDATE user_preferences SET avatar = $1, updated_at = NOW() WHERE user_id = $2",
         [avatar, userId]
       );
+      console.log("✅ Préférences mises à jour");
     } else {
       await db.query(
         "INSERT INTO user_preferences (user_id, avatar) VALUES ($1, $2)",
         [userId, avatar]
       );
+      console.log("✅ Nouvelles préférences créées");
     }
 
     res.json({ success: true, message: "Préférences sauvegardées" });
   } catch (error) {
-    console.error("Erreur sauvegarde préférences:", error);
-    res.status(500).json({ success: false, message: "Erreur serveur" });
+    console.error("❌ Erreur sauvegarde préférences:", error);
+    console.error("Stack:", error.stack);
+    res.status(500).json({ success: false, message: "Erreur serveur", error: error.message });
   }
 });
 
