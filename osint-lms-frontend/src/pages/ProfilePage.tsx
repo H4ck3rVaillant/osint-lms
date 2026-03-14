@@ -74,9 +74,10 @@ export default function ProfilePage() {
     reader.readAsDataURL(file);
   };
 
-  const handleSaveAvatar = () => {
+  const handleSaveAvatar = async () => {
     if (!user) return;
 
+    // 1. Sauvegarder en localStorage (affichage immédiat)
     if (avatarType === "emoji") {
       localStorage.setItem(`avatar_type_${user.username}`, "emoji");
       localStorage.setItem(`avatar_${user.username}`, selectedEmoji);
@@ -87,10 +88,36 @@ export default function ProfilePage() {
       localStorage.setItem(`avatar_${user.username}`, "custom");
     }
 
-    setAvatarSuccess("✅ Avatar mis à jour avec succès !");
+    // 2. Sauvegarder dans l'API (persistance)
+    try {
+      const token = localStorage.getItem("token");
+      const avatarData = avatarType === "emoji" ? selectedEmoji : customImage;
+      
+      const response = await fetch(`${BACKEND_URL}/game/preferences`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          avatar: avatarData
+        })
+      });
+
+      if (response.ok) {
+        console.log("💾 Avatar sauvegardé dans l'API");
+        setAvatarSuccess("✅ Avatar mis à jour avec succès !");
+      } else {
+        console.error("❌ Erreur sauvegarde avatar API:", response.status);
+        setAvatarSuccess("⚠️ Avatar sauvegardé localement uniquement");
+      }
+    } catch (error) {
+      console.error("❌ Erreur réseau avatar:", error);
+      setAvatarSuccess("⚠️ Avatar sauvegardé localement uniquement");
+    }
+
     setTimeout(() => {
       setAvatarSuccess("");
-      // ✅ Redirection vers dashboard au lieu de reload qui déconnecte
       navigate("/dashboard");
     }, 1500);
   };
