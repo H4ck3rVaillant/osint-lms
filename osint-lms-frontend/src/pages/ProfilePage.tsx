@@ -88,32 +88,36 @@ export default function ProfilePage() {
       localStorage.setItem(`avatar_${user.username}`, "custom");
     }
 
-    // 2. Sauvegarder dans l'API (persistance)
-    try {
-      const token = localStorage.getItem("token");
-      const avatarData = avatarType === "emoji" ? selectedEmoji : customImage;
-      
-      const response = await fetch(`${BACKEND_URL}/game/preferences`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          avatar: avatarData
-        })
-      });
+    // 2. 🔥 Sauvegarder UNIQUEMENT les emojis dans l'API (pas les images custom trop lourdes)
+    if (avatarType === "emoji") {
+      try {
+        const token = localStorage.getItem("token");
+        
+        const response = await fetch(`${BACKEND_URL}/game/preferences`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            avatar: selectedEmoji
+          })
+        });
 
-      if (response.ok) {
-        console.log("💾 Avatar sauvegardé dans l'API");
-        setAvatarSuccess("✅ Avatar mis à jour avec succès !");
-      } else {
-        console.error("❌ Erreur sauvegarde avatar API:", response.status);
-        setAvatarSuccess("⚠️ Avatar sauvegardé localement uniquement");
+        if (response.ok) {
+          console.log("✅ Avatar emoji sauvegardé dans l'API");
+          setAvatarSuccess("✅ Avatar emoji sauvegardé !");
+        } else {
+          console.error("❌ Erreur sauvegarde avatar API:", response.status);
+          setAvatarSuccess("✅ Avatar emoji sauvegardé localement !");
+        }
+      } catch (error) {
+        console.error("❌ Erreur réseau avatar:", error);
+        setAvatarSuccess("✅ Avatar emoji sauvegardé localement !");
       }
-    } catch (error) {
-      console.error("❌ Erreur réseau avatar:", error);
-      setAvatarSuccess("⚠️ Avatar sauvegardé localement uniquement");
+    } else {
+      // Image custom → localStorage uniquement (trop lourd pour l'API)
+      setAvatarSuccess("✅ Avatar image sauvegardé localement !");
     }
 
     setTimeout(() => {
