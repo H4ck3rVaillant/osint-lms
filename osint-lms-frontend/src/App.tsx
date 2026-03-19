@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
+import MessagesPage from "./pages/MessagesPage";
 import ContactPage from "./pages/ContactPage";
 import Dashboard from "./pages/Dashboard";
 import ParcoursHub from "./pages/ParcoursHub";
@@ -119,6 +120,7 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Protected><Layout><Dashboard /></Layout></Protected>} />
         <Route path="/profil" element={<Protected><Layout><ProfilePage /></Layout></Protected>} />
+        <Route path="/messages" element={<Protected><Layout><MessagesPage /></Layout></Protected>} />
         <Route path="/contact" element={<Protected><Layout><ContactPage /></Layout></Protected>} />
         <Route path="/parcours" element={<Protected><Layout><ParcoursHub /></Layout></Protected>} />
         <Route path="/parcours-debutant" element={<Protected><Layout><ParcoursDebutant /></Layout></Protected>} />
