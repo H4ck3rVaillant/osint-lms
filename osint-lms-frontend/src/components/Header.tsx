@@ -651,6 +651,25 @@ export default function Header() {
                   📧 Contact Admin
                 </Link>
 
+                <Link to="/messages" onClick={() => setShowUserMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  💬 Messages
+                </Link>
+
                 {/* Panel Admin - Visible uniquement pour Cyber_Admin */}
                 {user?.username === "Cyber_Admin" && (
                   <>
