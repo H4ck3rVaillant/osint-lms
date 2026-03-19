@@ -63,7 +63,7 @@ app.use("/messages", messagesRoutes);
 /* =========================
    SERVER
 ========================= */
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 const ENV = process.env.NODE_ENV || "development";
 
 app.listen(PORT, () => {

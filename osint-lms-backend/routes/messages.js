@@ -105,14 +105,10 @@ router.put("/:id/read", authMiddleware, async (req, res) => {
 
 /* ====================================
    GET /messages/users
-   Récupérer la liste des utilisateurs (pour admin)
+   Récupérer la liste des utilisateurs (pour tous)
 ==================================== */
 router.get("/users", authMiddleware, async (req, res) => {
   try {
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ success: false, message: "Accès interdit" });
-    }
-
     const users = await db.query(
       "SELECT id, username, role, created_at FROM utilisateurs ORDER BY created_at DESC"
     );
