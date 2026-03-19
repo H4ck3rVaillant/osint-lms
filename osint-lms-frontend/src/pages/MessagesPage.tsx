@@ -36,9 +36,7 @@ export default function MessagesPage() {
 
   // Charger les utilisateurs (pour admin)
   useEffect(() => {
-    if (user?.role === "admin") {
-      loadUsers();
-    }
+    loadUsers();
     loadMessages();
   }, [user]);
 
@@ -197,23 +195,21 @@ export default function MessagesPage() {
 
         {/* Onglets */}
         <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-          {user.role === "admin" && (
-            <button
-              onClick={() => setActiveTab("send")}
-              style={{
-                flex: 1,
-                padding: "12px",
-                background: activeTab === "send" ? "#00ff9c" : "transparent",
-                color: activeTab === "send" ? "#0b0f1a" : "#9ca3af",
-                border: `2px solid ${activeTab === "send" ? "#00ff9c" : "#2a3f3f"}`,
-                borderRadius: "8px",
-                fontWeight: "bold",
-                cursor: "pointer"
-              }}
-            >
-              ✉️ Envoyer
-            </button>
-          )}
+          <button
+            onClick={() => setActiveTab("send")}
+            style={{
+              flex: 1,
+              padding: "12px",
+              background: activeTab === "send" ? "#00ff9c" : "transparent",
+              color: activeTab === "send" ? "#0b0f1a" : "#9ca3af",
+              border: `2px solid ${activeTab === "send" ? "#00ff9c" : "#2a3f3f"}`,
+              borderRadius: "8px",
+              fontWeight: "bold",
+              cursor: "pointer"
+            }}
+          >
+            ✉️ Envoyer
+          </button>
           <button
             onClick={() => setActiveTab("received")}
             style={{
@@ -301,8 +297,8 @@ export default function MessagesPage() {
           padding: "30px"
         }}>
           
-          {/* Onglet Envoyer (admin uniquement) */}
-          {activeTab === "send" && user.role === "admin" && (
+          {/* Onglet Envoyer */}
+          {activeTab === "send" && (
             <div>
               <h2 style={{ color: "#e5e7eb", marginBottom: "20px" }}>Envoyer un message</h2>
               
