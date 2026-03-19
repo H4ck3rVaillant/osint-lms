@@ -2,11 +2,10 @@ require("dotenv").config({ debug: process.env.DEBUG === 'true' });
 
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
 const gameRoutes = require("./routes/game");
-const messagesRoutes = require("./routes/messages"); // ✨ NOUVEAU - Messagerie
+const messagesRoutes = require("./routes/messages");
 
 const app = express();
 
@@ -17,15 +16,14 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:4173",
   "https://osint-lms-frontend.onrender.com",
-  "https://www.cyberosint-academy.com",           // ✨ NOUVEAU - Vercel
-  "https://cyberosint-academy.vercel.app",        // ✨ NOUVEAU - Vercel
-  "https://cyberosint-academy-git-main-h4ck3rvaillants-projects.vercel.app" // ✨ NOUVEAU - Vercel preview
+  "https://www.cyberosint-academy.com",
+  "https://cyberosint-academy.vercel.app",
+  "https://cyberosint-academy-git-main-h4ck3rvaillants-projects.vercel.app"
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Autoriser les requêtes sans origin (comme curl, Postman)
       if (!origin) return callback(null, true);
       
       if (allowedOrigins.indexOf(origin) !== -1) {
@@ -53,14 +51,14 @@ app.get("/", (req, res) => {
   res.json({ 
     message: "OSINT-LMS backend opérationnel",
     version: "2.0.0",
-    features: ["auth", "admin", "game-persistence"]
+    features: ["auth", "admin", "game-persistence", "messaging"]
   });
 });
 
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
-app.use("/game", gameRoutes); // ✨ Routes pour la persistance
-app.use("/messages", messagesRoutes); // ✨ NOUVEAU - Messagerie
+app.use("/game", gameRoutes);
+app.use("/messages", messagesRoutes);
 
 /* =========================
    SERVER
