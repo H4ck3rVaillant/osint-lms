@@ -8,6 +8,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
+  token: string | null; // ✨ AJOUTÉ pour GameContext
   login: (username: string, password: string) => Promise<{ success: boolean; tempToken?: string; error?: string }>;
   verify2FA: (tempToken: string, totpCode: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
@@ -18,12 +19,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null); // ✨ AJOUTÉ
   const [isLoading, setIsLoading] = useState(true);
   const [showWarning, setShowWarning] = useState(false);
   const [countdown, setCountdown] = useState(60);
 
   // Backend URL - CORRIGÉ POUR PRODUCTION
-  const BACKEND_URL = import.meta.env.VITE_API_URL || "/api";
+  const BACKEND_URL = import.meta.env.VITE_API_URL || "https://osint-lms-backend.onrender.com"; // ✨ MODIFIÉ le fallback
 
   // Configuration de l'auto-logout
   const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes
@@ -33,6 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("token");
     localStorage.removeItem("lastActivity");
     setUser(null);
+    setToken(null); // ✨ AJOUTÉ
     setShowWarning(false);
   }, []);
 
@@ -106,12 +109,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // ✅ FIX F5 + INACTIVITÉ: Restaurer la session ET vérifier l'inactivité
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("token");
     const lastActivity = localStorage.getItem("lastActivity");
     
-    if (token) {
+    if (storedToken) {
       try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
+        const payload = JSON.parse(atob(storedToken.split(".")[1]));
         const isExpired = payload.exp && Date.now() / 1000 > payload.exp;
         
         // ✅ Vérifier aussi si 15 min d'inactivité sont écoulées
@@ -136,6 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             username: payload.username,
             role: payload.role || "user"
           });
+          setToken(storedToken); // ✨ AJOUTÉ
           // ✅ Mettre à jour le timestamp car l'utilisateur vient de charger la page
           updateLastActivity();
         } else {
@@ -192,6 +196,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (data.token && data.user) {
         localStorage.setItem("token", data.token);
         setUser(data.user);
+        setToken(data.token); // ✨ AJOUTÉ
         // ✅ Initialiser le timestamp de dernière activité à la connexion
         updateLastActivity();
         return { success: true };
@@ -205,7 +210,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, verify2FA, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, token, login, verify2FA, logout, isLoading }}>
       {children}
       
       {/* ⚠️ POPUP D'AVERTISSEMENT INACTIVITÉ */}
