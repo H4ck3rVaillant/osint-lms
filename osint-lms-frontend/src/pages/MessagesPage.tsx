@@ -23,7 +23,7 @@ interface Message {
 export default function MessagesPage() {
   const { user, token } = useAuth();
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || "https://osint-lms-backend.onrender.com";
+  const API_URL = "https://osint-lms-backend.onrender.com";
 
   const [users, setUsers] = useState<User[]>([]);
   const [receivedMessages, setReceivedMessages] = useState<Message[]>([]);
