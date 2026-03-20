@@ -152,9 +152,9 @@ router.get("/load", authMiddleware, async (req, res) => {
 router.post("/preferences", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { avatar } = req.body;
+    const { avatar, avatarType } = req.body;
 
-    console.log("💾 Sauvegarde préférences pour user", userId, "- Avatar:", avatar);
+    console.log("💾 Sauvegarde préférences pour user", userId, "- Avatar:", avatar, "Type:", avatarType);
 
     // Vérifier si existe
     const existing = await db.query(
@@ -165,13 +165,13 @@ router.post("/preferences", authMiddleware, async (req, res) => {
     if (existing.rows.length > 0) {
       await db.query(
         "UPDATE user_preferences SET avatar = $1, updated_at = NOW() WHERE user_id = $2",
-        [avatar, userId]
+        [JSON.stringify({ avatar, avatarType }), userId]
       );
       console.log("✅ Préférences mises à jour");
     } else {
       await db.query(
         "INSERT INTO user_preferences (user_id, avatar) VALUES ($1, $2)",
-        [userId, avatar]
+        [userId, JSON.stringify({ avatar, avatarType })]
       );
       console.log("✅ Nouvelles préférences créées");
     }
@@ -181,6 +181,49 @@ router.post("/preferences", authMiddleware, async (req, res) => {
     console.error("❌ Erreur sauvegarde préférences:", error);
     console.error("Stack:", error.stack);
     res.status(500).json({ success: false, message: "Erreur serveur", error: error.message });
+  }
+});
+
+/* ====================================
+   GET /game/leaderboard
+   Récupérer le classement des joueurs
+==================================== */
+router.get("/leaderboard", authMiddleware, async (req, res) => {
+  try {
+    const filter = req.query.filter || 'all'; // all, week, month
+    
+    let dateFilter = '';
+    if (filter === 'week') {
+      dateFilter = "AND gp.last_activity >= NOW() - INTERVAL '7 days'";
+    } else if (filter === 'month') {
+      dateFilter = "AND gp.last_activity >= NOW() - INTERVAL '30 days'";
+    }
+    
+    // Récupérer tous les utilisateurs avec leur progression (admin inclus)
+    const result = await db.query(`
+      SELECT 
+        u.id,
+        u.username,
+        COALESCE(gp.xp, 0) as xp,
+        COALESCE(gp.level, 0) as level,
+        COALESCE(gp.streak, 0) as streak,
+        COALESCE(gp.longest_streak, 0) as longest_streak,
+        gp.last_activity,
+        (SELECT COUNT(*) FROM solved_challenges WHERE user_id = u.id) as solved_count
+      FROM utilisateurs u
+      LEFT JOIN game_progress gp ON u.id = gp.user_id
+      WHERE 1=1 ${dateFilter}
+      ORDER BY COALESCE(gp.xp, 0) DESC
+    `);
+
+    res.json({ 
+      success: true, 
+      players: result.rows,
+      filter: filter
+    });
+  } catch (error) {
+    console.error("❌ Erreur récupération leaderboard:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
 
