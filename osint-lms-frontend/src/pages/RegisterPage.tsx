@@ -48,7 +48,7 @@ function getPasswordStrength(password: string): PasswordStrength {
 ===================================================== */
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const BACKEND_URL = "https://osint-lms-backend.onrender.com";
 
   const [step, setStep]             = useState<Step>("avatar");
   const [form, setForm]             = useState<FormData>({
