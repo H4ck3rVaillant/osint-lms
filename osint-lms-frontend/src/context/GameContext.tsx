@@ -276,17 +276,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
           saveToStorage(STORAGE_KEY, apiState);
           setIsLoadedFromAPI(true); // 🔥 ACTIVER la sauvegarde API maintenant
           
-          // 🔥 Charger l'avatar emoji depuis l'API (pas les images custom)
+          // 🔥 Charger l'avatar emoji depuis l'API UNIQUEMENT si pas d'avatar image custom
           if (data.preferences && data.preferences.avatar && user) {
-            const avatarData = data.preferences.avatar;
-            // Uniquement les emojis (pas les images custom)
-            if (!avatarData.startsWith('image:') && !avatarData.startsWith('data:')) {
-              localStorage.setItem(`avatar_type_${user.username}`, "emoji");
-              localStorage.setItem(`avatar_${user.username}`, avatarData);
-              localStorage.removeItem(`avatar_image_${user.username}`);
-              console.log("✅ Avatar emoji chargé depuis l'API");
-            }
+          const currentAvatarType = localStorage.getItem(`avatar_type_${user.username}`);
+          // Ne pas écraser si l'utilisateur a une image custom
+          if (currentAvatarType !== "image") {
+          const avatarData = data.preferences.avatar;
+          if (!avatarData.startsWith('image:') && !avatarData.startsWith('data:')) {
+          localStorage.setItem(`avatar_type_${user.username}`, "emoji");
+          localStorage.setItem(`avatar_${user.username}`, avatarData);
+          console.log("✅ Avatar emoji chargé depuis l'API");
           }
+         }
+        }
           
           console.log("✅ Progression chargée depuis l'API");
         } else {
