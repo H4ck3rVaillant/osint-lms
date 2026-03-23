@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useThemeColors } from "../context/ThemeContext";
 import { useGame } from "../context/GameContext";
+import { useAuth } from "../auth/AuthContext";
 
 interface Challenge {
   id: number;
@@ -109,15 +110,32 @@ export default function ChallengesPage() {
     }
   };
 
-  const handleReset = () => {
-    localStorage.removeItem("challenges_solved");
-    setSolvedChallenges([]);
-    setUserAnswer("");
-    setFeedback({ type: "", message: "" });
-    setShowHint(false);
-    setShowSolution(false);
-    setShowResetModal(false);
-  };
+const handleReset = async () => {
+  const { token } = useAuth();
+  
+  try {
+
+    const response = await fetch("https://osint-lms-backend.onrender.com/game/reset-all-challenges", {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      localStorage.removeItem("challenges_solved");
+      setSolvedChallenges([]);
+      setUserAnswer("");
+      setFeedback({ type: "", message: "" });
+      setShowHint(false);
+      setShowSolution(false);
+      setShowResetModal(false);
+      window.location.reload(); // Rafraîchir pour recharger depuis l'API
+    }
+  } catch (error) {
+    console.error("Erreur reset:", error);
+  }
+};
 
   const difficultyColors = { facile: "#10b981", moyen: "#f59e0b", difficile: "#ef4444" };
 
