@@ -227,4 +227,32 @@ router.get("/leaderboard", authMiddleware, async (req, res) => {
   }
 });
 
+/* ====================================
+   DELETE /game/reset-all-challenges
+   Réinitialiser TOUS les challenges
+==================================== */
+router.delete("/reset-all-challenges", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Supprimer tous les challenges
+    await db.query(
+      "DELETE FROM solved_challenges WHERE user_id = $1",
+      [userId]
+    );
+
+    // Remettre XP à 0
+    await db.query(
+      "UPDATE game_progress SET xp = 0, level = 0, updated_at = NOW() WHERE user_id = $1",
+      [userId]
+    );
+
+    console.log("✅ Tous les challenges réinitialisés pour user", userId);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("❌ Erreur reset challenges:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+});
+
 module.exports = router;
