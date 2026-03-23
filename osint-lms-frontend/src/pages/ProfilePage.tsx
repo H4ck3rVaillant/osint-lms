@@ -24,7 +24,7 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const BACKEND_URL = "https://osint-lms-backend.onrender.com";
 
   // Avatar actuel (emoji OU image custom)
   const currentAvatarType = localStorage.getItem(`avatar_type_${user?.username}`) || "emoji";
