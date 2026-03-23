@@ -165,13 +165,13 @@ router.post("/preferences", authMiddleware, async (req, res) => {
     if (existing.rows.length > 0) {
       await db.query(
         "UPDATE user_preferences SET avatar = $1, updated_at = NOW() WHERE user_id = $2",
-        [JSON.stringify({ avatar, avatarType }), userId]
+        [avatar, userId]
       );
       console.log("✅ Préférences mises à jour");
     } else {
       await db.query(
         "INSERT INTO user_preferences (user_id, avatar) VALUES ($1, $2)",
-        [userId, JSON.stringify({ avatar, avatarType })]
+        [userId, avatar]
       );
       console.log("✅ Nouvelles préférences créées");
     }
