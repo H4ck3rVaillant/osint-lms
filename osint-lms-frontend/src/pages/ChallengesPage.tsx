@@ -29,6 +29,7 @@ const CHALLENGES: Challenge[] = [
   { id: 10, title: "Bitcoin Tracking", difficulty: "difficile", category: "Crypto", description: "Une transaction Bitcoin suspecte doit être tracée.", question: "Quel explorateur blockchain permet d'analyser les transactions Bitcoin ?", answers: ["blockchain.com", "blockchair", "blockchain explorer"], hint: "Le nom contient le mot 'blockchain'", solution: "Blockchain.com ou Blockchair.com permettent de tracer les transactions Bitcoin publiquement.", points: 50 },
 ];
 
+
 export default function ChallengesPage() {
   const colors = useThemeColors();
   const { unlockBadge, addXP } = useGame();
@@ -114,7 +115,6 @@ const handleReset = async () => {
   const { token } = useAuth();
   
   try {
-
     const response = await fetch("https://osint-lms-backend.onrender.com/game/reset-all-challenges", {
       method: "DELETE",
       headers: {
@@ -130,7 +130,9 @@ const handleReset = async () => {
       setShowHint(false);
       setShowSolution(false);
       setShowResetModal(false);
-      window.location.reload(); // Rafraîchir pour recharger depuis l'API
+      window.location.reload();
+    } else {
+      console.error("Erreur reset:", response.status);
     }
   } catch (error) {
     console.error("Erreur reset:", error);
