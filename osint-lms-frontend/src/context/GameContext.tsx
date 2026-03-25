@@ -107,21 +107,23 @@ const INITIAL_BADGES: Badge[] = [
 ===================================================== */
 const CTF_CHALLENGES: CTFChallenge[] = [
   // OSINT (5)
-  { id: "osint_1", title: "Digital Footprint", category: "osint", difficulty: "easy", points: 50, description: "Trouvez les réseaux sociaux de l'utilisateur @cyb3rgh0st", hint: "Cherchez sur plusieurs plateformes", flag: "FLAG{social_media_everywhere}", solved: false, attempts: 0 },
-  { id: "osint_2", title: "Geolocation Master", category: "osint", difficulty: "medium", points: 100, description: "Localisez l'endroit exact de cette photo", hint: "Regardez les panneaux et l'architecture", flag: "FLAG{paris_eiffel_tower}", solved: false, attempts: 0 },
-  { id: "osint_3", title: "Metadata Hunter", category: "osint", difficulty: "medium", points: 100, description: "Extrayez les coordonnées GPS de cette image", hint: "Utilisez exiftool ou un outil similaire", flag: "FLAG{48.8584_2.2945}", solved: false, attempts: 0 },
-  { id: "osint_4", title: "Email Tracer", category: "osint", difficulty: "hard", points: 150, description: "Trouvez l'email professionnel du CEO de CyberCorp", hint: "LinkedIn et WHOIS peuvent aider", flag: "FLAG{ceo@cybercorp.com}", solved: false, attempts: 0 },
-  { id: "osint_5", title: "Deep Web Search", category: "osint", difficulty: "hard", points: 150, description: "Trouvez le forum caché mentionné dans ce message", hint: "Cherchez dans les archives et les liens morts", flag: "FLAG{hidden_forum_2024}", solved: false, attempts: 0 },
-  
-  // Cryptographie (3)
-  { id: "crypto_1", title: "Caesar Shift", category: "crypto", difficulty: "easy", points: 50, description: "Décodez : FDHVDU FLSKHU", hint: "Essayez un décalage de 3", flag: "FLAG{caesar_cipher}", solved: false, attempts: 0 },
-  { id: "crypto_2", title: "Base64 Layers", category: "crypto", difficulty: "medium", points: 100, description: "Décodez : VkZGSGUxcG9SazVWYlZaMFdWVlNURlV5ZUV0Vw==", hint: "Plusieurs couches de Base64", flag: "FLAG{base64_recursion}", solved: false, attempts: 0 },
-  { id: "crypto_3", title: "RSA Cracker", category: "crypto", difficulty: "hard", points: 150, description: "Cassez cette clé RSA faible (n=143, e=7)", hint: "Factorisez n pour trouver p et q", flag: "FLAG{rsa_weak_key}", solved: false, attempts: 0 },
-  
-  // Web Hacking (3)
-  { id: "web_1", title: "Hidden Admin", category: "web", difficulty: "easy", points: 50, description: "Trouvez la page d'administration cachée", hint: "Essayez /admin, /dashboard, robots.txt", flag: "FLAG{admin_panel_found}", solved: false, attempts: 0 },
-  { id: "web_2", title: "SQL Injection", category: "web", difficulty: "medium", points: 100, description: "Exploitez la vulnérabilité SQL pour vous connecter", hint: "' OR '1'='1' --", flag: "FLAG{sql_injection_success}", solved: false, attempts: 0 },
-  { id: "web_3", title: "XSS Master", category: "web", difficulty: "hard", points: 150, description: "Volez le cookie d'admin via XSS", hint: "<script>alert(document.cookie)</script>", flag: "FLAG{xss_cookie_theft}", solved: false, attempts: 0 },
+  { id: "osint_1", title: "Digital Footprint", category: "osint", difficulty: "easy", points: 100, description: "Trouvez les réseaux sociaux de l'utilisateur @cyb3rgh0st", hint: "Cherchez sur plusieurs plateformes", flag: "OSINT{tw1tt3r_hunt3r}", solved: false, attempts: 0 },
+  { id: "osint_2", title: "Geolocation Master", category: "osint", difficulty: "medium", points: 200, description: "Localisez l'endroit exact de cette photo", hint: "Regardez les panneaux et l'architecture", flag: "OSINT{p4r1s_t0w3r}", solved: false, attempts: 0 },
+  { id: "osint_3", title: "Metadata Hunter", category: "osint", difficulty: "medium", points: 250, description: "Extrayez les coordonnées GPS de cette image", hint: "Utilisez exiftool ou un outil similaire", flag: "OSINT{subd0m41ns_r34dy}", solved: false, attempts: 0 },
+  { id: "osint_4", title: "Email Tracer", category: "osint", difficulty: "hard", points: 300, description: "Trouvez l'email professionnel du CEO de CyberCorp", hint: "LinkedIn et WHOIS peuvent aider", flag: "OSINT{3m41l_tr4c3d}", solved: false, attempts: 0 },
+  { id: "osint_5", title: "Deep Web Search", category: "osint", difficulty: "hard", points: 400, description: "Trouvez le forum caché mentionné dans ce message", hint: "Cherchez dans les archives et les liens morts", flag: "OSINT{d4rk_w3b_s3cr3t}", solved: false, attempts: 0 },
+  // Cryptographie (5)
+  { id: "crypto_1", title: "Caesar Shift", category: "crypto", difficulty: "easy", points: 100, description: "Décodez : FDHVDU FLSKHU", hint: "Essayez un décalage de 3", flag: "CRYPTO{c43s4r_c1ph3r}", solved: false, attempts: 0 },
+  { id: "crypto_2", title: "Base64 Layers", category: "crypto", difficulty: "medium", points: 150, description: "Décodez : VkZGSGUxcG9SazVWYlZaMFdWVlNURlV5ZUV0Vw==", hint: "Plusieurs couches de Base64", flag: "CRYPTO{b4s3_s1xty_f0ur}", solved: false, attempts: 0 },
+  { id: "crypto_3", title: "Hash Cracker", category: "crypto", difficulty: "medium", points: 250, description: "Cassez ce hash MD5", hint: "Utilisez un rainbow table", flag: "CRYPTO{h4sh_cr4ck3d}", solved: false, attempts: 0 },
+  { id: "crypto_4", title: "RSA Cracker", category: "crypto", difficulty: "hard", points: 350, description: "Cassez cette clé RSA faible (n=143, e=7)", hint: "Factorisez n pour trouver p et q", flag: "CRYPTO{rs4_d3crypt3d}", solved: false, attempts: 0 },
+  { id: "crypto_5", title: "AES Master", category: "crypto", difficulty: "hard", points: 500, description: "Décryptez ce message AES", hint: "La clé est faible", flag: "CRYPTO{43s_m4st3r}", solved: false, attempts: 0 },
+  // Web Hacking (5)
+  { id: "web_1", title: "Hidden Admin", category: "web", difficulty: "easy", points: 100, description: "Trouvez la page d'administration cachée", hint: "Essayez /admin, /dashboard, robots.txt", flag: "WEB{sql_1nj3ct3d}", solved: false, attempts: 0 },
+  { id: "web_2", title: "SQL Injection", category: "web", difficulty: "medium", points: 200, description: "Exploitez la vulnérabilité SQL pour vous connecter", hint: "' OR '1'='1' --", flag: "WEB{xss_f0und}", solved: false, attempts: 0 },
+  { id: "web_3", title: "Path Traversal", category: "web", difficulty: "medium", points: 250, description: "Accédez aux fichiers système", hint: "../../../etc/passwd", flag: "WEB{p4th_tr4v3rs4l}", solved: false, attempts: 0 },
+  { id: "web_4", title: "JWT Forgery", category: "web", difficulty: "hard", points: 350, description: "Forgez un token JWT admin", hint: "La clé secrète est faible", flag: "WEB{jwt_f0rg3d}", solved: false, attempts: 0 },
+  { id: "web_5", title: "SSRF Exploit", category: "web", difficulty: "hard", points: 450, description: "Exploitez la SSRF pour accéder au réseau interne", hint: "http://localhost:8080/admin", flag: "WEB{ssrf_3xpl01t3d}", solved: false, attempts: 0 },
 ];
 
 /* =====================================================
