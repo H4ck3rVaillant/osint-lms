@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const speakeasy = require("speakeasy");
 const QRCode = require("qrcode");
-const db = require("../services/neonDatabase"); // ✨ MODIFIÉ - Utilise PostgreSQL Neon
+const db = require("../services/database");
 
 const router = express.Router();
 
@@ -145,6 +145,10 @@ router.post("/verify-2fa", async (req, res) => {
     if (!isValid) {
       return res.status(401).json({ message: "Code 2FA invalide" });
     }
+
+    // ✅ METTRE À JOUR last_login pour le streak
+    await db.updateLastLogin(user.id);
+    console.log("✅ Last login mis à jour pour user", user.id);
 
     // Générer le token JWT final (valide 24h)
     const finalToken = jwt.sign(

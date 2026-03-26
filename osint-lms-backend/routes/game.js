@@ -17,7 +17,7 @@ router.get("/health", async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error("❌ Health check error:", error);
+    console.error("Health check error:", error);
     res.status(500).json({ 
       status: "error", 
       database: "disconnected",
@@ -35,11 +35,6 @@ router.post("/save", authMiddleware, async (req, res) => {
     const userId = req.user.id;
     const { xp, level, streak, longestStreak, lastActivity, solvedChallenges } = req.body;
 
-    console.log("📊 Sauvegarde pour user", userId, "- XP:", xp, "Level:", level, "Streak:", streak);
-
-    // Utiliser NOW() si lastActivity n'est pas fourni
-    const activity = lastActivity || new Date().toISOString();
-
     // Vérifier si l'utilisateur a déjà une progression
     const existing = await db.query(
       "SELECT * FROM game_progress WHERE user_id = $1",
@@ -53,17 +48,15 @@ router.post("/save", authMiddleware, async (req, res) => {
          SET xp = $1, level = $2, streak = $3, longest_streak = $4, 
              last_activity = $5, updated_at = NOW()
          WHERE user_id = $6`,
-        [xp || 0, level || 0, streak || 0, longestStreak || 0, activity, userId]
+        [xp, level, streak, longestStreak, lastActivity, userId]
       );
-      console.log("✅ Progression mise à jour pour user", userId);
     } else {
       // Créer
       await db.query(
         `INSERT INTO game_progress (user_id, xp, level, streak, longest_streak, last_activity)
          VALUES ($1, $2, $3, $4, $5, $6)`,
-        [userId, xp || 0, level || 0, streak || 0, longestStreak || 0, activity]
+        [userId, xp, level, streak, longestStreak, lastActivity]
       );
-      console.log("✅ Nouvelle progression créée pour user", userId);
     }
 
     // Sauvegarder les challenges résolus
@@ -80,16 +73,14 @@ router.post("/save", authMiddleware, async (req, res) => {
             "INSERT INTO solved_challenges (user_id, challenge_id) VALUES ($1, $2)",
             [userId, challengeId]
           );
-          console.log("✅ Challenge", challengeId, "sauvegardé pour user", userId);
         }
       }
     }
 
     res.json({ success: true, message: "Progression sauvegardée" });
   } catch (error) {
-    console.error("❌ Erreur sauvegarde progression:", error);
-    console.error("Stack:", error.stack);
-    res.status(500).json({ success: false, message: "Erreur serveur", error: error.message });
+    console.error("Erreur sauvegarde progression:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
 
@@ -101,13 +92,61 @@ router.get("/load", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    console.log("📥 Chargement progression pour user", userId);
+    // ✅ CALCULER LE STREAK BASÉ SUR last_login
+    const userInfo = await db.query(
+      "SELECT last_login FROM utilisateurs WHERE id = $1",
+      [userId]
+    );
 
     // Charger la progression
     const progress = await db.query(
       "SELECT * FROM game_progress WHERE user_id = $1",
       [userId]
     );
+
+    // Si l'utilisateur a une progression, calculer le streak
+    if (progress.rows.length > 0 && userInfo.rows.length > 0) {
+      const lastLogin = userInfo.rows[0].last_login;
+      const currentProgress = progress.rows[0];
+      
+      if (lastLogin) {
+        const today = new Date().toISOString().split('T')[0];
+        const loginDate = new Date(lastLogin).toISOString().split('T')[0];
+        const lastActivityDate = currentProgress.last_activity ? new Date(currentProgress.last_activity).toISOString().split('T')[0] : null;
+        
+        // Calculer le streak
+        let newStreak = currentProgress.streak || 0;
+        let newLongestStreak = currentProgress.longest_streak || 0;
+        
+        // Si connexion aujourd'hui et dernière activité n'était pas aujourd'hui
+        if (loginDate === today && lastActivityDate !== today) {
+          // Vérifier si c'était hier
+          const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+          if (lastActivityDate === yesterday) {
+            newStreak = (currentProgress.streak || 0) + 1;
+          } else if (lastActivityDate === null || lastActivityDate < yesterday) {
+            newStreak = 1; // Reset si interruption
+          }
+          
+          newLongestStreak = Math.max(newLongestStreak, newStreak);
+          
+          // Mettre à jour le streak dans la DB
+          await db.query(
+            "UPDATE game_progress SET streak = $1, longest_streak = $2, last_activity = $3 WHERE user_id = $4",
+            [newStreak, newLongestStreak, today, userId]
+          );
+          
+          console.log(`✅ Streak mis à jour pour user ${userId}: ${newStreak} jours`);
+          
+          // Recharger la progression avec les nouvelles valeurs
+          const updatedProgress = await db.query(
+            "SELECT * FROM game_progress WHERE user_id = $1",
+            [userId]
+          );
+          progress.rows[0] = updatedProgress.rows[0];
+        }
+      }
+    }
 
     // Charger les challenges résolus
     const challenges = await db.query(
@@ -127,8 +166,6 @@ router.get("/load", authMiddleware, async (req, res) => {
       [userId]
     );
 
-    console.log("✅ Progression chargée:", progress.rows[0] ? "trouvée" : "vide");
-
     res.json({
       success: true,
       data: {
@@ -139,9 +176,8 @@ router.get("/load", authMiddleware, async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("❌ Erreur chargement progression:", error);
-    console.error("Stack:", error.stack);
-    res.status(500).json({ success: false, message: "Erreur serveur", error: error.message });
+    console.error("Erreur chargement progression:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
 
@@ -152,9 +188,7 @@ router.get("/load", authMiddleware, async (req, res) => {
 router.post("/preferences", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { avatar, avatarType } = req.body;
-
-    console.log("💾 Sauvegarde préférences pour user", userId, "- Avatar:", avatar, "Type:", avatarType);
+    const { avatar } = req.body;
 
     // Vérifier si existe
     const existing = await db.query(
@@ -167,90 +201,16 @@ router.post("/preferences", authMiddleware, async (req, res) => {
         "UPDATE user_preferences SET avatar = $1, updated_at = NOW() WHERE user_id = $2",
         [avatar, userId]
       );
-      console.log("✅ Préférences mises à jour");
     } else {
       await db.query(
         "INSERT INTO user_preferences (user_id, avatar) VALUES ($1, $2)",
         [userId, avatar]
       );
-      console.log("✅ Nouvelles préférences créées");
     }
 
     res.json({ success: true, message: "Préférences sauvegardées" });
   } catch (error) {
-    console.error("❌ Erreur sauvegarde préférences:", error);
-    console.error("Stack:", error.stack);
-    res.status(500).json({ success: false, message: "Erreur serveur", error: error.message });
-  }
-});
-
-/* ====================================
-   GET /game/leaderboard
-   Récupérer le classement des joueurs
-==================================== */
-router.get("/leaderboard", authMiddleware, async (req, res) => {
-  try {
-    const filter = req.query.filter || 'all'; // all, week, month
-    
-    let dateFilter = '';
-    if (filter === 'week') {
-      dateFilter = "AND gp.last_activity >= NOW() - INTERVAL '7 days'";
-    } else if (filter === 'month') {
-      dateFilter = "AND gp.last_activity >= NOW() - INTERVAL '30 days'";
-    }
-    
-    // Récupérer tous les utilisateurs avec leur progression (admin inclus)
-    const result = await db.query(`
-      SELECT 
-        u.id,
-        u.username,
-        COALESCE(gp.xp, 0) as xp,
-        COALESCE(gp.level, 0) as level,
-        COALESCE(gp.streak, 0) as streak,
-        COALESCE(gp.longest_streak, 0) as longest_streak,
-        gp.last_activity,
-        (SELECT COUNT(*) FROM solved_challenges WHERE user_id = u.id) as solved_count
-      FROM utilisateurs u
-      LEFT JOIN game_progress gp ON u.id = gp.user_id
-      WHERE 1=1 ${dateFilter}
-      ORDER BY COALESCE(gp.xp, 0) DESC
-    `);
-
-    res.json({ 
-      success: true, 
-      players: result.rows,
-      filter: filter
-    });
-  } catch (error) {
-    console.error("❌ Erreur récupération leaderboard:", error);
-    res.status(500).json({ success: false, message: "Erreur serveur" });
-  }
-});
-
-/* ====================================
-   DELETE /game/reset-all-challenges
-   Réinitialiser TOUS les challenges
-==================================== */
-router.delete("/reset-all-challenges", authMiddleware, async (req, res) => {
-  try {
-    const userId = req.user.id;
-
-    // Supprimer tous les challenges
-    await db.query(
-      "DELETE FROM solved_challenges WHERE user_id = $1",
-      [userId]
-    );
-
-    // Remettre XP à 0
-    await db.query(
-      "UPDATE game_progress SET xp = 0, level = 0, updated_at = NOW() WHERE user_id = $1",
-      [userId]
-    );
-
-    console.log("✅ Tous les challenges réinitialisés pour user", userId);
-    res.json({ success: true });
-  } catch (error) {
-    console.error("❌ Erreur reset challenges:", error);
+    console.error("Erreur sauvegarde préférences:", error);
     res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
