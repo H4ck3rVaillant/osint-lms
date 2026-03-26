@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useGame, CTF_CHALLENGES } from "../context/GameContext";
 import { useThemeColors } from "../context/ThemeContext";
+import { useAuth } from "../auth/AuthContext";
 
 const CATEGORY_CONFIG = {
   osint:  { label: "OSINT",          icon: "🔍", colorDark: "#00ff9c", colorLight: "#10b981" },
@@ -17,6 +18,7 @@ const DIFFICULTY_CONFIG = {
 export default function CTFPage() {
   const { challenges, submitFlag, useHint, gameState } = useGame();
   const colors = useThemeColors();
+  const { token } = useAuth();
   const [activeCategory, setActiveCategory] = useState<"all" | "osint" | "crypto" | "web">("all");
   const [selectedChallenge, setSelectedChallenge] = useState<string | null>(null);
   const [flagInput, setFlagInput] = useState("");
@@ -51,10 +53,25 @@ export default function CTFPage() {
     setIsSubmitting(false);
   };
 
-  const handleReset = () => {
-    localStorage.removeItem("ctf_progress");
-    setShowResetModal(false);
-    window.location.reload();
+  const handleReset = async () => {
+    try {
+      const response = await fetch("https://osint-lms-backend.onrender.com/game/reset-all-challenges", {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        localStorage.removeItem("ctf_progress");
+        setShowResetModal(false);
+        window.location.reload();
+      } else {
+        console.error("Erreur reset:", response.status);
+      }
+    } catch (error) {
+      console.error("Erreur reset:", error);
+    }
   };
 
   return (
