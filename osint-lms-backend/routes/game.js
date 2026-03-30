@@ -221,7 +221,7 @@ router.post("/preferences", authMiddleware, async (req, res) => {
 ==================================== */
 router.get("/leaderboard", authMiddleware, async (req, res) => {
   try {
-    // Récupérer TOUS les utilisateurs avec leur progression
+    // Récupérer TOUS les utilisateurs avec leur progression (sans filtre de rôle)
     const leaderboard = await db.query(`
       SELECT 
         u.id,
@@ -236,7 +236,6 @@ router.get("/leaderboard", authMiddleware, async (req, res) => {
       LEFT JOIN game_progress gp ON u.id = gp.user_id
       LEFT JOIN user_preferences up ON u.id = up.user_id
       LEFT JOIN solved_challenges sc ON u.id = sc.user_id
-      WHERE u.role = 'user'
       GROUP BY u.id, u.username, gp.xp, gp.level, gp.streak, gp.longest_streak, up.avatar
       ORDER BY COALESCE(gp.xp, 0) DESC, u.username ASC
     `);
