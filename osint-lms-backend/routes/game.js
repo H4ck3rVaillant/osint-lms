@@ -215,4 +215,53 @@ router.post("/preferences", authMiddleware, async (req, res) => {
   }
 });
 
+/* ====================================
+   GET /game/leaderboard
+   Récupérer le classement global
+==================================== */
+router.get("/leaderboard", authMiddleware, async (req, res) => {
+  try {
+    // Récupérer tous les utilisateurs avec leur progression
+    const leaderboard = await db.query(`
+      SELECT 
+        u.id,
+        u.username,
+        COALESCE(gp.xp, 0) as xp,
+        COALESCE(gp.level, 0) as level,
+        COALESCE(gp.streak, 0) as streak,
+        COALESCE(gp.longest_streak, 0) as longest_streak,
+        COALESCE(up.avatar, 'default') as avatar,
+        COUNT(DISTINCT sc.challenge_id) as solved_challenges
+      FROM utilisateurs u
+      LEFT JOIN game_progress gp ON u.id = gp.user_id
+      LEFT JOIN user_preferences up ON u.id = up.user_id
+      LEFT JOIN solved_challenges sc ON u.id = sc.user_id
+      WHERE u.role != 'admin'
+      GROUP BY u.id, u.username, gp.xp, gp.level, gp.streak, gp.longest_streak, up.avatar
+      ORDER BY COALESCE(gp.xp, 0) DESC, u.username ASC
+      LIMIT 100
+    `);
+
+    // Ajouter le rang
+    const rankedLeaderboard = leaderboard.rows.map((user, index) => ({
+      rank: index + 1,
+      username: user.username,
+      xp: user.xp,
+      level: user.level,
+      streak: user.streak,
+      longestStreak: user.longest_streak,
+      avatar: user.avatar,
+      solvedChallenges: parseInt(user.solved_challenges)
+    }));
+
+    res.json({
+      success: true,
+      data: rankedLeaderboard
+    });
+  } catch (error) {
+    console.error("Erreur récupération leaderboard:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+});
+
 module.exports = router;
