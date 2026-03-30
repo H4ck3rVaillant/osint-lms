@@ -33,7 +33,7 @@ router.get("/health", async (req, res) => {
 router.post("/save", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { xp, level, streak, longestStreak, lastActivity, solvedChallenges } = req.body;
+    const { xp, level, streak, longestStreak, lastActivity, solvedChallenges, badges } = req.body;
 
     // Vérifier si l'utilisateur a déjà une progression
     const existing = await db.query(
@@ -77,9 +77,87 @@ router.post("/save", authMiddleware, async (req, res) => {
       }
     }
 
+    // Sauvegarder les badges débloqués
+    if (badges && badges.length > 0) {
+      for (const badge of badges) {
+        if (badge.unlocked) {
+          // Vérifier si le badge est déjà enregistré
+          const existingBadge = await db.query(
+            "SELECT * FROM user_badges WHERE user_id = $1 AND badge_id = $2",
+            [userId, badge.id]
+          );
+
+          if (existingBadge.rows.length === 0) {
+            await db.query(
+              "INSERT INTO user_badges (user_id, badge_id, unlocked_at) VALUES ($1, $2, $3)",
+              [userId, badge.id, badge.unlockedAt || new Date().toISOString()]
+            );
+          }
+        }
+      }
+    }
+
     res.json({ success: true, message: "Progression sauvegardée" });
   } catch (error) {
     console.error("Erreur sauvegarde progression:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+});
+
+/* ====================================
+   POST /game/save-full
+   Sauvegarder TOUTE la progression (Quiz, Exercices, Badges, etc.)
+==================================== */
+router.post("/save-full", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { data } = req.body;
+
+    // Sauvegarder ou mettre à jour
+    const existing = await db.query(
+      "SELECT * FROM user_progression WHERE user_id = $1",
+      [userId]
+    );
+
+    if (existing.rows.length > 0) {
+      await db.query(
+        "UPDATE user_progression SET data = $1, updated_at = NOW() WHERE user_id = $2",
+        [JSON.stringify(data), userId]
+      );
+    } else {
+      await db.query(
+        "INSERT INTO user_progression (user_id, data) VALUES ($1, $2)",
+        [userId, JSON.stringify(data)]
+      );
+    }
+
+    res.json({ success: true, message: "Progression complète sauvegardée" });
+  } catch (error) {
+    console.error("Erreur sauvegarde progression complète:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+});
+
+/* ====================================
+   GET /game/load-full
+   Charger TOUTE la progression
+==================================== */
+router.get("/load-full", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    const result = await db.query(
+      "SELECT data FROM user_progression WHERE user_id = $1",
+      [userId]
+    );
+
+    if (result.rows.length > 0) {
+      res.json({ success: true, data: result.rows[0].data });
+    } else {
+      res.json({ success: true, data: null });
+    }
+  } catch (error) {
+    console.error("Erreur chargement progression complète:", error);
     res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
