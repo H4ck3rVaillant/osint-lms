@@ -264,4 +264,32 @@ router.get("/leaderboard", authMiddleware, async (req, res) => {
   }
 });
 
+/* ====================================
+   DELETE /game/reset-all-challenges
+   Réinitialiser tous les challenges CTF
+==================================== */
+router.delete("/reset-all-challenges", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Supprimer tous les challenges résolus
+    await db.query(
+      "DELETE FROM solved_challenges WHERE user_id = $1",
+      [userId]
+    );
+
+    // Réinitialiser la progression à 0
+    await db.query(
+      "UPDATE game_progress SET xp = 0, level = 0 WHERE user_id = $1",
+      [userId]
+    );
+
+    console.log(`✅ Challenges réinitialisés pour user ${userId}`);
+    res.json({ success: true, message: "Tous les challenges ont été réinitialisés" });
+  } catch (error) {
+    console.error("Erreur réinitialisation challenges:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+});
+
 module.exports = router;
