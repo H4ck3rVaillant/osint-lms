@@ -124,7 +124,12 @@ export default function Leaderboard() {
   };
 
   const getAvatar = (avatarKey: string) => {
-    return AVATARS_LB[avatarKey] || AVATARS_LB.default;
+    // Si l'avatar est reconnu, afficher l'emoji
+    if (AVATARS_LB[avatarKey]) {
+      return AVATARS_LB[avatarKey];
+    }
+    // Sinon, ne rien afficher (l'utilisateur mettra son avatar perso)
+    return "";
   };
 
   useEffect(() => {
