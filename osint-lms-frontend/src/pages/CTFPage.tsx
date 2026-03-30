@@ -55,6 +55,7 @@ export default function CTFPage() {
 
   const handleReset = async () => {
     try {
+      // 1. Appeler l'API pour effacer dans Neon
       const response = await fetch("https://osint-lms-backend.onrender.com/game/reset-all-challenges", {
         method: "DELETE",
         headers: {
@@ -63,14 +64,27 @@ export default function CTFPage() {
       });
 
       if (response.ok) {
+        // 2. Nettoyer IMMÉDIATEMENT le localStorage
         localStorage.removeItem("ctf_progress");
-        setShowResetModal(false);
-        window.location.reload();
+        localStorage.removeItem("cyberosint_game_state");
+        localStorage.removeItem("cyberosint_challenges");
+        
+        console.log("✅ Reset effectué dans l'API et localStorage");
+        
+        // 3. Attendre 500ms puis recharger pour que tout soit synchronisé
+        setTimeout(() => {
+          setShowResetModal(false);
+          window.location.reload();
+        }, 500);
       } else {
-        console.error("Erreur reset:", response.status);
+        console.error("❌ Erreur reset API:", response.status);
+        alert("Erreur lors de la réinitialisation. Veuillez réessayer.");
+        setShowResetModal(false);
       }
     } catch (error) {
-      console.error("Erreur reset:", error);
+      console.error("❌ Erreur reset:", error);
+      alert("Erreur réseau. Veuillez réessayer.");
+      setShowResetModal(false);
     }
   };
 

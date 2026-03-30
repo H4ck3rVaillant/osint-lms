@@ -21,13 +21,18 @@ interface LeaderboardEntry {
   isMe?: boolean;
 }
 
+const ITEMS_PER_PAGE = 20;
+
 export default function Leaderboard() {
   const colors = useThemeColors();
   const { gameState } = useGame();
   const { user, token } = useAuth();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [filteredLeaderboard, setFilteredLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Charger le leaderboard depuis l'API
   const loadLeaderboard = async () => {
@@ -44,9 +49,10 @@ export default function Leaderboard() {
           // Marquer l'utilisateur actuel
           const leaderboardWithMe = data.data.map((entry: LeaderboardEntry) => ({
             ...entry,
-            isMe: entry.username === user?.username
+            isMe: entry.username.toLowerCase() === user?.username.toLowerCase()
           }));
           setLeaderboard(leaderboardWithMe);
+          setFilteredLeaderboard(leaderboardWithMe);
           setLastUpdate(new Date());
         }
       }
@@ -60,7 +66,7 @@ export default function Leaderboard() {
   // Charger au démarrage
   useEffect(() => {
     loadLeaderboard();
-  }, [token]);
+  }, [token, user]);
 
   // Recharger toutes les 30 secondes
   useEffect(() => {
@@ -68,10 +74,29 @@ export default function Leaderboard() {
       loadLeaderboard();
     }, 30000);
     return () => clearInterval(timer);
-  }, [token]);
+  }, [token, user]);
+
+  // Filtrer par recherche
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredLeaderboard(leaderboard);
+    } else {
+      const filtered = leaderboard.filter(entry =>
+        entry.username.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredLeaderboard(filtered);
+    }
+    setCurrentPage(1); // Reset à la page 1 lors de la recherche
+  }, [searchQuery, leaderboard]);
 
   const myEntry = leaderboard.find(e => e.isMe);
-  const myRank = myEntry?.rank || 999;
+  const myRank = myEntry?.rank || leaderboard.length + 1;
+
+  // Pagination
+  const totalPages = Math.ceil(filteredLeaderboard.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedLeaderboard = filteredLeaderboard.slice(startIndex, endIndex);
 
   const getRankStyle = (rank: number) => {
     if (rank === 1) return { bg: "#fbbf24", color: colors.bgPrimary, icon: "🥇" };
@@ -139,7 +164,9 @@ export default function Leaderboard() {
             display: "inline-block"
           }}>
             <p style={{ color: colors.textSecondary, fontSize: "0.8rem", margin: "0 0 4px 0" }}>Votre rang</p>
-            <p style={{ color: colors.accent, fontSize: "2rem", fontWeight: "bold", margin: 0 }}>#{myRank}</p>
+            <p style={{ color: colors.accent, fontSize: "2rem", fontWeight: "bold", margin: 0 }}>
+              #{myRank}
+            </p>
           </div>
         </div>
       </div>
@@ -178,41 +205,71 @@ export default function Leaderboard() {
         </div>
       )}
 
-      {/* Top 3 Podium */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "15px", marginBottom: "30px" }}>
-        {leaderboard.slice(0, 3).map((player, idx) => {
-          const style = getRankStyle(player.rank);
-          return (
-            <div key={player.username} style={{
-              background: `linear-gradient(135deg, ${style.bg}22, ${style.bg}11)`,
-              border: `2px solid ${style.bg}`,
-              borderRadius: "12px",
-              padding: "25px",
-              textAlign: "center",
-              position: "relative",
-              order: idx === 0 ? 1 : idx === 1 ? 0 : 2
-            }}>
-              <div style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                fontSize: "2rem"
-              }}>{style.icon}</div>
-              <div style={{ fontSize: "3rem", marginBottom: "10px" }}>{getAvatar(player.avatar)}</div>
-              <p style={{ color: colors.accent, fontWeight: "bold", fontSize: "1.2rem", margin: "8px 0" }}>
-                {player.username}
-              </p>
-              <p style={{ color: style.bg, fontWeight: "bold", fontSize: "1.8rem", margin: "8px 0" }}>
-                {player.xp} XP
-              </p>
-              <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginTop: "12px" }}>
-                <span style={{ color: colors.textSecondary, fontSize: "0.85rem" }}>🚩 {player.solvedChallenges}</span>
-                <span style={{ color: colors.textSecondary, fontSize: "0.85rem" }}>🔥 {player.streak}j</span>
-              </div>
-            </div>
-          );
-        })}
+      {/* Barre de recherche */}
+      <div style={{ marginBottom: "25px" }}>
+        <input
+          type="text"
+          placeholder="🔍 Rechercher un joueur..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "14px 20px",
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.border}`,
+            borderRadius: "10px",
+            color: colors.textPrimary,
+            fontSize: "1rem",
+            outline: "none",
+            transition: "all 0.2s"
+          }}
+          onFocus={(e) => e.target.style.borderColor = colors.accent}
+          onBlur={(e) => e.target.style.borderColor = colors.border}
+        />
+        {searchQuery && (
+          <p style={{ color: colors.textSecondary, fontSize: "0.9rem", marginTop: "8px" }}>
+            {filteredLeaderboard.length} résultat{filteredLeaderboard.length > 1 ? 's' : ''} trouvé{filteredLeaderboard.length > 1 ? 's' : ''}
+          </p>
+        )}
       </div>
+
+      {/* Top 3 Podium */}
+      {currentPage === 1 && searchQuery === "" && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "15px", marginBottom: "30px" }}>
+          {leaderboard.slice(0, 3).map((player, idx) => {
+            const style = getRankStyle(player.rank);
+            return (
+              <div key={player.username} style={{
+                background: `linear-gradient(135deg, ${style.bg}22, ${style.bg}11)`,
+                border: `2px solid ${style.bg}`,
+                borderRadius: "12px",
+                padding: "25px",
+                textAlign: "center",
+                position: "relative",
+                order: idx === 0 ? 1 : idx === 1 ? 0 : 2
+              }}>
+                <div style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  fontSize: "2rem"
+                }}>{style.icon}</div>
+                <div style={{ fontSize: "3rem", marginBottom: "10px" }}>{getAvatar(player.avatar)}</div>
+                <p style={{ color: colors.accent, fontWeight: "bold", fontSize: "1.2rem", margin: "8px 0" }}>
+                  {player.username}
+                </p>
+                <p style={{ color: style.bg, fontWeight: "bold", fontSize: "1.8rem", margin: "8px 0" }}>
+                  {player.xp} XP
+                </p>
+                <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginTop: "12px" }}>
+                  <span style={{ color: colors.textSecondary, fontSize: "0.85rem" }}>🚩 {player.solvedChallenges}</span>
+                  <span style={{ color: colors.textSecondary, fontSize: "0.85rem" }}>🔥 {player.streak}j</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Liste complète */}
       <div style={{
@@ -239,7 +296,7 @@ export default function Leaderboard() {
           <div style={{ textAlign: "center" }}>STREAK</div>
         </div>
 
-        {leaderboard.map((player) => {
+        {paginatedLeaderboard.map((player) => {
           const style = getRankStyle(player.rank);
           return (
             <div
@@ -294,6 +351,56 @@ export default function Leaderboard() {
           );
         })}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div style={{
+          marginTop: "25px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "10px",
+          flexWrap: "wrap"
+        }}>
+          <button
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            style={{
+              padding: "10px 20px",
+              background: currentPage === 1 ? colors.bgSecondary : colors.accent,
+              color: currentPage === 1 ? colors.textTertiary : colors.bgPrimary,
+              border: "none",
+              borderRadius: "8px",
+              cursor: currentPage === 1 ? "not-allowed" : "pointer",
+              fontWeight: "bold",
+              opacity: currentPage === 1 ? 0.5 : 1
+            }}
+          >
+            ← Précédent
+          </button>
+
+          <span style={{ color: colors.textPrimary, fontWeight: "bold" }}>
+            Page {currentPage} / {totalPages}
+          </span>
+
+          <button
+            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            style={{
+              padding: "10px 20px",
+              background: currentPage === totalPages ? colors.bgSecondary : colors.accent,
+              color: currentPage === totalPages ? colors.textTertiary : colors.bgPrimary,
+              border: "none",
+              borderRadius: "8px",
+              cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+              fontWeight: "bold",
+              opacity: currentPage === totalPages ? 0.5 : 1
+            }}
+          >
+            Suivant →
+          </button>
+        </div>
+      )}
 
       {/* Footer stats */}
       <div style={{
