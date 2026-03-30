@@ -58,6 +58,11 @@ import Gamification from "./pages/Gamification";
 import StreakCalendar from "./pages/StreakCalendar";
 import ArgusRecon from "./pages/ArgusRecon";
 import ArgusConsole from "./pages/ArgusConsole";
+import { useLocalStorageSync } from "./hooks/useLocalStorageSync";
+
+function App() {
+  useLocalStorageSync();
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
