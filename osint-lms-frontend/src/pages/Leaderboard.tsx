@@ -1,303 +1,314 @@
 import { useState, useEffect } from "react";
+import { useThemeColors } from "../context/ThemeContext";
 import { useGame, getLevelInfo } from "../context/GameContext";
 import { useAuth } from "../auth/AuthContext";
 
 const AVATARS_LB: Record<string, string> = {
-  hacker: "🧑‍💻", ninja: "🥷", ghost: "👻", robot: "🤖", alien: "👽",
-  skull: "💀", detective: "🕵️", wizard: "🧙", demon: "😈", cat: "🐱",
-  fox: "🦊", wolf: "🐺", dragon: "🐉", parrot: "🦜", cyber: "⚡",
+  skull: "💀", ghost: "👻", robot: "🤖", ninja: "🥷", 
+  wizard: "🧙", dragon: "🐉", phoenix: "🔥", wolf: "🐺",
+  default: "🧑‍💻"
 };
 
-function getUserAvatarLB(username: string): string {
-  const saved = localStorage.getItem(`avatar_${username}`);
-  return saved && AVATARS_LB[saved] ? AVATARS_LB[saved] : "🧑‍💻";
-}
-
-interface Player {
-  id: number;
+interface LeaderboardEntry {
+  rank: number;
   username: string;
   xp: number;
   level: number;
   streak: number;
-  longest_streak: number;
-  solved_count: number;
-  last_activity: string;
+  longestStreak: number;
+  avatar: string;
+  solvedChallenges: number;
+  isMe?: boolean;
 }
 
 export default function Leaderboard() {
+  const colors = useThemeColors();
   const { gameState } = useGame();
   const { user, token } = useAuth();
-  const API_URL = "https://osint-lms-backend.onrender.com";
-  
-  const [filter, setFilter] = useState<"all" | "week" | "month">("all");
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
   // Charger le leaderboard depuis l'API
-  useEffect(() => {
-    loadLeaderboard();
-  }, [filter]);
-
-  // Actualiser toutes les 30 secondes
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setLastUpdate(new Date());
-      loadLeaderboard();
-    }, 30000);
-    return () => clearInterval(timer);
-  }, [filter]);
-
   const loadLeaderboard = async () => {
+    if (!token) return;
+    
     try {
-      setLoading(true);
-      const response = await fetch(`${API_URL}/game/leaderboard?filter=${filter}`, {
+      const response = await fetch("https://osint-lms-backend.onrender.com/game/leaderboard", {
         headers: { "Authorization": `Bearer ${token}` }
       });
-      const data = await response.json();
-      if (data.success) {
-        setPlayers(data.players);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data) {
+          // Marquer l'utilisateur actuel
+          const leaderboardWithMe = data.data.map((entry: LeaderboardEntry) => ({
+            ...entry,
+            isMe: entry.username === user?.username
+          }));
+          setLeaderboard(leaderboardWithMe);
+          setLastUpdate(new Date());
+        }
       }
     } catch (error) {
       console.error("Erreur chargement leaderboard:", error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const myRank = players.findIndex(p => p.username === user?.username) + 1;
+  // Charger au démarrage
+  useEffect(() => {
+    loadLeaderboard();
+  }, [token]);
+
+  // Recharger toutes les 30 secondes
+  useEffect(() => {
+    const timer = setInterval(() => {
+      loadLeaderboard();
+    }, 30000);
+    return () => clearInterval(timer);
+  }, [token]);
+
+  const myEntry = leaderboard.find(e => e.isMe);
+  const myRank = myEntry?.rank || 999;
 
   const getRankStyle = (rank: number) => {
-    if (rank === 1) return { bg: "#fbbf24", color: "#0b0f1a", icon: "🥇" };
-    if (rank === 2) return { bg: "#9ca3af", color: "#0b0f1a", icon: "🥈" };
-    if (rank === 3) return { bg: "#d97706", color: "#0b0f1a", icon: "🥉" };
-    return { bg: "#1a1f2e", color: "#e5e7eb", icon: `#${rank}` };
+    if (rank === 1) return { bg: "#fbbf24", color: colors.bgPrimary, icon: "🥇" };
+    if (rank === 2) return { bg: colors.textSecondary, color: colors.bgPrimary, icon: "🥈" };
+    if (rank === 3) return { bg: "#d97706", color: colors.bgPrimary, icon: "🥉" };
+    return { bg: colors.bgSecondary, color: colors.textPrimary, icon: `#${rank}` };
   };
 
-  const getLevelColor = (levelName: string) => {
+  const getLevelName = (level: number, xp: number) => {
+    const info = getLevelInfo(xp);
+    return info.name;
+  };
+
+  const getLevelColor = (xp: number) => {
+    const levelName = getLevelName(0, xp);
     const map: Record<string, string> = {
-      "Newbie": "#9ca3af",
+      "Newbie": colors.textSecondary,
       "Script Kiddie": "#22c55e",
       "Hacker": "#3b82f6",
       "Elite Hacker": "#8b5cf6",
       "Cyber Ninja": "#f59e0b",
       "Zero Day Master": "#ef4444",
     };
-    return map[levelName] || "#9ca3af";
+    return map[levelName] || colors.textSecondary;
   };
 
+  const getAvatar = (avatarKey: string) => {
+    return AVATARS_LB[avatarKey] || AVATARS_LB.default;
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <main style={{ paddingTop: "80px", padding: "40px", textAlign: "center", minHeight: "100vh", background: colors.bgPrimary }}>
+        <p style={{ color: colors.textSecondary, fontSize: "1.2rem" }}>Chargement du classement...</p>
+      </main>
+    );
+  }
+
   return (
-    <main style={{ padding: "40px", maxWidth: "1100px", margin: "0 auto" }}>
+    <main style={{ paddingTop: "80px", padding: "40px", maxWidth: "1100px", margin: "0 auto", minHeight: "100vh", background: colors.bgPrimary }}>
+
       {/* Header */}
       <div style={{ marginBottom: "35px", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "15px" }}>
         <div>
-          <h1 style={{ color: "#00ff9c", fontSize: "2.5rem", margin: 0 }}>
+          <h1 style={{ color: colors.accent, fontSize: "2.5rem", margin: 0 }}>
             🏆 Leaderboard
           </h1>
-          <p style={{ color: "#9ca3af", marginTop: "8px" }}>
+          <p style={{ color: colors.textSecondary, marginTop: "8px" }}>
             Classement global des hackers — Mis à jour en temps réel
+          </p>
+          <p style={{ color: colors.textTertiary, fontSize: "0.85rem", marginTop: "4px" }}>
+            Dernière mise à jour : {lastUpdate.toLocaleTimeString('fr-FR')}
           </p>
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={{
-            background: "#0b0f1a",
+            background: colors.bgPrimary,
             border: "1px solid #00ff9c",
             borderRadius: "10px",
             padding: "12px 20px",
             display: "inline-block"
           }}>
-            <p style={{ color: "#9ca3af", fontSize: "0.8rem", margin: "0 0 4px 0" }}>Votre rang</p>
-            <p style={{ color: "#00ff9c", fontSize: "2rem", fontWeight: "bold", margin: 0 }}>
-              #{myRank || "N/A"}
-            </p>
+            <p style={{ color: colors.textSecondary, fontSize: "0.8rem", margin: "0 0 4px 0" }}>Votre rang</p>
+            <p style={{ color: colors.accent, fontSize: "2rem", fontWeight: "bold", margin: 0 }}>#{myRank}</p>
           </div>
         </div>
       </div>
 
-      {/* Filtres */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "25px" }}>
-        {[
-          { key: "all", label: "🌍 Tous les temps" },
-          { key: "month", label: "📅 Ce mois" },
-          { key: "week", label: "📆 Cette semaine" }
-        ].map((f) => (
-          <button
-            key={f.key}
-            onClick={() => setFilter(f.key as "all" | "week" | "month")}
-            style={{
-              flex: 1,
-              padding: "12px",
-              background: filter === f.key ? "#00ff9c" : "transparent",
-              color: filter === f.key ? "#0b0f1a" : "#9ca3af",
-              border: `2px solid ${filter === f.key ? "#00ff9c" : "#2a3f3f"}`,
-              borderRadius: "8px",
-              fontWeight: "bold",
-              cursor: "pointer",
-              transition: "all 0.2s"
-            }}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
-
       {/* Ma position rapide */}
-      {myRank > 0 && (
+      {myEntry && (
         <div style={{
           background: "linear-gradient(135deg, #0b1a2e, #0b0f1a)",
           border: "2px solid #00ff9c",
           borderRadius: "12px",
-          padding: "20px",
-          marginBottom: "25px",
+          padding: "20px 25px",
+          marginBottom: "30px",
           display: "flex",
           alignItems: "center",
-          gap: "20px"
+          gap: "20px",
+          flexWrap: "wrap"
         }}>
-          <div style={{
-            fontSize: "3rem",
-            width: "70px",
-            height: "70px",
-            background: "#00ff9c",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}>
-            {getUserAvatarLB(user?.username || "")}
-          </div>
+          <div style={{ fontSize: "2.5rem" }}>{getAvatar(myEntry.avatar)}</div>
           <div style={{ flex: 1 }}>
-            <h3 style={{ color: "#00ff9c", margin: "0 0 5px 0", fontSize: "1.3rem" }}>
-              {user?.username}
-            </h3>
-            <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-              <span style={{ color: "#9ca3af" }}>
-                💎 <strong style={{ color: "#e5e7eb" }}>{gameState.xp} XP</strong>
-              </span>
-              <span style={{ color: "#9ca3af" }}>
-                🏅 <strong style={{ color: "#e5e7eb" }}>{getLevelInfo(gameState.xp).name}</strong>
-              </span>
-              <span style={{ color: "#9ca3af" }}>
-                🔥 <strong style={{ color: "#e5e7eb" }}>{gameState.streak} jours</strong>
-              </span>
-            </div>
+            <p style={{ color: colors.textSecondary, fontSize: "0.8rem", margin: "0 0 4px 0" }}>VOTRE PROFIL</p>
+            <p style={{ color: colors.accent, fontWeight: "bold", fontSize: "1.2rem", margin: 0 }}>
+              {user?.username || "Joueur"}
+            </p>
           </div>
-        </div>
-      )}
-
-      {/* Loading */}
-      {loading && (
-        <div style={{ textAlign: "center", padding: "40px", color: "#9ca3af" }}>
-          <div style={{
-            width: "40px",
-            height: "40px",
-            border: "3px solid #2a3f3f",
-            borderTop: "3px solid #00ff9c",
-            borderRadius: "50%",
-            animation: "spin 1s linear infinite",
-            margin: "0 auto 15px"
-          }} />
-          Chargement du classement...
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </div>
-      )}
-
-      {/* Table */}
-      {!loading && (
-        <div style={{
-          background: "#0b0f1a",
-          borderRadius: "12px",
-          overflow: "hidden",
-          border: "1px solid #2a3f3f"
-        }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: "#1a1f2e" }}>
-                <th style={{ padding: "15px", textAlign: "left", color: "#9ca3af", fontWeight: "600" }}>Rang</th>
-                <th style={{ padding: "15px", textAlign: "left", color: "#9ca3af", fontWeight: "600" }}>Joueur</th>
-                <th style={{ padding: "15px", textAlign: "center", color: "#9ca3af", fontWeight: "600" }}>XP</th>
-                <th style={{ padding: "15px", textAlign: "center", color: "#9ca3af", fontWeight: "600" }}>Level</th>
-                <th style={{ padding: "15px", textAlign: "center", color: "#9ca3af", fontWeight: "600" }}>Résolu</th>
-                <th style={{ padding: "15px", textAlign: "center", color: "#9ca3af", fontWeight: "600" }}>Streak</th>
-              </tr>
-            </thead>
-            <tbody>
-              {players.map((player, index) => {
-                const rank = index + 1;
-                const style = getRankStyle(rank);
-                const isMe = player.username === user?.username;
-                const levelName = getLevelInfo(player.xp).name;
-
-                return (
-                  <tr key={player.id} style={{
-                    background: isMe ? "#0a1a0a" : "transparent",
-                    borderBottom: "1px solid #1a1f2e",
-                    borderLeft: isMe ? "3px solid #00ff9c" : "none"
-                  }}>
-                    <td style={{ padding: "15px" }}>
-                      <div style={{
-                        display: "inline-block",
-                        background: style.bg,
-                        color: style.color,
-                        padding: "6px 12px",
-                        borderRadius: "20px",
-                        fontWeight: "bold",
-                        fontSize: "0.9rem"
-                      }}>
-                        {style.icon}
-                      </div>
-                    </td>
-                    <td style={{ padding: "15px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <div style={{ fontSize: "2rem" }}>
-                          {getUserAvatarLB(player.username)}
-                        </div>
-                        <div>
-                          <div style={{ color: "#e5e7eb", fontWeight: "600" }}>
-                            {player.username}
-                            {isMe && <span style={{ color: "#00ff9c", marginLeft: "8px" }}>(Vous)</span>}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td style={{ padding: "15px", textAlign: "center", color: "#00ff9c", fontWeight: "bold" }}>
-                      {player.xp.toLocaleString()}
-                    </td>
-                    <td style={{ padding: "15px", textAlign: "center" }}>
-                      <span style={{
-                        background: getLevelColor(levelName) + "33",
-                        color: getLevelColor(levelName),
-                        padding: "4px 12px",
-                        borderRadius: "12px",
-                        fontSize: "0.85rem",
-                        fontWeight: "600"
-                      }}>
-                        {levelName}
-                      </span>
-                    </td>
-                    <td style={{ padding: "15px", textAlign: "center", color: "#e5e7eb" }}>
-                      {player.solved_count || 0}
-                    </td>
-                    <td style={{ padding: "15px", textAlign: "center", color: "#e5e7eb" }}>
-                      🔥 {player.streak || 0}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-
-          {players.length === 0 && (
-            <div style={{ textAlign: "center", padding: "40px", color: "#6b7280" }}>
-              Aucun joueur trouvé pour cette période
+          {[
+            { label: "XP Total", value: `${myEntry.xp} XP`, icon: "⭐" },
+            { label: "Défis résolus", value: `${myEntry.solvedChallenges}/11`, icon: "🚩" },
+            { label: "Streak", value: `${myEntry.streak}j 🔥`, icon: "📅" },
+            { label: "Niveau", value: getLevelName(myEntry.level, myEntry.xp), icon: getLevelInfo(myEntry.xp).icon },
+          ].map((stat, i) => (
+            <div key={i} style={{ textAlign: "center", minWidth: "100px" }}>
+              <p style={{ color: colors.textSecondary, fontSize: "0.75rem", margin: "0 0 4px 0" }}>{stat.label}</p>
+              <p style={{ color: colors.textPrimary, fontWeight: "bold", margin: 0 }}>{stat.value}</p>
             </div>
-          )}
+          ))}
         </div>
       )}
 
-      {/* Footer */}
-      <div style={{ textAlign: "center", marginTop: "25px", color: "#6b7280", fontSize: "0.85rem" }}>
-        Dernière mise à jour : {lastUpdate.toLocaleTimeString('fr-FR')}
+      {/* Top 3 Podium */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "15px", marginBottom: "30px" }}>
+        {leaderboard.slice(0, 3).map((player, idx) => {
+          const style = getRankStyle(player.rank);
+          return (
+            <div key={player.username} style={{
+              background: `linear-gradient(135deg, ${style.bg}22, ${style.bg}11)`,
+              border: `2px solid ${style.bg}`,
+              borderRadius: "12px",
+              padding: "25px",
+              textAlign: "center",
+              position: "relative",
+              order: idx === 0 ? 1 : idx === 1 ? 0 : 2
+            }}>
+              <div style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                fontSize: "2rem"
+              }}>{style.icon}</div>
+              <div style={{ fontSize: "3rem", marginBottom: "10px" }}>{getAvatar(player.avatar)}</div>
+              <p style={{ color: colors.accent, fontWeight: "bold", fontSize: "1.2rem", margin: "8px 0" }}>
+                {player.username}
+              </p>
+              <p style={{ color: style.bg, fontWeight: "bold", fontSize: "1.8rem", margin: "8px 0" }}>
+                {player.xp} XP
+              </p>
+              <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginTop: "12px" }}>
+                <span style={{ color: colors.textSecondary, fontSize: "0.85rem" }}>🚩 {player.solvedChallenges}</span>
+                <span style={{ color: colors.textSecondary, fontSize: "0.85rem" }}>🔥 {player.streak}j</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
+
+      {/* Liste complète */}
+      <div style={{
+        background: colors.bgSecondary,
+        borderRadius: "12px",
+        overflow: "hidden",
+        border: `1px solid ${colors.border}`
+      }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "80px 1fr 120px 100px 100px",
+          gap: "15px",
+          padding: "15px 20px",
+          background: colors.bgPrimary,
+          borderBottom: `1px solid ${colors.border}`,
+          fontWeight: "bold",
+          fontSize: "0.85rem",
+          color: colors.textSecondary
+        }}>
+          <div>RANG</div>
+          <div>JOUEUR</div>
+          <div style={{ textAlign: "center" }}>XP</div>
+          <div style={{ textAlign: "center" }}>CTF</div>
+          <div style={{ textAlign: "center" }}>STREAK</div>
+        </div>
+
+        {leaderboard.map((player) => {
+          const style = getRankStyle(player.rank);
+          return (
+            <div
+              key={player.username}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "80px 1fr 120px 100px 100px",
+                gap: "15px",
+                padding: "18px 20px",
+                borderBottom: `1px solid ${colors.border}`,
+                background: player.isMe ? colors.accentDark : "transparent",
+                alignItems: "center",
+                transition: "background 0.2s"
+              }}
+            >
+              <div style={{
+                background: style.bg,
+                color: style.color,
+                fontWeight: "bold",
+                padding: "8px",
+                borderRadius: "8px",
+                textAlign: "center",
+                fontSize: "0.95rem"
+              }}>
+                {style.icon}
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{ fontSize: "1.8rem" }}>{getAvatar(player.avatar)}</div>
+                <div>
+                  <p style={{ color: player.isMe ? colors.accent : colors.textPrimary, fontWeight: "bold", margin: 0 }}>
+                    {player.username} {player.isMe && <span style={{ color: colors.accent }}>👈 Vous</span>}
+                  </p>
+                  <p style={{ color: getLevelColor(player.xp), fontSize: "0.8rem", margin: "2px 0 0 0" }}>
+                    {getLevelInfo(player.xp).icon} {getLevelName(player.level, player.xp)}
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ textAlign: "center", color: colors.accent, fontWeight: "bold", fontSize: "1.1rem" }}>
+                {player.xp} XP
+              </div>
+
+              <div style={{ textAlign: "center", color: colors.textSecondary }}>
+                🚩 {player.solvedChallenges}/11
+              </div>
+
+              <div style={{ textAlign: "center", color: player.streak > 7 ? "#f59e0b" : colors.textSecondary }}>
+                🔥 {player.streak}j
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Footer stats */}
+      <div style={{
+        marginTop: "30px",
+        padding: "20px",
+        background: colors.bgSecondary,
+        borderRadius: "12px",
+        border: `1px solid ${colors.border}`,
+        textAlign: "center"
+      }}>
+        <p style={{ color: colors.textSecondary, fontSize: "0.9rem" }}>
+          🎯 Total : <strong style={{ color: colors.accent }}>{leaderboard.length} hackers</strong> dans le classement
+        </p>
+      </div>
+
     </main>
   );
 }
