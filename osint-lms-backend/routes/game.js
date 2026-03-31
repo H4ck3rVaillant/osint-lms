@@ -261,14 +261,11 @@ router.get("/leaderboard", async (req, res) => {
       SELECT 
         u.id,
         u.username,
-        u.email,
         COALESCE(gp.xp, 0) as xp,
         COALESCE(gp.level, 0) as level,
-        COALESCE(gp.streak, 0) as streak,
-        COALESCE(up.avatar, 'default') as avatar
-      FROM users u
+        COALESCE(gp.streak, 0) as streak
+      FROM utilisateurs u
       LEFT JOIN game_progress gp ON u.id = gp.user_id
-      LEFT JOIN user_preferences up ON u.id = up.user_id
       ORDER BY COALESCE(gp.xp, 0) DESC
     `);
 
@@ -278,7 +275,11 @@ router.get("/leaderboard", async (req, res) => {
     });
   } catch (error) {
     console.error("Erreur leaderboard:", error);
-    res.status(500).json({ success: false, message: "Erreur serveur" });
+    res.status(500).json({ 
+      success: false, 
+      message: "Erreur serveur",
+      error: error.message 
+    });
   }
 });
 
