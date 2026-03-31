@@ -110,7 +110,35 @@ function Layout({ children }: { children: JSX.Element }) {
 }
 
 export default function App() {
-  useLocalStorageSync();
+  const { isLoading } = useLocalStorageSync(); // Synchronisation automatique localStorage ↔ API
+  
+  if (isLoading) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#0b0f1a"
+      }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{
+            width: "60px",
+            height: "60px",
+            border: "4px solid #2a3f3f",
+            borderTop: "4px solid #00ff9c",
+            borderRadius: "50%",
+            animation: "spin 1s linear infinite",
+            margin: "0 auto 20px"
+          }} />
+          <p style={{ color: "#00ff9c", fontSize: "1.1rem", fontWeight: "bold" }}>
+            Restauration de votre progression...
+          </p>
+          <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <GameProvider>

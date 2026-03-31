@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 
 /**
@@ -8,10 +8,14 @@ import { useAuth } from "../auth/AuthContext";
  */
 export function useLocalStorageSync() {
   const { token } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Charger depuis l'API au démarrage
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
 
     const loadFromAPI = async () => {
       try {
@@ -31,6 +35,8 @@ export function useLocalStorageSync() {
         }
       } catch (error) {
         console.error("❌ Erreur chargement progression:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -39,7 +45,7 @@ export function useLocalStorageSync() {
 
   // Sauvegarder vers l'API toutes les 30 secondes
   useEffect(() => {
-    if (!token) return;
+    if (!token || isLoading) return;
 
     const saveToAPI = async () => {
       try {
@@ -101,5 +107,7 @@ export function useLocalStorageSync() {
     const interval = setInterval(saveToAPI, 30000);
 
     return () => clearInterval(interval);
-  }, [token]);
+  }, [token, isLoading]);
+
+  return { isLoading };
 }
