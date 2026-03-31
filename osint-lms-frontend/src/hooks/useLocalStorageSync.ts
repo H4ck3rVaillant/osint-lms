@@ -43,15 +43,27 @@ export function useLocalStorageSync() {
 
     const saveToAPI = async () => {
       try {
-        // Récupérer TOUT le localStorage
-        const allData: Record<string, any> = {};
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && !key.startsWith("auth_")) { // Ignorer les tokens
+        // Clés à sauvegarder (UNIQUEMENT les données de progression)
+        const keysToSave = [
+          'quiz_progress',
+          'exercices_progress', 
+          'etudes_cas_progress',
+          'parcours_progress',
+          'badges_unlocked',
+          'modules_completed',
+          'cyberosint_game_state',
+          'cyberosint_challenges'
+        ];
+
+        // Récupérer SEULEMENT les données importantes
+        const importantData: Record<string, any> = {};
+        for (const key of keysToSave) {
+          const value = localStorage.getItem(key);
+          if (value) {
             try {
-              allData[key] = JSON.parse(localStorage.getItem(key) || "");
+              importantData[key] = JSON.parse(value);
             } catch {
-              allData[key] = localStorage.getItem(key);
+              importantData[key] = value;
             }
           }
         }
@@ -62,7 +74,7 @@ export function useLocalStorageSync() {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ data: allData })
+          body: JSON.stringify({ data: importantData })
         });
 
         console.log("💾 Progression sauvegardée vers l'API");
