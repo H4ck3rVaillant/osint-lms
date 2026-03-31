@@ -23,6 +23,9 @@ export default function Leaderboard() {
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 20;
 
   // Charger les données depuis l'API
   useEffect(() => {
@@ -88,6 +91,17 @@ export default function Leaderboard() {
     .map((p, i) => ({ ...p, rank: i + 1 }));
 
   const myRank = allPlayers.findIndex(p => p.isMe) + 1;
+
+  // Filtrer par recherche
+  const filteredPlayers = allPlayers.filter(p => 
+    p.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Pagination
+  const totalPages = Math.ceil(filteredPlayers.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedPlayers = filteredPlayers.slice(startIndex, endIndex);
 
   const getRankStyle = (rank: number) => {
     if (rank === 1) return { bg: "#fbbf24", color: colors.bgPrimary, icon: "🥇" };
@@ -176,6 +190,34 @@ export default function Leaderboard() {
             <p style={{ color: colors.textPrimary, fontWeight: "bold", margin: 0 }}>{stat.value}</p>
           </div>
         ))}
+      </div>
+
+      {/* Champ de recherche */}
+      <div style={{ marginBottom: "25px" }}>
+        <input
+          type="text"
+          placeholder="🔍 Rechercher un utilisateur..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentPage(1); // Reset à la page 1
+          }}
+          style={{
+            width: "100%",
+            padding: "15px 20px",
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.accent}`,
+            borderRadius: "10px",
+            color: colors.textPrimary,
+            fontSize: "1rem",
+            outline: "none"
+          }}
+        />
+        {searchQuery && (
+          <p style={{ color: colors.textSecondary, fontSize: "0.9rem", marginTop: "8px" }}>
+            {filteredPlayers.length} résultat{filteredPlayers.length > 1 ? 's' : ''} trouvé{filteredPlayers.length > 1 ? 's' : ''}
+          </p>
+        )}
       </div>
 
       {/* Filtres */}
@@ -283,7 +325,7 @@ export default function Leaderboard() {
         </div>
 
         {/* Lignes */}
-        {allPlayers.map((player, idx) => {
+        {paginatedPlayers.map((player, idx) => {
           const rankInfo = getRankStyle(player.rank);
           return (
             <div
@@ -371,6 +413,56 @@ export default function Leaderboard() {
           );
         })}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div style={{
+          marginTop: "30px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "10px",
+          flexWrap: "wrap"
+        }}>
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            style={{
+              padding: "10px 20px",
+              background: currentPage === 1 ? colors.bgSecondary : colors.accent,
+              color: currentPage === 1 ? colors.textSecondary : colors.bgPrimary,
+              border: "none",
+              borderRadius: "8px",
+              cursor: currentPage === 1 ? "not-allowed" : "pointer",
+              fontWeight: "bold",
+              opacity: currentPage === 1 ? 0.5 : 1
+            }}
+          >
+            ← Précédent
+          </button>
+
+          <span style={{ color: colors.textPrimary, fontWeight: "bold" }}>
+            Page {currentPage} / {totalPages}
+          </span>
+
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+            style={{
+              padding: "10px 20px",
+              background: currentPage === totalPages ? colors.bgSecondary : colors.accent,
+              color: currentPage === totalPages ? colors.textSecondary : colors.bgPrimary,
+              border: "none",
+              borderRadius: "8px",
+              cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+              fontWeight: "bold",
+              opacity: currentPage === totalPages ? 0.5 : 1
+            }}
+          >
+            Suivant →
+          </button>
+        </div>
+      )}
 
       {/* Footer info */}
       <div style={{
