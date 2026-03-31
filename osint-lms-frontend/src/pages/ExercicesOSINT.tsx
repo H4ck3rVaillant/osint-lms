@@ -369,8 +369,19 @@ export default function ExercicesOSINT() {
     ? exercises 
     : exercises.filter(ex => ex.difficulty === filterDifficulty);
 
-  const exercise = filteredExercises[current];
-  const progressPercentage = ((current + 1) / filteredExercises.length) * 100;
+  // Corriger current s'il est hors limites
+  useEffect(() => {
+    if (current >= filteredExercises.length && filteredExercises.length > 0) {
+      setCurrent(0);
+    } else if (current < 0) {
+      setCurrent(0);
+    }
+  }, [current, filteredExercises.length]);
+
+  // Protection contre les index invalides
+  const safeIndex = Math.max(0, Math.min(current, filteredExercises.length - 1));
+  const exercise = filteredExercises[safeIndex] || filteredExercises[0];
+  const progressPercentage = ((safeIndex + 1) / filteredExercises.length) * 100;
 
   const difficultyColor = (difficulty: string) => {
     switch(difficulty) {
@@ -463,7 +474,7 @@ export default function ExercicesOSINT() {
             fontWeight: "bold",
             fontSize: "1.1rem"
           }}>
-            Exercice {current + 1}/{filteredExercises.length}
+            Exercice {safeIndex + 1}/{filteredExercises.length}
           </span>
         </div>
         
