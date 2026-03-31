@@ -310,6 +310,22 @@ export default function ExercicesOSINT() {
   const [showResetPopup, setShowResetPopup] = useState(false);
   const [filterDifficulty, setFilterDifficulty] = useState<string>("Tous");
   const [completedExercises, setCompletedExercises] = useState<Set<number>>(new Set());
+  const [current, setCurrent] = useState(() => {
+  const saved = localStorage.getItem("exercices_current_index");
+  return saved ? parseInt(saved) : 0;
+});
+const [filterDifficulty, setFilterDifficulty] = useState<string>(() => {
+  return localStorage.getItem("exercices_filter") || "Tous";
+});
+const [userAnswer, setUserAnswer] = useState("");
+const [answerSubmitted, setAnswerSubmitted] = useState(false);
+
+// Sauvegarder l'index et le filtre à chaque changement
+useEffect(() => {
+  localStorage.setItem("exercices_current_index", current.toString());
+  localStorage.setItem("exercices_filter", filterDifficulty);
+}, [current, filterDifficulty]);
+
 
   // Charger les exercices complétés au montage du composant
   useEffect(() => {
@@ -529,6 +545,60 @@ export default function ExercicesOSINT() {
             {exercise.question}
           </p>
         </div>
+
+{/* Champ réponse */}
+{!answerSubmitted && !completedExercises.has(exercise.id) && (
+  <div style={{
+    background: colors.bgSecondary,
+    padding: "20px",
+    borderLeft: "4px solid #3b82f6",
+    borderRadius: "6px",
+    marginBottom: "20px"
+  }}>
+    <h3 style={{ color: "#3b82f6", marginBottom: "10px", fontSize: "1.1rem" }}>
+      ✍️ Votre réponse
+    </h3>
+    <textarea
+      value={userAnswer}
+      onChange={(e) => setUserAnswer(e.target.value)}
+      placeholder="Tapez votre réponse ici..."
+      style={{
+        width: "100%",
+        minHeight: "120px",
+        padding: "12px",
+        background: colors.bgPrimary,
+        border: `1px solid ${colors.border}`,
+        borderRadius: "6px",
+        color: colors.textPrimary,
+        fontSize: "0.95rem",
+        lineHeight: "1.6",
+        resize: "vertical",
+        fontFamily: "inherit"
+      }}
+    />
+    <button
+      onClick={() => {
+        setAnswerSubmitted(true);
+        markAsCompleted(exercise.id);
+      }}
+      disabled={!userAnswer.trim()}
+      style={{
+        marginTop: "12px",
+        background: userAnswer.trim() ? colors.accent : colors.bgSecondary,
+        color: userAnswer.trim() ? colors.bgPrimary : colors.textTertiary,
+        border: "none",
+        padding: "12px 24px",
+        borderRadius: "8px",
+        cursor: userAnswer.trim() ? "pointer" : "not-allowed",
+        fontWeight: "bold",
+        fontSize: "0.95rem",
+        opacity: userAnswer.trim() ? 1 : 0.5
+      }}
+    >
+      ✓ Soumettre ma réponse
+    </button>
+  </div>
+)}
 
         {/* Conseils */}
         {showTips && (
