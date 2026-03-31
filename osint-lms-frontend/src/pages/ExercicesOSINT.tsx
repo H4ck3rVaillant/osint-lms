@@ -305,10 +305,28 @@ const exercises: Exercise[] = [
 export default function ExercicesOSINT() {
   const colors = useThemeColors();
   
+  // Protection : si colors n'est pas défini, afficher un message
+  if (!colors) {
+    return (
+      <main style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
+        <h1 style={{ color: "#00ff9c", fontSize: "2rem", marginBottom: "10px" }}>
+          Chargement du thème...
+        </h1>
+      </main>
+    );
+  }
+  
   // Charger l'index et le filtre depuis localStorage
   const [current, setCurrent] = useState(() => {
     const saved = localStorage.getItem("exercices_current_index");
-    return saved ? parseInt(saved) : 0;
+    if (saved) {
+      const parsed = parseInt(saved);
+      // Valider que c'est un nombre valide et positif
+      if (!isNaN(parsed) && parsed >= 0) {
+        return parsed;
+      }
+    }
+    return 0;
   });
   
   const [showSolution, setShowSolution] = useState(false);
@@ -316,7 +334,13 @@ export default function ExercicesOSINT() {
   const [showResetPopup, setShowResetPopup] = useState(false);
   
   const [filterDifficulty, setFilterDifficulty] = useState<string>(() => {
-    return localStorage.getItem("exercices_filter") || "Tous";
+    const saved = localStorage.getItem("exercices_filter");
+    const validLevels = ["Tous", "Débutant", "Intermédiaire", "Avancé", "Expert"];
+    // Valider que la valeur est correcte
+    if (saved && validLevels.includes(saved)) {
+      return saved;
+    }
+    return "Tous";
   });
   
   const [completedExercises, setCompletedExercises] = useState<Set<number>>(new Set());
@@ -369,9 +393,31 @@ export default function ExercicesOSINT() {
     ? exercises 
     : exercises.filter(ex => ex.difficulty === filterDifficulty);
 
+  // Debug logging
+  console.log("🔍 ExercicesOSINT Debug:", {
+    filterDifficulty,
+    current,
+    exercisesLength: exercises.length,
+    filteredExercisesLength: filteredExercises.length
+  });
+
+  // Protection complète : s'assurer que le tableau n'est pas vide
+  if (filteredExercises.length === 0) {
+    return (
+      <main style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
+        <h1 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "10px" }}>
+          Exercices OSINT Pratiques
+        </h1>
+        <p style={{ color: colors.textSecondary, marginBottom: "30px" }}>
+          Aucun exercice disponible pour ce niveau.
+        </p>
+      </main>
+    );
+  }
+
   // Corriger current s'il est hors limites
   useEffect(() => {
-    if (current >= filteredExercises.length && filteredExercises.length > 0) {
+    if (current >= filteredExercises.length) {
       setCurrent(0);
     } else if (current < 0) {
       setCurrent(0);
@@ -380,7 +426,19 @@ export default function ExercicesOSINT() {
 
   // Protection contre les index invalides
   const safeIndex = Math.max(0, Math.min(current, filteredExercises.length - 1));
-  const exercise = filteredExercises[safeIndex] || filteredExercises[0];
+  const exercise = filteredExercises[safeIndex];
+  
+  // Si exercise est toujours undefined (ne devrait jamais arriver), fallback
+  if (!exercise) {
+    return (
+      <main style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
+        <h1 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "10px" }}>
+          Chargement...
+        </h1>
+      </main>
+    );
+  }
+
   const progressPercentage = ((safeIndex + 1) / filteredExercises.length) * 100;
 
   const difficultyColor = (difficulty: string) => {
