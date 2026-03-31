@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useThemeColors } from "../context/ThemeContext";
 
 type Exercise = {
   id: number;
@@ -304,28 +303,30 @@ const exercises: Exercise[] = [
 
 export default function ExercicesOSINT() {
   const colors = useThemeColors();
-  const [current, setCurrent] = useState(0);
+  
+  // Charger l'index et le filtre depuis localStorage
+  const [current, setCurrent] = useState(() => {
+    const saved = localStorage.getItem("exercices_current_index");
+    return saved ? parseInt(saved) : 0;
+  });
+  
   const [showSolution, setShowSolution] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [showResetPopup, setShowResetPopup] = useState(false);
-  const [filterDifficulty, setFilterDifficulty] = useState<string>("Tous");
+  
+  const [filterDifficulty, setFilterDifficulty] = useState<string>(() => {
+    return localStorage.getItem("exercices_filter") || "Tous";
+  });
+  
   const [completedExercises, setCompletedExercises] = useState<Set<number>>(new Set());
-  const [current, setCurrent] = useState(() => {
-  const saved = localStorage.getItem("exercices_current_index");
-  return saved ? parseInt(saved) : 0;
-});
-const [filterDifficulty, setFilterDifficulty] = useState<string>(() => {
-  return localStorage.getItem("exercices_filter") || "Tous";
-});
-const [userAnswer, setUserAnswer] = useState("");
-const [answerSubmitted, setAnswerSubmitted] = useState(false);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [answerSubmitted, setAnswerSubmitted] = useState(false);
 
-// Sauvegarder l'index et le filtre à chaque changement
-useEffect(() => {
-  localStorage.setItem("exercices_current_index", current.toString());
-  localStorage.setItem("exercices_filter", filterDifficulty);
-}, [current, filterDifficulty]);
-
+  // Sauvegarder l'index et le filtre à chaque changement
+  useEffect(() => {
+    localStorage.setItem("exercices_current_index", current.toString());
+    localStorage.setItem("exercices_filter", filterDifficulty);
+  }, [current, filterDifficulty]);
 
   // Charger les exercices complétés au montage du composant
   useEffect(() => {
@@ -376,7 +377,7 @@ useEffect(() => {
       case "Intermédiaire": return "#fbbf24";
       case "Avancé": return "#f97316";
       case "Expert": return "#ef4444";
-      default: return colors.accent;
+      default: return "#00ff9c";
     }
   };
 
@@ -389,22 +390,22 @@ useEffect(() => {
 
   return (
     <main style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
-      <h1 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "10px" }}>
+      <h1 style={{ color: "#00ff9c", fontSize: "2rem", marginBottom: "10px" }}>
         Exercices OSINT Pratiques
       </h1>
-      <p style={{ color: colors.textSecondary, marginBottom: "30px", fontSize: "1.1rem" }}>
+      <p style={{ color: "#9ca3af", marginBottom: "30px", fontSize: "1.1rem" }}>
         20 exercices progressifs couvrant tous les niveaux de compétence OSINT
       </p>
 
       {/* Filtres par difficulté */}
       <div style={{
-        background: colors.bgPrimary,
+        background: "#0b0f1a",
         border: "1px solid #00ff9c",
         borderRadius: "8px",
         padding: "20px",
         marginBottom: "20px"
       }}>
-        <h3 style={{ color: colors.accent, marginBottom: "15px", fontSize: "1.1rem" }}>
+        <h3 style={{ color: "#00ff9c", marginBottom: "15px", fontSize: "1.1rem" }}>
           Filtrer par niveau
         </h3>
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" as const }}>
@@ -417,11 +418,13 @@ useEffect(() => {
                 setCurrent(0);
                 setShowSolution(false);
                 setShowTips(false);
+                setUserAnswer("");
+                setAnswerSubmitted(false);
               }}
               style={{
-                background: filterDifficulty === level ? colors.accent : colors.bgSecondary,
-                color: filterDifficulty === level ? colors.bgPrimary : colors.accent,
-                border: `1px solid ${filterDifficulty === level ? colors.accent : colors.border}`,
+                background: filterDifficulty === level ? "#00ff9c" : "#1a1f2e",
+                color: filterDifficulty === level ? "#0b0f1a" : "#00ff9c",
+                border: `1px solid ${filterDifficulty === level ? "#00ff9c" : "#2a3f3f"}`,
                 padding: "8px 16px",
                 borderRadius: "6px",
                 cursor: "pointer",
@@ -439,7 +442,7 @@ useEffect(() => {
 
       {/* Barre de progression */}
       <div style={{ 
-        background: colors.bgPrimary, 
+        background: "#0b0f1a", 
         border: "1px solid #00ff9c", 
         borderRadius: "8px", 
         padding: "24px",
@@ -451,11 +454,11 @@ useEffect(() => {
           alignItems: "center",
           marginBottom: "12px"
         }}>
-          <h3 style={{ color: colors.accent, margin: 0, fontSize: "1.1rem" }}>
+          <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.1rem" }}>
             Progression
           </h3>
           <span style={{ 
-            color: colors.accent, 
+            color: "#00ff9c", 
             fontWeight: "bold",
             fontSize: "1.1rem"
           }}>
@@ -466,7 +469,7 @@ useEffect(() => {
         <div style={{
           width: "100%",
           height: "24px",
-          background: colors.bgSecondary,
+          background: "#1a1f2e",
           borderRadius: "12px",
           overflow: "hidden",
           border: "1px solid #2a3f3f"
@@ -479,7 +482,7 @@ useEffect(() => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: colors.bgPrimary,
+            color: "#0b0f1a",
             fontWeight: "bold",
             fontSize: "0.875rem"
           }}>
@@ -490,7 +493,7 @@ useEffect(() => {
 
       {/* Carte de l'exercice */}
       <section style={{
-        background: colors.bgPrimary,
+        background: "#0b0f1a",
         border: "1px solid #00ff9c",
         borderRadius: "12px",
         padding: "30px",
@@ -498,11 +501,11 @@ useEffect(() => {
       }}>
         <div style={{ marginBottom: "20px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "15px", flexWrap: "wrap" as const }}>
-            <h2 style={{ color: colors.accent, margin: 0, fontSize: "1.5rem" }}>
+            <h2 style={{ color: "#00ff9c", margin: 0, fontSize: "1.5rem" }}>
               {exercise.title}
             </h2>
             <span style={{
-              background: colors.bgSecondary,
+              background: "#1a1f2e",
               color: difficultyColor(exercise.difficulty),
               padding: "4px 12px",
               borderRadius: "6px",
@@ -513,8 +516,8 @@ useEffect(() => {
               {exercise.difficulty}
             </span>
             <span style={{
-              background: colors.bgSecondary,
-              color: colors.accent,
+              background: "#1a1f2e",
+              color: "#00ff9c",
               padding: "4px 12px",
               borderRadius: "6px",
               fontSize: "0.85rem",
@@ -525,20 +528,20 @@ useEffect(() => {
             </span>
           </div>
 
-          <p style={{ color: colors.textSecondary, lineHeight: "1.7", marginBottom: "20px" }}>
+          <p style={{ color: "#9ca3af", lineHeight: "1.7", marginBottom: "20px" }}>
             {exercise.description}
           </p>
         </div>
 
         {/* Question */}
         <div style={{
-          background: colors.bgSecondary,
+          background: "#1a1f2e",
           padding: "20px",
           borderLeft: "4px solid #00ff9c",
           borderRadius: "6px",
           marginBottom: "20px"
         }}>
-          <h3 style={{ color: colors.accent, marginBottom: "10px", fontSize: "1.1rem" }}>
+          <h3 style={{ color: "#00ff9c", marginBottom: "10px", fontSize: "1.1rem" }}>
             ❓ Question
           </h3>
           <p style={{ color: "#e5e7eb", lineHeight: "1.7", margin: 0 }}>
@@ -546,64 +549,65 @@ useEffect(() => {
           </p>
         </div>
 
-{/* Champ réponse */}
-{!answerSubmitted && !completedExercises.has(exercise.id) && (
-  <div style={{
-    background: colors.bgSecondary,
-    padding: "20px",
-    borderLeft: "4px solid #3b82f6",
-    borderRadius: "6px",
-    marginBottom: "20px"
-  }}>
-    <h3 style={{ color: "#3b82f6", marginBottom: "10px", fontSize: "1.1rem" }}>
-      ✍️ Votre réponse
-    </h3>
-    <textarea
-      value={userAnswer}
-      onChange={(e) => setUserAnswer(e.target.value)}
-      placeholder="Tapez votre réponse ici..."
-      style={{
-        width: "100%",
-        minHeight: "120px",
-        padding: "12px",
-        background: colors.bgPrimary,
-        border: `1px solid ${colors.border}`,
-        borderRadius: "6px",
-        color: colors.textPrimary,
-        fontSize: "0.95rem",
-        lineHeight: "1.6",
-        resize: "vertical",
-        fontFamily: "inherit"
-      }}
-    />
-    <button
-      onClick={() => {
-        setAnswerSubmitted(true);
-        markAsCompleted(exercise.id);
-      }}
-      disabled={!userAnswer.trim()}
-      style={{
-        marginTop: "12px",
-        background: userAnswer.trim() ? colors.accent : colors.bgSecondary,
-        color: userAnswer.trim() ? colors.bgPrimary : colors.textTertiary,
-        border: "none",
-        padding: "12px 24px",
-        borderRadius: "8px",
-        cursor: userAnswer.trim() ? "pointer" : "not-allowed",
-        fontWeight: "bold",
-        fontSize: "0.95rem",
-        opacity: userAnswer.trim() ? 1 : 0.5
-      }}
-    >
-      ✓ Soumettre ma réponse
-    </button>
-  </div>
-)}
+        {/* Champ réponse */}
+        {!answerSubmitted && !completedExercises.has(exercise.id) && (
+          <div style={{
+            background: colors.bgSecondary,
+            padding: "20px",
+            borderLeft: "4px solid #3b82f6",
+            borderRadius: "6px",
+            marginBottom: "20px"
+          }}>
+            <h3 style={{ color: "#3b82f6", marginBottom: "10px", fontSize: "1.1rem" }}>
+              ✍️ Votre réponse
+            </h3>
+            <textarea
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Tapez votre réponse ici..."
+              style={{
+                width: "100%",
+                minHeight: "120px",
+                padding: "12px",
+                background: colors.bgPrimary,
+                border: `1px solid ${colors.border}`,
+                borderRadius: "6px",
+                color: colors.textPrimary,
+                fontSize: "0.95rem",
+                lineHeight: "1.6",
+                resize: "vertical",
+                fontFamily: "inherit"
+              }}
+            />
+            <button
+              onClick={() => {
+                setAnswerSubmitted(true);
+                markAsCompleted(exercise.id);
+              }}
+              disabled={!userAnswer.trim()}
+              style={{
+                marginTop: "12px",
+                background: userAnswer.trim() ? colors.accent : colors.bgSecondary,
+                color: userAnswer.trim() ? colors.bgPrimary : colors.textTertiary,
+                border: "none",
+                padding: "12px 24px",
+                borderRadius: "8px",
+                cursor: userAnswer.trim() ? "pointer" : "not-allowed",
+                fontWeight: "bold",
+                fontSize: "0.95rem",
+                transition: "all 0.3s ease",
+                opacity: userAnswer.trim() ? 1 : 0.5
+              }}
+            >
+              ✓ Soumettre ma réponse
+            </button>
+          </div>
+        )}
 
         {/* Conseils */}
         {showTips && (
           <div style={{
-            background: colors.bgSecondary,
+            background: "#1a1f2e",
             padding: "20px",
             borderLeft: "4px solid #fbbf24",
             borderRadius: "6px",
@@ -612,7 +616,7 @@ useEffect(() => {
             <h3 style={{ color: "#fbbf24", marginBottom: "10px", fontSize: "1.1rem" }}>
               💡 Conseils
             </h3>
-            <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px", margin: 0 }}>
+            <ul style={{ color: "#9ca3af", lineHeight: "1.8", paddingLeft: "20px", margin: 0 }}>
               {exercise.tips.map((tip, index) => (
                 <li key={index}>{tip}</li>
               ))}
@@ -623,7 +627,7 @@ useEffect(() => {
         {/* Solution */}
         {showSolution && (
           <div style={{
-            background: colors.bgSecondary,
+            background: "#1a1f2e",
             padding: "20px",
             borderLeft: "4px solid #22c55e",
             borderRadius: "6px",
@@ -642,8 +646,8 @@ useEffect(() => {
         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" as const }}>
           <button
             style={{
-              background: showTips ? colors.bgSecondary : "#fbbf24",
-              color: showTips ? "#fbbf24" : colors.bgPrimary,
+              background: showTips ? "#1a1f2e" : "#fbbf24",
+              color: showTips ? "#fbbf24" : "#0b0f1a",
               border: showTips ? "1px solid #fbbf24" : "none",
               padding: "12px 24px",
               borderRadius: "8px",
@@ -659,8 +663,8 @@ useEffect(() => {
 
           <button
             style={{
-              background: showSolution ? colors.bgSecondary : colors.accent,
-              color: showSolution ? colors.accent : colors.bgPrimary,
+              background: showSolution ? "#1a1f2e" : "#00ff9c",
+              color: showSolution ? "#00ff9c" : "#0b0f1a",
               border: showSolution ? "1px solid #00ff9c" : "none",
               padding: "12px 24px",
               borderRadius: "8px",
@@ -683,8 +687,8 @@ useEffect(() => {
       <div style={{ display: "flex", gap: "12px", justifyContent: "space-between", flexWrap: "wrap" as const }}>
         <button
           style={{
-            background: current === 0 ? colors.bgSecondary : colors.bgPrimary,
-            color: colors.accent,
+            background: current === 0 ? "#1a1f2e" : "#0b0f1a",
+            color: "#00ff9c",
             border: "1px solid #00ff9c",
             padding: "12px 24px",
             borderRadius: "8px",
@@ -697,6 +701,8 @@ useEffect(() => {
           onClick={() => {
             setShowSolution(false);
             setShowTips(false);
+            setUserAnswer("");
+            setAnswerSubmitted(false);
             setCurrent(current - 1);
           }}
         >
@@ -705,8 +711,8 @@ useEffect(() => {
 
         <button
           style={{
-            background: current === filteredExercises.length - 1 ? colors.bgSecondary : colors.accent,
-            color: current === filteredExercises.length - 1 ? colors.accent : colors.bgPrimary,
+            background: current === filteredExercises.length - 1 ? "#1a1f2e" : "#00ff9c",
+            color: current === filteredExercises.length - 1 ? "#00ff9c" : "#0b0f1a",
             border: current === filteredExercises.length - 1 ? "1px solid #00ff9c" : "none",
             padding: "12px 24px",
             borderRadius: "8px",
@@ -719,6 +725,8 @@ useEffect(() => {
           onClick={() => {
             setShowSolution(false);
             setShowTips(false);
+            setUserAnswer("");
+            setAnswerSubmitted(false);
             setCurrent(current + 1);
           }}
         >
@@ -728,13 +736,13 @@ useEffect(() => {
 
       {/* Liste des exercices */}
       <section style={{
-        background: colors.bgPrimary,
+        background: "#0b0f1a",
         border: "1px solid #2a3f3f",
         borderRadius: "12px",
         padding: "24px",
         marginTop: "30px"
       }}>
-        <h2 style={{ color: colors.accent, marginBottom: "20px", fontSize: "1.3rem" }}>
+        <h2 style={{ color: "#00ff9c", marginBottom: "20px", fontSize: "1.3rem" }}>
           📋 Liste des exercices {filterDifficulty !== "Tous" && `(${filterDifficulty})`}
         </h2>
         <div style={{ display: "grid", gap: "10px" }}>
@@ -746,10 +754,12 @@ useEffect(() => {
                 setCurrent(index);
                 setShowSolution(false);
                 setShowTips(false);
+                setUserAnswer("");
+                setAnswerSubmitted(false);
               }}
               style={{
-                background: index === current ? colors.bgSecondary : "transparent",
-                border: `1px solid ${index === current ? colors.accent : colors.border}`,
+                background: index === current ? "#1a1f2e" : "transparent",
+                border: `1px solid ${index === current ? "#00ff9c" : "#2a3f3f"}`,
                 borderRadius: "8px",
                 padding: "12px 16px",
                 cursor: "pointer",
@@ -760,14 +770,14 @@ useEffect(() => {
               }}
             >
               <span style={{ 
-                color: completedExercises.has(ex.id) ? colors.accent : index === current ? colors.accent : "#6b7280",
+                color: completedExercises.has(ex.id) ? "#00ff9c" : index === current ? "#00ff9c" : "#6b7280",
                 fontSize: "1.2rem"
               }}>
                 {completedExercises.has(ex.id) ? "✓" : index === current ? "▶" : "○"}
               </span>
               <div style={{ flex: 1 }}>
                 <p style={{ 
-                  color: completedExercises.has(ex.id) ? colors.accent : index === current ? colors.accent : colors.textSecondary,
+                  color: completedExercises.has(ex.id) ? "#00ff9c" : index === current ? "#00ff9c" : "#9ca3af",
                   fontWeight: index === current ? "bold" : "normal",
                   margin: 0
                 }}>
@@ -791,8 +801,8 @@ useEffect(() => {
         <button
           onClick={() => setShowResetPopup(true)}
           style={{
-            background: colors.bgPrimary,
-            color: colors.accent,
+            background: "#0b0f1a",
+            color: "#00ff9c",
             border: "1px solid #00ff9c",
             padding: "14px 32px",
             borderRadius: "8px",
@@ -802,12 +812,12 @@ useEffect(() => {
             transition: "all 0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = colors.accent;
-            e.currentTarget.style.color = colors.bgPrimary;
+            e.currentTarget.style.background = "#00ff9c";
+            e.currentTarget.style.color = "#0b0f1a";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = colors.bgPrimary;
-            e.currentTarget.style.color = colors.accent;
+            e.currentTarget.style.background = "#0b0f1a";
+            e.currentTarget.style.color = "#00ff9c";
           }}
         >
           🔄 Recommencer depuis le début
@@ -822,14 +832,14 @@ useEffect(() => {
           left: 0,
           right: 0,
           bottom: 0,
-          background: colors.overlay,
+          background: "rgba(0, 0, 0, 0.85)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 1000,
         }}>
           <div style={{
-            background: colors.bgPrimary,
+            background: "#0b0f1a",
             border: "2px solid #00ff9c",
             borderRadius: "12px",
             padding: "40px",
@@ -837,10 +847,10 @@ useEffect(() => {
             textAlign: "center",
             boxShadow: "0 0 50px rgba(0, 255, 156, 0.3)",
           }}>
-            <h3 style={{ color: colors.accent, marginBottom: "15px", fontSize: "1.5rem" }}>
+            <h3 style={{ color: "#00ff9c", marginBottom: "15px", fontSize: "1.5rem" }}>
               Recommencer les exercices ?
             </h3>
-            <p style={{ color: colors.textSecondary, marginBottom: "30px", lineHeight: "1.6" }}>
+            <p style={{ color: "#9ca3af", marginBottom: "30px", lineHeight: "1.6" }}>
               Vous allez revenir au premier exercice et réinitialiser les filtres. 
               Vous pourrez toujours revenir à n'importe quel exercice via la liste.
             </p>
@@ -855,6 +865,8 @@ useEffect(() => {
                   setShowTips(false);
                   setShowResetPopup(false);
                   setCompletedExercises(new Set());
+                  setUserAnswer("");
+                  setAnswerSubmitted(false);
                   localStorage.removeItem("completed_exercises");
                   localStorage.setItem("exercices_completed", "0");
                   localStorage.removeItem("badge_exo_debutant");
@@ -862,11 +874,13 @@ useEffect(() => {
                   localStorage.removeItem("badge_exo_avance");
                   localStorage.removeItem("badge_exo_expert");
                   localStorage.removeItem("badge_exo_master");
+                  localStorage.removeItem("exercices_current_index");
+                  localStorage.removeItem("exercices_filter");
                 }}
                 style={{
                   padding: "12px 28px",
-                  background: colors.accent,
-                  color: colors.bgPrimary,
+                  background: "#00ff9c",
+                  color: "#0b0f1a",
                   borderRadius: "8px",
                   cursor: "pointer",
                   border: "none",
@@ -881,7 +895,7 @@ useEffect(() => {
                 style={{
                   padding: "12px 28px",
                   background: "transparent",
-                  color: colors.accent,
+                  color: "#00ff9c",
                   border: "1px solid #00ff9c",
                   borderRadius: "8px",
                   cursor: "pointer",

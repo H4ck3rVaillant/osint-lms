@@ -49,19 +49,27 @@ export function useLocalStorageSync() {
 
     const saveToAPI = async () => {
       try {
-        // Clés à sauvegarder (UNIQUEMENT les données de progression)
+        // Clés à sauvegarder (TOUTES les données de progression)
         const keysToSave = [
           // Quiz
           'quiz_results',
           'quiz_badges',
-          // Exercices
+          // Exercices  
           'completed_exercises',
           'exercices_completed',
+          'exercices_current_index',
+          'exercices_filter',
           'badge_exo_debutant',
           'badge_exo_intermediaire',
           'badge_exo_avance',
           'badge_exo_expert',
           'badge_exo_master',
+          // Challenges hebdo
+          'challenges_solved',
+          // Badges généraux
+          'badge_quiz_gold',
+          'badge_quiz_silver',
+          'badge_quiz_bronze',
           // Études de cas
           'etudes_cas_progress',
           // Parcours
