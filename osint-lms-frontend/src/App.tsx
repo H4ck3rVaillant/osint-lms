@@ -2,6 +2,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuth } from "./auth/AuthContext";
 import { GameProvider } from "./context/GameContext";
+import { useLocalStorageSync } from "./hooks/useLocalStorageSync";
 import Header from "./components/Header";
 import GameNotification from "./components/GameNotification";
 import Home from "./pages/Home";
@@ -58,11 +59,6 @@ import Gamification from "./pages/Gamification";
 import StreakCalendar from "./pages/StreakCalendar";
 import ArgusRecon from "./pages/ArgusRecon";
 import ArgusConsole from "./pages/ArgusConsole";
-import { useLocalStorageSync } from "./hooks/useLocalStorageSync";
-
-function App() {
-  useLocalStorageSync();
-}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -74,7 +70,6 @@ function ScrollToTop() {
 
 function Protected({ children }: { children: JSX.Element }) {
   const { user, isLoading } = useAuth();
-
   if (isLoading) {
     return (
       <div style={{
@@ -100,7 +95,6 @@ function Protected({ children }: { children: JSX.Element }) {
       </div>
     );
   }
-
   if (!user) return <Navigate to="/login" replace />;
   return children;
 }
@@ -116,6 +110,8 @@ function Layout({ children }: { children: JSX.Element }) {
 }
 
 export default function App() {
+  useLocalStorageSync();
+  
   return (
     <GameProvider>
       <ScrollToTop />
