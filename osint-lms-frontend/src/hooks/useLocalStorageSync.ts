@@ -45,14 +45,25 @@ export function useLocalStorageSync() {
       try {
         // Clés à sauvegarder (UNIQUEMENT les données de progression)
         const keysToSave = [
-          'quiz_progress',
-          'exercices_progress', 
+          // Quiz
+          'quiz_results',
+          'quiz_badges',
+          // Exercices
+          'completed_exercises',
+          'exercices_completed',
+          'badge_exo_debutant',
+          'badge_exo_intermediaire',
+          'badge_exo_avance',
+          'badge_exo_expert',
+          'badge_exo_master',
+          // Études de cas
           'etudes_cas_progress',
+          // Parcours
           'parcours_progress',
-          'badges_unlocked',
-          'modules_completed',
+          // CTF et Game
           'cyberosint_game_state',
-          'cyberosint_challenges'
+          'cyberosint_challenges',
+          'ctf_progress'
         ];
 
         // Récupérer SEULEMENT les données importantes
