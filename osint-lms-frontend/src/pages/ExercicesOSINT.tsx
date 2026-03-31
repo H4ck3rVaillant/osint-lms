@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useThemeColors } from "../context/ThemeContext";
 
 type Exercise = {
   id: number;
