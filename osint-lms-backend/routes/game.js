@@ -33,7 +33,7 @@ router.get("/health", async (req, res) => {
 router.post("/save", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { xp, level, streak, longestStreak, lastActivity, solvedChallenges, badges } = req.body;
+    const { xp, level, streak, longestStreak, lastActivity, solvedChallenges } = req.body;
 
     // Vérifier si l'utilisateur a déjà une progression
     const existing = await db.query(
@@ -77,87 +77,9 @@ router.post("/save", authMiddleware, async (req, res) => {
       }
     }
 
-    // Sauvegarder les badges débloqués
-    if (badges && badges.length > 0) {
-      for (const badge of badges) {
-        if (badge.unlocked) {
-          // Vérifier si le badge est déjà enregistré
-          const existingBadge = await db.query(
-            "SELECT * FROM user_badges WHERE user_id = $1 AND badge_id = $2",
-            [userId, badge.id]
-          );
-
-          if (existingBadge.rows.length === 0) {
-            await db.query(
-              "INSERT INTO user_badges (user_id, badge_id, unlocked_at) VALUES ($1, $2, $3)",
-              [userId, badge.id, badge.unlockedAt || new Date().toISOString()]
-            );
-          }
-        }
-      }
-    }
-
     res.json({ success: true, message: "Progression sauvegardée" });
   } catch (error) {
     console.error("Erreur sauvegarde progression:", error);
-    res.status(500).json({ success: false, message: "Erreur serveur" });
-  }
-});
-
-/* ====================================
-   POST /game/save-full
-   Sauvegarder TOUTE la progression (Quiz, Exercices, Badges, etc.)
-==================================== */
-router.post("/save-full", authMiddleware, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { data } = req.body;
-
-    // Sauvegarder ou mettre à jour
-    const existing = await db.query(
-      "SELECT * FROM user_progression WHERE user_id = $1",
-      [userId]
-    );
-
-    if (existing.rows.length > 0) {
-      await db.query(
-        "UPDATE user_progression SET data = $1, updated_at = NOW() WHERE user_id = $2",
-        [JSON.stringify(data), userId]
-      );
-    } else {
-      await db.query(
-        "INSERT INTO user_progression (user_id, data) VALUES ($1, $2)",
-        [userId, JSON.stringify(data)]
-      );
-    }
-
-    res.json({ success: true, message: "Progression complète sauvegardée" });
-  } catch (error) {
-    console.error("Erreur sauvegarde progression complète:", error);
-    res.status(500).json({ success: false, message: "Erreur serveur" });
-  }
-});
-
-/* ====================================
-   GET /game/load-full
-   Charger TOUTE la progression
-==================================== */
-router.get("/load-full", authMiddleware, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    
-    const result = await db.query(
-      "SELECT data FROM user_progression WHERE user_id = $1",
-      [userId]
-    );
-
-    if (result.rows.length > 0) {
-      res.json({ success: true, data: result.rows[0].data });
-    } else {
-      res.json({ success: true, data: null });
-    }
-  } catch (error) {
-    console.error("Erreur chargement progression complète:", error);
     res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
@@ -170,61 +92,11 @@ router.get("/load", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // ✅ CALCULER LE STREAK BASÉ SUR last_login
-    const userInfo = await db.query(
-      "SELECT last_login FROM utilisateurs WHERE id = $1",
-      [userId]
-    );
-
     // Charger la progression
     const progress = await db.query(
       "SELECT * FROM game_progress WHERE user_id = $1",
       [userId]
     );
-
-    // Si l'utilisateur a une progression, calculer le streak
-    if (progress.rows.length > 0 && userInfo.rows.length > 0) {
-      const lastLogin = userInfo.rows[0].last_login;
-      const currentProgress = progress.rows[0];
-      
-      if (lastLogin) {
-        const today = new Date().toISOString().split('T')[0];
-        const loginDate = new Date(lastLogin).toISOString().split('T')[0];
-        const lastActivityDate = currentProgress.last_activity ? new Date(currentProgress.last_activity).toISOString().split('T')[0] : null;
-        
-        // Calculer le streak
-        let newStreak = currentProgress.streak || 0;
-        let newLongestStreak = currentProgress.longest_streak || 0;
-        
-        // Si connexion aujourd'hui et dernière activité n'était pas aujourd'hui
-        if (loginDate === today && lastActivityDate !== today) {
-          // Vérifier si c'était hier
-          const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-          if (lastActivityDate === yesterday) {
-            newStreak = (currentProgress.streak || 0) + 1;
-          } else if (lastActivityDate === null || lastActivityDate < yesterday) {
-            newStreak = 1; // Reset si interruption
-          }
-          
-          newLongestStreak = Math.max(newLongestStreak, newStreak);
-          
-          // Mettre à jour le streak dans la DB
-          await db.query(
-            "UPDATE game_progress SET streak = $1, longest_streak = $2, last_activity = $3 WHERE user_id = $4",
-            [newStreak, newLongestStreak, today, userId]
-          );
-          
-          console.log(`✅ Streak mis à jour pour user ${userId}: ${newStreak} jours`);
-          
-          // Recharger la progression avec les nouvelles valeurs
-          const updatedProgress = await db.query(
-            "SELECT * FROM game_progress WHERE user_id = $1",
-            [userId]
-          );
-          progress.rows[0] = updatedProgress.rows[0];
-        }
-      }
-    }
 
     // Charger les challenges résolus
     const challenges = await db.query(
@@ -294,76 +166,66 @@ router.post("/preferences", authMiddleware, async (req, res) => {
 });
 
 /* ====================================
-   GET /game/leaderboard
-   Récupérer le classement global
+   POST /game/save-full
+   Sauvegarder TOUTE la progression (localStorage complet)
 ==================================== */
-router.get("/leaderboard", authMiddleware, async (req, res) => {
+router.post("/save-full", authMiddleware, async (req, res) => {
   try {
-    // Récupérer TOUS les utilisateurs avec leur progression (sans filtre de rôle)
-    const leaderboard = await db.query(`
-      SELECT 
-        u.id,
-        u.username,
-        COALESCE(gp.xp, 0) as xp,
-        COALESCE(gp.level, 0) as level,
-        COALESCE(gp.streak, 0) as streak,
-        COALESCE(gp.longest_streak, 0) as longest_streak,
-        COALESCE(up.avatar, 'default') as avatar,
-        COUNT(DISTINCT sc.challenge_id) as solved_challenges
-      FROM utilisateurs u
-      LEFT JOIN game_progress gp ON u.id = gp.user_id
-      LEFT JOIN user_preferences up ON u.id = up.user_id
-      LEFT JOIN solved_challenges sc ON u.id = sc.user_id
-      GROUP BY u.id, u.username, gp.xp, gp.level, gp.streak, gp.longest_streak, up.avatar
-      ORDER BY COALESCE(gp.xp, 0) DESC, u.username ASC
-    `);
+    const userId = req.user.id;
+    const { data } = req.body;
 
-    // Ajouter le rang
-    const rankedLeaderboard = leaderboard.rows.map((user, index) => ({
-      rank: index + 1,
-      username: user.username,
-      xp: user.xp,
-      level: user.level,
-      streak: user.streak,
-      longestStreak: user.longest_streak,
-      avatar: user.avatar,
-      solvedChallenges: parseInt(user.solved_challenges)
-    }));
+    if (!data || typeof data !== 'object') {
+      return res.status(400).json({ success: false, message: "Données invalides" });
+    }
 
-    res.json({
-      success: true,
-      data: rankedLeaderboard
-    });
+    // Vérifier si l'utilisateur a déjà une progression
+    const existing = await db.query(
+      "SELECT * FROM user_progression WHERE user_id = $1",
+      [userId]
+    );
+
+    if (existing.rows.length > 0) {
+      // Mettre à jour
+      await db.query(
+        "UPDATE user_progression SET data = $1, updated_at = NOW() WHERE user_id = $2",
+        [JSON.stringify(data), userId]
+      );
+    } else {
+      // Créer
+      await db.query(
+        "INSERT INTO user_progression (user_id, data) VALUES ($1, $2)",
+        [userId, JSON.stringify(data)]
+      );
+    }
+
+    res.json({ success: true, message: "Progression complète sauvegardée" });
   } catch (error) {
-    console.error("Erreur récupération leaderboard:", error);
+    console.error("Erreur sauvegarde progression complète:", error);
     res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
 
 /* ====================================
-   DELETE /game/reset-all-challenges
-   Réinitialiser tous les challenges CTF
+   GET /game/load-full
+   Charger TOUTE la progression (localStorage complet)
 ==================================== */
-router.delete("/reset-all-challenges", authMiddleware, async (req, res) => {
+router.get("/load-full", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Supprimer tous les challenges résolus
-    await db.query(
-      "DELETE FROM solved_challenges WHERE user_id = $1",
+    const result = await db.query(
+      "SELECT data FROM user_progression WHERE user_id = $1",
       [userId]
     );
 
-    // Réinitialiser la progression à 0
-    await db.query(
-      "UPDATE game_progress SET xp = 0, level = 0 WHERE user_id = $1",
-      [userId]
-    );
-
-    console.log(`✅ Challenges réinitialisés pour user ${userId}`);
-    res.json({ success: true, message: "Tous les challenges ont été réinitialisés" });
+    if (result.rows.length > 0) {
+      res.json({ success: true, data: result.rows[0].data });
+    } else {
+      // Pas de données sauvegardées, renvoyer un objet vide
+      res.json({ success: true, data: {} });
+    }
   } catch (error) {
-    console.error("Erreur réinitialisation challenges:", error);
+    console.error("Erreur chargement progression complète:", error);
     res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
