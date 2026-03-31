@@ -302,12 +302,26 @@ const exercises: Exercise[] = [
 ];
 
 export default function ExercicesOSINT() {
-  const [current, setCurrent] = useState(0);
+  // Charger l'index et le filtre depuis localStorage
+  const [current, setCurrent] = useState(() => {
+    const saved = localStorage.getItem("exercices_current_index");
+    return saved ? parseInt(saved) : 0;
+  });
   const [showSolution, setShowSolution] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [showResetPopup, setShowResetPopup] = useState(false);
-  const [filterDifficulty, setFilterDifficulty] = useState<string>("Tous");
+  const [filterDifficulty, setFilterDifficulty] = useState<string>(() => {
+    return localStorage.getItem("exercices_filter") || "Tous";
+  });
   const [completedExercises, setCompletedExercises] = useState<Set<number>>(new Set());
+  const [userAnswer, setUserAnswer] = useState("");
+  const [answerSubmitted, setAnswerSubmitted] = useState(false);
+
+  // Sauvegarder l'index et le filtre dans localStorage
+  useEffect(() => {
+    localStorage.setItem("exercices_current_index", current.toString());
+    localStorage.setItem("exercices_filter", filterDifficulty);
+  }, [current, filterDifficulty]);
 
   // Charger les exercices complétés au montage du composant
   useEffect(() => {
@@ -398,6 +412,8 @@ export default function ExercicesOSINT() {
                 setCurrent(0);
                 setShowSolution(false);
                 setShowTips(false);
+                setUserAnswer("");
+                setAnswerSubmitted(false);
               }}
               style={{
                 background: filterDifficulty === level ? "#00ff9c" : "#1a1f2e",
@@ -527,6 +543,61 @@ export default function ExercicesOSINT() {
           </p>
         </div>
 
+        {/* Champ réponse */}
+        {!answerSubmitted && !completedExercises.has(exercise.id) && (
+          <div style={{
+            background: "#1a1f2e",
+            padding: "20px",
+            borderLeft: "4px solid #3b82f6",
+            borderRadius: "6px",
+            marginBottom: "20px"
+          }}>
+            <h3 style={{ color: "#3b82f6", marginBottom: "10px", fontSize: "1.1rem" }}>
+              ✍️ Votre réponse
+            </h3>
+            <textarea
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder="Tapez votre réponse ici..."
+              style={{
+                width: "100%",
+                minHeight: "120px",
+                padding: "12px",
+                background: "#0b0f1a",
+                border: "1px solid #2a3f3f",
+                borderRadius: "6px",
+                color: "#e5e7eb",
+                fontSize: "0.95rem",
+                lineHeight: "1.6",
+                resize: "vertical",
+                fontFamily: "inherit"
+              }}
+            />
+            <button
+              onClick={() => {
+                setAnswerSubmitted(true);
+                markAsCompleted(exercise.id);
+              }}
+              disabled={!userAnswer.trim()}
+              style={{
+                marginTop: "12px",
+                background: userAnswer.trim() ? "#00ff9c" : "#1a1f2e",
+                color: userAnswer.trim() ? "#0b0f1a" : "#6b7280",
+                border: "none",
+                padding: "12px 24px",
+                borderRadius: "8px",
+                cursor: userAnswer.trim() ? "pointer" : "not-allowed",
+                fontWeight: "bold",
+                fontSize: "0.95rem",
+                transition: "all 0.3s ease",
+                opacity: userAnswer.trim() ? 1 : 0.5
+              }}
+            >
+              ✓ Soumettre ma réponse
+            </button>
+          </div>
+        )}
+
         {/* Conseils */}
         {showTips && (
           <div style={{
@@ -624,6 +695,8 @@ export default function ExercicesOSINT() {
           onClick={() => {
             setShowSolution(false);
             setShowTips(false);
+            setUserAnswer("");
+            setAnswerSubmitted(false);
             setCurrent(current - 1);
           }}
         >
@@ -646,6 +719,8 @@ export default function ExercicesOSINT() {
           onClick={() => {
             setShowSolution(false);
             setShowTips(false);
+            setUserAnswer("");
+            setAnswerSubmitted(false);
             setCurrent(current + 1);
           }}
         >
@@ -672,6 +747,8 @@ export default function ExercicesOSINT() {
                 setCurrent(index);
                 setShowSolution(false);
                 setShowTips(false);
+                setUserAnswer("");
+                setAnswerSubmitted(false);
               }}
               style={{
                 background: index === current ? "#1a1f2e" : "transparent",
@@ -780,6 +857,8 @@ export default function ExercicesOSINT() {
                   setShowTips(false);
                   setShowResetPopup(false);
                   setCompletedExercises(new Set());
+                  setUserAnswer("");
+                  setAnswerSubmitted(false);
                   localStorage.removeItem("completed_exercises");
                   localStorage.setItem("exercices_completed", "0");
                   localStorage.removeItem("badge_exo_debutant");
@@ -787,6 +866,8 @@ export default function ExercicesOSINT() {
                   localStorage.removeItem("badge_exo_avance");
                   localStorage.removeItem("badge_exo_expert");
                   localStorage.removeItem("badge_exo_master");
+                  localStorage.removeItem("exercices_current_index");
+                  localStorage.removeItem("exercices_filter");
                 }}
                 style={{
                   padding: "12px 28px",
