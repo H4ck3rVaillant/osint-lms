@@ -11,7 +11,7 @@ interface Question {
   options?: string[];
   correctAnswer: number; // Index de la bonne réponse (0, 1, 2, 3 pour QCM, 0=Vrai 1=Faux pour boolean)
   explanation: string;
-} 
+}
 
 // Base de données des questions par thème
 const quizDatabase: Record<string, Question[]> = {
