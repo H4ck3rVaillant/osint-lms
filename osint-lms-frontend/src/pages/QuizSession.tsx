@@ -221,7 +221,6 @@ export default function QuizSession() {
   };
 
   const handleNextQuestion = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
@@ -233,7 +232,6 @@ export default function QuizSession() {
   }, [currentQuestion, questions.length]);
 
   const handleFinishQuiz = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
     setIsFinished(true);
     
     const percentage = (score / questions.length) * 100;
@@ -251,7 +249,33 @@ export default function QuizSession() {
       xpGain = 150;
     }
 
+    // Sauvegarder le résultat dans localStorage
+    const quizResult = {
+      themeId,
+      score,
+      total: questions.length,
+      percentage,
+      badge,
+      xpGain,
+      completedAt: new Date().toISOString()
+    };
+    
+    // Récupérer les résultats existants
+    const existingResults = localStorage.getItem("quiz_results");
+    let results = existingResults ? JSON.parse(existingResults) : [];
+    
+    // Ajouter le nouveau résultat
+    results.push(quizResult);
+    localStorage.setItem("quiz_results", JSON.stringify(results));
+    
+    // Sauvegarder le badge si obtenu
     if (badge) {
+      const existingBadges = localStorage.getItem("quiz_badges");
+      let badges = existingBadges ? JSON.parse(existingBadges) : [];
+      if (!badges.includes(badge)) {
+        badges.push(badge);
+        localStorage.setItem("quiz_badges", JSON.stringify(badges));
+      }
       unlockBadge(badge, `Quiz ${themeId} - ${percentage >= 95 ? "Or" : percentage >= 80 ? "Argent" : "Bronze"}`);
     }
     
@@ -278,18 +302,6 @@ export default function QuizSession() {
     if (percentage >= 80) return { emoji: "🥈", name: "Argent", color: "#c0c0c0" };
     if (percentage >= 60) return { emoji: "🥉", name: "Bronze", color: "#cd7f32" };
     return { emoji: "❌", name: "Aucun", color: "#ef4444" };
-  };
-
-  const handleResetQuiz = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    setCurrentQuestion(0);
-    setSelectedAnswer(null);
-    setScore(0);
-    setShowExplanation(false);
-    setAnsweredQuestions(new Array(questions.length).fill(false));
-    setGlobalTime(15 * 60);
-    setQuestionTime(30);
-    setIsFinished(false);
   };
 
   if (questions.length === 0) {
@@ -411,7 +423,7 @@ export default function QuizSession() {
             justifyContent: "center"
           }}>
             <button
-              onClick={handleResetQuiz}
+              onClick={() => window.location.reload()}
               style={{
                 background: "transparent",
                 color: colors.accent,
