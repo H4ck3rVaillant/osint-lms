@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useThemeColors } from "../context/ThemeContext";
 
 type Exercise = {
   id: number;
@@ -303,55 +302,12 @@ const exercises: Exercise[] = [
 ];
 
 export default function ExercicesOSINT() {
-  const colors = useThemeColors();
-  
-  // Protection : si colors n'est pas défini, afficher un message
-  if (!colors) {
-    return (
-      <main style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
-        <h1 style={{ color: "#00ff9c", fontSize: "2rem", marginBottom: "10px" }}>
-          Chargement du thème...
-        </h1>
-      </main>
-    );
-  }
-  
-  // Charger l'index et le filtre depuis localStorage
-  const [current, setCurrent] = useState(() => {
-    const saved = localStorage.getItem("exercices_current_index");
-    if (saved) {
-      const parsed = parseInt(saved);
-      // Valider que c'est un nombre valide et positif
-      if (!isNaN(parsed) && parsed >= 0) {
-        return parsed;
-      }
-    }
-    return 0;
-  });
-  
+  const [current, setCurrent] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [showResetPopup, setShowResetPopup] = useState(false);
-  
-  const [filterDifficulty, setFilterDifficulty] = useState<string>(() => {
-    const saved = localStorage.getItem("exercices_filter");
-    const validLevels = ["Tous", "Débutant", "Intermédiaire", "Avancé", "Expert"];
-    // Valider que la valeur est correcte
-    if (saved && validLevels.includes(saved)) {
-      return saved;
-    }
-    return "Tous";
-  });
-  
+  const [filterDifficulty, setFilterDifficulty] = useState<string>("Tous");
   const [completedExercises, setCompletedExercises] = useState<Set<number>>(new Set());
-  const [userAnswer, setUserAnswer] = useState("");
-  const [answerSubmitted, setAnswerSubmitted] = useState(false);
-
-  // Sauvegarder l'index et le filtre à chaque changement
-  useEffect(() => {
-    localStorage.setItem("exercices_current_index", current.toString());
-    localStorage.setItem("exercices_filter", filterDifficulty);
-  }, [current, filterDifficulty]);
 
   // Charger les exercices complétés au montage du composant
   useEffect(() => {
@@ -393,53 +349,8 @@ export default function ExercicesOSINT() {
     ? exercises 
     : exercises.filter(ex => ex.difficulty === filterDifficulty);
 
-  // Debug logging
-  console.log("🔍 ExercicesOSINT Debug:", {
-    filterDifficulty,
-    current,
-    exercisesLength: exercises.length,
-    filteredExercisesLength: filteredExercises.length
-  });
-
-  // Protection complète : s'assurer que le tableau n'est pas vide
-  if (filteredExercises.length === 0) {
-    return (
-      <main style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
-        <h1 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "10px" }}>
-          Exercices OSINT Pratiques
-        </h1>
-        <p style={{ color: colors.textSecondary, marginBottom: "30px" }}>
-          Aucun exercice disponible pour ce niveau.
-        </p>
-      </main>
-    );
-  }
-
-  // Corriger current s'il est hors limites
-  useEffect(() => {
-    if (current >= filteredExercises.length) {
-      setCurrent(0);
-    } else if (current < 0) {
-      setCurrent(0);
-    }
-  }, [current, filteredExercises.length]);
-
-  // Protection contre les index invalides
-  const safeIndex = Math.max(0, Math.min(current, filteredExercises.length - 1));
-  const exercise = filteredExercises[safeIndex];
-  
-  // Si exercise est toujours undefined (ne devrait jamais arriver), fallback
-  if (!exercise) {
-    return (
-      <main style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
-        <h1 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "10px" }}>
-          Chargement...
-        </h1>
-      </main>
-    );
-  }
-
-  const progressPercentage = ((safeIndex + 1) / filteredExercises.length) * 100;
+  const exercise = filteredExercises[current];
+  const progressPercentage = ((current + 1) / filteredExercises.length) * 100;
 
   const difficultyColor = (difficulty: string) => {
     switch(difficulty) {
@@ -483,13 +394,10 @@ export default function ExercicesOSINT() {
             <button
               key={level}
               onClick={() => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
                 setFilterDifficulty(level);
                 setCurrent(0);
                 setShowSolution(false);
                 setShowTips(false);
-                setUserAnswer("");
-                setAnswerSubmitted(false);
               }}
               style={{
                 background: filterDifficulty === level ? "#00ff9c" : "#1a1f2e",
@@ -532,7 +440,7 @@ export default function ExercicesOSINT() {
             fontWeight: "bold",
             fontSize: "1.1rem"
           }}>
-            Exercice {safeIndex + 1}/{filteredExercises.length}
+            Exercice {current + 1}/{filteredExercises.length}
           </span>
         </div>
         
@@ -618,61 +526,6 @@ export default function ExercicesOSINT() {
             {exercise.question}
           </p>
         </div>
-
-        {/* Champ réponse */}
-        {!answerSubmitted && !completedExercises.has(exercise.id) && (
-          <div style={{
-            background: colors.bgSecondary,
-            padding: "20px",
-            borderLeft: "4px solid #3b82f6",
-            borderRadius: "6px",
-            marginBottom: "20px"
-          }}>
-            <h3 style={{ color: "#3b82f6", marginBottom: "10px", fontSize: "1.1rem" }}>
-              ✍️ Votre réponse
-            </h3>
-            <textarea
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              placeholder="Tapez votre réponse ici..."
-              style={{
-                width: "100%",
-                minHeight: "120px",
-                padding: "12px",
-                background: colors.bgPrimary,
-                border: `1px solid ${colors.border}`,
-                borderRadius: "6px",
-                color: colors.textPrimary,
-                fontSize: "0.95rem",
-                lineHeight: "1.6",
-                resize: "vertical",
-                fontFamily: "inherit"
-              }}
-            />
-            <button
-              onClick={() => {
-                setAnswerSubmitted(true);
-                markAsCompleted(exercise.id);
-              }}
-              disabled={!userAnswer.trim()}
-              style={{
-                marginTop: "12px",
-                background: userAnswer.trim() ? colors.accent : colors.bgSecondary,
-                color: userAnswer.trim() ? colors.bgPrimary : colors.textTertiary,
-                border: "none",
-                padding: "12px 24px",
-                borderRadius: "8px",
-                cursor: userAnswer.trim() ? "pointer" : "not-allowed",
-                fontWeight: "bold",
-                fontSize: "0.95rem",
-                transition: "all 0.3s ease",
-                opacity: userAnswer.trim() ? 1 : 0.5
-              }}
-            >
-              ✓ Soumettre ma réponse
-            </button>
-          </div>
-        )}
 
         {/* Conseils */}
         {showTips && (
@@ -771,8 +624,6 @@ export default function ExercicesOSINT() {
           onClick={() => {
             setShowSolution(false);
             setShowTips(false);
-            setUserAnswer("");
-            setAnswerSubmitted(false);
             setCurrent(current - 1);
           }}
         >
@@ -795,8 +646,6 @@ export default function ExercicesOSINT() {
           onClick={() => {
             setShowSolution(false);
             setShowTips(false);
-            setUserAnswer("");
-            setAnswerSubmitted(false);
             setCurrent(current + 1);
           }}
         >
@@ -820,12 +669,9 @@ export default function ExercicesOSINT() {
             <div
               key={ex.id}
               onClick={() => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
                 setCurrent(index);
                 setShowSolution(false);
                 setShowTips(false);
-                setUserAnswer("");
-                setAnswerSubmitted(false);
               }}
               style={{
                 background: index === current ? "#1a1f2e" : "transparent",
@@ -928,15 +774,12 @@ export default function ExercicesOSINT() {
             <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
               <button
                 onClick={() => {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
                   setCurrent(0);
                   setFilterDifficulty("Tous");
                   setShowSolution(false);
                   setShowTips(false);
                   setShowResetPopup(false);
                   setCompletedExercises(new Set());
-                  setUserAnswer("");
-                  setAnswerSubmitted(false);
                   localStorage.removeItem("completed_exercises");
                   localStorage.setItem("exercices_completed", "0");
                   localStorage.removeItem("badge_exo_debutant");
@@ -944,8 +787,6 @@ export default function ExercicesOSINT() {
                   localStorage.removeItem("badge_exo_avance");
                   localStorage.removeItem("badge_exo_expert");
                   localStorage.removeItem("badge_exo_master");
-                  localStorage.removeItem("exercices_current_index");
-                  localStorage.removeItem("exercices_filter");
                 }}
                 style={{
                   padding: "12px 28px",

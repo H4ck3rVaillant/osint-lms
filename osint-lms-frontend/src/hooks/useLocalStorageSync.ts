@@ -28,7 +28,11 @@ export function useLocalStorageSync() {
           if (result.success && result.data) {
             // Restaurer TOUT le localStorage
             Object.entries(result.data).forEach(([key, value]) => {
-              localStorage.setItem(key, JSON.stringify(value));
+              if (typeof value === 'string') {
+                localStorage.setItem(key, value);
+              } else {
+                localStorage.setItem(key, JSON.stringify(value));
+              }
             });
             console.log("✅ Progression restaurée depuis l'API");
           }
@@ -49,12 +53,16 @@ export function useLocalStorageSync() {
 
     const saveToAPI = async () => {
       try {
-        // Clés à sauvegarder (TOUTES les données de progression)
+        // TOUTES les clés à sauvegarder
         const keysToSave = [
+          // Game State (XP, Level, Streak)
+          'cyberosint_game_state',
           // Quiz
           'quiz_results',
           'quiz_badges',
-          // Exercices  
+          // Challenges hebdo
+          'challenges_solved',
+          // Exercices
           'completed_exercises',
           'exercices_completed',
           'exercices_current_index',
@@ -64,30 +72,42 @@ export function useLocalStorageSync() {
           'badge_exo_avance',
           'badge_exo_expert',
           'badge_exo_master',
-          // Challenges hebdo
-          'challenges_solved',
-          // Badges généraux
-          'badge_quiz_gold',
-          'badge_quiz_silver',
-          'badge_quiz_bronze',
+          // Parcours débutant
+          'badge_deb_intro',
+          'badge_deb_methodo',
+          'badge_deb_outils',
+          // Parcours intermédiaire
+          'badge_int_intro',
+          'badge_int_methodo',
+          'badge_int_outils',
+          // Parcours avancé
+          'badge_adv_intro',
+          'badge_adv_methodo',
+          'badge_adv_outils',
           // Études de cas
+          'badge_case_geo',
+          'badge_case_media',
+          'badge_case_attr',
+          'badge_case_chrono',
+          'badge_cases_osint',
           'etudes_cas_progress',
-          // Parcours
+          // Parcours général
           'parcours_progress',
-          // CTF et Game
-          'cyberosint_game_state',
-          'cyberosint_challenges',
-          'ctf_progress'
+          // CTF
+          'ctf_progress',
+          'cyberosint_challenges'
         ];
 
-        // Récupérer SEULEMENT les données importantes
+        // Récupérer les données
         const importantData: Record<string, any> = {};
         for (const key of keysToSave) {
           const value = localStorage.getItem(key);
           if (value) {
             try {
+              // Essayer de parser comme JSON
               importantData[key] = JSON.parse(value);
             } catch {
+              // Si ce n'est pas du JSON, garder tel quel
               importantData[key] = value;
             }
           }
