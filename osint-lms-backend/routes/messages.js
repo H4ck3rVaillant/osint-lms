@@ -4,80 +4,90 @@ const db = require("../services/neonDatabase");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 /* ====================================
-   GET /messages
-   Récupérer tous les messages de l'utilisateur
+   GET /messages/users
+   Liste des utilisateurs pour la messagerie
 ==================================== */
-router.get("/", authMiddleware, async (req, res) => {
+router.get("/users", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Messages reçus
-    const received = await db.query(
-      `SELECT m.*, u.username as from_username 
-       FROM messages m 
-       JOIN utilisateurs u ON m.from_user_id = u.id 
-       WHERE m.to_user_id = $1 
-       ORDER BY m.created_at DESC`,
+    // Récupérer tous les utilisateurs sauf l'utilisateur connecté
+    const result = await db.query(
+      "SELECT id, username, email, created_at FROM utilisateurs WHERE id != $1 ORDER BY username ASC",
       [userId]
     );
 
-    // Messages envoyés
-    const sent = await db.query(
-      `SELECT m.*, u.username as to_username 
-       FROM messages m 
-       JOIN utilisateurs u ON m.to_user_id = u.id 
-       WHERE m.from_user_id = $1 
-       ORDER BY m.created_at DESC`,
-      [userId]
-    );
-
-    res.json({
-      success: true,
-      received: received.rows,
-      sent: sent.rows
+    res.json({ 
+      success: true, 
+      users: result.rows 
     });
   } catch (error) {
-    console.error("❌ Erreur récupération messages:", error);
+    console.error("Erreur chargement utilisateurs:", error);
     res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
 
 /* ====================================
-   POST /messages/send
+   GET /messages
+   Liste des messages de l'utilisateur
+==================================== */
+router.get("/", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Récupérer les messages envoyés et reçus
+    const result = await db.query(`
+      SELECT 
+        m.id,
+        m.from_user_id,
+        m.to_user_id,
+        m.message,
+        m.created_at,
+        m.read,
+        sender.username as sender_username,
+        receiver.username as receiver_username
+      FROM messages m
+      LEFT JOIN utilisateurs sender ON m.from_user_id = sender.id
+      LEFT JOIN utilisateurs receiver ON m.to_user_id = receiver.id
+      WHERE m.from_user_id = $1 OR m.to_user_id = $1
+      ORDER BY m.created_at DESC
+    `, [userId]);
+
+    res.json({ 
+      success: true, 
+      messages: result.rows 
+    });
+  } catch (error) {
+    console.error("Erreur chargement messages:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+});
+
+/* ====================================
+   POST /messages
    Envoyer un message
 ==================================== */
-router.post("/send", authMiddleware, async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
   try {
-    const fromUserId = req.user.id;
-    const { toUsername, message } = req.body;
+    const from_user_id = req.user.id;
+    const { to_user_id, message } = req.body;
 
-    if (!toUsername || !message) {
-      return res.status(400).json({ success: false, message: "Username et message requis" });
+    if (!to_user_id || !message) {
+      return res.status(400).json({ success: false, message: "Données manquantes" });
     }
 
-    // Trouver l'utilisateur destinataire
-    const toUser = await db.query(
-      "SELECT id FROM utilisateurs WHERE username = $1",
-      [toUsername]
+    const result = await db.query(
+      "INSERT INTO messages (from_user_id, to_user_id, message) VALUES ($1, $2, $3) RETURNING *",
+      [from_user_id, to_user_id, message]
     );
 
-    if (toUser.rows.length === 0) {
-      return res.status(404).json({ success: false, message: "Utilisateur introuvable" });
-    }
-
-    const toUserId = toUser.rows[0].id;
-
-    // Insérer le message
-    await db.query(
-      "INSERT INTO messages (from_user_id, to_user_id, message) VALUES ($1, $2, $3)",
-      [fromUserId, toUserId, message]
-    );
-
-    console.log(`✅ Message envoyé de ${req.user.username} à ${toUsername}`);
-
-    res.json({ success: true, message: "Message envoyé" });
+    res.json({ 
+      success: true, 
+      message: "Message envoyé",
+      data: result.rows[0]
+    });
   } catch (error) {
-    console.error("❌ Erreur envoi message:", error);
+    console.error("Erreur envoi message:", error);
     res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
@@ -88,34 +98,17 @@ router.post("/send", authMiddleware, async (req, res) => {
 ==================================== */
 router.put("/:id/read", authMiddleware, async (req, res) => {
   try {
-    const messageId = req.params.id;
     const userId = req.user.id;
+    const messageId = req.params.id;
 
     await db.query(
-      "UPDATE messages SET read = TRUE WHERE id = $1 AND to_user_id = $2",
+      "UPDATE messages SET read = true WHERE id = $1 AND to_user_id = $2",
       [messageId, userId]
     );
 
-    res.json({ success: true });
+    res.json({ success: true, message: "Message marqué comme lu" });
   } catch (error) {
-    console.error("❌ Erreur marquage lu:", error);
-    res.status(500).json({ success: false, message: "Erreur serveur" });
-  }
-});
-
-/* ====================================
-   GET /messages/users
-   Récupérer la liste des utilisateurs (pour tous)
-==================================== */
-router.get("/users", authMiddleware, async (req, res) => {
-  try {
-    const users = await db.query(
-      "SELECT id, username, role, created_at FROM utilisateurs ORDER BY created_at DESC"
-    );
-
-    res.json({ success: true, users: users.rows });
-  } catch (error) {
-    console.error("❌ Erreur récupération utilisateurs:", error);
+    console.error("Erreur marquage message:", error);
     res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 });
