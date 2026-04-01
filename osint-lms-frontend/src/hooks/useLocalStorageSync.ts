@@ -6,7 +6,7 @@ export function useLocalStorageSync() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    let saveInterval: NodeJS.Timeout;
+    let saveInterval: number | undefined;
 
     const loadFromAPI = async () => {
       const token = localStorage.getItem("token");
