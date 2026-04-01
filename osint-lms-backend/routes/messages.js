@@ -44,8 +44,8 @@ router.get("/", authMiddleware, async (req, res) => {
         m.message,
         m.created_at,
         m.read,
-        sender.username as sender_username,
-        receiver.username as receiver_username
+        sender.username as from_username,
+        receiver.username as to_username
       FROM messages m
       LEFT JOIN utilisateurs sender ON m.from_user_id = sender.id
       LEFT JOIN utilisateurs receiver ON m.to_user_id = receiver.id
@@ -53,9 +53,14 @@ router.get("/", authMiddleware, async (req, res) => {
       ORDER BY m.created_at DESC
     `, [userId]);
 
+    // Séparer received et sent
+    const received = result.rows.filter(m => m.to_user_id === userId);
+    const sent = result.rows.filter(m => m.from_user_id === userId);
+
     res.json({ 
       success: true, 
-      messages: result.rows 
+      received,
+      sent
     });
   } catch (error) {
     console.error("Erreur chargement messages:", error);
@@ -64,8 +69,49 @@ router.get("/", authMiddleware, async (req, res) => {
 });
 
 /* ====================================
-   POST /messages
+   POST /messages/send
    Envoyer un message
+==================================== */
+router.post("/send", authMiddleware, async (req, res) => {
+  try {
+    const from_user_id = req.user.id;
+    const { toUsername, message } = req.body;
+
+    if (!toUsername || !message) {
+      return res.status(400).json({ success: false, message: "Données manquantes" });
+    }
+
+    // Trouver l'ID de l'utilisateur destinataire
+    const userResult = await db.query(
+      "SELECT id FROM utilisateurs WHERE username = $1",
+      [toUsername]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "Utilisateur introuvable" });
+    }
+
+    const to_user_id = userResult.rows[0].id;
+
+    const result = await db.query(
+      "INSERT INTO messages (from_user_id, to_user_id, message) VALUES ($1, $2, $3) RETURNING *",
+      [from_user_id, to_user_id, message]
+    );
+
+    res.json({ 
+      success: true, 
+      message: "Message envoyé",
+      data: result.rows[0]
+    });
+  } catch (error) {
+    console.error("Erreur envoi message:", error);
+    res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+});
+
+/* ====================================
+   POST /messages
+   Envoyer un message (ancienne route)
 ==================================== */
 router.post("/", authMiddleware, async (req, res) => {
   try {
