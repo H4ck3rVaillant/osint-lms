@@ -168,6 +168,26 @@ export default function QuizSession() {
   const [questionTime, setQuestionTime] = useState(30); // 30 secondes par question
   const [isFinished, setIsFinished] = useState(false);
 
+  // Vérifier si le quiz a déjà été complété
+  useEffect(() => {
+    const savedResults = localStorage.getItem("quiz_results");
+    if (savedResults) {
+      try {
+        const results = JSON.parse(savedResults);
+        const previousAttempt = results.find((r: any) => r.themeId === themeId);
+        
+        if (previousAttempt) {
+          // Quiz déjà complété, afficher directement les résultats
+          setIsFinished(true);
+          setScore(previousAttempt.score);
+          setGlobalTime(0);
+        }
+      } catch (error) {
+        console.error("Erreur chargement quiz précédent:", error);
+      }
+    }
+  }, [themeId]);
+
   // Timer global
   useEffect(() => {
     if (isFinished || questions.length === 0) return;
@@ -423,7 +443,21 @@ export default function QuizSession() {
             justifyContent: "center"
           }}>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                // Supprimer le résultat de ce quiz de localStorage
+                const savedResults = localStorage.getItem("quiz_results");
+                if (savedResults) {
+                  try {
+                    const results = JSON.parse(savedResults);
+                    const filteredResults = results.filter((r: any) => r.themeId !== themeId);
+                    localStorage.setItem("quiz_results", JSON.stringify(filteredResults));
+                  } catch (error) {
+                    console.error("Erreur suppression résultat:", error);
+                  }
+                }
+                // Recharger la page
+                window.location.reload();
+              }}
               style={{
                 background: "transparent",
                 color: colors.accent,

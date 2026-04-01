@@ -79,7 +79,7 @@ export default function Leaderboard() {
       rank: 0,
       username: p.username,
       xp: p.xp,
-      solved: 0,
+      solved: Math.min(11, Math.floor(p.xp / 100)), // 1 défi ≈ 100 XP
       streak: p.streak,
       level: getLevelInfo(p.xp).name,
       country: "🇫🇷",
