@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useAuth } from "../auth/AuthContext";
 
 /* =====================================================
    TYPES
@@ -416,7 +415,6 @@ const DEFAULT_GAME_STATE: GameState = {
 };
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const { user, token } = useAuth();
   const [gameState, setGameState] = useState<GameState>(() =>
     loadFromStorage(STORAGE_KEY, DEFAULT_GAME_STATE)
   );
@@ -427,125 +425,77 @@ export function GameProvider({ children }: { children: ReactNode }) {
     { message: string; type: "success" | "badge" | "level" } | null
   >(null);
 
-  // 🔥 CHARGER DEPUIS L'API AU DÉMARRAGE
-  useEffect(() => {
-    if (!user || !token) return;
-
-    const loadFromAPI = async () => {
-      try {
-        const response = await fetch("https://osint-lms-backend.onrender.com/game/load", {
-          headers: { "Authorization": `Bearer ${token}` }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          
-          // Charger les challenges résolus depuis l'API
-          if (data.data && data.data.solvedChallenges) {
-            const apiSolved = data.data.solvedChallenges;
-            const updatedChallenges = CTF_CHALLENGES.map(c => ({
-              ...c,
-              solved: apiSolved.includes(c.id),
-              solvedAt: apiSolved.includes(c.id) ? new Date().toISOString() : undefined,
-              attempts: 0
-            }));
-            setChallenges(updatedChallenges);
-            saveToStorage(CHALLENGES_KEY, updatedChallenges);
-            console.log("✅ Challenges chargés depuis l'API:", apiSolved.length, "résolus");
-          }
-
-          // Charger l'état du jeu
-          if (data.data && data.data.progress) {
-            const apiState = {
-              ...gameState,
-              xp: data.data.progress.xp || 0,
-              level: data.data.progress.level || 0,
-              streak: data.data.progress.streak || 0,
-              longestStreak: data.data.progress.longest_streak || 0,
-              lastActivity: data.data.progress.last_activity || null,
-            };
-            setGameState(apiState);
-            saveToStorage(STORAGE_KEY, apiState);
-            console.log("✅ Progression chargée depuis l'API");
-          }
-        }
-      } catch (error) {
-        console.error("Erreur chargement API:", error);
-      }
-    };
-
-    loadFromAPI();
-  }, [user, token]);
-
   // Sauvegarder à chaque changement
   useEffect(() => { saveToStorage(STORAGE_KEY, gameState); }, [gameState]);
   useEffect(() => { saveToStorage(CHALLENGES_KEY, challenges); }, [challenges]);
 
-  // 🔥 SAUVEGARDER VERS L'API à chaque changement de gameState
-  useEffect(() => {
-    if (!user || !token) return;
-    
-    const saveToAPI = async () => {
-      try {
-        await fetch("https://osint-lms-backend.onrender.com/game/save", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            xp: gameState.xp,
-            level: gameState.level,
-            streak: gameState.streak,
-            longestStreak: gameState.longestStreak,
-            lastActivity: gameState.lastActivity,
-            solvedChallenges: gameState.solvedChallenges,
-            badges: gameState.badges.filter(b => b.unlocked).map(b => ({ id: b.id, unlockedAt: b.unlockedAt }))
-          })
-        });
-        console.log("💾 Progression sauvegardée vers l'API");
-      } catch (err) {
-        console.error("❌ Erreur sauvegarde API:", err);
-      }
-    };
+  // Fonction pour synchroniser IMMÉDIATEMENT vers l'API
+  const syncToAPI = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-    saveToAPI();
-  }, [gameState, user, token]);
+    try {
+      // Collecter TOUTES les données localStorage
+      const allData: Record<string, any> = {};
+      
+      // Liste de TOUTES les clés à synchroniser
+      const keysToSync = [
+        "cyberosint_game_state",
+        "cyberosint_challenges",
+        "quiz_results",
+        "quiz_badges",
+        "challenges_solved",
+        "completed_exercises",
+        "exercices_completed",
+        "exercices_current_index",
+        "exercices_filter",
+        "badge_exo_debutant",
+        "badge_exo_intermediaire",
+        "badge_exo_avance",
+        "badge_exo_expert",
+        "badge_exo_master",
+        "badge_deb_theorie",
+        "badge_deb_pratique",
+        "badge_deb_validation",
+        "badge_int_theorie",
+        "badge_int_pratique",
+        "badge_int_validation",
+        "badge_adv_theorie",
+        "badge_adv_pratique",
+        "badge_adv_validation",
+        "parcours_progress",
+        "badge_case_1",
+        "badge_case_2",
+        "badge_case_3",
+        "etudes_cas_progress",
+        "ctf_progress"
+      ];
 
-  // 🔥 SAUVEGARDER LES CHALLENGES RÉSOLUS vers l'API
-  useEffect(() => {
-    if (!user || !token) return;
-    
-    const saveChallenges = async () => {
-      try {
-        const solvedIds = challenges.filter(c => c.solved).map(c => c.id);
-        
-        for (const challengeId of solvedIds) {
-          await fetch("https://osint-lms-backend.onrender.com/game/save", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-              xp: gameState.xp,
-              level: gameState.level,
-              streak: gameState.streak,
-              longestStreak: gameState.longestStreak,
-              lastActivity: gameState.lastActivity,
-              solvedChallenges: solvedIds,
-              badges: gameState.badges.filter(b => b.unlocked).map(b => ({ id: b.id, unlockedAt: b.unlockedAt }))
-            })
-          });
+      keysToSync.forEach(key => {
+        const value = localStorage.getItem(key);
+        if (value) {
+          try {
+            allData[key] = JSON.parse(value);
+          } catch {
+            allData[key] = value;
+          }
         }
-        console.log("💾 Challenges sauvegardés vers l'API");
-      } catch (err) {
-        console.error("❌ Erreur sauvegarde challenges:", err);
-      }
-    };
+      });
 
-    saveChallenges();
-  }, [challenges, user, token, gameState]);
+      await fetch("https://osint-lms-backend.onrender.com/game/save-full", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ data: allData })
+      });
+      
+      console.log("💾 Sync immédiate vers API réussie");
+    } catch (error) {
+      console.error("❌ Erreur sync API:", error);
+    }
+  };
 
   const showNotification = (message: string, type: "success" | "badge" | "level") => {
     setRecentNotification({ message, type });
@@ -615,7 +565,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
       if (leveledUp) {
         setTimeout(() => showNotification(`⬆️ Niveau atteint : ${levelName} !`, "level"), 500);
       }
-      return { ...prev, xp: newXP, level, levelName };
+      const newState = { ...prev, xp: newXP, level, levelName };
+      
+      // Sauvegarder immédiatement dans localStorage
+      setTimeout(() => {
+        saveToStorage(STORAGE_KEY, newState);
+        syncToAPI(); // Sync immédiate vers API
+      }, 100);
+      
+      return newState;
     });
   };
 
@@ -682,6 +640,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
     });
 
     showNotification(`✅ FLAG validé ! +${challenge.points} XP`, "success");
+    
+    // Sync immédiate vers API après résolution
+    setTimeout(() => syncToAPI(), 200);
+    
     return { success: true, message: `✅ Correct ! +${challenge.points} XP`, xpGained: challenge.points };
   };
 
