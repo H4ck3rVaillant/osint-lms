@@ -6,6 +6,7 @@ const path = require("path");
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
+const gameRoutes = require("./routes/game");
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/messages", messageRoutes);
+app.use("/game", gameRoutes);
 
 /* =========================
    SERVER
