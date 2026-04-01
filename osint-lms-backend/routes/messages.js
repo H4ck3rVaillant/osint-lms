@@ -13,7 +13,7 @@ router.get("/users", authMiddleware, async (req, res) => {
 
     // Récupérer tous les utilisateurs sauf l'utilisateur connecté
     const result = await db.query(
-      "SELECT id, username, email, created_at FROM utilisateurs WHERE id != $1 ORDER BY username ASC",
+      "SELECT id, username, created_at FROM utilisateurs WHERE id != $1 ORDER BY username ASC",
       [userId]
     );
 
