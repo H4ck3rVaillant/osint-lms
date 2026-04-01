@@ -429,74 +429,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
   useEffect(() => { saveToStorage(STORAGE_KEY, gameState); }, [gameState]);
   useEffect(() => { saveToStorage(CHALLENGES_KEY, challenges); }, [challenges]);
 
-  // Fonction pour synchroniser IMMÉDIATEMENT vers l'API
-  const syncToAPI = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    try {
-      // Collecter TOUTES les données localStorage
-      const allData: Record<string, any> = {};
-      
-      // Liste de TOUTES les clés à synchroniser
-      const keysToSync = [
-        "cyberosint_game_state",
-        "cyberosint_challenges",
-        "quiz_results",
-        "quiz_badges",
-        "challenges_solved",
-        "completed_exercises",
-        "exercices_completed",
-        "exercices_current_index",
-        "exercices_filter",
-        "badge_exo_debutant",
-        "badge_exo_intermediaire",
-        "badge_exo_avance",
-        "badge_exo_expert",
-        "badge_exo_master",
-        "badge_deb_theorie",
-        "badge_deb_pratique",
-        "badge_deb_validation",
-        "badge_int_theorie",
-        "badge_int_pratique",
-        "badge_int_validation",
-        "badge_adv_theorie",
-        "badge_adv_pratique",
-        "badge_adv_validation",
-        "parcours_progress",
-        "badge_case_1",
-        "badge_case_2",
-        "badge_case_3",
-        "etudes_cas_progress",
-        "ctf_progress"
-      ];
-
-      keysToSync.forEach(key => {
-        const value = localStorage.getItem(key);
-        if (value) {
-          try {
-            allData[key] = JSON.parse(value);
-          } catch {
-            allData[key] = value;
-          }
-        }
-      });
-
-      await fetch("https://osint-lms-backend.onrender.com/game/save-full", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ data: allData })
-      });
-      
-      console.log("💾 Sync immédiate vers API réussie");
-    } catch (error) {
-      console.error("❌ Erreur sync API:", error);
-    }
-  };
-
   const showNotification = (message: string, type: "success" | "badge" | "level") => {
     setRecentNotification({ message, type });
     setTimeout(() => setRecentNotification(null), 4000);
@@ -565,15 +497,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       if (leveledUp) {
         setTimeout(() => showNotification(`⬆️ Niveau atteint : ${levelName} !`, "level"), 500);
       }
-      const newState = { ...prev, xp: newXP, level, levelName };
-      
-      // Sauvegarder immédiatement dans localStorage
-      setTimeout(() => {
-        saveToStorage(STORAGE_KEY, newState);
-        syncToAPI(); // Sync immédiate vers API
-      }, 100);
-      
-      return newState;
+      return { ...prev, xp: newXP, level, levelName };
     });
   };
 
@@ -640,10 +564,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
     });
 
     showNotification(`✅ FLAG validé ! +${challenge.points} XP`, "success");
-    
-    // Sync immédiate vers API après résolution
-    setTimeout(() => syncToAPI(), 200);
-    
     return { success: true, message: `✅ Correct ! +${challenge.points} XP`, xpGained: challenge.points };
   };
 
