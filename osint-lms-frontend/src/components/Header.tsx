@@ -501,7 +501,6 @@ export default function Header() {
           {[
             { label: "Leaderboard", to: "/leaderboard" },
             { label: "Progression", to: "/progression" },
-            { label: "Streak", to: "/streak" },
             { label: "Badges", to: "/badges-osint" },
             { label: "Certificat", to: "/certificat" },
           ].map((item) => (
