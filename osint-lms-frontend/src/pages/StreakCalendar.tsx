@@ -4,46 +4,60 @@ import { useThemeColors } from "../context/ThemeContext";
 export default function StreakCalendar() {
   const colors = useThemeColors();
   const [streak, setStreak] = useState(0);
+  const [longestStreak, setLongestStreak] = useState(0);
   const [activityData, setActivityData] = useState<Record<string, number>>({});
   const [totalDays, setTotalDays] = useState(0);
 
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    const storedActivity = localStorage.getItem("activity_calendar") || "{}";
-    const activity = JSON.parse(storedActivity);
-
-    // Marquer aujourd'hui comme actif
-    if (!activity[today]) {
-      activity[today] = 1;
-      localStorage.setItem("activity_calendar", JSON.stringify(activity));
-    }
-
-    // Calculer le streak
-    let currentStreak = 0;
-    let checkDate = new Date();
+    // Lire depuis cyberosint_game_state (source de vérité)
+    const gameStateStr = localStorage.getItem("cyberosint_game_state");
     
-    while (true) {
-      const dateStr = checkDate.toISOString().split("T")[0];
-      if (activity[dateStr]) {
-        currentStreak++;
-        checkDate.setDate(checkDate.getDate() - 1);
-      } else {
-        break;
+    if (gameStateStr) {
+      try {
+        const gameState = JSON.parse(gameStateStr);
+        
+        // Utiliser les données du GameContext
+        setStreak(gameState.streak || 0);
+        setLongestStreak(gameState.longestStreak || 0);
+        setActivityData(gameState.activityCalendar || {});
+        setTotalDays(Object.keys(gameState.activityCalendar || {}).length);
+        
+      } catch (error) {
+        console.error("Erreur lecture gameState:", error);
       }
+    } else {
+      // Fallback: lire depuis activity_calendar (ancien système)
+      const storedActivity = localStorage.getItem("activity_calendar") || "{}";
+      const activity = JSON.parse(storedActivity);
+      
+      setActivityData(activity);
+      setTotalDays(Object.keys(activity).length);
+      
+      // Calculer le streak manuellement
+      let currentStreak = 0;
+      let checkDate = new Date();
+      
+      while (true) {
+        const dateStr = checkDate.toISOString().split("T")[0];
+        if (activity[dateStr]) {
+          currentStreak++;
+          checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+      
+      setStreak(currentStreak);
     }
-
-    setStreak(currentStreak);
-    setActivityData(activity);
-    setTotalDays(Object.keys(activity).length);
   }, []);
 
   const getCalendarData = () => {
-    const weeks: Array<Array<{ date: string; active: boolean }>> = [];
+    const weeks: Array<Array<{ date: string; active: boolean; count: number }>> = [];
     const today = new Date();
     
     // 52 semaines = 1 an
     for (let week = 0; week < 52; week++) {
-      const weekData: Array<{ date: string; active: boolean }> = [];
+      const weekData: Array<{ date: string; active: boolean; count: number }> = [];
       
       for (let day = 0; day < 7; day++) {
         const date = new Date(today);
@@ -53,6 +67,7 @@ export default function StreakCalendar() {
         weekData.push({
           date: dateStr,
           active: !!activityData[dateStr],
+          count: activityData[dateStr] || 0,
         });
       }
       
@@ -63,6 +78,14 @@ export default function StreakCalendar() {
   };
 
   const calendarData = getCalendarData();
+
+  // Déterminer l'intensité de couleur en fonction du nombre d'activités
+  const getIntensityColor = (count: number) => {
+    if (count === 0) return colors.border;
+    if (count === 1) return colors.accent + "40";
+    if (count === 2) return colors.accent + "80";
+    return colors.accent;
+  };
 
   return (
     <div style={{
@@ -161,7 +184,7 @@ export default function StreakCalendar() {
           <h2 style={{ color: colors.textPrimary, fontSize: "1.5rem", marginBottom: "20px" }}>
             📊 Calendrier d'activité
           </h2>
-
+          
           <div style={{
             display: "flex",
             gap: "3px",
@@ -173,12 +196,12 @@ export default function StreakCalendar() {
                 {week.map((day, dayIndex) => (
                   <div
                     key={dayIndex}
-                    title={day.date}
+                    title={`${day.date}${day.count > 0 ? ` - ${day.count} activité(s)` : ''}`}
                     style={{
                       width: "12px",
                       height: "12px",
                       borderRadius: "2px",
-                      background: day.active ? colors.accent : colors.border,
+                      background: getIntensityColor(day.count),
                       cursor: "pointer",
                     }}
                   />
@@ -216,6 +239,21 @@ export default function StreakCalendar() {
           }}>
             <p style={{ color: colors.accent, fontSize: "1.1rem", fontWeight: "600", margin: 0 }}>
               🎉 Bravo ! Vous avez un streak de {streak} jours ! Continuez comme ça !
+            </p>
+          </div>
+        )}
+
+        {longestStreak > streak && (
+          <div style={{
+            marginTop: "20px",
+            padding: "15px",
+            background: colors.bgSecondary,
+            border: `1px solid ${colors.border}`,
+            borderRadius: "8px",
+            textAlign: "center",
+          }}>
+            <p style={{ color: colors.textSecondary, fontSize: "0.95rem", margin: 0 }}>
+              🏆 Votre record : {longestStreak} jours consécutifs
             </p>
           </div>
         )}

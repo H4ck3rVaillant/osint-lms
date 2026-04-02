@@ -88,6 +88,7 @@ export function useLocalStorageSync() {
           "exercices_completed",
           "exercices_current_index",
           "exercices_filter",
+          "activity_calendar",  // Calendrier streak
           "badge_exo_debutant",
           "badge_exo_intermediaire",
           "badge_exo_avance",
@@ -107,7 +108,32 @@ export function useLocalStorageSync() {
           "badge_case_2",
           "badge_case_3",
           "etudes_cas_progress",
-          "ctf_progress"
+          "ctf_progress",
+          // Parcours Débutant
+          "badge_deb_intro",
+          "badge_deb_methodo",
+          "badge_deb_outils",
+          // Parcours Intermédiaire
+          "badge_int_intro",
+          "badge_int_methodo",
+          "badge_int_outils",
+          // Parcours Avancé
+          "badge_adv_intro",
+          "badge_adv_methodo",
+          "badge_adv_outils",
+          // Études de cas OSINT
+          "badge_case_geo",
+          "badge_case_media",
+          "badge_case_attr",
+          "badge_case_chrono",
+          "badge_cases_osint",
+          // Quiz intro parcours
+          "quiz_deb_intro_completed",
+          "quiz_deb_intro_answers",
+          "quiz_int_intro_completed",
+          "quiz_int_intro_answers",
+          "quiz_adv_intro_completed",
+          "quiz_adv_intro_answers"
         ];
 
         keysToSync.forEach(key => {
