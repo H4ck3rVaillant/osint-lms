@@ -55,6 +55,9 @@ export function useLocalStorageSync() {
               }
             });
             console.log("✅ Progression restaurée depuis l'API");
+            
+            // Émettre un événement pour notifier les composants
+            window.dispatchEvent(new Event('localStorageUpdated'));
           }
         }
       } catch (error) {
