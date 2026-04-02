@@ -429,6 +429,30 @@ export function GameProvider({ children }: { children: ReactNode }) {
   useEffect(() => { saveToStorage(STORAGE_KEY, gameState); }, [gameState]);
   useEffect(() => { saveToStorage(CHALLENGES_KEY, challenges); }, [challenges]);
 
+  // Écouter les changements de localStorage (restauration API)
+  useEffect(() => {
+  const handleStorageUpdate = () => {
+    console.log("🔄 localStorage mis à jour, rechargement des données...");
+    
+    // Recharger gameState depuis localStorage
+    const newGameState = loadFromStorage(STORAGE_KEY, DEFAULT_GAME_STATE);
+    setGameState(newGameState);
+    
+    // Recharger challenges depuis localStorage
+    const newChallenges = loadFromStorage(CHALLENGES_KEY, CTF_CHALLENGES);
+    setChallenges(newChallenges);
+    
+    console.log("✅ Données rechargées dans React");
+  };
+
+  // Écouter l'événement personnalisé émis par useLocalStorageSync
+  window.addEventListener('localStorageUpdated', handleStorageUpdate);
+
+  return () => {
+    window.removeEventListener('localStorageUpdated', handleStorageUpdate);
+  };
+}, []);
+
   const showNotification = (message: string, type: "success" | "badge" | "level") => {
     setRecentNotification({ message, type });
     setTimeout(() => setRecentNotification(null), 4000);
