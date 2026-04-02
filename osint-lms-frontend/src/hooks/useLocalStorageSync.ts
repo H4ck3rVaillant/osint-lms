@@ -4,17 +4,39 @@ const API_URL = "https://osint-lms-backend.onrender.com";
 
 export function useLocalStorageSync() {
   const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
+
+  // Surveiller le token
+  useEffect(() => {
+    const checkToken = () => {
+      const currentToken = localStorage.getItem("token");
+      setToken(currentToken);
+    };
+
+    // Vérifier immédiatement
+    checkToken();
+
+    // Surveiller les changements de localStorage
+    window.addEventListener('storage', checkToken);
+    
+    // Vérifier aussi toutes les 1 seconde (car storage event ne fonctionne pas dans la même fenêtre)
+    const tokenCheckInterval = setInterval(checkToken, 1000);
+
+    return () => {
+      window.removeEventListener('storage', checkToken);
+      clearInterval(tokenCheckInterval);
+    };
+  }, []);
 
   useEffect(() => {
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+
     let saveInterval: number | undefined;
 
     const loadFromAPI = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setIsLoading(false);
-        return;
-      }
-
       try {
         const response = await fetch(`${API_URL}/game/load-full`, {
           headers: {
@@ -39,7 +61,6 @@ export function useLocalStorageSync() {
         console.error("❌ Erreur chargement API:", error);
       } finally {
         setIsLoading(false);
-        
         // ATTENDRE 10 SECONDES après le chargement avant de commencer à sauvegarder
         setTimeout(() => {
           startAutoSave();
@@ -48,7 +69,6 @@ export function useLocalStorageSync() {
     };
 
     const saveToAPI = async () => {
-      const token = localStorage.getItem("token");
       if (!token) return;
 
       try {
@@ -106,7 +126,7 @@ export function useLocalStorageSync() {
           },
           body: JSON.stringify({ data: allData })
         });
-        
+
         console.log("💾 Progression sauvegardée vers l'API");
       } catch (error) {
         console.error("❌ Erreur sauvegarde API:", error);
@@ -115,10 +135,10 @@ export function useLocalStorageSync() {
 
     const startAutoSave = () => {
       // Sauvegarder toutes les 30 secondes
-      saveInterval = setInterval(() => {
+      saveInterval = window.setInterval(() => {
         saveToAPI();
       }, 30000);
-      
+
       // Sauvegarder immédiatement au démarrage de l'auto-save
       saveToAPI();
     };
@@ -130,7 +150,7 @@ export function useLocalStorageSync() {
         clearInterval(saveInterval);
       }
     };
-  }, []);
+  }, [token]); // SE RELANCE QUAND LE TOKEN CHANGE
 
   return { isLoading };
 }
