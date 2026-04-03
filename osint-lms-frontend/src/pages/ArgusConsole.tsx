@@ -81,7 +81,7 @@ function formatApiResponse(cmd: string, data: Record<string, unknown>): string[]
 
   else if (cmd === "whois") {
     lines.push(`[*] Requête WHOIS pour: ${data.domain}`);
-    const w = data.whois as Record<string, unknown>;
+    const w = data as Record<string, unknown>;
     if (w) {
       if (w.registrar) lines.push(`[+] Registrar     : ${w.registrar}`);
       if (w.creation_date) lines.push(`[+] Created       : ${w.creation_date}`);
