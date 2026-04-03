@@ -4,6 +4,13 @@ import Header from "../components/Header";
 
 const API_BASE = "https://argus-api-aqr6.onrender.com";
 
+// Ping automatique toutes les 10 minutes pour garder l'API éveillée
+const keepApiAlive = () => {
+  fetch(`${API_BASE}/`)
+    .then(() => console.log("🔄 API keepalive ping"))
+    .catch(() => console.log("⚠️ API keepalive failed"));
+};
+
 const HELP_TEXT = `
 ╔═══════════════════════════════════════════╗
 ║           ARGUS V2.0 - OSINT TOOLKIT      ║
@@ -233,6 +240,17 @@ export default function ArgusConsole() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+// Keepalive: ping l'API toutes les 10 minutes
+  useEffect(() => {
+    // Premier ping immédiat
+    keepApiAlive();
+    
+    // Puis toutes les 10 minutes
+    const interval = setInterval(keepApiAlive, 10 * 60 * 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [history]);
 
   const addLines = (lines: string[], type: "output" | "error" = "output") => {
@@ -303,7 +321,7 @@ export default function ArgusConsole() {
 
       try {
         const res = await fetch(`${API_BASE}${endpointMap[base]}`, {
-          signal: AbortSignal.timeout(30000),
+          signal: AbortSignal.timeout(60000),
         });
 
         if (!res.ok) {
