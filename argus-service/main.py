@@ -40,13 +40,31 @@ def dns_lookup(domain: str):
 def whois_lookup(domain: str):
     try:
         w = whois.whois(domain)
+        
+        # Formater les dates proprement
+        def format_date(date_val):
+            if not date_val:
+                return "N/A"
+            # Si c'est une liste, prendre la première date
+            if isinstance(date_val, list):
+                date_val = date_val[0] if date_val else None
+            # Formater en string
+            if date_val:
+                return str(date_val).split()[0]  # Garde juste YYYY-MM-DD
+            return "N/A"
+        
+        # Formater le status (prendre max 3 lignes)
+        status_val = w.status
+        if isinstance(status_val, list):
+            status_val = status_val[:3]  # Max 3 status
+        
         return {
             "domain": domain,
             "registrar": str(w.registrar or "N/A"),
-            "creation_date": str(w.creation_date or "N/A"),
-            "expiration_date": str(w.expiration_date or "N/A"),
+            "creation_date": format_date(w.creation_date),
+            "expiration_date": format_date(w.expiration_date),
             "name_servers": [str(ns) for ns in (w.name_servers or [])],
-            "status": str(w.status or "N/A"),
+            "status": status_val if isinstance(status_val, list) else [str(status_val)] if status_val else ["N/A"],
             "org": str(w.org or "N/A"),
         }
     except Exception as e:
