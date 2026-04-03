@@ -35,9 +35,10 @@ const PARROT_COMMANDS: Record<string, (args: string[], session: Session) => stri
   maltego                      Visualisation de liens
   recon-ng                     Framework de reconnaissance
   theHarvester -d <domain>     Collecte d'informations
+  whois <domain>               Lookup WHOIS (simulé)
   osint-framework              Accès OSINT Framework
   spiderfoot -l 0.0.0.0:5001   SpiderFoot OSINT tool
-  sherlock <username>           Recherche de profils
+  sherlock <username>          Recherche de profils
 
 [🔐 CRYPTOGRAPHIE]
   gpg --gen-key                Générer clé GPG
@@ -74,7 +75,7 @@ const PARROT_COMMANDS: Record<string, (args: string[], session: Session) => stri
   whoami: (_, s) => s.user,
   pwd: (_, s) => s.cwd,
   hostname: (_, s) => s.hostname,
-
+  
   uname: (args) => {
     if (args.includes("-a")) {
       return "Linux parrot 6.5.0-13parrot1-amd64 #1 SMP PREEMPT_DYNAMIC Parrot 6.5.0-1parrot1 (2024-01-10) x86_64 GNU/Linux";
@@ -94,7 +95,6 @@ const PARROT_COMMANDS: Record<string, (args: string[], session: Session) => stri
 [✓] Redirecting all traffic through Tor
 [✓] DNS leak protection enabled
 [✓] IPv6 disabled
-
 [✓] AnonSurf is now running
 [i] All traffic is now routed through Tor
 [i] Your real IP is hidden`;
@@ -105,17 +105,14 @@ const PARROT_COMMANDS: Record<string, (args: string[], session: Session) => stri
 [✓] Stopping Tor service
 [✓] Restoring NetworkManager
 [✓] DNS restored to system default
-
 [✓] AnonSurf stopped — back to clearnet`;
     }
     if (sub === "myip") {
       return `[i] Checking your IP address via Tor...
-
 [✓] Current exit node IP: 185.220.101.42
 [i] Location: Germany, Frankfurt
 [i] ISP: Tor Exit Node
 [i] Your real IP is protected
-
 [!] To verify, visit: https://check.torproject.org`;
     }
     return `[i] AnonSurf Status:
@@ -145,12 +142,25 @@ New MAC: ${["aa","bb","cc","dd","ee","ff"].map(() => Math.floor(Math.random()*25
     return `Current MAC: 08:00:27:4e:66:a1 (VirtualBox)\nUsage: macchanger -r <interface>`;
   },
 
+  whois: (args) => {
+    const domain = args[0]?.replace(/^https?:\/\//, '').replace(/\/$/, '') || "example.com";
+    return `Domain Name: ${domain.toUpperCase()}
+Registrar: Example Registrar LLC
+Created: 1995-08-13
+Expires: 2024-08-13
+Organization: ${domain.split('.')[0].toUpperCase()} Inc.
+Status: clientTransferProhibited
+Name Servers: NS1.${domain.toUpperCase()}, NS2.${domain.toUpperCase()}
+
+[!] Note: Données simulées pour démonstration
+[i] Pour WHOIS réel, utilisez Argus Console`;
+  },
+
   proxychains: (args) => {
     const cmd = args.join(" ") || "nmap target";
     return `ProxyChains-3.1 (http://proxychains.sf.net)
 [i] Using SOCKS5 proxy chain:
     → 127.0.0.1:9050 (Tor) → 10.10.1.5:1080 → 192.168.1.100:3128
-
 [✓] Tunneling ${cmd} through proxy chain
 [i] DNS leak protection active`;
   },
@@ -158,20 +168,16 @@ New MAC: ${["aa","bb","cc","dd","ee","ff"].map(() => Math.floor(Math.random()*25
   wifiphisher: () => `
   ______ ______ ______ ______ ______ ______ ______ ______ ______
  |______||______||______||______||______||______||______||______||______|
-
  Wifiphisher 1.4GIT | HTTPS Enabled | Connected Clients: 0
  ESSID: Victim_WiFi | Channel: 6 | BSSID: AA:BB:CC:DD:EE:FF
-
  [*] Launching Evil Twin attack...
  [+] Deauth frames sent: 127
  [+] Client disconnected: 192.168.1.105
  [+] Client connected to rogue AP: 192.168.1.105
-
  [*] Waiting for credentials...
  [+] Credentials captured!
      Username: admin
      Password: wifi_password_123
-
  [✓] Attack successful`,
 
   airgeddon: () => `
@@ -205,7 +211,6 @@ Read 12847 packets.
 Choosing first network as target.
 
                               Aircrack-ng 1.7
-
                    [00:01:23] 98472 keys tested (1307.23 k/s)
 
                            KEY FOUND! [ wifi1234 ]
@@ -217,13 +222,13 @@ Choosing first network as target.
   gpg: (args) => {
     if (args.includes("--gen-key") || args.includes("--generate-key")) {
       return `gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
-
 Note: Use "gpg --full-generate-key" for a full featured key generation dialog.
 
 GnuPG needs to construct a user ID to identify your key.
 
 Real name: User OSINT
 Email address: user@cyberosint.academy
+
 You selected this USER-ID:
     "User OSINT <user@cyberosint.academy>"
 
@@ -316,8 +321,8 @@ Child process initialized in ${Math.floor(Math.random() * 100) + 50}ms
  /        /  __/ / /_/ /  __/ /  / __/ /_/ / /_/ /_
 /_______  /\___/_/\__,_/\___/_/  /_/  \____/\__/\__/
         \/
-
 SpiderFoot 4.0 OSINT Automation Tool
+
 Starting web server on http://127.0.0.1:5001
 [✓] SpiderFoot started — open browser to continue`;
   },
@@ -331,6 +336,7 @@ Starting web server on http://127.0.0.1:5001
     +--------------------------------------+------+
 
 [recon-ng][default] > help
+
 Commands:
   workspaces   Manage workspaces
   modules      Show/load modules
@@ -342,6 +348,7 @@ Commands:
 
   bettercap: (args) => {
     return `bettercap v2.32.0 (built for linux/amd64 with go1.21)
+
 [10:23:14] [sys.log] loading modules...
 [10:23:14] [sys.log] starting network sniffer
 [10:23:14] [net.probe] probing 256 targets
@@ -357,10 +364,12 @@ bettercap > `;
     return `Starting Nmap 7.94 ( https://nmap.org )
 Nmap scan report for ${target}
 Host is up (0.025s latency).
+
 PORT     STATE SERVICE    VERSION
 22/tcp   open  ssh        OpenSSH 8.9p1
 80/tcp   open  http       Apache 2.4.57
 443/tcp  open  https      nginx 1.24.0
+
 Nmap done: 1 IP address (1 host up) scanned in 3.21 seconds`;
   },
 
@@ -368,6 +377,7 @@ Nmap done: 1 IP address (1 host up) scanned in 3.21 seconds`;
     const file = args.find(a => !a.startsWith("-")) || "disk.img";
     return `Processing: ${file}
 |${"|".repeat(50)}
+
 Num     Name (bs=512)     Size     File Offset     Comment
 0:      00000000.jpg      49152    0               
 1:      00001024.pdf      131072   524288          
@@ -375,6 +385,7 @@ Num     Name (bs=512)     Size     File Offset     Comment
 3:      00005120.png      32768    2621440         
 
 Finish: Tue Jan 15 10:23:45 2024
+
 4 files recovered`;
   },
 
@@ -427,7 +438,6 @@ IP: 10.0.0.50
     return `cat: ${file}: No such file or directory`;
   },
 
-  whoami: (_, s) => s.user,
   clear: () => "\x1B[2J",
   cls: () => "\x1B[2J",
   date: () => new Date().toString(),
@@ -471,6 +481,7 @@ export default function VMParrot() {
   const [commandCount, setCommandCount] = useState(0);
   const [elapsedTime, setElapsedTime] = useState("00:00");
   const [anonActive, setAnonActive] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const sessionRef = useRef(session);
@@ -564,7 +575,6 @@ export default function VMParrot() {
 
   return (
     <div style={{ padding: "20px", maxWidth: "1400px", margin: "0 auto" }}>
-
       {/* Header */}
       <div style={{ marginBottom: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "15px" }}>
         <div>
@@ -575,7 +585,6 @@ export default function VMParrot() {
             Privacy & Security — Session isolée
           </p>
         </div>
-
         <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
           {/* Indicateur Tor */}
           <div style={{
@@ -590,7 +599,6 @@ export default function VMParrot() {
               {anonActive ? "TOR ON" : "TOR OFF"}
             </div>
           </div>
-
           {[
             { label: "Session", value: session.id, icon: "🔑" },
             { label: "Durée", value: elapsedTime, icon: "⏱️" },
@@ -656,7 +664,6 @@ export default function VMParrot() {
             {line.content}
           </div>
         ))}
-
         <div style={{ display: "flex", alignItems: "center", marginTop: "8px" }}>
           <span style={{ color: "#3b82f6", marginRight: "8px", whiteSpace: "nowrap" }}>
             {session.user}@{session.hostname}:{session.cwd}$
