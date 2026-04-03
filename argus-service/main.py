@@ -10,7 +10,11 @@ app = FastAPI(title="Argus V2.0 API", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://cyberosint-academy.vercel.app", "http://localhost:5173"],
+    allow_origins=[
+        "https://cyberosint-academy.vercel.app",
+        "https://www.cyberosint-academy.com",
+        "http://localhost:5173"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
