@@ -3,7 +3,6 @@ import { useThemeColors } from "../context/ThemeContext";
 import { useGame, LEADERBOARD_PLAYERS, getLevelInfo } from "../context/GameContext";
 import { useAuth } from "../auth/AuthContext";
 
-
 const AVATARS_LB: Record<string, string> = {
   hacker: "🧑‍💻", ninja: "🥷", ghost: "👻", robot: "🤖", alien: "👽",
   skull: "💀", detective: "🕵️", wizard: "🧙", demon: "😈", cat: "🐱",
@@ -19,7 +18,6 @@ export default function Leaderboard() {
   const colors = useThemeColors();
   const { gameState } = useGame();
   const { user } = useAuth();
-  const [filter, setFilter] = useState<"all" | "week" | "month">("all");
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -128,7 +126,6 @@ export default function Leaderboard() {
 
   return (
     <main style={{ paddingTop: "80px", padding: "40px", maxWidth: "1100px", margin: "0 auto", minHeight: "100vh", background: colors.bgPrimary }}>
-
       {loading ? (
         <div style={{ textAlign: "center", padding: "100px 20px", color: colors.accent }}>
           <div style={{ fontSize: "3rem", marginBottom: "20px" }}>⏳</div>
@@ -192,62 +189,40 @@ export default function Leaderboard() {
         ))}
       </div>
 
-      {/* Champ de recherche */}
+      {/* Champ de recherche avec indicateur Live */}
       <div style={{ marginBottom: "25px" }}>
-        <input
-          type="text"
-          placeholder="🔍 Rechercher un utilisateur..."
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setCurrentPage(1); // Reset à la page 1
-          }}
-          style={{
-            width: "100%",
-            padding: "15px 20px",
-            background: colors.bgSecondary,
-            border: `1px solid ${colors.accent}`,
-            borderRadius: "10px",
-            color: colors.textPrimary,
-            fontSize: "1rem",
-            outline: "none"
-          }}
-        />
+        <div style={{ display: "flex", gap: "15px", alignItems: "center", marginBottom: "10px" }}>
+          <input
+            type="text"
+            placeholder="🔍 Rechercher un utilisateur..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1); // Reset à la page 1
+            }}
+            style={{
+              flex: 1,
+              padding: "15px 20px",
+              background: colors.bgSecondary,
+              border: `1px solid ${colors.accent}`,
+              borderRadius: "10px",
+              color: colors.textPrimary,
+              fontSize: "1rem",
+              outline: "none"
+            }}
+          />
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e", animation: "pulse 2s infinite" }} />
+            <span style={{ color: colors.textSecondary, fontSize: "0.8rem", whiteSpace: "nowrap" }}>
+              Live · {lastUpdate.toLocaleTimeString()}
+            </span>
+          </div>
+        </div>
         {searchQuery && (
           <p style={{ color: colors.textSecondary, fontSize: "0.9rem", marginTop: "8px" }}>
             {filteredPlayers.length} résultat{filteredPlayers.length > 1 ? 's' : ''} trouvé{filteredPlayers.length > 1 ? 's' : ''}
           </p>
         )}
-      </div>
-
-      {/* Filtres */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "25px" }}>
-        {([
-          { key: "all",   label: "Tous les temps" },
-          { key: "week",  label: "Cette semaine" },
-          { key: "month", label: "Ce mois" },
-        ] as const).map(f => (
-          <button
-            key={f.key}
-            onClick={() => setFilter(f.key)}
-            style={{
-              background: filter === f.key ? colors.accent : colors.bgPrimary,
-              color: filter === f.key ? colors.bgPrimary : colors.textPrimary,
-              border: `1px solid ${filter === f.key ? colors.accent : colors.border}`,
-              padding: "8px 18px",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontWeight: "bold",
-              transition: "all 0.2s"
-            }}
-          >{f.label}</button>
-        ))}
-        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
-          <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e", animation: "pulse 2s infinite" }} />
-          <span style={{ color: colors.textSecondary, fontSize: "0.8rem" }}>
-            Live · {lastUpdate.toLocaleTimeString()}
-          </span>
-        </div>
       </div>
 
       {/* Podium Top 3 */}
