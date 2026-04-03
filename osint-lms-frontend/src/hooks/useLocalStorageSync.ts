@@ -89,6 +89,8 @@ export function useLocalStorageSync() {
           "exercices_current_index",
           "exercices_filter",
           "activity_calendar",  // Calendrier streak
+          "certificat_progression",  // Progression certificat
+          "formation_date_debut",  // Date début formation
           "badge_exo_debutant",
           "badge_exo_intermediaire",
           "badge_exo_avance",
@@ -133,7 +135,10 @@ export function useLocalStorageSync() {
           "quiz_int_intro_completed",
           "quiz_int_intro_answers",
           "quiz_adv_intro_completed",
-          "quiz_adv_intro_answers"
+          "quiz_adv_intro_answers",
+          // Certificat
+          "certificat_progression",
+          "formation_date_debut"
         ];
 
         keysToSync.forEach(key => {

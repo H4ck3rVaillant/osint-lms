@@ -104,26 +104,60 @@ function checkQuizFromLocalStorage(): ProgressionData["quiz"] {
     };
   }
 
-  const results = JSON.parse(quizResults);
-  
-  return {
-    osintBasics: results["osint-basics"]?.score >= 60,
-    searchTechniques: results["search-techniques"]?.score >= 60,
-    geolocation: results["geolocation"]?.score >= 60,
-    socialMedia: results["social-media"]?.score >= 60,
-    cryptoBlockchain: results["crypto-blockchain"]?.score >= 60,
-    darkweb: results["darkweb"]?.score >= 60,
-  };
+  try {
+    const results = JSON.parse(quizResults);
+    
+    // Vérifier si c'est un tableau (nouveau format) ou un objet (ancien format)
+    let quizData: any = {};
+    
+    if (Array.isArray(results)) {
+      // Nouveau format: tableau de résultats
+      results.forEach((result: any) => {
+        if (result.themeId) {
+          quizData[result.themeId] = result;
+        }
+      });
+    } else {
+      // Ancien format: objet direct
+      quizData = results;
+    }
+    
+    return {
+      osintBasics: (quizData["osint-basics"]?.score || 0) >= 60,
+      searchTechniques: (quizData["search-techniques"]?.score || 0) >= 60,
+      geolocation: (quizData["geolocation"]?.score || 0) >= 60,
+      socialMedia: (quizData["social-media"]?.score || 0) >= 60,
+      cryptoBlockchain: (quizData["crypto-blockchain"]?.score || 0) >= 60,
+      darkweb: (quizData["darkweb"]?.score || 0) >= 60,
+    };
+  } catch (error) {
+    console.error("Erreur lecture quiz_results:", error);
+    return {
+      osintBasics: false,
+      searchTechniques: false,
+      geolocation: false,
+      socialMedia: false,
+      cryptoBlockchain: false,
+      darkweb: false,
+    };
+  }
 }
 
 function checkCTFFromLocalStorage(): boolean {
-  const ctfProgress = localStorage.getItem("ctf_progress");
-  if (!ctfProgress) return false;
+  // Lire depuis cyberosint_challenges (source de vérité)
+  const challengesStr = localStorage.getItem("cyberosint_challenges");
+  if (!challengesStr) return false;
   
-  const progress = JSON.parse(ctfProgress);
-  const solvedCount = progress.filter((ch: any) => ch.solved).length;
-  
-  return solvedCount >= 11;
+  try {
+    const challenges = JSON.parse(challengesStr);
+    const solvedCount = challenges.filter((ch: any) => ch.solved === true).length;
+    
+    // Il y a 11 challenges au total
+    return solvedCount >= 11;
+  } catch (error) {
+    console.error("Erreur lecture challenges:", error);
+    return false;
+  }
 }
 
 export function getProgression(): ProgressionData {
