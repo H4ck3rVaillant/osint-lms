@@ -1,24 +1,26 @@
-# CyberOSINT Academy - robots.txt
-# Autoriser tous les robots à indexer le site
+# robots.txt pour www.cyberosint-academy.com
+# Généré le 2026-04-08
 
 User-agent: *
 Allow: /
 
-# Pages importantes pour le référencement
+# Sitemap
+Sitemap: https://www.cyberosint-academy.com/sitemap.xml
+
+# Pages importantes à indexer en priorité
 Allow: /dashboard
 Allow: /parcours
-Allow: /parcours-debutant
-Allow: /parcours-intermediaire
-Allow: /parcours-avance
 Allow: /exercices-osint
-Allow: /etudes-osint
-Allow: /badges-osint
 Allow: /ctf
-Allow: /labo-osint
+Allow: /certificat
 
-# Bloquer les pages privées
-Disallow: /profil
+# Empêcher l'indexation des pages admin/auth
+Disallow: /admin
+Disallow: /login
+Disallow: /register
 Disallow: /api/
 
-# Sitemap
-Sitemap: https://cyberosint-academy.vercel.app/sitemap.xml
+# Empêcher l'indexation des fichiers techniques
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /static/
