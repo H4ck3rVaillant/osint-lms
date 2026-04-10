@@ -3,177 +3,164 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const speakeasy = require("speakeasy");
 const QRCode = require("qrcode");
-const db = require("../db");
+const db = require("../services/neonDatabase");
 
 const router = express.Router();
 
 /* ====================================
-   POST /auth/register - SÉCURISÉ
-   FAILLE CORRIGÉE: role forcé à "user"
+   POST /auth/register
+   Inscription d'un nouvel utilisateur
 ==================================== */
 router.post("/register", async (req, res) => {
-  const { username, password } = req.body; // PAS de role dans req.body
-  
-  // SÉCURITÉ: Forcer role = "user" (JAMAIS admin via register)
-  const role = "user";
-  
+  const { username, password, role = "user" } = req.body;
+
   // Validation
   if (!username || !password) {
     return res.status(400).json({ message: "Username et password requis" });
   }
-  
+
   if (password.length < 8) {
     return res.status(400).json({ message: "Le mot de passe doit faire au moins 8 caractères" });
   }
-  
+
   try {
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await db.getUserByUsername(username);
     if (existingUser) {
       return res.status(409).json({ message: "Cet utilisateur existe déjà" });
     }
-    
-    // Hash du mot de passe
+
+    // Hash du mot de passe avec bcrypt (salt rounds = 10)
     const passwordHash = await bcrypt.hash(password, 10);
-    
-    // Générer secret TOTP pour 2FA
+
+    // Générer un secret TOTP pour l'authentification 2FA
     const totpSecret = speakeasy.generateSecret({
       name: `CyberOSINT Academy (${username})`,
       issuer: "CyberOSINT Academy"
     });
-    
-    // Créer l'utilisateur (role forcé à "user")
+
+    // Créer l'utilisateur dans la DB
     const userId = await db.createUser({
       username,
-      passwordHash,
-      role,  // FORCÉ à "user"
-      totpSecret: totpSecret.base32
+      password: passwordHash,
+      role,
+      totp_secret: totpSecret.base32,
+      must_change_password: 0
     });
-    
-    // Générer QR Code pour 2FA
-    const qrCodeUrl = await QRCode.toDataURL(totpSecret.otpauth_url);
-    
+
+    // Générer le QR Code pour FreeOTP/Google Authenticator
+    const qrCodeDataURL = await QRCode.toDataURL(totpSecret.otpauth_url);
+
     res.status(201).json({
       message: "Utilisateur créé avec succès",
       userId,
-      username,
-      qrCode: qrCodeUrl,
-      totpSecret: totpSecret.base32
+      totpSecret: totpSecret.base32,
+      qrCode: qrCodeDataURL,
+      instructions: "Scannez ce QR code avec FreeOTP ou Google Authenticator"
     });
-    
   } catch (error) {
-    console.error("Erreur register:", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    console.error("Erreur lors de l'inscription:", error);
+    res.status(500).json({ message: "Erreur serveur lors de l'inscription" });
   }
 });
 
 /* ====================================
-   POST /auth/login - Étape 1
+   POST /auth/login
+   Étape 1 : Vérification username/password
 ==================================== */
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  
+
   if (!username || !password) {
-    return res.status(400).json({ message: "Username et password requis" });
+    return res.status(400).json({ message: "Champs manquants" });
   }
-  
+
   try {
+    // Récupérer l'utilisateur depuis la DB
     const user = await db.getUserByUsername(username);
-    
+
     if (!user) {
       return res.status(401).json({ message: "Identifiants invalides" });
     }
-    
-    // Vérifier password
-    const validPassword = await bcrypt.compare(password, user.password_hash);
-    
-    if (!validPassword) {
+
+    // Vérifier le mot de passe avec bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
       return res.status(401).json({ message: "Identifiants invalides" });
     }
-    
-    // SÉCURITÉ: Ajouter timestamp dans tempToken
+
+    // Générer un token temporaire (5 minutes) pour la vérification 2FA
     const tempToken = jwt.sign(
-      { 
-        id: user.id, 
-        username: user.username, 
-        step: "awaiting_2fa",
-        iat: Math.floor(Date.now() / 1000)  // Timestamp
-      },
+      { id: user.id, username: user.username, step: "awaiting_2fa" },
       process.env.JWT_SECRET || "dev_secret",
       { expiresIn: "5m" }
     );
-    
+
     res.json({
       message: "Mot de passe correct. Veuillez entrer votre code 2FA.",
       tempToken,
       requires2FA: true
     });
-    
   } catch (error) {
-    console.error("Erreur login:", error);
+    console.error("Erreur lors du login:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
 /* ====================================
-   POST /auth/verify-2fa - SÉCURISÉ
-   FAILLE CORRIGÉE: Vérification stricte du tempToken
+   POST /auth/verify-2fa
+   Étape 2 : Vérification du code TOTP (6 chiffres)
 ==================================== */
 router.post("/verify-2fa", async (req, res) => {
-  const { tempToken, code } = req.body;
-  
-  if (!tempToken || !code) {
-    return res.status(400).json({ message: "Token et code requis" });
+  const { tempToken, totpCode } = req.body;
+
+  if (!tempToken || !totpCode) {
+    return res.status(400).json({ message: "Token et code 2FA requis" });
   }
-  
+
   try {
-    // Vérifier et décoder le tempToken
+    // Vérifier le token temporaire
     const decoded = jwt.verify(tempToken, process.env.JWT_SECRET || "dev_secret");
-    
-    // SÉCURITÉ 1: Vérifier que step === "awaiting_2fa"
+
     if (decoded.step !== "awaiting_2fa") {
-      return res.status(401).json({ message: "Token invalide - étape incorrecte" });
+      return res.status(401).json({ message: "Token invalide" });
     }
-    
-    // SÉCURITÉ 2: Vérifier que le token a moins de 5 minutes
-    const tokenAge = Math.floor(Date.now() / 1000) - decoded.iat;
-    if (tokenAge > 300) { // 5 minutes = 300 secondes
-      return res.status(401).json({ message: "Token expiré" });
-    }
-    
+
     // Récupérer l'utilisateur
     const user = await db.getUserById(decoded.id);
-    
-    if (!user) {
-      return res.status(401).json({ message: "Utilisateur introuvable" });
+
+    if (!user || !user.totp_secret) {
+      return res.status(401).json({ message: "Utilisateur invalide ou 2FA non configuré" });
     }
-    
-    // Vérifier le code 2FA
-    const verified = speakeasy.totp.verify({
+
+    // Vérifier le code TOTP (6 chiffres) avec speakeasy
+    const isValid = speakeasy.totp.verify({
       secret: user.totp_secret,
       encoding: "base32",
-      token: code,
-      window: 2
+      token: totpCode,
+      window: 2 // Accepte ±1 intervalle de 30s pour compenser le décalage d'horloge
     });
-    
-    if (!verified) {
+
+    if (!isValid) {
       return res.status(401).json({ message: "Code 2FA invalide" });
     }
-    
-    // Mettre à jour last_login
+
+    // ✅ METTRE À JOUR last_login pour le streak
     await db.updateLastLogin(user.id);
-    
-    // Générer le token final (24h)
+    console.log("✅ Last login mis à jour pour user", user.id);
+
+    // Générer le token JWT final (valide 24h)
     const finalToken = jwt.sign(
-      {
-        id: user.id,
+      { 
+        id: user.id, 
         username: user.username,
-        role: user.role
+        role: user.role 
       },
       process.env.JWT_SECRET || "dev_secret",
       { expiresIn: "24h" }
     );
-    
+
     res.json({
       message: "Authentification réussie",
       token: finalToken,
@@ -183,47 +170,61 @@ router.post("/verify-2fa", async (req, res) => {
         role: user.role
       }
     });
-    
   } catch (error) {
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expiré" });
+    if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token invalide ou expiré" });
     }
-    if (error.name === "JsonWebTokenError") {
-      return res.status(401).json({ message: "Token invalide" });
-    }
-    console.error("Erreur verify-2fa:", error);
+    console.error("Erreur lors de la vérification 2FA:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
 /* ====================================
-   GET /auth/me - Vérifier token
+   POST /auth/regenerate-qr
+   Régénérer le QR code TOTP (si perdu)
 ==================================== */
-router.get("/me", async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  
-  if (!token) {
-    return res.status(401).json({ message: "Token manquant" });
+router.post("/regenerate-qr", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ message: "Champs manquants" });
   }
-  
+
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "dev_secret");
-    const user = await db.getUserById(decoded.id);
-    
+    const user = await db.getUserByUsername(username);
+
     if (!user) {
-      return res.status(401).json({ message: "Utilisateur introuvable" });
+      return res.status(401).json({ message: "Utilisateur non trouvé" });
     }
-    
-    res.json({
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.role
-      }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Mot de passe invalide" });
+    }
+
+    if (!user.totp_secret) {
+      return res.status(400).json({ message: "Pas de secret TOTP configuré" });
+    }
+
+    // Recréer le QR code à partir du secret existant
+    const otpauthUrl = speakeasy.otpauthURL({
+      secret: user.totp_secret,
+      label: `CyberOSINT Academy (${username})`,
+      issuer: "CyberOSINT Academy",
+      encoding: "base32"
     });
-    
+
+    const qrCodeDataURL = await QRCode.toDataURL(otpauthUrl);
+
+    res.json({
+      qrCode: qrCodeDataURL,
+      totpSecret: user.totp_secret,
+      instructions: "Scannez ce QR code avec FreeOTP ou Google Authenticator"
+    });
   } catch (error) {
-    res.status(401).json({ message: "Token invalide" });
+    console.error("Erreur lors de la régénération du QR:", error);
+    res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
