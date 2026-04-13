@@ -2,7 +2,7 @@
 const db = require("../services/neonDatabase");
 
 // Configuration email (Cyber_Admin)
-const ADMIN_EMAIL = "cyber_admin@cyberosint-academy.com"; // À MODIFIER
+const ADMIN_EMAIL = "h4ck3r.vaillant@proton.me"; // À MODIFIER
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_DURATION_HOURS = 24;
 
@@ -155,7 +155,7 @@ async function notifyAdmin(username, attemptType, failedCount) {
     });
 
     await transporter.sendMail({
-      from: "security@cyberosint-academy.com",
+      from: "h4ck3r.vaillant@proton.me",
       to: ADMIN_EMAIL,
       subject: `🚨 Alerte Sécurité: Compte bloqué`,
       text: `Le compte "${username}" a été bloqué après ${failedCount} tentatives échouées de ${attemptType}.

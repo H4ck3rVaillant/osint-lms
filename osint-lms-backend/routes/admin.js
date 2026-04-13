@@ -158,3 +158,100 @@ router.post("/reset-password", authMiddleware, async (req, res) => {
 });
 
 module.exports = router;
+// À ajouter dans routes/admin.js (ou créer ce fichier)
+
+const express = require("express");
+const router = express.Router();
+const db = require("../services/neonDatabase");
+
+/**
+ * GET /admin/blocked-accounts
+ * Récupérer la liste des comptes bloqués
+ */
+router.get("/blocked-accounts", async (req, res) => {
+  try {
+    // Vérifier que l'utilisateur est admin (JWT middleware requis)
+    // TODO: Ajouter vérification role === "admin"
+    
+    const result = await db.query(`
+      SELECT 
+        la.username,
+        la.attempt_type,
+        la.attempts,
+        la.blocked_until,
+        la.last_attempt,
+        u.id as user_id,
+        u.email
+      FROM login_attempts la
+      LEFT JOIN utilisateurs u ON la.username = u.username
+      WHERE la.blocked_until > NOW()
+      ORDER BY la.blocked_until DESC
+    `);
+    
+    res.json({
+      blockedAccounts: result.rows,
+      count: result.rows.length
+    });
+    
+  } catch (error) {
+    console.error("Erreur récupération comptes bloqués:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+/**
+ * POST /admin/unblock-account
+ * Débloquer manuellement un compte
+ */
+router.post("/unblock-account", async (req, res) => {
+  const { username } = req.body;
+  
+  if (!username) {
+    return res.status(400).json({ message: "Username requis" });
+  }
+  
+  try {
+    // Supprimer les tentatives pour ce username
+    await db.query(`
+      DELETE FROM login_attempts 
+      WHERE username = $1
+    `, [username]);
+    
+    res.json({ 
+      message: `Compte ${username} débloqué avec succès`,
+      username: username
+    });
+    
+  } catch (error) {
+    console.error("Erreur déblocage compte:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+/**
+ * GET /admin/login-stats
+ * Statistiques des tentatives de connexion
+ */
+router.get("/login-stats", async (req, res) => {
+  try {
+    const stats = await db.query(`
+      SELECT 
+        attempt_type,
+        COUNT(*) as total_records,
+        COUNT(CASE WHEN blocked_until > NOW() THEN 1 END) as currently_blocked,
+        SUM(attempts) as total_failed_attempts
+      FROM login_attempts
+      GROUP BY attempt_type
+    `);
+    
+    res.json({
+      stats: stats.rows
+    });
+    
+  } catch (error) {
+    console.error("Erreur stats login:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+module.exports = router;
