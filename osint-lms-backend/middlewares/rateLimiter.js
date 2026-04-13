@@ -1,6 +1,5 @@
 // middlewares/rateLimiter.js
 const db = require("../services/neonDatabase");
-const nodemailer = require("nodemailer");
 
 // Configuration email (Cyber_Admin)
 const ADMIN_EMAIL = "cyber_admin@cyberosint-academy.com"; // À MODIFIER
