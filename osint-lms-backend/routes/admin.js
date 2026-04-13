@@ -157,21 +157,16 @@ router.post("/reset-password", authMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
-// À ajouter dans routes/admin.js (ou créer ce fichier)
-
-const express = require("express");
-const router = express.Router();
-const db = require("../services/neonDatabase");
-
-/**
- * GET /admin/blocked-accounts
- * Récupérer la liste des comptes bloqués
- */
-router.get("/blocked-accounts", async (req, res) => {
+/* ====================================
+   GET /admin/blocked-accounts
+   Récupérer la liste des comptes bloqués
+==================================== */
+router.get("/blocked-accounts", authMiddleware, async (req, res) => {
   try {
-    // Vérifier que l'utilisateur est admin (JWT middleware requis)
-    // TODO: Ajouter vérification role === "admin"
+    // Vérifier que c'est un admin
+    if (req.user.role !== "admin" && req.user.username !== "Cyber_Admin") {
+      return res.status(403).json({ success: false, message: "Accès refusé" });
+    }
     
     const result = await db.query(`
       SELECT 
@@ -194,16 +189,16 @@ router.get("/blocked-accounts", async (req, res) => {
     });
     
   } catch (error) {
-    console.error("Erreur récupération comptes bloqués:", error);
+    console.error("❌ Erreur récupération comptes bloqués:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
-/**
- * POST /admin/unblock-account
- * Débloquer manuellement un compte
- */
-router.post("/unblock-account", async (req, res) => {
+/* ====================================
+   POST /admin/unblock-account
+   Débloquer manuellement un compte
+==================================== */
+router.post("/unblock-account", authMiddleware, async (req, res) => {
   const { username } = req.body;
   
   if (!username) {
@@ -211,6 +206,11 @@ router.post("/unblock-account", async (req, res) => {
   }
   
   try {
+    // Vérifier que c'est un admin
+    if (req.user.role !== "admin" && req.user.username !== "Cyber_Admin") {
+      return res.status(403).json({ success: false, message: "Accès refusé" });
+    }
+    
     // Supprimer les tentatives pour ce username
     await db.query(`
       DELETE FROM login_attempts 
@@ -223,17 +223,22 @@ router.post("/unblock-account", async (req, res) => {
     });
     
   } catch (error) {
-    console.error("Erreur déblocage compte:", error);
+    console.error("❌ Erreur déblocage compte:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
-/**
- * GET /admin/login-stats
- * Statistiques des tentatives de connexion
- */
-router.get("/login-stats", async (req, res) => {
+/* ====================================
+   GET /admin/login-stats
+   Statistiques des tentatives de connexion
+==================================== */
+router.get("/login-stats", authMiddleware, async (req, res) => {
   try {
+    // Vérifier que c'est un admin
+    if (req.user.role !== "admin" && req.user.username !== "Cyber_Admin") {
+      return res.status(403).json({ success: false, message: "Accès refusé" });
+    }
+    
     const stats = await db.query(`
       SELECT 
         attempt_type,
@@ -249,7 +254,7 @@ router.get("/login-stats", async (req, res) => {
     });
     
   } catch (error) {
-    console.error("Erreur stats login:", error);
+    console.error("❌ Erreur stats login:", error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
