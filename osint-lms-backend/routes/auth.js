@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const speakeasy = require("speakeasy");
 const QRCode = require("qrcode");
 const db = require("../services/neonDatabase");
+const { checkAccountLocked, recordFailedAttempt, resetAttempts } = require("../middlewares/rateLimiter");
 
 const router = express.Router();
 
@@ -70,6 +71,7 @@ router.post("/register", async (req, res) => {
 
 /* ====================================
    POST /auth/login - Étape 1
+   PROTECTION: Rate limiting sur mot de passe
 ==================================== */
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -79,18 +81,49 @@ router.post("/login", async (req, res) => {
   }
   
   try {
+    // 🛡️ PROTECTION 1: Vérifier si le compte est bloqué (mot de passe)
+    const lockStatus = await checkAccountLocked(username, "password");
+    
+    if (lockStatus.isLocked) {
+      return res.status(429).json({
+        message: lockStatus.message,
+        unlockTime: lockStatus.unlockTime,
+        hoursRemaining: lockStatus.hoursRemaining
+      });
+    }
+    
+    // Récupérer l'utilisateur depuis la DB
     const user = await db.getUserByUsername(username);
     
     if (!user) {
-      return res.status(401).json({ message: "Identifiants invalides" });
+      // 🛡️ PROTECTION 2: Enregistrer tentative échouée
+      const result = await recordFailedAttempt(username, "password");
+      
+      return res.status(401).json({ 
+        message: "Identifiants invalides",
+        remainingAttempts: result.remainingAttempts
+      });
     }
     
     // Vérifier le mot de passe avec bcrypt
     const isPasswordValid = await bcrypt.compare(password, user.password);
     
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Identifiants invalides" });
+      // 🛡️ PROTECTION 3: Enregistrer tentative échouée
+      const result = await recordFailedAttempt(username, "password");
+      
+      if (result.isLocked) {
+        return res.status(429).json({ message: result.message });
+      }
+      
+      return res.status(401).json({ 
+        message: "Identifiants invalides",
+        remainingAttempts: result.remainingAttempts
+      });
     }
+    
+    // ✅ Mot de passe correct: Réinitialiser les tentatives
+    await resetAttempts(username, "password");
     
     // SÉCURITÉ: Ajouter timestamp dans tempToken
     const tempToken = jwt.sign(
@@ -118,7 +151,7 @@ router.post("/login", async (req, res) => {
 
 /* ====================================
    POST /auth/verify-2fa - SÉCURISÉ
-   FAILLE CORRIGÉE: Vérification stricte du tempToken
+   PROTECTION: Rate limiting sur code 2FA
 ==================================== */
 router.post("/verify-2fa", async (req, res) => {
   const { tempToken, totpCode } = req.body;
@@ -142,6 +175,17 @@ router.post("/verify-2fa", async (req, res) => {
       return res.status(401).json({ message: "Token expiré" });
     }
     
+    // 🛡️ PROTECTION 3: Vérifier si le compte est bloqué (2FA)
+    const lockStatus = await checkAccountLocked(decoded.username, "2fa");
+    
+    if (lockStatus.isLocked) {
+      return res.status(429).json({
+        message: lockStatus.message,
+        unlockTime: lockStatus.unlockTime,
+        hoursRemaining: lockStatus.hoursRemaining
+      });
+    }
+    
     // Récupérer l'utilisateur
     const user = await db.getUserById(decoded.id);
     
@@ -158,8 +202,21 @@ router.post("/verify-2fa", async (req, res) => {
     });
     
     if (!isValid) {
-      return res.status(401).json({ message: "Code 2FA invalide" });
+      // 🛡️ PROTECTION 4: Enregistrer tentative 2FA échouée
+      const result = await recordFailedAttempt(decoded.username, "2fa");
+      
+      if (result.isLocked) {
+        return res.status(429).json({ message: result.message });
+      }
+      
+      return res.status(401).json({ 
+        message: "Code 2FA invalide",
+        remainingAttempts: result.remainingAttempts
+      });
     }
+    
+    // ✅ Code 2FA correct: Réinitialiser les tentatives
+    await resetAttempts(decoded.username, "2fa");
     
     // Mettre à jour last_login
     await db.updateLastLogin(user.id);
