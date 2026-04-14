@@ -17,6 +17,14 @@ interface Stats {
   activeToday: number;
 }
 
+interface BlockedAccount {
+  username: string;
+  attempt_type: string;
+  attempts: number;
+  blocked_until: string;
+  last_attempt: string;
+}
+
 // Décoder le JWT payload
 function decodeToken(token: string) {
   try {
@@ -48,31 +56,43 @@ export default function AdminPanel() {
   
   const [stats, setStats] = useState<Stats>({ total: 0, newThisWeek: 0, activeToday: 0 });
   const [users, setUsers] = useState<User[]>([]);
+  const [blockedAccounts, setBlockedAccounts] = useState<BlockedAccount[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Protection
   useEffect(() => {
+    console.log("🔐 Admin check:", currentUser?.username);
     if (currentUser?.username !== "Cyber_Admin") {
+      console.log("❌ Pas admin, redirection...");
       navigate("/dashboard");
+    } else {
+      console.log("✅ Admin confirmé");
     }
   }, [currentUser, navigate]);
 
   // Charger les données
   useEffect(() => {
     if (currentUser?.username === "Cyber_Admin") {
+      console.log("📊 Chargement données admin...");
       fetchStats();
       fetchUsers();
+      fetchBlockedAccounts();
     }
-  }, []);
+  }, [currentUser]);
 
   const fetchStats = async () => {
     try {
+      console.log("📊 Fetching stats...");
       const res = await fetch(`${API_URL}/admin/stats`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
+      
+      console.log("📊 Stats response:", res.status);
+      
       if (res.ok) {
         const data = await res.json();
+        console.log("📊 Stats data:", data);
         if (data.success) {
           setStats({
             total: data.total,
@@ -82,26 +102,90 @@ export default function AdminPanel() {
         }
       }
     } catch (error) {
-      console.error('Failed to fetch stats:', error);
+      console.error('❌ Failed to fetch stats:', error);
     }
   };
 
   const fetchUsers = async () => {
     try {
+      console.log("👥 Fetching users...");
       setLoading(true);
       const res = await fetch(`${API_URL}/admin/users`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
+      
+      console.log("👥 Users response:", res.status);
+      
       if (res.ok) {
         const data = await res.json();
+        console.log("👥 Users data:", data.users?.length, "users");
         if (data.success) {
           setUsers(data.users);
         }
       }
     } catch (error) {
-      console.error('Failed to fetch users:', error);
+      console.error('❌ Failed to fetch users:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchBlockedAccounts = async () => {
+    try {
+      console.log("🔍 Fetching blocked accounts...");
+      
+      const response = await fetch(`${API_URL}/admin/blocked-accounts`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      
+      console.log("🔍 Blocked accounts response:", response.status);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log("🔍 Blocked accounts data:", data);
+        console.log("🔍 Count:", data.count);
+        
+        setBlockedAccounts(data.blockedAccounts || []);
+        console.log("✅ Blocked accounts state updated:", data.blockedAccounts?.length || 0);
+      } else {
+        const error = await response.json();
+        console.error("❌ Blocked accounts error:", error);
+      }
+    } catch (error) {
+      console.error('❌ Failed to fetch blocked accounts:', error);
+    }
+  };
+
+  const unblockAccount = async (username: string) => {
+    if (!confirm(`Débloquer le compte "${username}" ?`)) {
+      return;
+    }
+
+    try {
+      console.log(`🔓 Unblockin
+
+g: ${username}`);
+      
+      const res = await fetch(`${API_URL}/admin/unblock-account`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ username })
+      });
+
+      if (res.ok) {
+        console.log(`✅ ${username} unblocked`);
+        alert(`✅ Compte ${username} débloqué avec succès`);
+        fetchBlockedAccounts(); // Refresh
+      } else {
+        console.error(`❌ Failed to unblock ${username}`);
+        alert('❌ Erreur lors du déblocage');
+      }
+    } catch (error) {
+      console.error('❌ Unblock error:', error);
+      alert('❌ Erreur lors du déblocage');
     }
   };
 
@@ -109,6 +193,7 @@ export default function AdminPanel() {
     if (!confirm(`⚠️ Supprimer définitivement "${username}" ?`)) {
       return;
     }
+
     try {
       const res = await fetch(`${API_URL}/admin/delete-user`, {
         method: 'DELETE',
@@ -118,6 +203,7 @@ export default function AdminPanel() {
         },
         body: JSON.stringify({ userId }),
       });
+
       const data = await res.json();
       if (res.ok && data.success) {
         alert('✅ Utilisateur supprimé');
@@ -136,6 +222,7 @@ export default function AdminPanel() {
     if (!confirm(`${currentBlocked ? 'Débloquer' : 'Bloquer'} "${username}" ?`)) {
       return;
     }
+
     try {
       const res = await fetch(`${API_URL}/admin/block-user`, {
         method: 'PATCH',
@@ -145,6 +232,7 @@ export default function AdminPanel() {
         },
         body: JSON.stringify({ userId, blocked: !currentBlocked }),
       });
+
       const data = await res.json();
       if (res.ok && data.success) {
         alert(`✅ Utilisateur ${currentBlocked ? 'débloqué' : 'bloqué'}`);
@@ -162,6 +250,7 @@ export default function AdminPanel() {
     if (!confirm(`Réinitialiser le mot de passe de "${username}" ?`)) {
       return;
     }
+
     try {
       const res = await fetch(`${API_URL}/admin/reset-password`, {
         method: 'POST',
@@ -171,6 +260,7 @@ export default function AdminPanel() {
         },
         body: JSON.stringify({ userId }),
       });
+
       const data = await res.json();
       if (res.ok && data.success) {
         alert(`✅ Mot de passe réinitialisé !\n\nNouveau MDP temporaire :\n${data.tempPassword}\n\nCommuniquez-le à l'utilisateur.`);
@@ -190,6 +280,8 @@ export default function AdminPanel() {
   if (currentUser?.username !== "Cyber_Admin") {
     return null;
   }
+
+  console.log("🎨 Rendering admin panel, blockedAccounts:", blockedAccounts.length);
 
   return (
     <div style={{
@@ -260,6 +352,98 @@ export default function AdminPanel() {
           ))}
         </div>
 
+        {/* Section Comptes Bloqués - TOUJOURS AFFICHÉE */}
+        <div style={{
+          marginBottom: "40px",
+          padding: "25px",
+          background: blockedAccounts.length > 0 ? "#fff3cd" : colors.bgSecondary,
+          border: `2px solid ${blockedAccounts.length > 0 ? "#ffc107" : colors.border}`,
+          borderRadius: "12px",
+        }}>
+          <h3 style={{
+            fontSize: "1.5rem",
+            fontWeight: "600",
+            color: blockedAccounts.length > 0 ? "#856404" : colors.textPrimary,
+            marginBottom: "20px",
+          }}>
+            🔒 Comptes Bloqués ({blockedAccounts.length})
+          </h3>
+          
+          {blockedAccounts.length === 0 ? (
+            <p style={{ color: colors.textSecondary, margin: 0 }}>
+              Aucun compte bloqué actuellement
+            </p>
+          ) : (
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr style={{ background: "#ffe69c" }}>
+                    {["Username", "Type", "Tentatives", "Bloqué jusqu'à", "Dernière tentative", "Action"].map((h) => (
+                      <th key={h} style={{
+                        padding: "12px",
+                        textAlign: "left",
+                        color: "#856404",
+                        fontSize: "0.9rem",
+                        fontWeight: "600",
+                      }}>
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {blockedAccounts.map((account) => (
+                    <tr key={`${account.username}-${account.attempt_type}`} style={{
+                      borderBottom: "1px solid #ffc107",
+                    }}>
+                      <td style={{ padding: "12px", color: "#212529", fontWeight: "600" }}>
+                        {account.username}
+                      </td>
+                      <td style={{ padding: "12px" }}>
+                        <span style={{
+                          padding: "4px 10px",
+                          background: account.attempt_type === "password" ? "#dc3545" : "#fd7e14",
+                          color: "#fff",
+                          borderRadius: "12px",
+                          fontSize: "0.85rem",
+                        }}>
+                          {account.attempt_type === "password" ? "🔑 Mot de passe" : "🔐 2FA"}
+                        </span>
+                      </td>
+                      <td style={{ padding: "12px", color: "#dc3545", fontWeight: "700" }}>
+                        {account.attempts}
+                      </td>
+                      <td style={{ padding: "12px", color: "#856404", fontSize: "0.9rem" }}>
+                        {new Date(account.blocked_until).toLocaleString('fr-FR')}
+                      </td>
+                      <td style={{ padding: "12px", color: "#6c757d", fontSize: "0.85rem" }}>
+                        {new Date(account.last_attempt).toLocaleString('fr-FR')}
+                      </td>
+                      <td style={{ padding: "12px" }}>
+                        <button
+                          onClick={() => unblockAccount(account.username)}
+                          style={{
+                            padding: "8px 16px",
+                            background: "#28a745",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontSize: "0.85rem",
+                            fontWeight: "600",
+                          }}
+                        >
+                          ✅ Débloquer
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
         {/* Search */}
         <div style={{ marginBottom: "25px" }}>
           <input
@@ -279,7 +463,7 @@ export default function AdminPanel() {
           />
         </div>
 
-        {/* Table */}
+        {/* Table Utilisateurs */}
         <div style={{
           background: colors.bgSecondary,
           border: `1px solid ${colors.border}`,
@@ -354,7 +538,6 @@ export default function AdminPanel() {
                         </td>
                         <td style={{ padding: "15px" }}>
                           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                            {/* Badge Bloqué (si applicable) */}
                             {u.blocked && (
                               <span style={{
                                 padding: "4px 12px",
@@ -366,7 +549,6 @@ export default function AdminPanel() {
                                 🚫 Bloqué
                               </span>
                             )}
-                            {/* Badge Actif/Inactif (basé sur connexion < 30 jours) */}
                             {!u.blocked && (
                               <span style={{
                                 padding: "4px 12px",
@@ -449,6 +631,8 @@ export default function AdminPanel() {
             ✅ <strong>Connecté à Neon PostgreSQL</strong> - Les utilisateurs affichés proviennent de la base de données réelle.
             <br />
             ⏱️ <strong>Inactif</strong> = Pas de connexion depuis 30 jours ou plus.
+            <br />
+            🔒 <strong>Comptes bloqués</strong> = Bloqués automatiquement après 5 tentatives échouées (mot de passe ou 2FA).
           </p>
         </div>
       </div>
