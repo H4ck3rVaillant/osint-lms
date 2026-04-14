@@ -160,6 +160,7 @@ router.post("/reset-password", authMiddleware, async (req, res) => {
 /* ====================================
    GET /admin/blocked-accounts
    Récupérer la liste des comptes bloqués
+   REQUÊTE SIMPLIFIÉE SANS JOIN
 ==================================== */
 router.get("/blocked-accounts", authMiddleware, async (req, res) => {
   try {
@@ -168,20 +169,22 @@ router.get("/blocked-accounts", authMiddleware, async (req, res) => {
       return res.status(403).json({ success: false, message: "Accès refusé" });
     }
     
+    console.log("🔍 Fetching blocked accounts...");
+    
+    // Requête simplifiée SANS JOIN (évite erreurs nom table)
     const result = await db.query(`
       SELECT 
-        la.username,
-        la.attempt_type,
-        la.attempts,
-        la.blocked_until,
-        la.last_attempt,
-        u.id as user_id,
-        u.email
-      FROM login_attempts la
-      LEFT JOIN utilisateurs u ON la.username = u.username
-      WHERE la.blocked_until > NOW()
-      ORDER BY la.blocked_until DESC
+        username,
+        attempt_type,
+        attempts,
+        blocked_until,
+        last_attempt
+      FROM login_attempts
+      WHERE blocked_until > NOW()
+      ORDER BY blocked_until DESC
     `);
+    
+    console.log("✅ Blocked accounts found:", result.rows.length);
     
     res.json({
       blockedAccounts: result.rows,
@@ -190,7 +193,12 @@ router.get("/blocked-accounts", authMiddleware, async (req, res) => {
     
   } catch (error) {
     console.error("❌ Erreur récupération comptes bloqués:", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    console.error("❌ Stack:", error.stack);
+    res.status(500).json({ 
+      message: "Erreur serveur", 
+      error: error.message,
+      details: error.stack 
+    });
   }
 });
 
@@ -211,11 +219,15 @@ router.post("/unblock-account", authMiddleware, async (req, res) => {
       return res.status(403).json({ success: false, message: "Accès refusé" });
     }
     
+    console.log(`🔓 Déblocage compte: ${username}`);
+    
     // Supprimer les tentatives pour ce username
     await db.query(`
       DELETE FROM login_attempts 
       WHERE username = $1
     `, [username]);
+    
+    console.log(`✅ Compte ${username} débloqué`);
     
     res.json({ 
       message: `Compte ${username} débloqué avec succès`,
@@ -224,7 +236,7 @@ router.post("/unblock-account", authMiddleware, async (req, res) => {
     
   } catch (error) {
     console.error("❌ Erreur déblocage compte:", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 });
 
@@ -255,7 +267,7 @@ router.get("/login-stats", authMiddleware, async (req, res) => {
     
   } catch (error) {
     console.error("❌ Erreur stats login:", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 });
 
