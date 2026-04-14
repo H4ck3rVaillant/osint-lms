@@ -71,7 +71,7 @@ export default function AdminPanel() {
     }
   }, [currentUser, navigate]);
 
-  // Charger les données
+  // ✅ CORRECTION : Tableau vide pour éviter la boucle infinie
   useEffect(() => {
     if (currentUser?.username === "Cyber_Admin") {
       console.log("📊 Chargement données admin...");
@@ -79,7 +79,8 @@ export default function AdminPanel() {
       fetchUsers();
       fetchBlockedAccounts();
     }
-  }, [currentUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // ✅ S'exécute UNE SEULE FOIS au montage du composant
 
   const fetchStats = async () => {
     try {
@@ -162,9 +163,7 @@ export default function AdminPanel() {
     }
 
     try {
-      console.log(`🔓 Unblockin
-
-g: ${username}`);
+      console.log(`🔓 Unblocking: ${username}`);
       
       const res = await fetch(`${API_URL}/admin/unblock-account`, {
         method: 'POST',
