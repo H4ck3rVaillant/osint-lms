@@ -1,3 +1,6 @@
+// routes/auth.js - VERSION SÉCURISÉE
+// ✅ Les audit logs sont optionnels - si erreur, la route fonctionne quand même
+
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -8,300 +11,336 @@ const { checkAccountLocked, recordFailedAttempt, resetAttempts } = require("../m
 
 const router = express.Router();
 
+// ✅ IMPORT SÉCURISÉ : Ne crash pas si auditLogger absent
+let logAction = null;
+let ACTION_TYPES = null;
+
+try {
+  const auditLogger = require("../services/auditLogger");
+  logAction = auditLogger.logAction;
+  ACTION_TYPES = auditLogger.ACTION_TYPES;
+} catch (error) {
+  console.log("⚠️ Audit logger non disponible (optionnel)");
+}
+
+// Helper pour logger de manière sécurisée
+async function safeLog(username, action, req, details = null) {
+  try {
+    if (logAction && ACTION_TYPES) {
+      await logAction(username, action, req, details);
+    }
+  } catch (error) {
+    // Ne pas bloquer si le logging échoue
+    console.error("❌ Erreur audit log (non bloquant):", error.message);
+  }
+}
+
 /* ====================================
-   POST /auth/register - SÉCURISÉ
-   FAILLE CORRIGÉE: role forcé à "user"
+   POST /auth/register
 ==================================== */
 router.post("/register", async (req, res) => {
-  const { username, password } = req.body; // PAS de role dans req.body
-  
-  // SÉCURITÉ: Forcer role = "user" (JAMAIS admin via register)
+  const { username, password } = req.body;
   const role = "user";
-  
-  // Validation
+
   if (!username || !password) {
-    return res.status(400).json({ message: "Username et password requis" });
+    return res.status(400).json({ error: "Username et password requis" });
   }
-  
-  if (password.length < 8) {
-    return res.status(400).json({ message: "Le mot de passe doit faire au moins 8 caractères" });
-  }
-  
+
   try {
-    // Vérifier si l'utilisateur existe déjà
-    const existingUser = await db.getUserByUsername(username);
-    if (existingUser) {
-      return res.status(409).json({ message: "Cet utilisateur existe déjà" });
+    const existingUser = await db.query(
+      "SELECT * FROM utilisateurs WHERE username = $1",
+      [username]
+    );
+
+    if (existingUser.rows.length > 0) {
+      await safeLog(null, ACTION_TYPES?.REGISTER, req, `Failed: Username ${username} already exists`);
+      return res.status(400).json({ error: "Nom d'utilisateur déjà pris" });
     }
-    
-    // Hash du mot de passe
-    const passwordHash = await bcrypt.hash(password, 10);
-    
-    // Générer secret TOTP pour 2FA
-    const totpSecret = speakeasy.generateSecret({
-      name: `CyberOSINT Academy (${username})`,
-      issuer: "CyberOSINT Academy"
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await db.query(
+      "INSERT INTO utilisateurs (username, password, role) VALUES ($1, $2, $3)",
+      [username, hashedPassword, role]
+    );
+
+    await safeLog(username, ACTION_TYPES?.REGISTER, req, "Account created successfully");
+
+    res.status(201).json({ 
+      success: true,
+      message: "Utilisateur créé avec succès" 
     });
-    
-    // Créer l'utilisateur (role forcé à "user")
-    const userId = await db.createUser({
-      username,
-      password: passwordHash,
-      role,  // FORCÉ à "user"
-      totp_secret: totpSecret.base32,
-      must_change_password: 0
-    });
-    
-    // Générer le QR Code pour FreeOTP/Google Authenticator
-    const qrCodeDataURL = await QRCode.toDataURL(totpSecret.otpauth_url);
-    
-    res.status(201).json({
-      message: "Utilisateur créé avec succès",
-      userId,
-      totpSecret: totpSecret.base32,
-      qrCode: qrCodeDataURL,
-      instructions: "Scannez ce QR code avec FreeOTP ou Google Authenticator"
-    });
-    
+
   } catch (error) {
     console.error("Erreur lors de l'inscription:", error);
-    res.status(500).json({ message: "Erreur serveur lors de l'inscription" });
+    res.status(500).json({ error: "Erreur serveur" });
   }
 });
 
 /* ====================================
-   POST /auth/login - Étape 1
-   PROTECTION: Rate limiting sur mot de passe
+   POST /auth/login
 ==================================== */
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  
+
   if (!username || !password) {
-    return res.status(400).json({ message: "Champs manquants" });
+    return res.status(400).json({ error: "Username et password requis" });
   }
-  
+
   try {
-    // 🛡️ PROTECTION 1: Vérifier si le compte est bloqué (mot de passe)
     const lockStatus = await checkAccountLocked(username, "password");
     
     if (lockStatus.isLocked) {
+      await safeLog(username, ACTION_TYPES?.LOGIN_FAILED, req, `Account locked until ${lockStatus.unlockTime}`);
+      
       return res.status(429).json({
+        error: "Trop de tentatives échouées",
         message: lockStatus.message,
-        unlockTime: lockStatus.unlockTime,
-        hoursRemaining: lockStatus.hoursRemaining
+        unlockTime: lockStatus.unlockTime
       });
     }
-    
-    // Récupérer l'utilisateur depuis la DB
-    const user = await db.getUserByUsername(username);
-    
-    if (!user) {
-      // 🛡️ PROTECTION 2: Enregistrer tentative échouée
-      const result = await recordFailedAttempt(username, "password");
-      
-      return res.status(401).json({ 
-        message: "Identifiants invalides",
-        remainingAttempts: result.remainingAttempts
-      });
-    }
-    
-    // Vérifier le mot de passe avec bcrypt
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    
-    if (!isPasswordValid) {
-      // 🛡️ PROTECTION 3: Enregistrer tentative échouée
-      const result = await recordFailedAttempt(username, "password");
-      
-      if (result.isLocked) {
-        return res.status(429).json({ message: result.message });
-      }
-      
-      return res.status(401).json({ 
-        message: "Identifiants invalides",
-        remainingAttempts: result.remainingAttempts
-      });
-    }
-    
-    // ✅ Mot de passe correct: Réinitialiser les tentatives
-    await resetAttempts(username, "password");
-    
-    // SÉCURITÉ: Ajouter timestamp dans tempToken
-    const tempToken = jwt.sign(
-      { 
-        id: user.id, 
-        username: user.username, 
-        step: "awaiting_2fa",
-        iat: Math.floor(Date.now() / 1000)  // Timestamp
-      },
-      process.env.JWT_SECRET || "dev_secret",
-      { expiresIn: "5m" }
-    );
-    
-    res.json({
-      message: "Mot de passe correct. Veuillez entrer votre code 2FA.",
-      tempToken,
-      requires2FA: true
-    });
-    
-  } catch (error) {
-    console.error("Erreur lors du login:", error);
-    res.status(500).json({ message: "Erreur serveur" });
-  }
-});
 
-/* ====================================
-   POST /auth/verify-2fa - SÉCURISÉ
-   PROTECTION: Rate limiting sur code 2FA
-==================================== */
-router.post("/verify-2fa", async (req, res) => {
-  const { tempToken, totpCode } = req.body;
-  
-  if (!tempToken || !totpCode) {
-    return res.status(400).json({ message: "Token et code requis" });
-  }
-  
-  try {
-    // Vérifier et décoder le tempToken
-    const decoded = jwt.verify(tempToken, process.env.JWT_SECRET || "dev_secret");
-    
-    // SÉCURITÉ 1: Vérifier que step === "awaiting_2fa"
-    if (decoded.step !== "awaiting_2fa") {
-      return res.status(401).json({ message: "Token invalide - étape incorrecte" });
-    }
-    
-    // SÉCURITÉ 2: Vérifier que le token a moins de 5 minutes
-    const tokenAge = Math.floor(Date.now() / 1000) - decoded.iat;
-    if (tokenAge > 300) { // 5 minutes = 300 secondes
-      return res.status(401).json({ message: "Token expiré" });
-    }
-    
-    // 🛡️ PROTECTION 3: Vérifier si le compte est bloqué (2FA)
-    const lockStatus = await checkAccountLocked(decoded.username, "2fa");
-    
-    if (lockStatus.isLocked) {
-      return res.status(429).json({
-        message: lockStatus.message,
-        unlockTime: lockStatus.unlockTime,
-        hoursRemaining: lockStatus.hoursRemaining
-      });
-    }
-    
-    // Récupérer l'utilisateur
-    const user = await db.getUserById(decoded.id);
-    
-    if (!user || !user.totp_secret) {
-      return res.status(401).json({ message: "Utilisateur invalide ou 2FA non configuré" });
-    }
-    
-    // Vérifier le code 2FA
-    const isValid = speakeasy.totp.verify({
-      secret: user.totp_secret,
-      encoding: "base32",
-      token: totpCode,
-      window: 2
-    });
-    
-    if (!isValid) {
-      // 🛡️ PROTECTION 4: Enregistrer tentative 2FA échouée
-      const result = await recordFailedAttempt(decoded.username, "2fa");
-      
-      if (result.isLocked) {
-        return res.status(429).json({ message: result.message });
-      }
-      
-      return res.status(401).json({ 
-        message: "Code 2FA invalide",
-        remainingAttempts: result.remainingAttempts
-      });
-    }
-    
-    // ✅ Code 2FA correct: Réinitialiser les tentatives
-    await resetAttempts(decoded.username, "2fa");
-    
-    // Mettre à jour last_login
-    await db.updateLastLogin(user.id);
-    console.log("✅ Last login mis à jour pour user", user.id);
-    
-    // Générer le token final (24h)
-    const finalToken = jwt.sign(
-      {
-        id: user.id,
-        username: user.username,
-        role: user.role
-      },
-      process.env.JWT_SECRET || "dev_secret",
-      { expiresIn: "24h" }
+    const result = await db.query(
+      "SELECT * FROM utilisateurs WHERE username = $1",
+      [username]
     );
-    
+
+    if (result.rows.length === 0) {
+      await recordFailedAttempt(username, "password");
+      await safeLog(username, ACTION_TYPES?.LOGIN_FAILED, req, "User not found");
+      
+      return res.status(401).json({ error: "Identifiants invalides" });
+    }
+
+    const user = result.rows[0];
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    if (!isValidPassword) {
+      await recordFailedAttempt(username, "password");
+      await safeLog(username, ACTION_TYPES?.LOGIN_FAILED, req, "Invalid password");
+      
+      return res.status(401).json({ error: "Identifiants invalides" });
+    }
+
+    await resetAttempts(username, "password");
+
+    await db.query(
+      "UPDATE utilisateurs SET last_login = NOW() WHERE id = $1",
+      [user.id]
+    );
+
+    if (user.totp_secret) {
+      await safeLog(username, "LOGIN_PARTIAL", req, "Waiting for 2FA verification");
+      
+      return res.json({
+        success: true,
+        requires2FA: true,
+        userId: user.id,
+        username: user.username
+      });
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, username: user.username, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    await safeLog(username, ACTION_TYPES?.LOGIN_SUCCESS, req, null);
+
     res.json({
-      message: "Authentification réussie",
-      token: finalToken,
+      success: true,
+      token: token,
       user: {
         id: user.id,
         username: user.username,
         role: user.role
       }
     });
-    
+
   } catch (error) {
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expiré" });
-    }
-    if (error.name === "JsonWebTokenError") {
-      return res.status(401).json({ message: "Token invalide" });
-    }
-    console.error("Erreur verify-2fa:", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    console.error("Erreur lors de la connexion:", error);
+    res.status(500).json({ error: "Erreur serveur" });
   }
 });
 
 /* ====================================
-   POST /auth/regenerate-qr
-   Régénérer le QR code TOTP (si perdu)
+   POST /auth/verify-2fa
 ==================================== */
-router.post("/regenerate-qr", async (req, res) => {
-  const { username, password } = req.body;
-  
-  if (!username || !password) {
-    return res.status(400).json({ message: "Champs manquants" });
+router.post("/verify-2fa", async (req, res) => {
+  const { username, token } = req.body;
+
+  if (!username || !token) {
+    return res.status(400).json({ error: "Username et token requis" });
   }
-  
+
   try {
-    const user = await db.getUserByUsername(username);
+    const lockStatus = await checkAccountLocked(username, "2fa");
     
-    if (!user) {
-      return res.status(401).json({ message: "Utilisateur non trouvé" });
+    if (lockStatus.isLocked) {
+      await safeLog(username, ACTION_TYPES?.VERIFY_2FA_FAILED, req, `Account locked until ${lockStatus.unlockTime}`);
+      
+      return res.status(429).json({
+        error: "Trop de tentatives échouées",
+        message: lockStatus.message,
+        unlockTime: lockStatus.unlockTime
+      });
     }
-    
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Mot de passe invalide" });
+
+    const result = await db.query(
+      "SELECT * FROM utilisateurs WHERE username = $1",
+      [username]
+    );
+
+    if (result.rows.length === 0) {
+      await safeLog(username, ACTION_TYPES?.VERIFY_2FA_FAILED, req, "User not found");
+      return res.status(401).json({ error: "Utilisateur non trouvé" });
     }
-    
+
+    const user = result.rows[0];
+
     if (!user.totp_secret) {
-      return res.status(400).json({ message: "Pas de secret TOTP configuré" });
+      return res.status(400).json({ error: "2FA non activé pour cet utilisateur" });
     }
-    
-    // Recréer le QR code à partir du secret existant
-    const otpauthUrl = speakeasy.otpauthURL({
+
+    const isValid = speakeasy.totp.verify({
       secret: user.totp_secret,
-      label: `CyberOSINT Academy (${username})`,
-      issuer: "CyberOSINT Academy",
-      encoding: "base32"
+      encoding: "base32",
+      token: token,
+      window: 2
     });
-    
-    const qrCodeDataURL = await QRCode.toDataURL(otpauthUrl);
-    
+
+    if (!isValid) {
+      await recordFailedAttempt(username, "2fa");
+      await safeLog(username, ACTION_TYPES?.VERIFY_2FA_FAILED, req, "Invalid 2FA code");
+      
+      return res.status(401).json({ error: "Code 2FA invalide" });
+    }
+
+    await resetAttempts(username, "2fa");
+
+    const jwtToken = jwt.sign(
+      { userId: user.id, username: user.username, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    await safeLog(username, ACTION_TYPES?.VERIFY_2FA_SUCCESS, req, null);
+
     res.json({
-      qrCode: qrCodeDataURL,
-      totpSecret: user.totp_secret,
-      instructions: "Scannez ce QR code avec FreeOTP ou Google Authenticator"
+      success: true,
+      token: jwtToken,
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role
+      }
     });
-    
+
   } catch (error) {
-    console.error("Erreur lors de la régénération du QR:", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    console.error("Erreur lors de la vérification 2FA:", error);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+/* ====================================
+   POST /auth/setup-2fa
+==================================== */
+router.post("/setup-2fa", async (req, res) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: "Username requis" });
+  }
+
+  try {
+    const result = await db.query(
+      "SELECT * FROM utilisateurs WHERE username = $1",
+      [username]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Utilisateur non trouvé" });
+    }
+
+    const user = result.rows[0];
+
+    const secret = speakeasy.generateSecret({
+      name: `CyberOSINT (${username})`,
+    });
+
+    await db.query(
+      "UPDATE utilisateurs SET totp_secret = $1 WHERE id = $2",
+      [secret.base32, user.id]
+    );
+
+    const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url);
+
+    await safeLog(username, ACTION_TYPES?.ENABLE_2FA, req, null);
+
+    res.json({
+      success: true,
+      secret: secret.base32,
+      qrCode: qrCodeUrl,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la configuration 2FA:", error);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+/* ====================================
+   POST /auth/disable-2fa
+==================================== */
+router.post("/disable-2fa", async (req, res) => {
+  const { username, token } = req.body;
+
+  if (!username || !token) {
+    return res.status(400).json({ error: "Username et token requis" });
+  }
+
+  try {
+    const result = await db.query(
+      "SELECT * FROM utilisateurs WHERE username = $1",
+      [username]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Utilisateur non trouvé" });
+    }
+
+    const user = result.rows[0];
+
+    if (!user.totp_secret) {
+      return res.status(400).json({ error: "2FA non activé" });
+    }
+
+    const isValid = speakeasy.totp.verify({
+      secret: user.totp_secret,
+      encoding: "base32",
+      token: token,
+      window: 2,
+    });
+
+    if (!isValid) {
+      return res.status(401).json({ error: "Code 2FA invalide" });
+    }
+
+    await db.query(
+      "UPDATE utilisateurs SET totp_secret = NULL WHERE id = $1",
+      [user.id]
+    );
+
+    await safeLog(username, ACTION_TYPES?.DISABLE_2FA, req, null);
+
+    res.json({
+      success: true,
+      message: "2FA désactivé avec succès",
+    });
+  } catch (error) {
+    console.error("Erreur lors de la désactivation 2FA:", error);
+    res.status(500).json({ error: "Erreur serveur" });
   }
 });
 
