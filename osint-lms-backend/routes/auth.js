@@ -133,12 +133,15 @@ router.post("/login", async (req, res) => {
     if (user.totp_secret) {
       await safeLog(username, "LOGIN_PARTIAL", req, "Waiting for 2FA verification");
       
-      return res.json({
+      const response = {
         success: true,
         requires2FA: true,
         userId: user.id,
         username: user.username
-      });
+      };
+      
+      console.log("🔵 RESPONSE (2FA required):", JSON.stringify(response));
+      return res.json(response);
     }
 
     const token = jwt.sign(
@@ -149,7 +152,7 @@ router.post("/login", async (req, res) => {
 
     await safeLog(username, ACTION_TYPES?.LOGIN_SUCCESS, req, null);
 
-    res.json({
+    const response = {
       success: true,
       token: token,
       user: {
@@ -157,7 +160,10 @@ router.post("/login", async (req, res) => {
         username: user.username,
         role: user.role
       }
-    });
+    };
+    
+    console.log("🔵 RESPONSE (login complete):", JSON.stringify(response));
+    res.json(response);
 
   } catch (error) {
     console.error("Erreur lors de la connexion:", error);
