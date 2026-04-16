@@ -176,17 +176,21 @@ router.post("/login", async (req, res) => {
    POST /auth/verify-2fa
 ==================================== */
 router.post("/verify-2fa", async (req, res) => {
-  const { username, token } = req.body;
+  const { tempToken, totpCode, username, token } = req.body;
+  
+  // ✅ Accepter les deux formats (frontend ancien et nouveau)
+  const usernameToUse = username || tempToken;
+  const codeToUse = token || totpCode;
 
-  if (!username || !token) {
-    return res.status(400).json({ error: "Username et token requis" });
+  if (!usernameToUse || !codeToUse) {
+    return res.status(400).json({ error: "Username et code requis" });
   }
 
   try {
-    const lockStatus = await checkAccountLocked(username, "2fa");
+    const lockStatus = await checkAccountLocked(usernameToUse, "2fa");
     
     if (lockStatus.isLocked) {
-      await safeLog(username, ACTION_TYPES?.VERIFY_2FA_FAILED, req, `Account locked until ${lockStatus.unlockTime}`);
+      await safeLog(usernameToUse, ACTION_TYPES?.VERIFY_2FA_FAILED, req, `Account locked until ${lockStatus.unlockTime}`);
       
       return res.status(429).json({
         error: "Trop de tentatives échouées",
@@ -197,11 +201,11 @@ router.post("/verify-2fa", async (req, res) => {
 
     const result = await db.query(
       "SELECT * FROM utilisateurs WHERE username = $1",
-      [username]
+      [usernameToUse]
     );
 
     if (result.rows.length === 0) {
-      await safeLog(username, ACTION_TYPES?.VERIFY_2FA_FAILED, req, "User not found");
+      await safeLog(usernameToUse, ACTION_TYPES?.VERIFY_2FA_FAILED, req, "User not found");
       return res.status(401).json({ error: "Utilisateur non trouvé" });
     }
 
@@ -214,18 +218,18 @@ router.post("/verify-2fa", async (req, res) => {
     const isValid = speakeasy.totp.verify({
       secret: user.totp_secret,
       encoding: "base32",
-      token: token,
+      token: codeToUse,
       window: 2
     });
 
     if (!isValid) {
-      await recordFailedAttempt(username, "2fa");
-      await safeLog(username, ACTION_TYPES?.VERIFY_2FA_FAILED, req, "Invalid 2FA code");
+      await recordFailedAttempt(usernameToUse, "2fa");
+      await safeLog(usernameToUse, ACTION_TYPES?.VERIFY_2FA_FAILED, req, "Invalid 2FA code");
       
       return res.status(401).json({ error: "Code 2FA invalide" });
     }
 
-    await resetAttempts(username, "2fa");
+    await resetAttempts(usernameToUse, "2fa");
 
     const jwtToken = jwt.sign(
       { userId: user.id, username: user.username, role: user.role },
@@ -233,7 +237,7 @@ router.post("/verify-2fa", async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    await safeLog(username, ACTION_TYPES?.VERIFY_2FA_SUCCESS, req, null);
+    await safeLog(usernameToUse, ACTION_TYPES?.VERIFY_2FA_SUCCESS, req, null);
 
     res.json({
       success: true,
