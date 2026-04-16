@@ -137,7 +137,7 @@ router.post("/login", async (req, res) => {
         success: true,
         requires2FA: true,
         tempToken: username,  // ✅ AJOUT du tempToken
-        userId: user.id,
+        id: user.id,
         username: user.username
       };
       
@@ -146,7 +146,7 @@ router.post("/login", async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user.id, username: user.username, role: user.role },
+      { id: user.id, username: user.username, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -232,7 +232,7 @@ router.post("/verify-2fa", async (req, res) => {
     await resetAttempts(usernameToUse, "2fa");
 
     const jwtToken = jwt.sign(
-      { userId: user.id, username: user.username, role: user.role },
+      { id: user.id, username: user.username, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
