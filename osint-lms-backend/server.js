@@ -7,6 +7,7 @@ const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
 const gameRoutes = require("./routes/game");
+const honeypotRoutes = require("./routes/honeypot");
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/messages", messageRoutes);
 app.use("/game", gameRoutes);
+app.use("/", honeypotRoutes);
 
 /* =========================
    SERVER
