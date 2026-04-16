@@ -136,6 +136,7 @@ router.post("/login", async (req, res) => {
       const response = {
         success: true,
         requires2FA: true,
+        tempToken: username,  // ✅ AJOUT du tempToken
         userId: user.id,
         username: user.username
       };
