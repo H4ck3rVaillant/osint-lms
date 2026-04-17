@@ -45,6 +45,7 @@ import CertificatPage from "./pages/CertificatPage";
 import YouTubePage from "./pages/YouTubePage";
 import ChallengesPage from "./pages/ChallengesPage";
 import AdminPanel from "./pages/AdminPanel";
+import SecurityDashboard from "./pages/SecurityDashboard";
 import HackerAI from "./pages/HackerAI";
 import DependencyTrack from "./pages/DependencyTrack";
 import OutilsCyber from "./pages/OutilsCyber";
@@ -62,14 +63,17 @@ import ArgusConsole from "./pages/ArgusConsole";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
   return null;
 }
 
 function Protected({ children }: { children: JSX.Element }) {
   const { user, isLoading } = useAuth();
+
   if (isLoading) {
     return (
       <div style={{
@@ -95,7 +99,9 @@ function Protected({ children }: { children: JSX.Element }) {
       </div>
     );
   }
+
   if (!user) return <Navigate to="/login" replace />;
+
   return children;
 }
 
@@ -110,7 +116,7 @@ function Layout({ children }: { children: JSX.Element }) {
 }
 
 export default function App() {
-  const { isLoading } = useLocalStorageSync(); // Synchronisation automatique localStorage ↔ API
+  const { isLoading } = useLocalStorageSync();
   
   if (isLoading) {
     return (
@@ -187,6 +193,7 @@ export default function App() {
         <Route path="/youtube" element={<Protected><Layout><YouTubePage /></Layout></Protected>} />
         <Route path="/challenges" element={<Protected><Layout><ChallengesPage /></Layout></Protected>} />
         <Route path="/admin" element={<Protected><Layout><AdminPanel /></Layout></Protected>} />
+        <Route path="/admin/security" element={<Protected><Layout><SecurityDashboard /></Layout></Protected>} />
         <Route path="/hacker-ai" element={<Protected><Layout><HackerAI /></Layout></Protected>} />
         <Route path="/dependency-track" element={<Protected><Layout><DependencyTrack /></Layout></Protected>} />
         <Route path="/outils-cyber" element={<Protected><Layout><OutilsCyber /></Layout></Protected>} />
@@ -202,7 +209,6 @@ export default function App() {
         <Route path="/outils/argus" element={<Protected><Layout><ArgusRecon /></Layout></Protected>} />
         <Route path="/outils/argus/console" element={<Protected><Layout><ArgusConsole /></Layout></Protected>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/admin/security" element={<PrivateRoute><SecurityDashboard /></PrivateRoute>} />
       </Routes>
     </GameProvider>
   );
