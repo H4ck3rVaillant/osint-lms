@@ -202,6 +202,7 @@ export default function App() {
         <Route path="/outils/argus" element={<Protected><Layout><ArgusRecon /></Layout></Protected>} />
         <Route path="/outils/argus/console" element={<Protected><Layout><ArgusConsole /></Layout></Protected>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/admin/security" element={<PrivateRoute><SecurityDashboard /></PrivateRoute>} />
       </Routes>
     </GameProvider>
   );

@@ -111,7 +111,6 @@ export default function Header() {
         >
           ☰
         </button>
-
         {/* 🎯 LOGO */}
         <Link to="/dashboard" style={{ 
           display: "flex", 
@@ -129,9 +128,7 @@ export default function Header() {
             CyberOSINT Academy
           </span>
         </Link>
-
         <div style={separatorStyle} className="separator" />
-
         {/* 📚 SECTION FORMATION (desktop) */}
         <nav style={{
           display: "flex",
@@ -155,7 +152,6 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-
           {/* Menu Modules OSINT */}
           <div style={{ position: "relative" as const }}>
             <span onClick={() => setShowModulesMenu(!showModulesMenu)} style={{
@@ -167,7 +163,6 @@ export default function Header() {
             }}>
               Modules OSINT ▾
             </span>
-
             {showModulesMenu && (
               <div style={{
                 position: "absolute" as const,
@@ -292,7 +287,6 @@ export default function Header() {
               </div>
             )}
           </div>
-
           {[
             { label: "Exercices", to: "/exercices-osint" },
             { label: "Etudes de cas", to: "/etudes-osint" },
@@ -309,7 +303,6 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-
           {/* Menu Quiz + Challenge */}
           <div style={{ position: "relative" as const }}>
             <span onClick={() => setShowQuizMenu(!showQuizMenu)} style={{
@@ -321,7 +314,6 @@ export default function Header() {
             }}>
               Quiz + Challenge ▾
             </span>
-
             {showQuizMenu && (
               <div style={{
                 position: "absolute" as const,
@@ -371,7 +363,6 @@ export default function Header() {
                 }}>
                   🚩 CTF Challenge
                 </Link>
-
                 <Link to="/challenges" onClick={() => setShowQuizMenu(false)} style={{
                   display: "block",
                   color: colors.textPrimary,
@@ -394,9 +385,7 @@ export default function Header() {
             )}
           </div>
         </nav>
-
         <div style={separatorStyle} className="separator" />
-
         {/* 🛠️ SECTION LABO/OUTILS (desktop) */}
         <nav style={{
           display: "flex",
@@ -415,7 +404,6 @@ export default function Header() {
           }}>
             Labo
           </Link>
-
           {/* Menu Outils */}
           <div style={{ position: "relative" as const }}>
             <span onClick={() => setShowOutilsMenu(!showOutilsMenu)} style={{
@@ -427,7 +415,6 @@ export default function Header() {
             }}>
               Outils ▾
             </span>
-
             {showOutilsMenu && (
               <div style={{
                 position: "absolute" as const,
@@ -474,7 +461,6 @@ export default function Header() {
               </div>
             )}
           </div>
-
           <Link to="/youtube" style={linkStyle}
           onMouseEnter={(e) => {
             e.currentTarget.style.color = colors.accent;
@@ -487,9 +473,7 @@ export default function Header() {
             YouTube (embeds)
           </Link>
         </nav>
-
         <div style={separatorStyle} className="separator" />
-
         {/* 🏆 SECTION SUIVI (desktop) */}
         <nav style={{
           display: "flex",
@@ -517,9 +501,7 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-
         <div style={separatorStyle} className="separator" />
-
         {/* 🎨 BOUTONS ACTIONS */}
         <div style={{ 
           display: "flex", 
@@ -557,7 +539,6 @@ export default function Header() {
           >
             {theme === "dark" ? "🌞" : "🌙"}
           </button>
-
           {/* Avatar + User Menu */}
           <div style={{ position: "relative" as const }}>
             <div onClick={() => setShowUserMenu(!showUserMenu)} style={{
@@ -585,7 +566,6 @@ export default function Header() {
               }}>
                 {getUserAvatar(user.username)}
               </div>
-
               <span style={{ 
                 color: colors.textSecondary, 
                 fontWeight: "500", 
@@ -597,7 +577,6 @@ export default function Header() {
               
               <span style={{ color: colors.textSecondary, fontSize: "0.6rem" }}>▾</span>
             </div>
-
             {showUserMenu && (
               <div style={{
                 position: "absolute" as const,
@@ -630,7 +609,6 @@ export default function Header() {
                 }}>
                   👤 Mon Profil
                 </Link>
-
                 <Link to="/contact" onClick={() => setShowUserMenu(false)} style={{
                   display: "block",
                   color: colors.textPrimary,
@@ -649,7 +627,6 @@ export default function Header() {
                 }}>
                   📧 Contact Admin
                 </Link>
-
                 <Link to="/messages" onClick={() => setShowUserMenu(false)} style={{
                   display: "block",
                   color: colors.textPrimary,
@@ -668,7 +645,6 @@ export default function Header() {
                 }}>
                   💬 Messages
                 </Link>
-
                 {/* Panel Admin - Visible uniquement pour Cyber_Admin */}
                 {user?.username === "Cyber_Admin" && (
                   <>
@@ -691,11 +667,27 @@ export default function Header() {
                     }}>
                       🛡️ Panel Admin
                     </Link>
+                    
+                    <Link to="/admin/security" onClick={() => setShowUserMenu(false)} style={{
+                      display: "block",
+                      color: colors.accent,
+                      textDecoration: "none",
+                      padding: "10px 18px",
+                      fontSize: "0.85rem",
+                      fontWeight: "600",
+                      transition: "all 0.2s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = colors.bgSecondary;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "transparent";
+                    }}>
+                      🔒 Tableau de bord sécurité
+                    </Link>
                   </>
                 )}
-
                 <div style={{ height: "1px", background: colors.border, margin: "8px 0" }} />
-
                 <button onClick={handleLogout} style={{
                   width: "100%",
                   background: "transparent",
@@ -718,7 +710,6 @@ export default function Header() {
               </div>
             )}
           </div>
-
           {/* Online Status */}
           <div style={{
             width: "10px",
@@ -731,9 +722,7 @@ export default function Header() {
           title="En ligne"
           />
         </div>
-
       </div>
-
       {/* 📱 MENU MOBILE OVERLAY */}
       {showMobileMenu && (
         <div style={{
@@ -779,7 +768,6 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
-
             {/* MODULES OSINT - 6 modules */}
             <div style={{ 
               color: colors.textSecondary, 
@@ -810,7 +798,6 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
-
             <div style={{ 
               color: colors.textSecondary, 
               fontSize: "0.75rem", 
@@ -844,7 +831,6 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
-
             <div style={{ 
               color: colors.textSecondary, 
               fontSize: "0.75rem", 
@@ -875,12 +861,9 @@ export default function Header() {
           </div>
         </div>
       )}
-
     </header>
-
     {/* SPACER */}
     <div style={{ height: "60px" }} />
-
     <style>{`
       /* Mode mobile < 1400px */
       @media (max-width: 1400px) {
@@ -894,7 +877,6 @@ export default function Header() {
           display: none !important;
         }
       }
-
       /* Mode compact 1400-1600px */
       @media (min-width: 1401px) and (max-width: 1600px) {
         .desktop-nav a, .desktop-nav span {
@@ -902,7 +884,6 @@ export default function Header() {
           padding: 4px 6px !important;
         }
       }
-
       /* Mode très large > 1920px */
       @media (min-width: 1921px) {
         .desktop-nav a, .desktop-nav span {
