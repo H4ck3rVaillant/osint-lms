@@ -45,8 +45,8 @@ const ACTION_TYPES = {
  */
 async function logAction(username, action, req, details = null) {
   try {
-    const ipAddress = req.ip || req.connection.remoteAddress || "unknown";
-    const userAgent = req.get('User-Agent') || "unknown";
+    const ipAddress = req ? (req.ip || req.connection?.remoteAddress || "unknown") : "unknown";
+    const userAgent = req ? (req.get('User-Agent') || "unknown") : "unknown";
     
     await db.query(
       `INSERT INTO audit_logs (username, action, details, ip_address, user_agent, timestamp)

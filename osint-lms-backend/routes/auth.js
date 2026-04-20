@@ -106,7 +106,7 @@ router.post("/login", async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      await recordFailedAttempt(username, "password");
+      await recordFailedAttempt(username, "password", req);
       await safeLog(username, ACTION_TYPES?.LOGIN_FAILED, req, "User not found");
       
       return res.status(401).json({ error: "Identifiants invalides" });
@@ -117,7 +117,7 @@ router.post("/login", async (req, res) => {
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      await recordFailedAttempt(username, "password");
+      await recordFailedAttempt(username, "password", req);
       await safeLog(username, ACTION_TYPES?.LOGIN_FAILED, req, "Invalid password");
       
       return res.status(401).json({ error: "Identifiants invalides" });
