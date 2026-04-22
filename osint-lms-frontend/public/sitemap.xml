@@ -1,146 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Page d'accueil -->
   <url>
     <loc>https://www.cyberosint-academy.com/</loc>
-    <lastmod>2026-04-08</lastmod>
+    <lastmod>2026-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
-  <!-- Dashboard -->
+  <url>
+    <loc>https://www.cyberosint-academy.com/login</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cyberosint-academy.com/register</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <url>
     <loc>https://www.cyberosint-academy.com/dashboard</loc>
-    <lastmod>2026-04-08</lastmod>
+    <lastmod>2026-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  
-  <!-- Parcours Hub -->
   <url>
     <loc>https://www.cyberosint-academy.com/parcours</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  
-  <!-- Parcours Débutant -->
   <url>
-    <loc>https://www.cyberosint-academy.com/parcours-debutant</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Parcours Intermédiaire -->
-  <url>
-    <loc>https://www.cyberosint-academy.com/parcours-intermediaire</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Parcours Avancé -->
-  <url>
-    <loc>https://www.cyberosint-academy.com/parcours-avance</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Exercices OSINT -->
-  <url>
-    <loc>https://www.cyberosint-academy.com/exercices-osint</loc>
-    <lastmod>2026-04-08</lastmod>
+    <loc>https://www.cyberosint-academy.com/modules/shodan</loc>
+    <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  
-  <!-- Études de Cas -->
   <url>
-    <loc>https://www.cyberosint-academy.com/etudes-osint</loc>
-    <lastmod>2026-04-08</lastmod>
+    <loc>https://www.cyberosint-academy.com/modules/linkedin</loc>
+    <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  
-  <!-- Badges -->
   <url>
-    <loc>https://www.cyberosint-academy.com/badges-osint</loc>
-    <lastmod>2026-04-08</lastmod>
+    <loc>https://www.cyberosint-academy.com/modules/telegram</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cyberosint-academy.com/modules/discord</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cyberosint-academy.com/modules/theharvester</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cyberosint-academy.com/modules/maltego</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cyberosint-academy.com/quiz</loc>
+    <lastmod>2026-04-22</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
-  
-  <!-- CTF Challenges -->
   <url>
     <loc>https://www.cyberosint-academy.com/ctf</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
-  
-  <!-- Leaderboard -->
   <url>
-    <loc>https://www.cyberosint-academy.com/leaderboard</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
+    <loc>https://www.cyberosint-academy.com/exercices-osint</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
-  
-  <!-- Labo OSINT -->
-  <url>
-    <loc>https://www.cyberosint-academy.com/labo-osint</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <!-- Outils Cyber -->
-  <url>
-    <loc>https://www.cyberosint-academy.com/outils-cyber</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <!-- VM Kali -->
-  <url>
-    <loc>https://www.cyberosint-academy.com/vm-kali</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <!-- VM Parrot -->
-  <url>
-    <loc>https://www.cyberosint-academy.com/vm-parrot</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <!-- Argus Console -->
-  <url>
-    <loc>https://www.cyberosint-academy.com/argus</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <!-- Certificat -->
   <url>
     <loc>https://www.cyberosint-academy.com/certificat</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  
-  <!-- Progression -->
-  <url>
-    <loc>https://www.cyberosint-academy.com/progression</loc>
-    <lastmod>2026-04-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
   </url>
 </urlset>
