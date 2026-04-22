@@ -238,6 +238,7 @@ router.post("/verify-2fa", async (req, res) => {
     );
 
     await safeLog(usernameToUse, ACTION_TYPES?.VERIFY_2FA_SUCCESS, req, null);
+    await safeLog(usernameToUse, ACTION_TYPES?.LOGIN_SUCCESS, req, "2FA verified");
 
     res.json({
       success: true,
