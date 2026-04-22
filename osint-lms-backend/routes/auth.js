@@ -223,7 +223,7 @@ router.post("/verify-2fa", async (req, res) => {
     });
 
     if (!isValid) {
-      await recordFailedAttempt(usernameToUse, "2fa");
+      await recordFailedAttempt(usernameToUse, "2fa", req);
       await safeLog(usernameToUse, ACTION_TYPES?.VERIFY_2FA_FAILED, req, "Invalid 2FA code");
       
       return res.status(401).json({ error: "Code 2FA invalide" });
