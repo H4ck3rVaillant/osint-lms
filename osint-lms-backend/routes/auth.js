@@ -59,16 +59,26 @@ router.post("/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Générer le secret TOTP pour le 2FA obligatoire dès l inscription
+    const secret = speakeasy.generateSecret({
+      name: `CyberOSINT (${username})`,
+    });
+
     await db.query(
-      "INSERT INTO utilisateurs (username, password, role) VALUES ($1, $2, $3)",
-      [username, hashedPassword, role]
+      "INSERT INTO utilisateurs (username, password, role, totp_secret) VALUES ($1, $2, $3, $4)",
+      [username, hashedPassword, role, secret.base32]
     );
+
+    // Générer le QR code à retourner au frontend
+    const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url);
 
     await safeLog(username, ACTION_TYPES?.REGISTER, req, "Account created successfully");
 
-    res.status(201).json({ 
+    res.status(201).json({
       success: true,
-      message: "Utilisateur créé avec succès" 
+      message: "Utilisateur créé avec succès",
+      qrCode: qrCodeUrl,
+      totpSecret: secret.base32,
     });
 
   } catch (error) {
