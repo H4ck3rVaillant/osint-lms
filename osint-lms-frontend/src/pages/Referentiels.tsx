@@ -140,7 +140,7 @@ export default function Referentiels() {
               },
               {
                 title: "Référentiel Général de Sécurité (RGS)",
-                desc: "Cadre réglementaire pour sécuriser les échanges électroniques des administrations",
+                desc: "Cadre réglementaire pour sécuriser les échanges électroniques",
                 tags: ["Réglementaire", "Administration"],
                 link: "https://cyber.gouv.fr/reglementation/reglementation-identite-confiance-numerique/securite-echanges-voie-electronique/referentiel-general-de-securite/"
               },
@@ -589,7 +589,7 @@ export default function Referentiels() {
         </div>
       )}
 
-      {/* Section Normes ISO */}
+      {/* Section Normes ISO - inchangée, je la conserve telle quelle */}
       {activeSection === "normes" && (
         <div>
           <h2 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "30px" }}>
