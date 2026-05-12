@@ -118,37 +118,37 @@ export default function Referentiels() {
                 title: "Guide d'hygiène informatique",
                 desc: "42 règles essentielles pour la sécurité des systèmes d'information",
                 tags: ["Essentiel", "Bonnes pratiques"],
-                link: "https://www.ssi.gouv.fr/guide/guide-dhygiene-informatique/"
+                link: "https://messervices.cyber.gouv.fr/guides/guide-dhygiene-informatique"
               },
               {
                 title: "Panorama de la cybermenace",
                 desc: "Rapport annuel sur les menaces cyber en France",
                 tags: ["CTI", "Annuel"],
-                link: "https://www.ssi.gouv.fr/publication/panorama-de-la-cybermenace/"
+                link: "https://cyber.gouv.fr/nous-connaitre/publications/panoramas-de-la-cybermenace/"
               },
               {
                 title: "EBIOS Risk Manager",
                 desc: "Méthode d'appréciation et de traitement des risques numériques",
                 tags: ["Méthodologie", "Risk Management"],
-                link: "https://www.ssi.gouv.fr/guide/la-methode-ebios-risk-manager-le-guide/"
+                link: "https://cyber.gouv.fr/securisation/analyse-des-risques/methode-ebios-rm/"
               },
               {
-                title: "Recommandations de sécurité GNU/Linux",
-                desc: "Guides techniques sur la sécurisation des systèmes Linux",
+                title: "Recommandations de sécurité",
+                desc: "Règles de sécurité pour les systèmes d'information",
                 tags: ["Technique", "Recommandations"],
-                link: "https://www.ssi.gouv.fr/administration/guide/recommandations-de-securite-relatives-a-un-systeme-gnulinux/"
+                link: "https://cyber.gouv.fr/reglementation/cybersecurite-systemes-dinformation/directives-nis-nis2-et-dispositif-saiv/dispositif-saiv/regles-de-s%C3%A9curite/"
               },
               {
                 title: "Référentiel Général de Sécurité (RGS)",
                 desc: "Cadre réglementaire pour sécuriser les échanges électroniques des administrations",
                 tags: ["Réglementaire", "Administration"],
-                link: "https://www.ssi.gouv.fr/entreprise/reglementation/confiance-numerique/le-referentiel-general-de-securite-rgs/"
+                link: "https://cyber.gouv.fr/reglementation/reglementation-identite-confiance-numerique/securite-echanges-voie-electronique/referentiel-general-de-securite/"
               },
               {
-                title: "Catalogue des produits certifiés",
-                desc: "Liste des produits de sécurité certifiés par l'ANSSI",
+                title: "Solutions certifiées et qualifiées",
+                desc: "Catalogue des produits et services de sécurité certifiés",
                 tags: ["Certification", "Produits"],
-                link: "https://www.ssi.gouv.fr/administration/produits-certifies/"
+                link: "https://cyber.gouv.fr/offre-de-service/solutions-certifiees-et-qualifiees/services-de-securite-evalue/decouvrir-les-solutions-certifiees-qualifiees/"
               }
             ].map((pub, idx) => (
               <div
@@ -220,7 +220,7 @@ export default function Referentiels() {
               🌐 Site officiel de l'ANSSI
             </p>
             <a
-              href="https://www.ssi.gouv.fr"
+              href="https://cyber.gouv.fr"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -236,7 +236,7 @@ export default function Referentiels() {
               onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
               onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
             >
-              Visiter www.ssi.gouv.fr
+              Visiter cyber.gouv.fr
             </a>
           </div>
         </div>
@@ -355,7 +355,7 @@ export default function Referentiels() {
                 </div>
               </div>
               
-              <a href="https://www.ssi.gouv.fr/entreprise/reglementation/protection-des-oiv/" target="_blank" rel="noopener noreferrer" 
+              <a href="https://cyber.gouv.fr/reglementation/cybersecurite-systemes-dinformation/directives-nis-nis2-et-dispositif-saiv/dispositif-saiv" target="_blank" rel="noopener noreferrer" 
                  style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
                 → Protection des OIV (ANSSI)
               </a>
@@ -409,13 +409,13 @@ export default function Referentiels() {
                 </div>
               </div>
               
-              <a href="https://www.ssi.gouv.fr/entreprise/reglementation/confiance-numerique/directive-nis-2/" target="_blank" rel="noopener noreferrer" 
+              <a href="https://cyber.gouv.fr/reglementation/cybersecurite-systemes-dinformation/directives-nis-nis2-et-dispositif-saiv/directive-nis2" target="_blank" rel="noopener noreferrer" 
                  style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
                 → Directive NIS 2 (ANSSI)
               </a>
             </div>
 
-            {/* ✅ NOUVEAU : DORA */}
+            {/* DORA */}
             <div style={{
               background: colors.bgPrimary,
               border: "2px solid #00ff9c",
@@ -473,17 +473,13 @@ export default function Referentiels() {
                 </p>
               </div>
               
-              <a href="https://www.ssi.gouv.fr/actualite/dora-ce-quil-faut-savoir/" target="_blank" rel="noopener noreferrer" 
-                 style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold", display: "inline-block", marginRight: "15px" }}>
-                → Guide DORA (ANSSI)
-              </a>
-              <a href="https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX:32022R2554" target="_blank" rel="noopener noreferrer" 
+              <a href="https://www.europarl.europa.eu/RegData/etudes/ATAG/2022/738197/EPRS_ATA(2022)738197_FR.pdf" target="_blank" rel="noopener noreferrer" 
                  style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold", display: "inline-block" }}>
-                → Texte officiel UE
+                → Fiche DORA (Parlement Européen)
               </a>
             </div>
 
-            {/* ✅ NOUVEAU : Fuites de données */}
+            {/* Fuites de données */}
             <div style={{
               background: colors.bgPrimary,
               border: "2px solid #ef4444",
@@ -545,19 +541,19 @@ export default function Referentiels() {
                   📚 Ressources officielles
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                  <a href="https://www.cnil.fr/fr/notifier-une-violation-de-donnees-personnelles" target="_blank" rel="noopener noreferrer" 
+                  <a href="https://www.cnil.fr/fr/services-en-ligne/notifier-une-violation-de-donnees-personnelles" target="_blank" rel="noopener noreferrer" 
                      style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
                     → Guide de notification CNIL
                   </a>
-                  <a href="https://www.cnil.fr/fr/les-violations-de-donnees-personnelles" target="_blank" rel="noopener noreferrer" 
+                  <a href="https://www.cnil.fr/fr/RGPD-le-registre-des-activites-de-traitement" target="_blank" rel="noopener noreferrer" 
                      style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
-                    → Registre public des violations (CNIL)
+                    → Registre des traitements (CNIL)
                   </a>
-                  <a href="https://www.cybermalveillance.gouv.fr/tous-nos-contenus/actualites/barometre-annuel-cybermalveillance" target="_blank" rel="noopener noreferrer" 
+                  <a href="https://www.cybermalveillance.gouv.fr/tous-nos-contenus/actualites/etude-maturite-cyber-tpe-pme-2025" target="_blank" rel="noopener noreferrer" 
                      style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
-                    → Baromètre cybermalveillance (stats annuelles)
+                    → Étude maturité cyber TPE-PME 2025
                   </a>
-                  <a href="https://www.ssi.gouv.fr/publication/panorama-de-la-cybermenace/" target="_blank" rel="noopener noreferrer" 
+                  <a href="https://cyber.gouv.fr/nous-connaitre/publications/panoramas-de-la-cybermenace/" target="_blank" rel="noopener noreferrer" 
                      style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
                     → Panorama des menaces cyber (ANSSI)
                   </a>
