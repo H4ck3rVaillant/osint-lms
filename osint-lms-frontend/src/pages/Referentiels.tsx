@@ -409,7 +409,7 @@ export default function Referentiels() {
                 </div>
               </div>
               
-              <a href="https://cyber.gouv.fr/reglementation/cybersecurite-systemes-dinformation/directives-nis-nis2-et-dispositif-saiv/directive-nis2" target="_blank" rel="noopener noreferrer" 
+              <a href="https://cyber.gouv.fr/reglementation/cybersecurite-systemes-dinformation/directives-nis-nis2-et-dispositif-saiv/directive-nis-2/" target="_blank" rel="noopener noreferrer" 
                  style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
                 → Directive NIS 2 (ANSSI)
               </a>
