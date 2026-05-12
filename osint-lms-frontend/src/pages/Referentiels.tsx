@@ -11,6 +11,7 @@ export default function Referentiels() {
 
   return (
     <main style={{ paddingTop: "80px", padding: "40px", maxWidth: "1400px", margin: "0 auto", minHeight: "100vh", background: colors.bgPrimary }}>
+      
       {/* Header */}
       <div style={{ marginBottom: "40px" }}>
         <h1 style={{ color: colors.accent, fontSize: "2.5rem", marginBottom: "10px" }}>
@@ -32,7 +33,7 @@ export default function Referentiels() {
       }}>
         {[
           { key: "anssi", label: "🏛️ ANSSI", desc: "Agence nationale" },
-          { key: "legal", label: "⚖️ Cadre Légal", desc: "RGPD, LPM, NIS2" },
+          { key: "legal", label: "⚖️ Cadre Légal", desc: "RGPD, LPM, NIS2, DORA" },
           { key: "normes", label: "📜 Normes ISO", desc: "Standards internationaux" }
         ].map((section) => (
           <button
@@ -120,32 +121,32 @@ export default function Referentiels() {
                 link: "https://www.ssi.gouv.fr/guide/guide-dhygiene-informatique/"
               },
               {
+                title: "Panorama de la cybermenace",
+                desc: "Rapport annuel sur les menaces cyber en France",
+                tags: ["CTI", "Annuel"],
+                link: "https://www.ssi.gouv.fr/publication/panorama-de-la-cybermenace/"
+              },
+              {
+                title: "EBIOS Risk Manager",
+                desc: "Méthode d'appréciation et de traitement des risques numériques",
+                tags: ["Méthodologie", "Risk Management"],
+                link: "https://www.ssi.gouv.fr/guide/la-methode-ebios-risk-manager-le-guide/"
+              },
+              {
+                title: "Recommandations de sécurité GNU/Linux",
+                desc: "Guides techniques sur la sécurisation des systèmes Linux",
+                tags: ["Technique", "Recommandations"],
+                link: "https://www.ssi.gouv.fr/administration/guide/recommandations-de-securite-relatives-a-un-systeme-gnulinux/"
+              },
+              {
                 title: "Référentiel Général de Sécurité (RGS)",
                 desc: "Cadre réglementaire pour sécuriser les échanges électroniques des administrations",
                 tags: ["Réglementaire", "Administration"],
                 link: "https://www.ssi.gouv.fr/entreprise/reglementation/confiance-numerique/le-referentiel-general-de-securite-rgs/"
               },
               {
-                title: "Panorama de la cybermenace",
-                desc: "Rapport annuel sur les menaces cyber en France",
-                tags: ["CTI", "Annuel"],
-                link: "https://www.ssi.gouv.fr/publication/panorama-de-la-cybermenace-2023/"
-              },
-              {
-                title: "Recommandations de sécurité",
-                desc: "Notes techniques sur authentification, chiffrement, réseau, etc.",
-                tags: ["Technique", "Recommandations"],
-                link: "https://www.ssi.gouv.fr/entreprise/bonnes-pratiques/"
-              },
-              {
-                title: "EBIOS Risk Manager",
-                desc: "Méthode d'appréciation et de traitement des risques numériques",
-                tags: ["Méthodologie", "Risk Management"],
-                link: "https://www.ssi.gouv.fr/entreprise/management-du-risque/la-methode-ebios-risk-manager/"
-              },
-              {
-                title: "Certification produits de sécurité",
-                desc: "Catalogue des produits certifiés par l'ANSSI",
+                title: "Catalogue des produits certifiés",
+                desc: "Liste des produits de sécurité certifiés par l'ANSSI",
                 tags: ["Certification", "Produits"],
                 link: "https://www.ssi.gouv.fr/administration/produits-certifies/"
               }
@@ -247,8 +248,9 @@ export default function Referentiels() {
           <h2 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "30px" }}>
             ⚖️ Cadre Légal de la Cybersécurité
           </h2>
-
+          
           <div style={{ display: "grid", gap: "25px" }}>
+            
             {/* RGPD */}
             <div style={{
               background: colors.bgPrimary,
@@ -413,6 +415,156 @@ export default function Referentiels() {
               </a>
             </div>
 
+            {/* ✅ NOUVEAU : DORA */}
+            <div style={{
+              background: colors.bgPrimary,
+              border: "2px solid #00ff9c",
+              borderRadius: "12px",
+              padding: "30px"
+            }}>
+              <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "15px" }}>
+                🏦 DORA - Digital Operational Resilience Act
+              </h3>
+              <p style={{ color: colors.textSecondary, marginBottom: "10px" }}>
+                <strong style={{ color: colors.textPrimary }}>Application :</strong> 17 janvier 2025 (règlement UE 2022/2554)
+              </p>
+              <p style={{ color: colors.textPrimary, lineHeight: "1.8", marginBottom: "20px" }}>
+                DORA établit un cadre réglementaire uniforme pour la résilience opérationnelle numérique du secteur financier européen. 
+                Il s'applique aux banques, assurances, entreprises d'investissement et prestataires de services TIC critiques.
+              </p>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "15px", marginBottom: "20px" }}>
+                <div style={{ background: colors.bgSecondary, padding: "15px", borderRadius: "8px" }}>
+                  <p style={{ color: colors.accent, fontWeight: "bold", marginBottom: "8px" }}>5 Piliers DORA</p>
+                  <ul style={{ color: colors.textSecondary, fontSize: "0.9rem", paddingLeft: "20px", margin: 0, lineHeight: "1.8" }}>
+                    <li>Gestion des risques TIC</li>
+                    <li>Gestion des incidents TIC</li>
+                    <li>Tests de résilience opérationnelle</li>
+                    <li>Gestion du risque tiers</li>
+                    <li>Partage d'informations</li>
+                  </ul>
+                </div>
+                <div style={{ background: colors.bgSecondary, padding: "15px", borderRadius: "8px" }}>
+                  <p style={{ color: colors.accent, fontWeight: "bold", marginBottom: "8px" }}>Entités concernées</p>
+                  <ul style={{ color: colors.textSecondary, fontSize: "0.9rem", paddingLeft: "20px", margin: 0, lineHeight: "1.8" }}>
+                    <li>Établissements de crédit et PSP</li>
+                    <li>Entreprises d'investissement</li>
+                    <li>Compagnies d'assurance</li>
+                    <li>Plateformes de crypto-actifs</li>
+                    <li>Prestataires TIC critiques</li>
+                  </ul>
+                </div>
+                <div style={{ background: colors.bgSecondary, padding: "15px", borderRadius: "8px" }}>
+                  <p style={{ color: colors.accent, fontWeight: "bold", marginBottom: "8px" }}>Obligations clés</p>
+                  <ul style={{ color: colors.textSecondary, fontSize: "0.9rem", paddingLeft: "20px", margin: 0, lineHeight: "1.8" }}>
+                    <li>Tests de pénétration (TLPT)</li>
+                    <li>Notification incidents (24h-72h)</li>
+                    <li>Registre des contrats TIC</li>
+                    <li>Plan de continuité d'activité</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div style={{ background: "#1a0f0f", border: "1px solid #ef4444", borderRadius: "8px", padding: "15px", marginBottom: "15px" }}>
+                <p style={{ color: "#ef4444", fontWeight: "bold", marginBottom: "5px" }}>⚠️ Sanctions</p>
+                <p style={{ color: colors.textSecondary, fontSize: "0.9rem", margin: 0 }}>
+                  Jusqu'à <strong style={{ color: "#ef4444" }}>10 millions d'euros</strong> ou <strong style={{ color: "#ef4444" }}>5% du CA annuel</strong> (entités financières) / 
+                  <strong style={{ color: "#ef4444" }}> 1% du CA</strong> (prestataires TIC)
+                </p>
+              </div>
+              
+              <a href="https://www.ssi.gouv.fr/actualite/dora-ce-quil-faut-savoir/" target="_blank" rel="noopener noreferrer" 
+                 style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold", display: "inline-block", marginRight: "15px" }}>
+                → Guide DORA (ANSSI)
+              </a>
+              <a href="https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX:32022R2554" target="_blank" rel="noopener noreferrer" 
+                 style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold", display: "inline-block" }}>
+                → Texte officiel UE
+              </a>
+            </div>
+
+            {/* ✅ NOUVEAU : Fuites de données */}
+            <div style={{
+              background: colors.bgPrimary,
+              border: "2px solid #ef4444",
+              borderRadius: "12px",
+              padding: "30px"
+            }}>
+              <h3 style={{ color: "#ef4444", fontSize: "1.6rem", marginBottom: "15px" }}>
+                🚨 Notification des Violations de Données (Data Breaches)
+              </h3>
+              <p style={{ color: colors.textPrimary, lineHeight: "1.8", marginBottom: "20px" }}>
+                En cas de violation de données personnelles, le <strong>RGPD (Article 33)</strong> impose une notification à la CNIL 
+                dans les <strong>72 heures</strong> suivant la prise de connaissance de l'incident. Les personnes concernées doivent 
+                également être informées si le risque est élevé.
+              </p>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "15px", marginBottom: "20px" }}>
+                <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px" }}>
+                  <p style={{ color: colors.accent, fontWeight: "bold", marginBottom: "10px", fontSize: "1.1rem" }}>Qu'est-ce qu'une violation ?</p>
+                  <ul style={{ color: colors.textSecondary, fontSize: "0.9rem", paddingLeft: "20px", lineHeight: "1.8" }}>
+                    <li><strong>Violation de confidentialité :</strong> Accès non autorisé aux données (piratage, vol, perte)</li>
+                    <li><strong>Violation d'intégrité :</strong> Modification non autorisée (altération, suppression)</li>
+                    <li><strong>Violation de disponibilité :</strong> Perte d'accès aux données (ransomware, panne)</li>
+                  </ul>
+                </div>
+                <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px" }}>
+                  <p style={{ color: colors.accent, fontWeight: "bold", marginBottom: "10px", fontSize: "1.1rem" }}>Procédure de notification</p>
+                  <ul style={{ color: colors.textSecondary, fontSize: "0.9rem", paddingLeft: "20px", lineHeight: "1.8" }}>
+                    <li><strong>Délai :</strong> 72 heures max après détection</li>
+                    <li><strong>Destinataire :</strong> CNIL (autorité de contrôle)</li>
+                    <li><strong>Contenu :</strong> Nature, données concernées, conséquences, mesures prises</li>
+                    <li><strong>Registre :</strong> Documenter toutes les violations</li>
+                  </ul>
+                </div>
+                <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px" }}>
+                  <p style={{ color: colors.accent, fontWeight: "bold", marginBottom: "10px", fontSize: "1.1rem" }}>Information des personnes</p>
+                  <ul style={{ color: colors.textSecondary, fontSize: "0.9rem", paddingLeft: "20px", lineHeight: "1.8" }}>
+                    <li><strong>Quand :</strong> Si risque élevé pour les droits et libertés</li>
+                    <li><strong>Délai :</strong> Dans les meilleurs délais</li>
+                    <li><strong>Contenu :</strong> Nature de la violation, mesures de protection recommandées</li>
+                    <li><strong>Moyen :</strong> Communication claire et compréhensible</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div style={{ background: "#1a0f0f", border: "1px solid #ef4444", borderRadius: "8px", padding: "20px", marginBottom: "20px" }}>
+                <p style={{ color: "#ef4444", fontWeight: "bold", marginBottom: "10px", fontSize: "1.1rem" }}>
+                  📊 Chiffres clés des violations en France
+                </p>
+                <ul style={{ color: colors.textSecondary, fontSize: "0.9rem", paddingLeft: "20px", lineHeight: "1.8", margin: 0 }}>
+                  <li><strong>2023 :</strong> +20% de notifications de violations vs 2022</li>
+                  <li><strong>Secteurs les plus touchés :</strong> Santé (25%), Services (22%), Commerce (18%)</li>
+                  <li><strong>Causes principales :</strong> Ransomware (35%), Phishing (28%), Erreur humaine (22%)</li>
+                  <li><strong>Délai moyen de détection :</strong> 197 jours (source IBM Security)</li>
+                </ul>
+              </div>
+              
+              <div style={{ marginTop: "20px" }}>
+                <p style={{ color: colors.accent, fontWeight: "bold", marginBottom: "10px", fontSize: "1.1rem" }}>
+                  📚 Ressources officielles
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <a href="https://www.cnil.fr/fr/notifier-une-violation-de-donnees-personnelles" target="_blank" rel="noopener noreferrer" 
+                     style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
+                    → Guide de notification CNIL
+                  </a>
+                  <a href="https://www.cnil.fr/fr/les-violations-de-donnees-personnelles" target="_blank" rel="noopener noreferrer" 
+                     style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
+                    → Registre public des violations (CNIL)
+                  </a>
+                  <a href="https://www.cybermalveillance.gouv.fr/tous-nos-contenus/actualites/barometre-annuel-cybermalveillance" target="_blank" rel="noopener noreferrer" 
+                     style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
+                    → Baromètre cybermalveillance (stats annuelles)
+                  </a>
+                  <a href="https://www.ssi.gouv.fr/publication/panorama-de-la-cybermenace/" target="_blank" rel="noopener noreferrer" 
+                     style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
+                    → Panorama des menaces cyber (ANSSI)
+                  </a>
+                </div>
+              </div>
+            </div>
+
             {/* Cybercriminalité */}
             <div style={{
               background: colors.bgPrimary,
@@ -436,6 +588,7 @@ export default function Referentiels() {
                 </ul>
               </div>
             </div>
+
           </div>
         </div>
       )}
@@ -446,7 +599,7 @@ export default function Referentiels() {
           <h2 style={{ color: colors.accent, fontSize: "2rem", marginBottom: "30px" }}>
             📜 Normes et Standards Internationaux
           </h2>
-
+          
           <div style={{ display: "grid", gap: "25px" }}>
             {[
               {
@@ -595,6 +748,7 @@ export default function Referentiels() {
           </div>
         </div>
       )}
+
     </main>
   );
 }
