@@ -295,7 +295,7 @@ export default function Dashboard() {
               }} />
             </div>
             <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
-              {moduleProgress.instagram.toFixed(0)}% complété
+              {moduleProgress.instagram > 0 ? `${moduleProgress.instagram.toFixed(0)}% complété` : "Quiz non validé"}
             </p>
           </Link>
 
@@ -321,7 +321,7 @@ export default function Dashboard() {
               }} />
             </div>
             <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
-              {moduleProgress.facebook.toFixed(0)}% complété
+              {moduleProgress.facebook > 0 ? `${moduleProgress.facebook.toFixed(0)}% complété` : "Quiz non validé"}
             </p>
           </Link>
 
@@ -347,7 +347,7 @@ export default function Dashboard() {
               }} />
             </div>
             <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
-              {moduleProgress.tiktok.toFixed(0)}% complété
+              {moduleProgress.tiktok > 0 ? `${moduleProgress.tiktok.toFixed(0)}% complété` : "Quiz non validé"}
             </p>
           </Link>
 
@@ -373,7 +373,7 @@ export default function Dashboard() {
               }} />
             </div>
             <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
-              {moduleProgress.googlemaps.toFixed(0)}% complété
+              {moduleProgress.googlemaps > 0 ? `${moduleProgress.googlemaps.toFixed(0)}% complété` : "Quiz non validé"}
             </p>
           </Link>
         </div>
