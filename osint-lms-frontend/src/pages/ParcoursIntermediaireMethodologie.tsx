@@ -21,32 +21,57 @@ export default function ParcoursIntermediaireMethodologie() {
     {
       id: 1,
       question: "La triangulation des sources consiste à :",
-      options: ["Utiliser 3 outils différents", "Vérifier une info avec 3 sources indépendantes", "Créer 3 rapports", "Contacter 3 personnes"],
-      correct: 1
+      options: [
+        "Utiliser 3 outils différents",
+        "Créer 3 rapports",
+        "Vérifier une info avec 3 sources indépendantes",
+        "Contacter 3 personnes"
+      ],
+      correct: 2
     },
     {
       id: 2,
       question: "L'analyse temporelle permet de :",
-      options: ["Gagner du temps", "Identifier des patterns dans le temps", "Supprimer des données anciennes", "Accélérer les recherches"],
-      correct: 1
+      options: [
+        "Gagner du temps",
+        "Supprimer des données anciennes",
+        "Accélérer les recherches",
+        "Identifier des patterns dans le temps"
+      ],
+      correct: 3
     },
     {
       id: 3,
       question: "La cartographie de réseaux sert à :",
-      options: ["Créer des cartes géographiques", "Visualiser les connexions entre entités", "Dessiner des schémas", "Créer des graphiques"],
-      correct: 1
+      options: [
+        "Visualiser les connexions entre entités",
+        "Créer des cartes géographiques",
+        "Dessiner des schémas",
+        "Créer des graphiques"
+      ],
+      correct: 0
     },
     {
       id: 4,
       question: "L'automatisation en OSINT permet de :",
-      options: ["Remplacer l'analyste", "Gagner du temps sur les tâches répétitives", "Hacker des systèmes", "Créer de faux profils"],
-      correct: 1
+      options: [
+        "Remplacer l'analyste",
+        "Hacker des systèmes",
+        "Gagner du temps sur les tâches répétitives",
+        "Créer de faux profils"
+      ],
+      correct: 2
     },
     {
       id: 5,
       question: "La documentation des sources est :",
-      options: ["Optionnelle", "Obligatoire pour la traçabilité", "Inutile", "Dangereuse"],
-      correct: 1
+      options: [
+        "Optionnelle",
+        "Inutile",
+        "Dangereuse",
+        "Obligatoire pour la traçabilité"
+      ],
+      correct: 3
     }
   ];
 

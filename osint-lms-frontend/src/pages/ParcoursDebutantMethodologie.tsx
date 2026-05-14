@@ -21,32 +21,57 @@ export default function ParcoursDebutantMethodologie() {
     {
       id: 1,
       question: "Quelle est la première étape de la méthodologie OSINT ?",
-      options: ["Collecte", "Cadrage", "Analyse", "Recoupement"],
-      correct: 1
+      options: [
+        "Collecte",
+        "Analyse",
+        "Recoupement",
+        "Cadrage"
+      ],
+      correct: 3
     },
     {
       id: 2,
       question: "Combien d'étapes comporte la méthodologie OSINT complète ?",
-      options: ["4", "5", "6", "7"],
-      correct: 2
+      options: [
+        "6",
+        "4",
+        "5",
+        "7"
+      ],
+      correct: 0
     },
     {
       id: 3,
       question: "Le recoupement consiste à :",
-      options: ["Collecter plus d'informations", "Vérifier la cohérence avec d'autres sources", "Analyser les données", "Rédiger le rapport"],
-      correct: 1
+      options: [
+        "Collecter plus d'informations",
+        "Analyser les données",
+        "Vérifier la cohérence avec d'autres sources",
+        "Rédiger le rapport"
+      ],
+      correct: 2
     },
     {
       id: 4,
       question: "Une information est fiable si elle est confirmée par au moins :",
-      options: ["1 source", "2-3 sources indépendantes", "5 sources", "10 sources"],
-      correct: 1
+      options: [
+        "1 source",
+        "5 sources",
+        "10 sources",
+        "2-3 sources indépendantes"
+      ],
+      correct: 3
     },
     {
       id: 5,
       question: "La dernière étape de la méthodologie OSINT est :",
-      options: ["Analyse", "Recoupement", "Restitution", "Collecte"],
-      correct: 2
+      options: [
+        "Analyse",
+        "Restitution",
+        "Recoupement",
+        "Collecte"
+      ],
+      correct: 1
     }
   ];
 

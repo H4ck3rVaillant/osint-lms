@@ -21,32 +21,57 @@ export default function ParcoursIntermediaireOutils() {
     {
       id: 1,
       question: "Maltego est utilisé pour :",
-      options: ["Créer des sites web", "Cartographier des réseaux et relations", "Envoyer des emails", "Créer des virus"],
-      correct: 1
+      options: [
+        "Créer des sites web",
+        "Envoyer des emails",
+        "Créer des virus",
+        "Cartographier des réseaux et relations"
+      ],
+      correct: 3
     },
     {
       id: 2,
       question: "Recon-ng permet de :",
-      options: ["Jouer en ligne", "Automatiser la collecte OSINT", "Créer des images", "Éditer des vidéos"],
-      correct: 1
+      options: [
+        "Automatiser la collecte OSINT",
+        "Jouer en ligne",
+        "Créer des images",
+        "Éditer des vidéos"
+      ],
+      correct: 0
     },
     {
       id: 3,
       question: "L'analyse EXIF des images révèle :",
-      options: ["La qualité de l'image", "Métadonnées: date, lieu, appareil", "Les couleurs", "La taille du fichier"],
-      correct: 1
+      options: [
+        "La qualité de l'image",
+        "Les couleurs",
+        "Métadonnées: date, lieu, appareil",
+        "La taille du fichier"
+      ],
+      correct: 2
     },
     {
       id: 4,
       question: "SpiderFoot est un outil pour :",
-      options: ["Tuer des araignées", "Automatiser l'OSINT et corréler des données", "Créer des graphiques", "Éditer du texte"],
-      correct: 1
+      options: [
+        "Tuer des araignées",
+        "Créer des graphiques",
+        "Éditer du texte",
+        "Automatiser l'OSINT et corréler des données"
+      ],
+      correct: 3
     },
     {
       id: 5,
       question: "Censys et Shodan servent à :",
-      options: ["Créer des sites", "Scanner l'Internet pour des actifs exposés", "Envoyer des spams", "Hacker des comptes"],
-      correct: 1
+      options: [
+        "Créer des sites",
+        "Scanner l'Internet pour des actifs exposés",
+        "Envoyer des spams",
+        "Hacker des comptes"
+      ],
+      correct: 2
     }
   ];
 

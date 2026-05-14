@@ -20,32 +20,57 @@ export default function ParcoursDebutantOutils() {
     {
       id: 1,
       question: "Quel opérateur Google permet de rechercher dans un site spécifique ?",
-      options: ["site:", "domain:", "url:", "web:"],
-      correct: 0
+      options: [
+        "domain:",
+        "site:",
+        "url:",
+        "web:"
+      ],
+      correct: 1
     },
     {
       id: 2,
       question: "WHOIS permet de :",
-      options: ["Hacker un site", "Obtenir des infos sur un nom de domaine", "Scanner des ports", "Créer des sites web"],
-      correct: 1
+      options: [
+        "Hacker un site",
+        "Scanner des ports",
+        "Créer des sites web",
+        "Obtenir des infos sur un nom de domaine"
+      ],
+      correct: 3
     },
     {
       id: 3,
       question: "Google Dorks sont utilisés pour :",
-      options: ["Jouer en ligne", "Faire des recherches avancées", "Créer des sites", "Envoyer des emails"],
-      correct: 1
+      options: [
+        "Faire des recherches avancées",
+        "Jouer en ligne",
+        "Créer des sites",
+        "Envoyer des emails"
+      ],
+      correct: 0
     },
     {
       id: 4,
       question: "Shodan est un moteur de recherche pour :",
-      options: ["Les réseaux sociaux", "Les appareils connectés à internet", "Les images", "Les vidéos"],
-      correct: 1
+      options: [
+        "Les réseaux sociaux",
+        "Les images",
+        "Les appareils connectés à internet",
+        "Les vidéos"
+      ],
+      correct: 2
     },
     {
       id: 5,
       question: "TheHarvester sert à :",
-      options: ["Cultiver des légumes", "Collecter emails et sous-domaines", "Créer des sites web", "Envoyer des spams"],
-      correct: 1
+      options: [
+        "Cultiver des légumes",
+        "Créer des sites web",
+        "Envoyer des spams",
+        "Collecter emails et sous-domaines"
+      ],
+      correct: 3
     }
   ];
 

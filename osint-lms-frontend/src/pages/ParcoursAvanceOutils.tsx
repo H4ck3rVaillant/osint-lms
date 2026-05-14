@@ -21,32 +21,57 @@ export default function ParcoursAvanceOutils() {
     {
       id: 1,
       question: "MITRE ATT&CK est :",
-      options: ["Un jeu vidéo", "Une base de connaissances de TTPs adversaires", "Un antivirus", "Un navigateur"],
-      correct: 1
+      options: [
+        "Un jeu vidéo",
+        "Un antivirus",
+        "Un navigateur",
+        "Une base de connaissances de TTPs adversaires"
+      ],
+      correct: 3
     },
     {
       id: 2,
       question: "Elasticsearch + Kibana permettent de :",
-      options: ["Créer des sites", "Indexer et visualiser des données massives", "Envoyer des emails", "Jouer en ligne"],
-      correct: 1
+      options: [
+        "Indexer et visualiser des données massives",
+        "Créer des sites",
+        "Envoyer des emails",
+        "Jouer en ligne"
+      ],
+      correct: 0
     },
     {
       id: 3,
       question: "YARA rules servent à :",
-      options: ["Créer des règles de jeu", "Identifier des patterns dans des fichiers/malware", "Bloquer des sites", "Créer des firewalls"],
-      correct: 1
+      options: [
+        "Créer des règles de jeu",
+        "Bloquer des sites",
+        "Identifier des patterns dans des fichiers/malware",
+        "Créer des firewalls"
+      ],
+      correct: 2
     },
     {
       id: 4,
       question: "Un SIEM (Security Information and Event Management) permet de :",
-      options: ["Créer des emails", "Corréler des événements de sécurité en temps réel", "Éditer des images", "Créer des bases de données"],
-      correct: 1
+      options: [
+        "Créer des emails",
+        "Éditer des images",
+        "Créer des bases de données",
+        "Corréler des événements de sécurité en temps réel"
+      ],
+      correct: 3
     },
     {
       id: 5,
       question: "Les Threat Intelligence Platforms (TIPs) servent à :",
-      options: ["Créer des menaces", "Centraliser et automatiser la TI", "Envoyer des alertes spam", "Créer des rapports Word"],
-      correct: 1
+      options: [
+        "Créer des menaces",
+        "Envoyer des alertes spam",
+        "Centraliser et automatiser la TI",
+        "Créer des rapports Word"
+      ],
+      correct: 2
     }
   ];
 

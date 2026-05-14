@@ -21,32 +21,57 @@ export default function ParcoursAvanceIntroduction() {
     {
       id: 1,
       question: "L'OSINT avancé se caractérise par :",
-      options: ["L'utilisation de plus d'outils", "L'analyse stratégique et prédictive", "La vitesse de collecte", "Le nombre de sources"],
-      correct: 1
+      options: [
+        "L'analyse stratégique et prédictive",
+        "L'utilisation de plus d'outils",
+        "La vitesse de collecte",
+        "Le nombre de sources"
+      ],
+      correct: 0
     },
     {
       id: 2,
       question: "La threat intelligence consiste à :",
-      options: ["Créer des menaces", "Anticiper et prévenir les menaces", "Supprimer des données", "Hacker des systèmes"],
-      correct: 1
+      options: [
+        "Créer des menaces",
+        "Supprimer des données",
+        "Hacker des systèmes",
+        "Anticiper et prévenir les menaces"
+      ],
+      correct: 3
     },
     {
       id: 3,
       question: "L'analyse comportementale permet de :",
-      options: ["Modifier des comportements", "Détecter des patterns et anomalies", "Créer des profils faux", "Supprimer des comptes"],
-      correct: 1
+      options: [
+        "Modifier des comportements",
+        "Créer des profils faux",
+        "Détecter des patterns et anomalies",
+        "Supprimer des comptes"
+      ],
+      correct: 2
     },
     {
       id: 4,
       question: "L'OSINT avancé nécessite :",
-      options: ["Juste des outils chers", "Expertise technique + analyse stratégique", "Un diplôme spécifique", "Une autorisation gouvernementale"],
-      correct: 1
+      options: [
+        "Juste des outils chers",
+        "Un diplôme spécifique",
+        "Une autorisation gouvernementale",
+        "Expertise technique + analyse stratégique"
+      ],
+      correct: 3
     },
     {
       id: 5,
       question: "La production d'intelligence actionable signifie :",
-      options: ["Collecter beaucoup de données", "Produire du renseignement exploitable pour décisions", "Créer des rapports longs", "Archiver des informations"],
-      correct: 1
+      options: [
+        "Produire du renseignement exploitable pour décisions",
+        "Collecter beaucoup de données",
+        "Créer des rapports longs",
+        "Archiver des informations"
+      ],
+      correct: 0
     }
   ];
 

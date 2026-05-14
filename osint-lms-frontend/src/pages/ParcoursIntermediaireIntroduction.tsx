@@ -21,32 +21,57 @@ export default function ParcoursIntermediaireIntroduction() {
     {
       id: 1,
       question: "L'OSINT intermédiaire se distingue par :",
-      options: ["L'utilisation d'outils basiques", "La combinaison de plusieurs sources", "L'utilisation d'un seul outil", "Pas besoin de méthodologie"],
-      correct: 1
+      options: [
+        "L'utilisation d'outils basiques",
+        "L'utilisation d'un seul outil",
+        "Pas besoin de méthodologie",
+        "La combinaison de plusieurs sources"
+      ],
+      correct: 3
     },
     {
       id: 2,
       question: "Le pivoting consiste à :",
-      options: ["Arrêter la recherche", "Passer d'une information à une autre liée", "Supprimer des données", "Créer de fausses pistes"],
-      correct: 1
+      options: [
+        "Passer d'une information à une autre liée",
+        "Arrêter la recherche",
+        "Supprimer des données",
+        "Créer de fausses pistes"
+      ],
+      correct: 0
     },
     {
       id: 3,
       question: "La corrélation de données permet de :",
-      options: ["Effacer des informations", "Relier des informations entre elles", "Créer des faux profils", "Supprimer des comptes"],
-      correct: 1
+      options: [
+        "Effacer des informations",
+        "Créer des faux profils",
+        "Relier des informations entre elles",
+        "Supprimer des comptes"
+      ],
+      correct: 2
     },
     {
       id: 4,
       question: "L'analyse de métadonnées est utile pour :",
-      options: ["Créer des images", "Extraire des infos cachées des fichiers", "Modifier des documents", "Envoyer des emails"],
-      correct: 1
+      options: [
+        "Créer des images",
+        "Modifier des documents",
+        "Envoyer des emails",
+        "Extraire des infos cachées des fichiers"
+      ],
+      correct: 3
     },
     {
       id: 5,
       question: "En OSINT intermédiaire, la vérification croisée est :",
-      options: ["Optionnelle", "Indispensable", "Inutile", "Dangereuse"],
-      correct: 1
+      options: [
+        "Indispensable",
+        "Optionnelle",
+        "Inutile",
+        "Dangereuse"
+      ],
+      correct: 0
     }
   ];
 

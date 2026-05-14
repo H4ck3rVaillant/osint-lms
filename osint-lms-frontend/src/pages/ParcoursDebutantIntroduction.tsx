@@ -18,56 +18,56 @@ export default function ParcoursDebutantIntroduction() {
       id: 1,
       question: "Que signifie OSINT ?",
       options: [
-        "Open Source Intelligence",
         "Online Security Investigation",
         "Operational Systems Intelligence",
+        "Open Source Intelligence",
         "Open Security Network Tools"
       ],
-      correct: 0
+      correct: 2
     },
     {
       id: 2,
       question: "L'OSINT consiste principalement à :",
       options: [
         "Pirater des systèmes informatiques",
-        "Exploiter intelligemment l'information publique",
         "Accéder à des bases de données privées",
-        "Utiliser des outils de hacking avancés"
+        "Utiliser des outils de hacking avancés",
+        "Exploiter intelligemment l'information publique"
       ],
-      correct: 1
+      correct: 3
     },
     {
       id: 3,
       question: "Quelle organisation utilise l'OSINT professionnellement ?",
       options: [
-        "Bellingcat",
         "Aucune organisation connue",
+        "Bellingcat",
         "Uniquement les agences gouvernementales",
         "Seulement les hackers éthiques"
       ],
-      correct: 0
+      correct: 1
     },
     {
       id: 4,
       question: "L'OSINT nécessite :",
       options: [
+        "De la méthode et de la rigueur",
         "Un budget matériel important",
         "Des compétences en programmation avancées",
-        "De la méthode et de la rigueur",
         "Une autorisation légale spéciale"
       ],
-      correct: 2
+      correct: 0
     },
     {
       id: 5,
       question: "En OSINT, respecter le RGPD est :",
       options: [
         "Optionnel selon les cas",
+        "Pas nécessaire avec des sources publiques",
         "Obligatoire",
-        "Uniquement pour les entreprises",
-        "Pas nécessaire avec des sources publiques"
+        "Uniquement pour les entreprises"
       ],
-      correct: 1
+      correct: 2
     }
   ];
 

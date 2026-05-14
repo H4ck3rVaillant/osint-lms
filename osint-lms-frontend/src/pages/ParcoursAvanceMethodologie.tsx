@@ -21,32 +21,57 @@ export default function ParcoursAvanceMethodologie() {
     {
       id: 1,
       question: "Le kill chain analysis permet de :",
-      options: ["Tuer des processus", "Analyser les étapes d'une attaque", "Créer des virus", "Supprimer des données"],
-      correct: 1
+      options: [
+        "Tuer des processus",
+        "Créer des virus",
+        "Analyser les étapes d'une attaque",
+        "Supprimer des données"
+      ],
+      correct: 2
     },
     {
       id: 2,
       question: "L'attribution d'une cyberattaque nécessite :",
-      options: ["Une seule preuve", "Corrélation de multiples indicateurs techniques et contextuels", "Juste une IP", "Un nom d'utilisateur"],
-      correct: 1
+      options: [
+        "Une seule preuve",
+        "Juste une IP",
+        "Un nom d'utilisateur",
+        "Corrélation de multiples indicateurs techniques et contextuels"
+      ],
+      correct: 3
     },
     {
       id: 3,
       question: "La timeline analysis consiste à :",
-      options: ["Créer des calendriers", "Reconstituer chronologiquement les événements", "Supprimer l'historique", "Modifier des dates"],
-      correct: 1
+      options: [
+        "Reconstituer chronologiquement les événements",
+        "Créer des calendriers",
+        "Supprimer l'historique",
+        "Modifier des dates"
+      ],
+      correct: 0
     },
     {
       id: 4,
       question: "Le Diamond Model aide à :",
-      options: ["Créer des diamants", "Modéliser les relations adversaire-infrastructure-victime-capacité", "Dessiner des formes", "Faire des graphiques"],
-      correct: 1
+      options: [
+        "Créer des diamants",
+        "Dessiner des formes",
+        "Modéliser les relations adversaire-infrastructure-victime-capacité",
+        "Faire des graphiques"
+      ],
+      correct: 2
     },
     {
       id: 5,
       question: "La production d'un rapport d'intelligence stratégique inclut :",
-      options: ["Juste des données brutes", "Executive summary + analyse + recommandations + sources", "Des captures d'écran", "Du code"],
-      correct: 1
+      options: [
+        "Juste des données brutes",
+        "Des captures d'écran",
+        "Du code",
+        "Executive summary + analyse + recommandations + sources"
+      ],
+      correct: 3
     }
   ];
 
