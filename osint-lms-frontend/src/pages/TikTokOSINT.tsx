@@ -1,694 +1,373 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useThemeColors } from "../context/ThemeContext";
-import { useAuth } from "../auth/AuthContext";
 
 export default function TikTokOSINT() {
   const colors = useThemeColors();
-  const { user } = useAuth();
-  const [progress, setProgress] = useState({
-    exercise1: false,
-    exercise2: false,
-    exercise3: false,
-    exercise4: false,
-    exercise5: false,
+  const [activeTab, setActiveTab] = useState("theory");
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
+  const [showResults, setShowResults] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
+
+  const BADGE_KEY = "badge_module_tiktok";
+  const ANSWERS_KEY = "quiz_answers_tiktok";
+  const RESULTS_KEY = "quiz_results_tiktok";
+
+  useState(() => {
+    const savedAnswers = localStorage.getItem(ANSWERS_KEY);
+    const savedResults = localStorage.getItem(RESULTS_KEY);
+    if (savedAnswers) setQuizAnswers(JSON.parse(savedAnswers));
+    if (savedResults === "true") setShowResults(true);
   });
 
-  const [answers, setAnswers] = useState({
-    exercise1: "",
-    exercise2: "",
-    exercise3: "",
-    exercise4: "",
-    exercise5: "",
-  });
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    loadProgress();
-  }, []);
-
-  const loadProgress = async () => {
-    if (!user) return;
-    
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/progression/tiktok-osint`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        if (data.progress) {
-          setProgress(data.progress);
-        }
-      }
-    } catch (error) {
-      console.error("Erreur chargement progression:", error);
-    }
-  };
-
-  const saveProgress = async (exerciseKey: string, completed: boolean) => {
-    if (!user) return;
-
-    const newProgress = { ...progress, [exerciseKey]: completed };
-    setProgress(newProgress);
-
-    try {
-      const token = localStorage.getItem("token");
-      await fetch(`${import.meta.env.VITE_API_URL}/api/progression/tiktok-osint`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ progress: newProgress }),
-      });
-    } catch (error) {
-      console.error("Erreur sauvegarde progression:", error);
-    }
-  };
-
-  const checkAnswer = (exerciseKey: string, correctAnswer: string, userAnswer: string) => {
-    const isCorrect = userAnswer.toLowerCase().trim() === correctAnswer.toLowerCase().trim();
-    
-    if (isCorrect) {
-      saveProgress(exerciseKey, true);
-      alert("✅ Correct ! Exercice validé.");
-    } else {
-      alert("❌ Incorrect. Réessayez !");
-    }
-  };
-
-  const resetProgress = async () => {
-    if (!confirm("Voulez-vous vraiment réinitialiser votre progression sur ce module ?")) {
-      return;
-    }
-
-    const resetData = {
-      exercise1: false,
-      exercise2: false,
-      exercise3: false,
-      exercise4: false,
-      exercise5: false,
-    };
-
-    setProgress(resetData);
-    setAnswers({
-      exercise1: "",
-      exercise2: "",
-      exercise3: "",
-      exercise4: "",
-      exercise5: "",
-    });
-
-    if (user) {
-      try {
-        const token = localStorage.getItem("token");
-        await fetch(`${import.meta.env.VITE_API_URL}/api/progression/tiktok-osint`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ progress: resetData }),
-        });
-        alert("✅ Progression réinitialisée !");
-      } catch (error) {
-        console.error("Erreur reset:", error);
-      }
-    }
-  };
-
-  // ===== QUIZ STATE =====
-  const QUIZ_BADGE_KEY = "badge_module_tiktok";
-  const QUIZ_ANSWERS_KEY = "quiz_answers_tiktok_module";
-  const QUIZ_RESULTS_KEY = "quiz_results_tiktok_module";
-
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>(() => {
-    const saved = localStorage.getItem(QUIZ_ANSWERS_KEY);
-    return saved ? JSON.parse(saved) : {};
-  });
-  const [showQuizResults, setShowQuizResults] = useState<boolean>(() => {
-    return localStorage.getItem(QUIZ_RESULTS_KEY) === "true";
-  });
-  const [showQuizResetModal, setShowQuizResetModal] = useState(false);
-
-  const quizQuestions = [
-    { id: 1, question: "Combien TikTok compte-t-il d'utilisateurs actifs ?", options: ["500 millions", "1 milliard", "2 milliards", "750 millions"], correct: 1 },
-    { id: 2, question: "Quelle URL permet d'accéder au profil TikTok de l'utilisateur 'osint_pro' ?", options: ["tiktok.com/osint_pro", "tiktok.com/user/osint_pro", "tiktok.com/@osint_pro", "tiktok.com/profile/osint_pro"], correct: 2 },
-    { id: 3, question: "Quel outil européen permet de vérifier l'authenticité d'une vidéo TikTok ?", options: ["TikBuddy", "Maverick", "InVID", "Exolyt"], correct: 2 },
-    { id: 4, question: "Quelle URL permet de voir toutes les vidéos du hashtag #osint sur TikTok ?", options: ["tiktok.com/search/osint", "tiktok.com/tag/osint", "tiktok.com/#osint", "tiktok.com/hashtag/osint"], correct: 1 },
-    { id: 5, question: "À partir de quel âge un utilisateur est-il considéré comme majeur selon le RGPD ?", options: ["16 ans", "21 ans", "15 ans", "18 ans"], correct: 3 },
+  const tabs = [
+    { id: "theory", label: "📖 Théorie", icon: "📚" },
+    { id: "tools", label: "🔧 Outils", icon: "⚙️" },
+    { id: "exercises", label: "💡 Exercices", icon: "✍️" },
+    { id: "quiz", label: "🎯 Quiz", icon: "✅" },
   ];
 
-  const getQuizScore = () => {
+  const quizQuestions = [
+    {
+      id: 1,
+      question: "Combien d'utilisateurs actifs mensuels TikTok compte-t-il dans le monde ?",
+      options: [
+        "500 millions",
+        "1 milliard",
+        "2 milliards",
+        "750 millions"
+      ],
+      correct: 1
+    },
+    {
+      id: 2,
+      question: "Quelle URL permet d'accéder au profil TikTok de l'utilisateur 'osint_analyst' ?",
+      options: [
+        "tiktok.com/osint_analyst",
+        "tiktok.com/user/osint_analyst",
+        "tiktok.com/@osint_analyst",
+        "tiktok.com/profile/osint_analyst"
+      ],
+      correct: 2
+    },
+    {
+      id: 3,
+      question: "Quel outil européen permet de vérifier l'authenticité d'une vidéo TikTok et détecter les manipulations ?",
+      options: [
+        "TikBuddy",
+        "Exolyt",
+        "InVID / WeVerify",
+        "Pentos"
+      ],
+      correct: 2
+    },
+    {
+      id: 4,
+      question: "Quelle URL permet de voir toutes les vidéos associées au hashtag #cybersecurity sur TikTok ?",
+      options: [
+        "tiktok.com/search/cybersecurity",
+        "tiktok.com/tag/cybersecurity",
+        "tiktok.com/#cybersecurity",
+        "tiktok.com/hashtag/cybersecurity"
+      ],
+      correct: 1
+    },
+    {
+      id: 5,
+      question: "Quel service TikTok officiel permet aux chercheurs d'accéder aux données publiques de la plateforme ?",
+      options: [
+        "TikTok Analytics API",
+        "TikTok Research API",
+        "TikTok Developer Portal",
+        "TikTok Data Center"
+      ],
+      correct: 1
+    }
+  ];
+
+  const handleQuizSubmit = () => {
+    const score = getScore();
+    setShowResults(true);
+    localStorage.setItem(ANSWERS_KEY, JSON.stringify(quizAnswers));
+    localStorage.setItem(RESULTS_KEY, "true");
+    if (score >= 4) localStorage.setItem(BADGE_KEY, "true");
+  };
+
+  const handleReset = () => {
+    setQuizAnswers({});
+    setShowResults(false);
+    setShowResetModal(false);
+    localStorage.removeItem(BADGE_KEY);
+    localStorage.removeItem(ANSWERS_KEY);
+    localStorage.removeItem(RESULTS_KEY);
+  };
+
+  const getScore = () => {
     let correct = 0;
-    quizQuestions.forEach(q => { if (quizAnswers[q.id] === q.correct.toString()) correct++; });
+    quizQuestions.forEach(q => {
+      if (quizAnswers[q.id] === q.correct.toString()) correct++;
+    });
     return correct;
   };
 
-  const handleQuizSubmit = () => {
-    const score = getQuizScore();
-    setShowQuizResults(true);
-    localStorage.setItem(QUIZ_ANSWERS_KEY, JSON.stringify(quizAnswers));
-    localStorage.setItem(QUIZ_RESULTS_KEY, "true");
-    if (score >= 4) localStorage.setItem(QUIZ_BADGE_KEY, "true");
-  };
-
-  const handleQuizReset = () => {
-    setQuizAnswers({});
-    setShowQuizResults(false);
-    setShowQuizResetModal(false);
-    localStorage.removeItem(QUIZ_BADGE_KEY);
-    localStorage.removeItem(QUIZ_ANSWERS_KEY);
-    localStorage.removeItem(QUIZ_RESULTS_KEY);
-  };
-  // ===== FIN QUIZ STATE =====
-
-  const completedCount = Object.values(progress).filter(Boolean).length;
-  const totalExercises = 5;
-  const progressPercentage = (completedCount / totalExercises) * 100;
-
   return (
-    <main style={{ paddingTop: "80px", padding: "40px", maxWidth: "1400px", margin: "0 auto", minHeight: "100vh", background: colors.bgPrimary }}>
-      
-      {/* Header */}
-      <div style={{ marginBottom: "40px" }}>
-        <h1 style={{ color: colors.accent, fontSize: "2.5rem", marginBottom: "10px" }}>
-          🎵 TikTok OSINT
-        </h1>
-        <p style={{ color: colors.textSecondary, fontSize: "1.2rem", lineHeight: "1.6" }}>
-          Techniques d'investigation sur TikTok pour l'OSINT
-        </p>
-      </div>
+    <div style={{ minHeight: "100vh", background: colors.bgPrimary, paddingTop: "80px" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 20px" }}>
 
-      {/* Progress bar */}
-      <div style={{ marginBottom: "40px", background: colors.bgSecondary, padding: "20px", borderRadius: "12px", border: `1px solid ${colors.border}` }}>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-          <span style={{ color: colors.textPrimary, fontWeight: "bold" }}>
-            Progression : {completedCount}/{totalExercises} exercices
-          </span>
-          <span style={{ color: colors.accent, fontWeight: "bold" }}>
-            {progressPercentage.toFixed(0)}%
-          </span>
-        </div>
-        <div style={{ width: "100%", height: "12px", background: "#1a1a1a", borderRadius: "6px", overflow: "hidden" }}>
-          <div style={{ width: `${progressPercentage}%`, height: "100%", background: colors.accent, transition: "width 0.3s" }} />
-        </div>
-        <button
-          onClick={resetProgress}
-          style={{
-            marginTop: "15px",
-            padding: "8px 16px",
-            background: "#ef4444",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontWeight: "bold",
-          }}
-        >
-          🔄 Réinitialiser la progression
-        </button>
-      </div>
-
-      {/* Introduction */}
-      <div style={{ background: colors.bgSecondary, padding: "30px", borderRadius: "12px", marginBottom: "30px", border: `2px solid ${colors.accent}` }}>
-        <h2 style={{ color: colors.accent, fontSize: "1.8rem", marginBottom: "20px" }}>
-          🎯 Introduction à l'OSINT TikTok
-        </h2>
-        <p style={{ color: colors.textPrimary, lineHeight: "1.8", marginBottom: "15px" }}>
-          TikTok compte plus d'<strong>1 milliard d'utilisateurs actifs</strong> et génère des millions de vidéos quotidiennes. 
-          Les métadonnées, géolocalisations, sons et hashtags offrent des opportunités uniques pour l'OSINT.
-        </p>
-        <p style={{ color: colors.textPrimary, lineHeight: "1.8" }}>
-          Ce module vous apprendra à exploiter TikTok pour collecter des informations tout en respectant la vie privée des utilisateurs.
-        </p>
-      </div>
-
-      {/* Section 1 : Recherche de profils */}
-      <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          1️⃣ Recherche et analyse de profils
-        </h3>
-        
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🔍 Techniques de recherche
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Recherche par @username :</strong> tiktok.com/@username</li>
-            <li><strong>Recherche par hashtag :</strong> tiktok.com/tag/[hashtag]</li>
-            <li><strong>Recherche par son :</strong> Identifier des vidéos utilisant le même audio</li>
-            <li><strong>Outils tiers :</strong> TikTok Downloader, Maverick, Snaptik</li>
-          </ul>
-        </div>
-
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            📊 Analyse d'un profil TikTok
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Bio et liens :</strong> Description, site web, réseaux sociaux</li>
-            <li><strong>Statistiques :</strong> Followers, Following, Likes totaux</li>
-            <li><strong>Vidéos :</strong> Contenu publié, fréquence, thèmes récurrents</li>
-            <li><strong>Interactions :</strong> Comptes likés, commentaires, duos/stitches</li>
-            <li><strong>Favoris :</strong> Vidéos et sons sauvegardés (si publics)</li>
-          </ul>
-        </div>
-
-        {/* Exercise 1 */}
-        <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", border: progress.exercise1 ? `2px solid ${colors.accent}` : `1px solid ${colors.border}` }}>
-          <h4 style={{ color: colors.accent, marginBottom: "15px" }}>
-            {progress.exercise1 ? "✅" : "📝"} Exercice 1 : URL de profil
-          </h4>
-          <p style={{ color: colors.textPrimary, marginBottom: "15px" }}>
-            Quelle est la structure d'URL pour accéder au profil TikTok de l'utilisateur "osint_pro" ? (format: tiktok.com/...)
+        <div style={{ textAlign: "center", marginBottom: "40px" }}>
+          <div style={{ fontSize: "4rem", marginBottom: "15px" }}>🎵</div>
+          <h1 style={{ fontSize: "2.5rem", fontWeight: "700", color: colors.textPrimary, marginBottom: "15px" }}>
+            Module TikTok OSINT
+          </h1>
+          <p style={{ fontSize: "1.1rem", color: colors.textSecondary, maxWidth: "700px", margin: "0 auto" }}>
+            Investigation et collecte de renseignements sur TikTok
           </p>
-          <input
-            type="text"
-            value={answers.exercise1}
-            onChange={(e) => setAnswers({ ...answers, exercise1: e.target.value })}
-            placeholder="tiktok.com/..."
-            disabled={progress.exercise1}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "15px",
-              background: colors.bgPrimary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "6px",
-              color: colors.textPrimary,
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={() => checkAnswer("exercise1", "tiktok.com/@osint_pro", answers.exercise1)}
-            disabled={progress.exercise1}
-            style={{
-              padding: "10px 20px",
-              background: progress.exercise1 ? "#4ade80" : colors.accent,
-              color: colors.bgPrimary,
-              border: "none",
-              borderRadius: "6px",
-              cursor: progress.exercise1 ? "not-allowed" : "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {progress.exercise1 ? "✅ Validé" : "Vérifier"}
-          </button>
-        </div>
-      </div>
-
-      {/* Section 2 : Analyse de vidéos */}
-      <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          2️⃣ Analyse et téléchargement de vidéos
-        </h3>
-        
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🎥 Extraction de métadonnées vidéo
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Date de publication :</strong> Horodatage précis de la vidéo</li>
-            <li><strong>Localisation :</strong> Lieu tagué si ajouté par le créateur</li>
-            <li><strong>Musique/Son :</strong> Identifier l'audio original ou utilisé</li>
-            <li><strong>Hashtags :</strong> Tags associés à la vidéo</li>
-            <li><strong>Engagement :</strong> Likes, commentaires, partages, vues</li>
-          </ul>
-        </div>
-
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            💾 Outils de téléchargement et analyse
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>SnapTik :</strong> Téléchargement sans watermark</li>
-            <li><strong>TikMate :</strong> Téléchargement vidéos et métadonnées</li>
-            <li><strong>TikTok Scraper (Python) :</strong> Extraction automatisée</li>
-            <li><strong>FFmpeg :</strong> Analyse frame par frame</li>
-          </ul>
-        </div>
-
-        {/* Exercise 2 */}
-        <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", border: progress.exercise2 ? `2px solid ${colors.accent}` : `1px solid ${colors.border}` }}>
-          <h4 style={{ color: colors.accent, marginBottom: "15px" }}>
-            {progress.exercise2 ? "✅" : "📝"} Exercice 2 : Téléchargement
-          </h4>
-          <p style={{ color: colors.textPrimary, marginBottom: "15px" }}>
-            Quel outil open-source Python permet d'extraire automatiquement des vidéos TikTok avec métadonnées ?
-          </p>
-          <input
-            type="text"
-            value={answers.exercise2}
-            onChange={(e) => setAnswers({ ...answers, exercise2: e.target.value })}
-            placeholder="Nom de l'outil (2 mots)"
-            disabled={progress.exercise2}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "15px",
-              background: colors.bgPrimary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "6px",
-              color: colors.textPrimary,
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={() => checkAnswer("exercise2", "tiktok scraper", answers.exercise2)}
-            disabled={progress.exercise2}
-            style={{
-              padding: "10px 20px",
-              background: progress.exercise2 ? "#4ade80" : colors.accent,
-              color: colors.bgPrimary,
-              border: "none",
-              borderRadius: "6px",
-              cursor: progress.exercise2 ? "not-allowed" : "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {progress.exercise2 ? "✅ Validé" : "Vérifier"}
-          </button>
-        </div>
-      </div>
-
-      {/* Section 3 : Hashtags et tendances */}
-      <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          3️⃣ Hashtags et analyse de tendances
-        </h3>
-        
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            #️⃣ Exploitation des hashtags
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Recherche par hashtag :</strong> tiktok.com/tag/[hashtag]</li>
-            <li><strong>Tendances virales :</strong> Identifier les challenges populaires</li>
-            <li><strong>Hashtags géolocalisés :</strong> #ParisTravel, #TokyoFood</li>
-            <li><strong>Analyse temporelle :</strong> Évolution d'un hashtag dans le temps</li>
-          </ul>
-        </div>
-
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            📈 Outils d'analyse de tendances
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>TikTok Creative Center :</strong> Statistiques officielles de trends</li>
-            <li><strong>Exolyt :</strong> Analytics TikTok et tracking hashtags</li>
-            <li><strong>Pentos :</strong> Analyse de performance de comptes</li>
-            <li><strong>Social Blade :</strong> Croissance et statistiques</li>
-          </ul>
-        </div>
-
-        {/* Exercise 3 */}
-        <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", border: progress.exercise3 ? `2px solid ${colors.accent}` : `1px solid ${colors.border}` }}>
-          <h4 style={{ color: colors.accent, marginBottom: "15px" }}>
-            {progress.exercise3 ? "✅" : "📝"} Exercice 3 : Recherche hashtag
-          </h4>
-          <p style={{ color: colors.textPrimary, marginBottom: "15px" }}>
-            Quelle URL permet de voir toutes les vidéos associées au hashtag #osint sur TikTok ? (format: tiktok.com/...)
-          </p>
-          <input
-            type="text"
-            value={answers.exercise3}
-            onChange={(e) => setAnswers({ ...answers, exercise3: e.target.value })}
-            placeholder="tiktok.com/..."
-            disabled={progress.exercise3}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "15px",
-              background: colors.bgPrimary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "6px",
-              color: colors.textPrimary,
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={() => checkAnswer("exercise3", "tiktok.com/tag/osint", answers.exercise3)}
-            disabled={progress.exercise3}
-            style={{
-              padding: "10px 20px",
-              background: progress.exercise3 ? "#4ade80" : colors.accent,
-              color: colors.bgPrimary,
-              border: "none",
-              borderRadius: "6px",
-              cursor: progress.exercise3 ? "not-allowed" : "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {progress.exercise3 ? "✅ Validé" : "Vérifier"}
-          </button>
-        </div>
-      </div>
-
-      {/* Section 4 : Outils OSINT */}
-      <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          4️⃣ Outils et techniques OSINT avancées
-        </h3>
-        
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🛠️ Outils spécialisés TikTok
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>TikTok Scraper API :</strong> Extraction massive de données</li>
-            <li><strong>Maverick :</strong> Analyse de profils et vidéos</li>
-            <li><strong>InVID-WeVerify :</strong> Vérification de vidéos</li>
-            <li><strong>TikBuddy :</strong> Statistiques et analytics</li>
-          </ul>
-        </div>
-
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🔍 Techniques de vérification
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Reverse Video Search :</strong> InVID, Google Images</li>
-            <li><strong>Audio Identification :</strong> Shazam, ACRCloud</li>
-            <li><strong>Analyse géographique :</strong> Cross-référencement avec Google Maps</li>
-            <li><strong>Timeline reconstruction :</strong> Chronologie des publications</li>
-          </ul>
-        </div>
-
-        {/* Exercise 4 */}
-        <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", border: progress.exercise4 ? `2px solid ${colors.accent}` : `1px solid ${colors.border}` }}>
-          <h4 style={{ color: colors.accent, marginBottom: "15px" }}>
-            {progress.exercise4 ? "✅" : "📝"} Exercice 4 : Vérification vidéo
-          </h4>
-          <p style={{ color: colors.textPrimary, marginBottom: "15px" }}>
-            Quel outil européen permet de vérifier l'authenticité d'une vidéo TikTok ? (1 mot)
-          </p>
-          <input
-            type="text"
-            value={answers.exercise4}
-            onChange={(e) => setAnswers({ ...answers, exercise4: e.target.value })}
-            placeholder="Nom de l'outil"
-            disabled={progress.exercise4}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "15px",
-              background: colors.bgPrimary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "6px",
-              color: colors.textPrimary,
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={() => checkAnswer("exercise4", "invid", answers.exercise4)}
-            disabled={progress.exercise4}
-            style={{
-              padding: "10px 20px",
-              background: progress.exercise4 ? "#4ade80" : colors.accent,
-              color: colors.bgPrimary,
-              border: "none",
-              borderRadius: "6px",
-              cursor: progress.exercise4 ? "not-allowed" : "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {progress.exercise4 ? "✅ Validé" : "Vérifier"}
-          </button>
-        </div>
-      </div>
-
-      {/* Section 5 : Éthique */}
-      <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          5️⃣ Éthique et respect de la vie privée
-        </h3>
-        
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            ⚖️ Cadre légal
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>RGPD :</strong> Protection des données personnelles</li>
-            <li><strong>CGU TikTok :</strong> Interdiction du scraping massif</li>
-            <li><strong>Contenu public uniquement :</strong> Ne jamais tenter d'accéder à des comptes privés</li>
-            <li><strong>Mineurs :</strong> Protection renforcée des utilisateurs de moins de 18 ans</li>
-          </ul>
-        </div>
-
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🛡️ Bonnes pratiques
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Comptes OSINT dédiés :</strong> Jamais de comptes personnels</li>
-            <li><strong>Documentation :</strong> Screenshots horodatés</li>
-            <li><strong>Respect des créateurs :</strong> Ne pas réutiliser de contenu sans autorisation</li>
-            <li><strong>Proportionnalité :</strong> Limiter la collecte au strict nécessaire</li>
-          </ul>
-        </div>
-
-        {/* Exercise 5 */}
-        <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", border: progress.exercise5 ? `2px solid ${colors.accent}` : `1px solid ${colors.border}` }}>
-          <h4 style={{ color: colors.accent, marginBottom: "15px" }}>
-            {progress.exercise5 ? "✅" : "📝"} Exercice 5 : Protection des mineurs
-          </h4>
-          <p style={{ color: colors.textPrimary, marginBottom: "15px" }}>
-            À partir de quel âge un utilisateur est-il considéré comme majeur en OSINT selon le RGPD ? (nombre en chiffres)
-          </p>
-          <input
-            type="text"
-            value={answers.exercise5}
-            onChange={(e) => setAnswers({ ...answers, exercise5: e.target.value })}
-            placeholder="Âge en chiffres"
-            disabled={progress.exercise5}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "15px",
-              background: colors.bgPrimary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "6px",
-              color: colors.textPrimary,
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={() => checkAnswer("exercise5", "18", answers.exercise5)}
-            disabled={progress.exercise5}
-            style={{
-              padding: "10px 20px",
-              background: progress.exercise5 ? "#4ade80" : colors.accent,
-              color: colors.bgPrimary,
-              border: "none",
-              borderRadius: "6px",
-              cursor: progress.exercise5 ? "not-allowed" : "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {progress.exercise5 ? "✅ Validé" : "Vérifier"}
-          </button>
-        </div>
-      </div>
-
-      {/* ===== SECTION QUIZ ===== */}
-      <div style={{ background: colors.bgPrimary, border: `2px solid ${colors.accent}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "10px" }}>
-          🎯 Quiz de validation — TikTok OSINT
-        </h3>
-        <p style={{ color: colors.textSecondary, marginBottom: "25px" }}>
-          5 questions — Obtenez 4/5 ou plus pour débloquer le badge du module.
-        </p>
-        {localStorage.getItem(QUIZ_BADGE_KEY) === "true" && (
-          <div style={{ marginBottom: "20px", display: "inline-block", padding: "8px 20px", background: colors.accent + "20", border: `2px solid ${colors.accent}`, borderRadius: "20px", color: colors.accent, fontWeight: "600" }}>
-            ✓ Badge débloqué
-          </div>
-        )}
-        {quizQuestions.map((q, index) => (
-          <div key={q.id} style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "12px", marginBottom: "20px" }}>
-            <h4 style={{ color: colors.textPrimary, fontSize: "1.05rem", marginBottom: "15px" }}>
-              {index + 1}. {q.question}
-            </h4>
-            {q.options.map((option, optIndex) => (
-              <label key={optIndex} style={{ display: "block", padding: "12px", marginBottom: "8px", background: quizAnswers[q.id] === optIndex.toString() ? colors.accent + "30" : colors.bgPrimary, border: `2px solid ${quizAnswers[q.id] === optIndex.toString() ? colors.accent : colors.border}`, borderRadius: "8px", cursor: showQuizResults ? "default" : "pointer" }}>
-                <input
-                  type="radio"
-                  name={`tiktok-q-${q.id}`}
-                  value={optIndex}
-                  checked={quizAnswers[q.id] === optIndex.toString()}
-                  disabled={showQuizResults}
-                  onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })}
-                  style={{ marginRight: "10px" }}
-                />
-                <span style={{ color: colors.textPrimary }}>{option}</span>
-                {showQuizResults && optIndex === q.correct && <span style={{ marginLeft: "10px", color: "#10b981", fontWeight: "bold" }}>✓</span>}
-                {showQuizResults && quizAnswers[q.id] === optIndex.toString() && optIndex !== q.correct && <span style={{ marginLeft: "10px", color: "#ef4444", fontWeight: "bold" }}>✗</span>}
-              </label>
-            ))}
-          </div>
-        ))}
-        <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
-          {!showQuizResults && (
-            <button
-              onClick={handleQuizSubmit}
-              disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
-              style={{ padding: "14px 35px", background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border, color: "#020617", border: "none", borderRadius: "8px", fontSize: "1rem", fontWeight: "600", cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed" }}
-            >
-              Valider le quiz
-            </button>
+          {localStorage.getItem(BADGE_KEY) === "true" && (
+            <div style={{ marginTop: "15px", display: "inline-block", padding: "8px 20px", background: colors.accent + "20", border: `2px solid ${colors.accent}`, borderRadius: "20px", color: colors.accent, fontWeight: "600", fontSize: "0.9rem" }}>
+              ✓ Badge débloqué
+            </div>
           )}
-          <button
-            onClick={() => setShowQuizResetModal(true)}
-            style={{ padding: "14px 35px", background: "#0b0f1a", color: "#00ff9c", border: "2px solid #00ff9c", borderRadius: "8px", fontSize: "1rem", fontWeight: "600", cursor: "pointer" }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#00ff9c"; e.currentTarget.style.color = "#0b0f1a"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#0b0f1a"; e.currentTarget.style.color = "#00ff9c"; }}
-          >
-            🔄 Reset quiz
-          </button>
         </div>
-        {showQuizResults && (
-          <div style={{ marginTop: "25px", padding: "20px", background: getQuizScore() >= 4 ? colors.accent + "20" : "#ef444420", border: `2px solid ${getQuizScore() >= 4 ? colors.accent : "#ef4444"}`, borderRadius: "12px" }}>
-            <h4 style={{ color: getQuizScore() >= 4 ? colors.accent : "#ef4444", fontSize: "1.3rem", marginBottom: "8px" }}>
-              {getQuizScore() >= 4 ? "✅ Quiz validé !" : "❌ Score insuffisant"}
-            </h4>
-            <p style={{ color: colors.textPrimary, fontSize: "1.1rem", margin: 0 }}>
-              Score : {getQuizScore()}/{quizQuestions.length} — {getQuizScore() >= 4 ? "Badge débloqué 🎉" : "4/5 requis pour le badge. Réinitialisez et réessayez."}
-            </p>
-          </div>
-        )}
+
+        <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "40px", flexWrap: "wrap" }}>
+          {tabs.map((tab) => (
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: "12px 24px", background: activeTab === tab.id ? colors.accent : colors.bgSecondary, color: activeTab === tab.id ? "#020617" : colors.textPrimary, border: `2px solid ${activeTab === tab.id ? colors.accent : colors.border}`, borderRadius: "12px", fontSize: "1rem", fontWeight: "600", cursor: "pointer", transition: "all 0.3s ease" }}>
+              {tab.icon} {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ background: colors.bgSecondary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "40px" }}>
+
+          {activeTab === "theory" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>📖 TikTok comme source OSINT</h2>
+
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "20px" }}>
+                TikTok est devenu en quelques années l'une des plateformes les plus influentes avec <strong>plus d'1 milliard d'utilisateurs actifs</strong>. Sa nature vidéo courte et son algorithme de recommandation en font une source OSINT particulièrement riche : les vidéos contiennent des informations visuelles et audio denses, les profils révèlent des habitudes comportementales, et les tendances émergent souvent sur TikTok avant les autres plateformes. La plateforme est également au cœur de nombreuses enquêtes de désinformation et d'influence.
+              </p>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>🎯 Cas d'usage en OSINT</h3>
+              <ul style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px", marginBottom: "25px" }}>
+                <li><strong>Identification de personnes :</strong> Retrouver l'identité réelle d'un créateur via les éléments visuels, la voix, les lieux apparaissant dans ses vidéos</li>
+                <li><strong>Géolocalisation vidéo :</strong> Localiser précisément le lieu de tournage d'une vidéo par analyse des arrière-plans, enseignes, panneaux</li>
+                <li><strong>Surveillance de tendances :</strong> Détecter les mouvements sociaux, contestations, événements viraux avant qu'ils n'atteignent les médias traditionnels</li>
+                <li><strong>Détection de désinformation :</strong> Identifier les vidéos manipulées, deepfakes ou contenus sortis de leur contexte original</li>
+                <li><strong>Analyse d'influence :</strong> Cartographier les réseaux d'influenceurs coordonnés diffusant des messages similaires</li>
+                <li><strong>Investigation criminelle :</strong> Les vidéos postées involontairement révèlent des indices sur des activités illégales</li>
+              </ul>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>🔑 Structure des données TikTok</h3>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Profils publics</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Username (avec @), nom d'affichage, bio, lien externe, nombre de vidéos/abonnés/abonnements, comptes liés (Instagram, YouTube). Accessibles via tiktok.com/@username sans compte.
+                </p>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Vidéos et métadonnées</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Date de publication, description, hashtags, musique utilisée, nombre de vues/likes/commentaires/partages, géolocalisation (si renseignée). Les vidéos elles-mêmes contiennent des informations visuelles précieuses : environnement, objets, vêtements, voix, langue.
+                </p>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Défis et tendances</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Les hashtags de défi (#challenge) et les sons viraux permettent de suivre des mouvements coordonnés. L'analyse des participants à un même défi révèle des réseaux de comptes liés, potentiellement coordonnés de manière artificielle.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "tools" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>🔧 Outils et Techniques TikTok OSINT</h2>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>📌 Recherche manuelle</h3>
+              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", marginBottom: "20px", fontFamily: "monospace", fontSize: "0.9rem" }}>
+                <div style={{ marginBottom: "12px", color: colors.textSecondary }}>
+                  <strong style={{ color: colors.accent }}>tiktok.com/@username</strong> → Profil public complet
+                </div>
+                <div style={{ marginBottom: "12px", color: colors.textSecondary }}>
+                  <strong style={{ color: colors.accent }}>tiktok.com/tag/[hashtag]</strong> → Vidéos d'un hashtag
+                </div>
+                <div style={{ marginBottom: "12px", color: colors.textSecondary }}>
+                  <strong style={{ color: colors.accent }}>tiktok.com/search?q=[terme]</strong> → Recherche globale
+                </div>
+                <div style={{ color: colors.textSecondary }}>
+                  <strong style={{ color: colors.accent }}>site:tiktok.com "@username"</strong> → Google Dork TikTok
+                </div>
+              </div>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>💎 Outils spécialisés</h3>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Exolyt</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Outil d'analyse TikTok permettant de consulter les statistiques détaillées d'un compte public : évolution du nombre d'abonnés, engagement moyen, meilleures vidéos, tendances. Utile pour évaluer l'influence réelle d'un compte et détecter des croissances anormales (achat de followers).
+                </p>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>InVID / WeVerify</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
+                  Extension navigateur européenne de vérification de contenus vidéo. Permet d'extraire des captures d'écran de vidéos TikTok pour les soumettre à un reverse image search, analyser les métadonnées et vérifier l'origine du contenu.
+                </p>
+                <div style={{ fontFamily: "monospace", fontSize: "0.85rem" }}>
+                  <code style={{ color: colors.accent, display: "block" }}>Extension Chrome/Firefox : InVID-WeVerify</code>
+                </div>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>TikTok Research API</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  API officielle TikTok réservée aux chercheurs académiques et journalistes accrédités. Permet d'accéder programmatiquement aux données publiques : vidéos, commentaires, profils, hashtags. Nécessite une demande d'accès et une justification de recherche.
+                </p>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Pentos.io</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Outil de suivi et d'analyse de hashtags TikTok. Permet de monitorer l'évolution d'un hashtag dans le temps, identifier les créateurs les plus actifs et analyser les pics de publication pour détecter des campagnes coordonnées.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "exercises" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>💡 Exercices Pratiques</h2>
+
+              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 1 : Analyse d'un profil TikTok public</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}>
+                  <strong>Objectif :</strong> Collecter et analyser les informations disponibles sur un compte TikTok public sans créer de compte.
+                </p>
+                <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
+                <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
+                  <li>Accéder à tiktok.com/@username et relever : bio, liens externes, abonnés, abonnements, nombre de likes total</li>
+                  <li>Analyser les 10 dernières vidéos : fréquence, sujets récurrents, lieux apparents, langue utilisée</li>
+                  <li>Identifier les comptes liés mentionnés dans la bio (Instagram, YouTube, Twitter)</li>
+                  <li>Utiliser Exolyt pour obtenir les statistiques historiques du compte</li>
+                </ol>
+                <p style={{ color: "#f59e0b", marginTop: "15px", fontWeight: "600" }}>
+                  ⚠️ ÉTHIQUE : Respectez la vie privée des créateurs. Ne collectez que des données publiques.
+                </p>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 2 : Géolocalisation d'une vidéo TikTok</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}>
+                  <strong>Objectif :</strong> Identifier le lieu de tournage d'une vidéo TikTok à partir des éléments visuels.
+                </p>
+                <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
+                <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
+                  <li>Utiliser InVID pour extraire des captures d'écran clés de la vidéo</li>
+                  <li>Analyser les éléments visuels : enseignes, architecture, signalétique, véhicules, végétation</li>
+                  <li>Soumettre les captures à Google Images et Yandex pour un reverse image search</li>
+                  <li>Confirmer la localisation via Google Street View et Google Maps</li>
+                </ol>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 3 : Détection de campagne coordonnée</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}>
+                  <strong>Objectif :</strong> Identifier une possible coordination artificielle autour d'un hashtag TikTok.
+                </p>
+                <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
+                <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
+                  <li>Sélectionner un hashtag suspect et analyser les 20 premières vidéos</li>
+                  <li>Vérifier : les dates de création des comptes, les similitudes entre profils, le ratio vues/abonnés</li>
+                  <li>Analyser si les mêmes sons, filtres ou structures de vidéo sont utilisés de manière coordonnée</li>
+                  <li>Utiliser Pentos.io pour observer les pics anormaux d'utilisation du hashtag</li>
+                </ol>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px" }}>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 4 : Vérification d'une vidéo virale</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}>
+                  <strong>Objectif :</strong> Vérifier l'authenticité et l'origine d'une vidéo TikTok virale potentiellement manipulée.
+                </p>
+                <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
+                <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
+                  <li>Installer l'extension InVID/WeVerify et analyser la vidéo cible</li>
+                  <li>Vérifier les métadonnées disponibles : date de publication, compte source, première apparition</li>
+                  <li>Soumettre des captures d'écran au reverse image search pour retrouver des versions antérieures</li>
+                  <li>Croiser avec des sources journalistiques et des bases de fact-checking (AFP Factuel, Reuters Fact Check)</li>
+                </ol>
+                <p style={{ color: "#ef4444", marginTop: "15px", fontWeight: "600" }}>
+                  ⚠️ LÉGAL : Le téléchargement de vidéos TikTok sans autorisation peut violer les droits d'auteur.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "quiz" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>🎯 Quiz de validation</h2>
+
+              {quizQuestions.map((q, index) => (
+                <div key={q.id} style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "12px", marginBottom: "20px" }}>
+                  <h3 style={{ color: colors.textPrimary, fontSize: "1.1rem", marginBottom: "15px" }}>
+                    {index + 1}. {q.question}
+                  </h3>
+                  {q.options.map((option, optIndex) => (
+                    <label key={optIndex} style={{ display: "block", padding: "12px", marginBottom: "8px", background: quizAnswers[q.id] === optIndex.toString() ? colors.accent + "30" : colors.bgSecondary, border: `2px solid ${quizAnswers[q.id] === optIndex.toString() ? colors.accent : colors.border}`, borderRadius: "8px", cursor: "pointer", transition: "all 0.3s ease" }}>
+                      <input type="radio" name={`question-${q.id}`} value={optIndex} checked={quizAnswers[q.id] === optIndex.toString()} onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })} style={{ marginRight: "10px" }} />
+                      <span style={{ color: colors.textPrimary }}>{option}</span>
+                    </label>
+                  ))}
+                </div>
+              ))}
+
+              <div style={{ display: "flex", gap: "15px" }}>
+                <button onClick={handleQuizSubmit} disabled={Object.keys(quizAnswers).length !== quizQuestions.length} style={{ padding: "15px 40px", background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border, color: "#020617", border: "none", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "600", cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed" }}>
+                  Valider le quiz
+                </button>
+                <button onClick={() => setShowResetModal(true)} style={{ padding: "15px 40px", background: "#0b0f1a", color: "#00ff9c", border: "2px solid #00ff9c", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "600", cursor: "pointer", transition: "all 0.3s ease" }} onMouseEnter={(e) => { e.currentTarget.style.background = "#00ff9c"; e.currentTarget.style.color = "#0b0f1a"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#0b0f1a"; e.currentTarget.style.color = "#00ff9c"; }}>
+                  🔄 Réinitialiser
+                </button>
+              </div>
+
+              {showResults && (
+                <div style={{ marginTop: "30px", padding: "25px", background: getScore() >= 4 ? colors.accent + "20" : "#ef444420", border: `2px solid ${getScore() >= 4 ? colors.accent : "#ef4444"}`, borderRadius: "12px" }}>
+                  <h3 style={{ color: getScore() >= 4 ? colors.accent : "#ef4444", fontSize: "1.5rem", marginBottom: "10px" }}>
+                    {getScore() >= 4 ? "✅ Félicitations !" : "❌ Pas encore..."}
+                  </h3>
+                  <p style={{ color: colors.textPrimary, fontSize: "1.2rem" }}>
+                    Score : {getScore()}/{quizQuestions.length}
+                  </p>
+                  <p style={{ color: colors.textSecondary, marginTop: "10px" }}>
+                    {getScore() >= 4 ? "Badge débloqué ! Vous maîtrisez l'OSINT TikTok ! 🎉" : "Révisez le module et réessayez."}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Modal reset quiz */}
-      {showQuizResetModal && (
+      {showResetModal && (
         <>
-          <div onClick={() => setShowQuizResetModal(false)} style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", zIndex: 9998 }} />
-          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)", background: "#0b0f1a", border: "3px solid #00ff9c", borderRadius: "12px", padding: "40px", maxWidth: "500px", width: "90%", zIndex: 9999 }}>
-            <h3 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px", textAlign: "center" }}>⚠️ Réinitialiser le quiz</h3>
-            <p style={{ color: "#9ca3af", marginBottom: "30px", textAlign: "center" }}>Toutes vos réponses et le badge seront effacés.</p>
+          <div onClick={() => setShowResetModal(false)} style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0, 0, 0, 0.8)", zIndex: 9998 }} />
+          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", background: "#0b0f1a", border: "3px solid #00ff9c", borderRadius: "12px", padding: "40px", maxWidth: "500px", width: "90%", zIndex: 9999, boxShadow: "0 0 40px rgba(0, 255, 156, 0.5)" }}>
+            <h3 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px", textAlign: "center" }}>⚠️ Réinitialiser le Quiz</h3>
+            <p style={{ color: "#9ca3af", marginBottom: "30px", textAlign: "center", lineHeight: "1.6" }}>
+              Êtes-vous sûr ? Toutes vos réponses et le badge seront effacés.
+            </p>
             <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
-              <button onClick={() => setShowQuizResetModal(false)} style={{ padding: "12px 30px", background: "transparent", color: "#9ca3af", border: "2px solid #2a3f3f", borderRadius: "8px", cursor: "pointer" }}>Annuler</button>
-              <button onClick={handleQuizReset} style={{ padding: "12px 30px", background: "#00ff9c", color: "#0b0f1a", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>Confirmer</button>
+              <button onClick={() => setShowResetModal(false)} style={{ padding: "12px 30px", background: "transparent", color: "#9ca3af", border: "2px solid #2a3f3f", borderRadius: "8px", fontSize: "1rem", fontWeight: "600", cursor: "pointer" }}>
+                Annuler
+              </button>
+              <button onClick={handleReset} style={{ padding: "12px 30px", background: "#00ff9c", color: "#0b0f1a", border: "none", borderRadius: "8px", fontSize: "1rem", fontWeight: "600", cursor: "pointer" }}>
+                Confirmer
+              </button>
             </div>
           </div>
         </>
       )}
-
-      {/* Ressources */}
-      <div style={{ background: colors.bgSecondary, padding: "30px", borderRadius: "12px", border: `1px solid ${colors.border}` }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          📚 Ressources complémentaires
-        </h3>
-        <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-          <li><strong>TikTok Creative Center :</strong> Statistiques officielles</li>
-          <li><strong>Bellingcat :</strong> Guides de vérification vidéo</li>
-          <li><strong>OSINT Framework :</strong> Outils TikTok OSINT</li>
-          <li><strong>InVID-WeVerify :</strong> Plugin de vérification</li>
-        </ul>
-      </div>
-
-    </main>
+    </div>
   );
 }

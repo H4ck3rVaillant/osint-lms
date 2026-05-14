@@ -1,692 +1,376 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useThemeColors } from "../context/ThemeContext";
-import { useAuth } from "../auth/AuthContext";
 
 export default function GoogleMapsOSINT() {
   const colors = useThemeColors();
-  const { user } = useAuth();
-  const [progress, setProgress] = useState({
-    exercise1: false,
-    exercise2: false,
-    exercise3: false,
-    exercise4: false,
-    exercise5: false,
+  const [activeTab, setActiveTab] = useState("theory");
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
+  const [showResults, setShowResults] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
+
+  const BADGE_KEY = "badge_module_googlemaps";
+  const ANSWERS_KEY = "quiz_answers_googlemaps";
+  const RESULTS_KEY = "quiz_results_googlemaps";
+
+  useState(() => {
+    const savedAnswers = localStorage.getItem(ANSWERS_KEY);
+    const savedResults = localStorage.getItem(RESULTS_KEY);
+    if (savedAnswers) setQuizAnswers(JSON.parse(savedAnswers));
+    if (savedResults === "true") setShowResults(true);
   });
 
-  const [answers, setAnswers] = useState({
-    exercise1: "",
-    exercise2: "",
-    exercise3: "",
-    exercise4: "",
-    exercise5: "",
-  });
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    loadProgress();
-  }, []);
-
-  const loadProgress = async () => {
-    if (!user) return;
-    
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/progression/googlemaps-osint`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        if (data.progress) {
-          setProgress(data.progress);
-        }
-      }
-    } catch (error) {
-      console.error("Erreur chargement progression:", error);
-    }
-  };
-
-  const saveProgress = async (exerciseKey: string, completed: boolean) => {
-    if (!user) return;
-
-    const newProgress = { ...progress, [exerciseKey]: completed };
-    setProgress(newProgress);
-
-    try {
-      const token = localStorage.getItem("token");
-      await fetch(`${import.meta.env.VITE_API_URL}/api/progression/googlemaps-osint`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ progress: newProgress }),
-      });
-    } catch (error) {
-      console.error("Erreur sauvegarde progression:", error);
-    }
-  };
-
-  const checkAnswer = (exerciseKey: string, correctAnswer: string, userAnswer: string) => {
-    const isCorrect = userAnswer.toLowerCase().trim() === correctAnswer.toLowerCase().trim();
-    
-    if (isCorrect) {
-      saveProgress(exerciseKey, true);
-      alert("✅ Correct ! Exercice validé.");
-    } else {
-      alert("❌ Incorrect. Réessayez !");
-    }
-  };
-
-  const resetProgress = async () => {
-    if (!confirm("Voulez-vous vraiment réinitialiser votre progression sur ce module ?")) {
-      return;
-    }
-
-    const resetData = {
-      exercise1: false,
-      exercise2: false,
-      exercise3: false,
-      exercise4: false,
-      exercise5: false,
-    };
-
-    setProgress(resetData);
-    setAnswers({
-      exercise1: "",
-      exercise2: "",
-      exercise3: "",
-      exercise4: "",
-      exercise5: "",
-    });
-
-    if (user) {
-      try {
-        const token = localStorage.getItem("token");
-        await fetch(`${import.meta.env.VITE_API_URL}/api/progression/googlemaps-osint`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ progress: resetData }),
-        });
-        alert("✅ Progression réinitialisée !");
-      } catch (error) {
-        console.error("Erreur reset:", error);
-      }
-    }
-  };
-
-  // ===== QUIZ STATE =====
-  const QUIZ_BADGE_KEY = "badge_module_googlemaps";
-  const QUIZ_ANSWERS_KEY = "quiz_answers_googlemaps_module";
-  const QUIZ_RESULTS_KEY = "quiz_results_googlemaps_module";
-
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>(() => {
-    const saved = localStorage.getItem(QUIZ_ANSWERS_KEY);
-    return saved ? JSON.parse(saved) : {};
-  });
-  const [showQuizResults, setShowQuizResults] = useState<boolean>(() => {
-    return localStorage.getItem(QUIZ_RESULTS_KEY) === "true";
-  });
-  const [showQuizResetModal, setShowQuizResetModal] = useState(false);
-
-  const quizQuestions = [
-    { id: 1, question: "Quel format de coordonnées GPS utilise deux valeurs décimales ?", options: ["DMS (Degrés Minutes Secondes)", "What3Words", "Plus Codes", "Latitude Longitude"], correct: 3 },
-    { id: 2, question: "Quelle fonctionnalité Street View permet de voir l'évolution temporelle d'un lieu ?", options: ["Panorama", "Timeline", "History", "Replay"], correct: 1 },
-    { id: 3, question: "Quel service utilise 3 mots simples pour identifier un lieu précis au monde ?", options: ["Plus Codes", "GPS Visualizer", "What3Words", "GeoGuessr"], correct: 2 },
-    { id: 4, question: "Quel service Google permet d'exporter toutes ses données de localisation personnelles ?", options: ["Google Drive", "Google Takeout", "Google Maps Export", "Google Timeline"], correct: 1 },
-    { id: 5, question: "Quelle réglementation européenne protège les données de géolocalisation ?", options: ["NIS2", "DORA", "LPM", "RGPD"], correct: 3 },
+  const tabs = [
+    { id: "theory", label: "📖 Théorie", icon: "📚" },
+    { id: "tools", label: "🔧 Outils", icon: "⚙️" },
+    { id: "exercises", label: "💡 Exercices", icon: "✍️" },
+    { id: "quiz", label: "🎯 Quiz", icon: "✅" },
   ];
 
-  const getQuizScore = () => {
+  const quizQuestions = [
+    {
+      id: 1,
+      question: "Quel format de coordonnées GPS exprime la position avec deux valeurs décimales (ex : 48.8566, 2.3522) ?",
+      options: [
+        "DMS — Degrés Minutes Secondes",
+        "What3Words",
+        "Plus Codes Google",
+        "Latitude/Longitude décimal"
+      ],
+      correct: 3
+    },
+    {
+      id: 2,
+      question: "Quelle fonctionnalité Google Street View permet de visualiser l'évolution d'un lieu dans le temps ?",
+      options: [
+        "Street View Panorama",
+        "Historique temporel (icône horloge)",
+        "Google Earth Timeline",
+        "Maps Replay"
+      ],
+      correct: 1
+    },
+    {
+      id: 3,
+      question: "Quel service utilise trois mots simples pour identifier avec précision n'importe quel endroit au monde ?",
+      options: [
+        "Plus Codes",
+        "GPS Visualizer",
+        "What3Words",
+        "GeoGuessr"
+      ],
+      correct: 2
+    },
+    {
+      id: 4,
+      question: "Quel service Google permet d'exporter l'intégralité de ses données de localisation personnelles ?",
+      options: [
+        "Google Drive",
+        "Google Takeout",
+        "Google Maps Export",
+        "Google Timeline"
+      ],
+      correct: 1
+    },
+    {
+      id: 5,
+      question: "Quel outil open-source permet d'importer des coordonnées GPS et de les visualiser sur une carte interactive ?",
+      options: [
+        "Google Earth Pro uniquement",
+        "GPS Visualizer",
+        "What3Words",
+        "GeoGuessr"
+      ],
+      correct: 1
+    }
+  ];
+
+  const handleQuizSubmit = () => {
+    const score = getScore();
+    setShowResults(true);
+    localStorage.setItem(ANSWERS_KEY, JSON.stringify(quizAnswers));
+    localStorage.setItem(RESULTS_KEY, "true");
+    if (score >= 4) localStorage.setItem(BADGE_KEY, "true");
+  };
+
+  const handleReset = () => {
+    setQuizAnswers({});
+    setShowResults(false);
+    setShowResetModal(false);
+    localStorage.removeItem(BADGE_KEY);
+    localStorage.removeItem(ANSWERS_KEY);
+    localStorage.removeItem(RESULTS_KEY);
+  };
+
+  const getScore = () => {
     let correct = 0;
-    quizQuestions.forEach(q => { if (quizAnswers[q.id] === q.correct.toString()) correct++; });
+    quizQuestions.forEach(q => {
+      if (quizAnswers[q.id] === q.correct.toString()) correct++;
+    });
     return correct;
   };
 
-  const handleQuizSubmit = () => {
-    const score = getQuizScore();
-    setShowQuizResults(true);
-    localStorage.setItem(QUIZ_ANSWERS_KEY, JSON.stringify(quizAnswers));
-    localStorage.setItem(QUIZ_RESULTS_KEY, "true");
-    if (score >= 4) localStorage.setItem(QUIZ_BADGE_KEY, "true");
-  };
-
-  const handleQuizReset = () => {
-    setQuizAnswers({});
-    setShowQuizResults(false);
-    setShowQuizResetModal(false);
-    localStorage.removeItem(QUIZ_BADGE_KEY);
-    localStorage.removeItem(QUIZ_ANSWERS_KEY);
-    localStorage.removeItem(QUIZ_RESULTS_KEY);
-  };
-  // ===== FIN QUIZ STATE =====
-
-  const completedCount = Object.values(progress).filter(Boolean).length;
-  const totalExercises = 5;
-  const progressPercentage = (completedCount / totalExercises) * 100;
-
   return (
-    <main style={{ paddingTop: "80px", padding: "40px", maxWidth: "1400px", margin: "0 auto", minHeight: "100vh", background: colors.bgPrimary }}>
-      
-      {/* Header */}
-      <div style={{ marginBottom: "40px" }}>
-        <h1 style={{ color: colors.accent, fontSize: "2.5rem", marginBottom: "10px" }}>
-          🗺️ Google Maps OSINT
-        </h1>
-        <p style={{ color: colors.textSecondary, fontSize: "1.2rem", lineHeight: "1.6" }}>
-          Techniques de géolocalisation et investigation avec Google Maps
-        </p>
-      </div>
+    <div style={{ minHeight: "100vh", background: colors.bgPrimary, paddingTop: "80px" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 20px" }}>
 
-      {/* Progress bar */}
-      <div style={{ marginBottom: "40px", background: colors.bgSecondary, padding: "20px", borderRadius: "12px", border: `1px solid ${colors.border}` }}>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-          <span style={{ color: colors.textPrimary, fontWeight: "bold" }}>
-            Progression : {completedCount}/{totalExercises} exercices
-          </span>
-          <span style={{ color: colors.accent, fontWeight: "bold" }}>
-            {progressPercentage.toFixed(0)}%
-          </span>
-        </div>
-        <div style={{ width: "100%", height: "12px", background: "#1a1a1a", borderRadius: "6px", overflow: "hidden" }}>
-          <div style={{ width: `${progressPercentage}%`, height: "100%", background: colors.accent, transition: "width 0.3s" }} />
-        </div>
-        <button
-          onClick={resetProgress}
-          style={{
-            marginTop: "15px",
-            padding: "8px 16px",
-            background: "#ef4444",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontWeight: "bold",
-          }}
-        >
-          🔄 Réinitialiser la progression
-        </button>
-      </div>
-
-      {/* Introduction */}
-      <div style={{ background: colors.bgSecondary, padding: "30px", borderRadius: "12px", marginBottom: "30px", border: `2px solid ${colors.accent}` }}>
-        <h2 style={{ color: colors.accent, fontSize: "1.8rem", marginBottom: "20px" }}>
-          🎯 Introduction à l'OSINT Google Maps
-        </h2>
-        <p style={{ color: colors.textPrimary, lineHeight: "1.8", marginBottom: "15px" }}>
-          Google Maps est l'outil de géolocalisation le plus puissant pour l'OSINT. Avec <strong>Street View</strong>, les images satellites, 
-          les avis utilisateurs et les coordonnées GPS, il permet des investigations géographiques précises.
-        </p>
-        <p style={{ color: colors.textPrimary, lineHeight: "1.8" }}>
-          Ce module vous apprendra à exploiter Google Maps pour identifier des lieux, vérifier des informations et reconstituer des déplacements.
-        </p>
-      </div>
-
-      {/* Section 1 : Recherche de lieux */}
-      <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          1️⃣ Recherche et identification de lieux
-        </h3>
-        
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🔍 Techniques de recherche
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Recherche par nom :</strong> Restaurants, hôtels, monuments</li>
-            <li><strong>Recherche par adresse :</strong> Localisation précise</li>
-            <li><strong>Recherche par coordonnées GPS :</strong> Latitude, Longitude</li>
-            <li><strong>Recherche visuelle :</strong> Identifier un lieu à partir d'une photo</li>
-          </ul>
-        </div>
-
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            📊 Informations exploitables
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Avis utilisateurs :</strong> Commentaires, photos, dates de visite</li>
-            <li><strong>Horaires d'affluence :</strong> Fréquentation par heure et jour</li>
-            <li><strong>Photos géolocalisées :</strong> Images contribuées par les utilisateurs</li>
-            <li><strong>Établissements similaires :</strong> Lieux à proximité</li>
-          </ul>
-        </div>
-
-        {/* Exercise 1 */}
-        <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", border: progress.exercise1 ? `2px solid ${colors.accent}` : `1px solid ${colors.border}` }}>
-          <h4 style={{ color: colors.accent, marginBottom: "15px" }}>
-            {progress.exercise1 ? "✅" : "📝"} Exercice 1 : Coordonnées GPS
-          </h4>
-          <p style={{ color: colors.textPrimary, marginBottom: "15px" }}>
-            Quel format de coordonnées GPS Google Maps accepte-t-il ? (exemple: XX.XXXX, YY.YYYY)
+        <div style={{ textAlign: "center", marginBottom: "40px" }}>
+          <div style={{ fontSize: "4rem", marginBottom: "15px" }}>🗺️</div>
+          <h1 style={{ fontSize: "2.5rem", fontWeight: "700", color: colors.textPrimary, marginBottom: "15px" }}>
+            Module Google Maps OSINT
+          </h1>
+          <p style={{ fontSize: "1.1rem", color: colors.textSecondary, maxWidth: "700px", margin: "0 auto" }}>
+            Géolocalisation, analyse géospatiale et investigation via Google Maps
           </p>
-          <input
-            type="text"
-            value={answers.exercise1}
-            onChange={(e) => setAnswers({ ...answers, exercise1: e.target.value })}
-            placeholder="Format (2 mots)"
-            disabled={progress.exercise1}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "15px",
-              background: colors.bgPrimary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "6px",
-              color: colors.textPrimary,
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={() => checkAnswer("exercise1", "latitude longitude", answers.exercise1)}
-            disabled={progress.exercise1}
-            style={{
-              padding: "10px 20px",
-              background: progress.exercise1 ? "#4ade80" : colors.accent,
-              color: colors.bgPrimary,
-              border: "none",
-              borderRadius: "6px",
-              cursor: progress.exercise1 ? "not-allowed" : "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {progress.exercise1 ? "✅ Validé" : "Vérifier"}
-          </button>
-        </div>
-      </div>
-
-      {/* Section 2 : Street View */}
-      <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          2️⃣ Exploitation de Street View
-        </h3>
-        
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            👁️ Utilisation de Street View
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Navigation 360° :</strong> Explorer virtuellement un lieu</li>
-            <li><strong>Historique temporel :</strong> Voir l'évolution d'un lieu dans le temps</li>
-            <li><strong>Zoom et détails :</strong> Identifier plaques, enseignes, panneaux</li>
-            <li><strong>Angles multiples :</strong> Changer de perspective pour plus d'infos</li>
-          </ul>
-        </div>
-
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🕰️ Analyse temporelle avec Street View
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Historique des images :</strong> Cliquer sur l'horloge en haut à gauche</li>
-            <li><strong>Comparaison temporelle :</strong> Identifier des changements</li>
-            <li><strong>Date de capture :</strong> Métadonnées temporelles des photos</li>
-            <li><strong>Reconstruction timeline :</strong> Chronologie des modifications</li>
-          </ul>
-        </div>
-
-        {/* Exercise 2 */}
-        <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", border: progress.exercise2 ? `2px solid ${colors.accent}` : `1px solid ${colors.border}` }}>
-          <h4 style={{ color: colors.accent, marginBottom: "15px" }}>
-            {progress.exercise2 ? "✅" : "📝"} Exercice 2 : Street View
-          </h4>
-          <p style={{ color: colors.textPrimary, marginBottom: "15px" }}>
-            Quelle fonctionnalité Street View permet de voir l'évolution temporelle d'un lieu ? (1 mot anglais)
-          </p>
-          <input
-            type="text"
-            value={answers.exercise2}
-            onChange={(e) => setAnswers({ ...answers, exercise2: e.target.value })}
-            placeholder="Fonctionnalité"
-            disabled={progress.exercise2}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "15px",
-              background: colors.bgPrimary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "6px",
-              color: colors.textPrimary,
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={() => checkAnswer("exercise2", "timeline", answers.exercise2)}
-            disabled={progress.exercise2}
-            style={{
-              padding: "10px 20px",
-              background: progress.exercise2 ? "#4ade80" : colors.accent,
-              color: colors.bgPrimary,
-              border: "none",
-              borderRadius: "6px",
-              cursor: progress.exercise2 ? "not-allowed" : "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {progress.exercise2 ? "✅ Validé" : "Vérifier"}
-          </button>
-        </div>
-      </div>
-
-      {/* Section 3 : Coordonnées GPS */}
-      <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          3️⃣ Exploitation des coordonnées GPS
-        </h3>
-        
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            📍 Formats de coordonnées
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Degrés décimaux :</strong> 48.8566, 2.3522 (Paris)</li>
-            <li><strong>DMS (Degrees Minutes Seconds) :</strong> 48°51'23.8"N 2°21'07.9"E</li>
-            <li><strong>Plus Codes :</strong> 8FW4V942+27 (Open Location Code)</li>
-            <li><strong>What3Words :</strong> ///mots.trois.unique</li>
-          </ul>
-        </div>
-
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🛠️ Outils de conversion et analyse
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>GPS Visualizer :</strong> Conversion de formats GPS</li>
-            <li><strong>What3Words :</strong> Localisation par triplet de mots</li>
-            <li><strong>Plus Codes :</strong> Codes courts pour lieux sans adresse</li>
-            <li><strong>Geocoding API :</strong> Conversion adresse ↔ coordonnées</li>
-          </ul>
-        </div>
-
-        {/* Exercise 3 */}
-        <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", border: progress.exercise3 ? `2px solid ${colors.accent}` : `1px solid ${colors.border}` }}>
-          <h4 style={{ color: colors.accent, marginBottom: "15px" }}>
-            {progress.exercise3 ? "✅" : "📝"} Exercice 3 : Format GPS
-          </h4>
-          <p style={{ color: colors.textPrimary, marginBottom: "15px" }}>
-            Quel format de coordonnées utilise 3 mots simples pour identifier un lieu précis ? (nom du service)
-          </p>
-          <input
-            type="text"
-            value={answers.exercise3}
-            onChange={(e) => setAnswers({ ...answers, exercise3: e.target.value })}
-            placeholder="Nom du service"
-            disabled={progress.exercise3}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "15px",
-              background: colors.bgPrimary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "6px",
-              color: colors.textPrimary,
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={() => checkAnswer("exercise3", "what3words", answers.exercise3)}
-            disabled={progress.exercise3}
-            style={{
-              padding: "10px 20px",
-              background: progress.exercise3 ? "#4ade80" : colors.accent,
-              color: colors.bgPrimary,
-              border: "none",
-              borderRadius: "6px",
-              cursor: progress.exercise3 ? "not-allowed" : "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {progress.exercise3 ? "✅ Validé" : "Vérifier"}
-          </button>
-        </div>
-      </div>
-
-      {/* Section 4 : Timeline et déplacements */}
-      <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          4️⃣ Timeline et historique de localisation
-        </h3>
-        
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🕐 Google Timeline (personnel)
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Historique de localisation :</strong> Tous les déplacements enregistrés</li>
-            <li><strong>Lieux visités :</strong> Restaurants, magasins, lieux fréquentés</li>
-            <li><strong>Trajets :</strong> Modes de transport utilisés</li>
-            <li><strong>Export de données :</strong> Google Takeout pour analyse</li>
-          </ul>
-        </div>
-
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🗺️ Analyse de déplacements
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Patterns de mouvement :</strong> Habitudes de déplacement</li>
-            <li><strong>Lieux récurrents :</strong> Domicile, travail, loisirs</li>
-            <li><strong>Horaires :</strong> Moments de présence dans des lieux</li>
-            <li><strong>Cross-référencement :</strong> Combiner avec d'autres sources OSINT</li>
-          </ul>
-        </div>
-
-        {/* Exercise 4 */}
-        <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", border: progress.exercise4 ? `2px solid ${colors.accent}` : `1px solid ${colors.border}` }}>
-          <h4 style={{ color: colors.accent, marginBottom: "15px" }}>
-            {progress.exercise4 ? "✅" : "📝"} Exercice 4 : Export de données
-          </h4>
-          <p style={{ color: colors.textPrimary, marginBottom: "15px" }}>
-            Quel service Google permet d'exporter toutes ses données de localisation ? (2 mots anglais)
-          </p>
-          <input
-            type="text"
-            value={answers.exercise4}
-            onChange={(e) => setAnswers({ ...answers, exercise4: e.target.value })}
-            placeholder="Nom du service"
-            disabled={progress.exercise4}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "15px",
-              background: colors.bgPrimary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "6px",
-              color: colors.textPrimary,
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={() => checkAnswer("exercise4", "google takeout", answers.exercise4)}
-            disabled={progress.exercise4}
-            style={{
-              padding: "10px 20px",
-              background: progress.exercise4 ? "#4ade80" : colors.accent,
-              color: colors.bgPrimary,
-              border: "none",
-              borderRadius: "6px",
-              cursor: progress.exercise4 ? "not-allowed" : "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {progress.exercise4 ? "✅ Validé" : "Vérifier"}
-          </button>
-        </div>
-      </div>
-
-      {/* Section 5 : Éthique */}
-      <div style={{ background: colors.bgPrimary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          5️⃣ Éthique et vie privée
-        </h3>
-        
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            ⚖️ Considérations légales
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>RGPD :</strong> Protection des données de localisation</li>
-            <li><strong>Données publiques uniquement :</strong> Respecter la vie privée</li>
-            <li><strong>Consentement :</strong> Ne jamais tracker quelqu'un sans autorisation</li>
-            <li><strong>Contexte professionnel :</strong> Investigation légale uniquement</li>
-          </ul>
-        </div>
-
-        <div style={{ marginBottom: "25px" }}>
-          <h4 style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
-            🛡️ Bonnes pratiques
-          </h4>
-          <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-            <li><strong>Documentation :</strong> Capturer et horodater toutes les preuves</li>
-            <li><strong>Proportionnalité :</strong> Limiter l'investigation au nécessaire</li>
-            <li><strong>Transparence :</strong> Cadre légal clair</li>
-            <li><strong>Respect :</strong> Ne pas divulguer des informations sensibles</li>
-          </ul>
-        </div>
-
-        {/* Exercise 5 */}
-        <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", border: progress.exercise5 ? `2px solid ${colors.accent}` : `1px solid ${colors.border}` }}>
-          <h4 style={{ color: colors.accent, marginBottom: "15px" }}>
-            {progress.exercise5 ? "✅" : "📝"} Exercice 5 : Protection des données
-          </h4>
-          <p style={{ color: colors.textPrimary, marginBottom: "15px" }}>
-            Quelle réglementation européenne protège les données de localisation ? (sigle)
-          </p>
-          <input
-            type="text"
-            value={answers.exercise5}
-            onChange={(e) => setAnswers({ ...answers, exercise5: e.target.value })}
-            placeholder="Sigle de la réglementation"
-            disabled={progress.exercise5}
-            style={{
-              width: "100%",
-              padding: "12px",
-              marginBottom: "15px",
-              background: colors.bgPrimary,
-              border: `1px solid ${colors.border}`,
-              borderRadius: "6px",
-              color: colors.textPrimary,
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={() => checkAnswer("exercise5", "rgpd", answers.exercise5)}
-            disabled={progress.exercise5}
-            style={{
-              padding: "10px 20px",
-              background: progress.exercise5 ? "#4ade80" : colors.accent,
-              color: colors.bgPrimary,
-              border: "none",
-              borderRadius: "6px",
-              cursor: progress.exercise5 ? "not-allowed" : "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {progress.exercise5 ? "✅ Validé" : "Vérifier"}
-          </button>
-        </div>
-      </div>
-
-      {/* ===== SECTION QUIZ ===== */}
-      <div style={{ background: colors.bgPrimary, border: `2px solid ${colors.accent}`, borderRadius: "12px", padding: "30px", marginBottom: "30px" }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "10px" }}>
-          🎯 Quiz de validation — Google Maps OSINT
-        </h3>
-        <p style={{ color: colors.textSecondary, marginBottom: "25px" }}>
-          5 questions — Obtenez 4/5 ou plus pour débloquer le badge du module.
-        </p>
-        {localStorage.getItem(QUIZ_BADGE_KEY) === "true" && (
-          <div style={{ marginBottom: "20px", display: "inline-block", padding: "8px 20px", background: colors.accent + "20", border: `2px solid ${colors.accent}`, borderRadius: "20px", color: colors.accent, fontWeight: "600" }}>
-            ✓ Badge débloqué
-          </div>
-        )}
-        {quizQuestions.map((q, index) => (
-          <div key={q.id} style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "12px", marginBottom: "20px" }}>
-            <h4 style={{ color: colors.textPrimary, fontSize: "1.05rem", marginBottom: "15px" }}>
-              {index + 1}. {q.question}
-            </h4>
-            {q.options.map((option, optIndex) => (
-              <label key={optIndex} style={{ display: "block", padding: "12px", marginBottom: "8px", background: quizAnswers[q.id] === optIndex.toString() ? colors.accent + "30" : colors.bgPrimary, border: `2px solid ${quizAnswers[q.id] === optIndex.toString() ? colors.accent : colors.border}`, borderRadius: "8px", cursor: showQuizResults ? "default" : "pointer" }}>
-                <input
-                  type="radio"
-                  name={`googlemaps-q-${q.id}`}
-                  value={optIndex}
-                  checked={quizAnswers[q.id] === optIndex.toString()}
-                  disabled={showQuizResults}
-                  onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })}
-                  style={{ marginRight: "10px" }}
-                />
-                <span style={{ color: colors.textPrimary }}>{option}</span>
-                {showQuizResults && optIndex === q.correct && <span style={{ marginLeft: "10px", color: "#10b981", fontWeight: "bold" }}>✓</span>}
-                {showQuizResults && quizAnswers[q.id] === optIndex.toString() && optIndex !== q.correct && <span style={{ marginLeft: "10px", color: "#ef4444", fontWeight: "bold" }}>✗</span>}
-              </label>
-            ))}
-          </div>
-        ))}
-        <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
-          {!showQuizResults && (
-            <button
-              onClick={handleQuizSubmit}
-              disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
-              style={{ padding: "14px 35px", background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border, color: "#020617", border: "none", borderRadius: "8px", fontSize: "1rem", fontWeight: "600", cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed" }}
-            >
-              Valider le quiz
-            </button>
+          {localStorage.getItem(BADGE_KEY) === "true" && (
+            <div style={{ marginTop: "15px", display: "inline-block", padding: "8px 20px", background: colors.accent + "20", border: `2px solid ${colors.accent}`, borderRadius: "20px", color: colors.accent, fontWeight: "600", fontSize: "0.9rem" }}>
+              ✓ Badge débloqué
+            </div>
           )}
-          <button
-            onClick={() => setShowQuizResetModal(true)}
-            style={{ padding: "14px 35px", background: "#0b0f1a", color: "#00ff9c", border: "2px solid #00ff9c", borderRadius: "8px", fontSize: "1rem", fontWeight: "600", cursor: "pointer" }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#00ff9c"; e.currentTarget.style.color = "#0b0f1a"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#0b0f1a"; e.currentTarget.style.color = "#00ff9c"; }}
-          >
-            🔄 Reset quiz
-          </button>
         </div>
-        {showQuizResults && (
-          <div style={{ marginTop: "25px", padding: "20px", background: getQuizScore() >= 4 ? colors.accent + "20" : "#ef444420", border: `2px solid ${getQuizScore() >= 4 ? colors.accent : "#ef4444"}`, borderRadius: "12px" }}>
-            <h4 style={{ color: getQuizScore() >= 4 ? colors.accent : "#ef4444", fontSize: "1.3rem", marginBottom: "8px" }}>
-              {getQuizScore() >= 4 ? "✅ Quiz validé !" : "❌ Score insuffisant"}
-            </h4>
-            <p style={{ color: colors.textPrimary, fontSize: "1.1rem", margin: 0 }}>
-              Score : {getQuizScore()}/{quizQuestions.length} — {getQuizScore() >= 4 ? "Badge débloqué 🎉" : "4/5 requis pour le badge. Réinitialisez et réessayez."}
-            </p>
-          </div>
-        )}
+
+        <div style={{ display: "flex", justifyContent: "center", gap: "15px", marginBottom: "40px", flexWrap: "wrap" }}>
+          {tabs.map((tab) => (
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: "12px 24px", background: activeTab === tab.id ? colors.accent : colors.bgSecondary, color: activeTab === tab.id ? "#020617" : colors.textPrimary, border: `2px solid ${activeTab === tab.id ? colors.accent : colors.border}`, borderRadius: "12px", fontSize: "1rem", fontWeight: "600", cursor: "pointer", transition: "all 0.3s ease" }}>
+              {tab.icon} {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ background: colors.bgSecondary, border: `1px solid ${colors.border}`, borderRadius: "12px", padding: "40px" }}>
+
+          {activeTab === "theory" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>📖 Google Maps comme outil OSINT</h2>
+
+              <p style={{ color: colors.textSecondary, lineHeight: "1.8", marginBottom: "20px" }}>
+                Google Maps et ses services associés (Street View, Google Earth, Google Timeline) constituent l'un des outils de géolocalisation les plus puissants disponibles en OSINT. Ils permettent de confirmer des localisations, analyser des infrastructures, observer l'évolution temporelle d'un site et croiser des coordonnées GPS avec des éléments visuels concrets. La maîtrise de ces outils est fondamentale pour tout investigateur OSINT pratiquant la géolocalisation.
+              </p>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>🎯 Cas d'usage en OSINT</h3>
+              <ul style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px", marginBottom: "25px" }}>
+                <li><strong>Confirmation de localisation :</strong> Vérifier et préciser le lieu exact d'une photo ou vidéo grâce à Street View et la vue satellite</li>
+                <li><strong>Analyse d'infrastructure :</strong> Étudier les installations d'une organisation, ses accès, ses bâtiments et son environnement</li>
+                <li><strong>Chronologie géospatiale :</strong> Utiliser l'historique temporel de Google Earth pour observer les modifications d'un site au fil du temps</li>
+                <li><strong>Suivi de déplacements :</strong> Reconstituer un itinéraire à partir de coordonnées GPS extraites de photos ou de témoignages</li>
+                <li><strong>Investigation environnementale :</strong> Surveiller l'évolution d'une zone (construction, déforestation, conflit armé) via les images satellites</li>
+                <li><strong>Vérification de témoignages :</strong> Confirmer ou infirmer qu'un événement a bien eu lieu à l'endroit déclaré</li>
+              </ul>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>🔑 Systèmes de coordonnées GPS</h3>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Latitude/Longitude décimal</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Format le plus courant : deux valeurs décimales représentant la latitude (Nord/Sud) et la longitude (Est/Ouest). Exemple : 48.8566, 2.3522 pour Paris. Directement utilisable dans Google Maps, Google Earth et la plupart des outils de cartographie.
+                </p>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>DMS — Degrés Minutes Secondes</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Format traditionnel utilisé en navigation et dans certains fichiers EXIF. Exemple : 48°51'23.8"N 2°21'7.9"E pour Paris. Nécessite une conversion pour être utilisé dans la plupart des outils modernes. Des convertisseurs en ligne permettent de passer facilement d'un format à l'autre.
+                </p>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>What3Words et Plus Codes</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Systèmes alternatifs d'adressage. What3Words divise le monde en carrés de 3m x 3m identifiés par trois mots (ex : ///livre.chat.soleil). Les Plus Codes de Google sont des codes alphanumériques courts (ex : 8FW4V75V+8Q) identifiant une zone précise. Utiles pour partager des localisations sans coordonnées numériques.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "tools" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>🔧 Outils et Techniques Google Maps OSINT</h2>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px" }}>📌 Google Maps — Fonctionnalités OSINT</h3>
+              <div style={{ background: colors.bgPrimary, padding: "15px", borderRadius: "8px", marginBottom: "20px", fontFamily: "monospace", fontSize: "0.9rem" }}>
+                <div style={{ marginBottom: "12px", color: colors.textSecondary }}>
+                  <strong style={{ color: colors.accent }}>maps.google.com/maps?q=48.8566,2.3522</strong> → Coordonnées directes
+                </div>
+                <div style={{ marginBottom: "12px", color: colors.textSecondary }}>
+                  <strong style={{ color: colors.accent }}>Clic droit sur la carte</strong> → Copier les coordonnées GPS du point
+                </div>
+                <div style={{ marginBottom: "12px", color: colors.textSecondary }}>
+                  <strong style={{ color: colors.accent }}>Street View + icône horloge</strong> → Historique temporel du lieu
+                </div>
+                <div style={{ color: colors.textSecondary }}>
+                  <strong style={{ color: colors.accent }}>Vue satellite + zoom maximum</strong> → Analyse d'infrastructure détaillée
+                </div>
+              </div>
+
+              <h3 style={{ color: colors.accent, fontSize: "1.5rem", marginBottom: "15px", marginTop: "30px" }}>💎 Outils spécialisés</h3>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Google Earth Pro</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
+                  Version avancée de Google Earth, gratuite depuis 2015. Permet d'accéder à l'historique d'images satellites remontant jusqu'aux années 1980 pour certaines zones, d'importer des fichiers KML/KMZ avec des coordonnées, et d'effectuer des mesures de distances et surfaces.
+                </p>
+                <div style={{ fontFamily: "monospace", fontSize: "0.85rem" }}>
+                  <code style={{ color: colors.accent, display: "block" }}>Téléchargement gratuit : earth.google.com/web</code>
+                </div>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>GPS Visualizer</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", marginBottom: "10px" }}>
+                  Outil en ligne permettant d'importer des fichiers GPS (GPX, KML, CSV) et de les visualiser sur une carte interactive. Idéal pour cartographier des séries de coordonnées extraites de fichiers EXIF ou de relevés de terrain.
+                </p>
+                <div style={{ fontFamily: "monospace", fontSize: "0.85rem" }}>
+                  <code style={{ color: colors.accent, display: "block" }}>https://www.gpsvisualizer.com</code>
+                </div>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px", marginBottom: "15px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>Google Takeout — Extraction de données</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Service Google permettant d'exporter l'intégralité de ses données personnelles, dont l'historique de localisation (Google Timeline). Dans un contexte OSINT légal (investigation sur soi-même ou avec autorisation), cet export révèle chaque déplacement enregistré avec horodatage précis.
+                </p>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "8px" }}>
+                <h4 style={{ color: colors.accent, marginBottom: "10px" }}>GeoGuessr — Entraînement à la géolocalisation</h4>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.6", margin: 0 }}>
+                  Jeu de géolocalisation basé sur Street View qui entraîne l'investigateur à identifier des pays, régions et villes à partir d'indices visuels. Excellent outil de formation pour développer les réflexes d'analyse géospatiale utilisés en OSINT professionnel.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "exercises" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>💡 Exercices Pratiques</h2>
+
+              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 1 : Géolocalisation par analyse visuelle</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}>
+                  <strong>Objectif :</strong> Identifier précisément le lieu de prise de vue d'une photo à partir de ses éléments visuels, sans utiliser les métadonnées GPS.
+                </p>
+                <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
+                <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
+                  <li>Analyser les éléments de la photo : architecture, végétation, enseignes, langue, type de véhicules</li>
+                  <li>Identifier le pays/région possible, puis la ville via Google Images ou Yandex</li>
+                  <li>Utiliser Google Maps (vue satellite puis Street View) pour confirmer le lieu exact</li>
+                  <li>Relever les coordonnées GPS précises via clic droit sur Google Maps</li>
+                </ol>
+                <p style={{ color: "#f59e0b", marginTop: "15px", fontWeight: "600" }}>
+                  ⚠️ ÉTHIQUE : N'utilisez jamais la géolocalisation pour traquer des personnes sans autorisation légale.
+                </p>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 2 : Analyse temporelle d'un site</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}>
+                  <strong>Objectif :</strong> Observer l'évolution d'un lieu au fil du temps via l'historique de Google Earth et Street View.
+                </p>
+                <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
+                <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
+                  <li>Ouvrir Google Earth Pro et naviguer vers le site cible</li>
+                  <li>Activer l'historique temporel (icône horloge) et faire défiler les dates disponibles</li>
+                  <li>Dans Street View, cliquer sur l'icône horloge pour accéder aux vues passées</li>
+                  <li>Documenter les changements observés : construction, démolition, modification d'accès</li>
+                </ol>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px", marginBottom: "20px" }}>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 3 : Cartographie d'une infrastructure</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}>
+                  <strong>Objectif :</strong> Analyser et documenter les installations d'une organisation via les outils cartographiques publics.
+                </p>
+                <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
+                <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
+                  <li>Identifier l'adresse du site cible et l'ouvrir dans Google Maps</li>
+                  <li>Basculer en vue satellite pour observer le périmètre, les accès, les parkings, les bâtiments</li>
+                  <li>Utiliser Street View pour observer les façades et les points d'entrée</li>
+                  <li>Exporter les coordonnées dans GPS Visualizer pour créer une carte annotée</li>
+                </ol>
+              </div>
+
+              <div style={{ background: colors.bgPrimary, padding: "25px", borderRadius: "12px" }}>
+                <h3 style={{ color: colors.accent, fontSize: "1.3rem", marginBottom: "15px" }}>Exercice 4 : Reconstitution d'un itinéraire</h3>
+                <p style={{ color: colors.textSecondary, marginBottom: "15px" }}>
+                  <strong>Objectif :</strong> Reconstituer le déplacement d'une personne à partir de coordonnées GPS extraites de plusieurs photos.
+                </p>
+                <p style={{ color: colors.textSecondary, marginBottom: "10px" }}><strong>Méthode :</strong></p>
+                <ol style={{ color: colors.textSecondary, lineHeight: "1.8", marginLeft: "20px" }}>
+                  <li>Extraire les coordonnées GPS de chaque photo avec ExifTool (si disponibles)</li>
+                  <li>Trier les points par horodatage pour reconstituer l'ordre chronologique</li>
+                  <li>Importer les coordonnées dans GPS Visualizer pour tracer l'itinéraire sur une carte</li>
+                  <li>Confirmer chaque point via Street View et noter les durées de déplacement entre les étapes</li>
+                </ol>
+                <p style={{ color: "#ef4444", marginTop: "15px", fontWeight: "600" }}>
+                  ⚠️ LÉGAL : La reconstitution d'itinéraires de tiers sans autorisation peut constituer une atteinte à la vie privée.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "quiz" && (
+            <div>
+              <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>🎯 Quiz de validation</h2>
+
+              {quizQuestions.map((q, index) => (
+                <div key={q.id} style={{ background: colors.bgPrimary, padding: "20px", borderRadius: "12px", marginBottom: "20px" }}>
+                  <h3 style={{ color: colors.textPrimary, fontSize: "1.1rem", marginBottom: "15px" }}>
+                    {index + 1}. {q.question}
+                  </h3>
+                  {q.options.map((option, optIndex) => (
+                    <label key={optIndex} style={{ display: "block", padding: "12px", marginBottom: "8px", background: quizAnswers[q.id] === optIndex.toString() ? colors.accent + "30" : colors.bgSecondary, border: `2px solid ${quizAnswers[q.id] === optIndex.toString() ? colors.accent : colors.border}`, borderRadius: "8px", cursor: "pointer", transition: "all 0.3s ease" }}>
+                      <input type="radio" name={`question-${q.id}`} value={optIndex} checked={quizAnswers[q.id] === optIndex.toString()} onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })} style={{ marginRight: "10px" }} />
+                      <span style={{ color: colors.textPrimary }}>{option}</span>
+                    </label>
+                  ))}
+                </div>
+              ))}
+
+              <div style={{ display: "flex", gap: "15px" }}>
+                <button onClick={handleQuizSubmit} disabled={Object.keys(quizAnswers).length !== quizQuestions.length} style={{ padding: "15px 40px", background: Object.keys(quizAnswers).length === quizQuestions.length ? colors.accent : colors.border, color: "#020617", border: "none", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "600", cursor: Object.keys(quizAnswers).length === quizQuestions.length ? "pointer" : "not-allowed" }}>
+                  Valider le quiz
+                </button>
+                <button onClick={() => setShowResetModal(true)} style={{ padding: "15px 40px", background: "#0b0f1a", color: "#00ff9c", border: "2px solid #00ff9c", borderRadius: "8px", fontSize: "1.1rem", fontWeight: "600", cursor: "pointer", transition: "all 0.3s ease" }} onMouseEnter={(e) => { e.currentTarget.style.background = "#00ff9c"; e.currentTarget.style.color = "#0b0f1a"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#0b0f1a"; e.currentTarget.style.color = "#00ff9c"; }}>
+                  🔄 Réinitialiser
+                </button>
+              </div>
+
+              {showResults && (
+                <div style={{ marginTop: "30px", padding: "25px", background: getScore() >= 4 ? colors.accent + "20" : "#ef444420", border: `2px solid ${getScore() >= 4 ? colors.accent : "#ef4444"}`, borderRadius: "12px" }}>
+                  <h3 style={{ color: getScore() >= 4 ? colors.accent : "#ef4444", fontSize: "1.5rem", marginBottom: "10px" }}>
+                    {getScore() >= 4 ? "✅ Félicitations !" : "❌ Pas encore..."}
+                  </h3>
+                  <p style={{ color: colors.textPrimary, fontSize: "1.2rem" }}>
+                    Score : {getScore()}/{quizQuestions.length}
+                  </p>
+                  <p style={{ color: colors.textSecondary, marginTop: "10px" }}>
+                    {getScore() >= 4 ? "Badge débloqué ! Vous maîtrisez l'OSINT Google Maps ! 🎉" : "Révisez le module et réessayez."}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Modal reset quiz */}
-      {showQuizResetModal && (
+      {showResetModal && (
         <>
-          <div onClick={() => setShowQuizResetModal(false)} style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", zIndex: 9998 }} />
-          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)", background: "#0b0f1a", border: "3px solid #00ff9c", borderRadius: "12px", padding: "40px", maxWidth: "500px", width: "90%", zIndex: 9999 }}>
-            <h3 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px", textAlign: "center" }}>⚠️ Réinitialiser le quiz</h3>
-            <p style={{ color: "#9ca3af", marginBottom: "30px", textAlign: "center" }}>Toutes vos réponses et le badge seront effacés.</p>
+          <div onClick={() => setShowResetModal(false)} style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0, 0, 0, 0.8)", zIndex: 9998 }} />
+          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", background: "#0b0f1a", border: "3px solid #00ff9c", borderRadius: "12px", padding: "40px", maxWidth: "500px", width: "90%", zIndex: 9999, boxShadow: "0 0 40px rgba(0, 255, 156, 0.5)" }}>
+            <h3 style={{ color: "#00ff9c", fontSize: "1.5rem", marginBottom: "15px", textAlign: "center" }}>⚠️ Réinitialiser le Quiz</h3>
+            <p style={{ color: "#9ca3af", marginBottom: "30px", textAlign: "center", lineHeight: "1.6" }}>
+              Êtes-vous sûr ? Toutes vos réponses et le badge seront effacés.
+            </p>
             <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
-              <button onClick={() => setShowQuizResetModal(false)} style={{ padding: "12px 30px", background: "transparent", color: "#9ca3af", border: "2px solid #2a3f3f", borderRadius: "8px", cursor: "pointer" }}>Annuler</button>
-              <button onClick={handleQuizReset} style={{ padding: "12px 30px", background: "#00ff9c", color: "#0b0f1a", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>Confirmer</button>
+              <button onClick={() => setShowResetModal(false)} style={{ padding: "12px 30px", background: "transparent", color: "#9ca3af", border: "2px solid #2a3f3f", borderRadius: "8px", fontSize: "1rem", fontWeight: "600", cursor: "pointer" }}>
+                Annuler
+              </button>
+              <button onClick={handleReset} style={{ padding: "12px 30px", background: "#00ff9c", color: "#0b0f1a", border: "none", borderRadius: "8px", fontSize: "1rem", fontWeight: "600", cursor: "pointer" }}>
+                Confirmer
+              </button>
             </div>
           </div>
         </>
       )}
-
-      {/* Ressources */}
-      <div style={{ background: colors.bgSecondary, padding: "30px", borderRadius: "12px", border: `1px solid ${colors.border}` }}>
-        <h3 style={{ color: colors.accent, fontSize: "1.6rem", marginBottom: "20px" }}>
-          📚 Ressources complémentaires
-        </h3>
-        <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
-          <li><strong>Bellingcat :</strong> Guides de géolocalisation</li>
-          <li><strong>OSINT Framework :</strong> Outils de géolocalisation</li>
-          <li><strong>What3Words :</strong> Système de coordonnées alternatif</li>
-          <li><strong>Google Earth :</strong> Imagerie satellite historique</li>
-        </ul>
-      </div>
-
-    </main>
+    </div>
   );
 }
