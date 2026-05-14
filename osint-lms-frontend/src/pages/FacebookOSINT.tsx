@@ -240,7 +240,7 @@ export default function FacebookOSINT() {
           <ul style={{ color: colors.textSecondary, lineHeight: "1.8", paddingLeft: "20px" }}>
             <li><strong>Recherche par nom :</strong> Filtres ville, école, entreprise, amis mutuels</li>
             <li><strong>Graph Search :</strong> facebook.com/search/query (syntaxe avancée)</li>
-            <li><strong>ID Facebook :</strong> facebook.com/[ID_numé Facebook :</strong> facebook.com/[ID_numérique] pour profils avec URL personnalisée</li>
+            <li><strong>ID Facebook :</strong> facebook.com/[ID_numérique] pour profils avec URL personnalisée</li>
             <li><strong>Outils tiers :</strong> IntelX, Sowdust Facebook Search, Lookup-ID</li>
           </ul>
         </div>
