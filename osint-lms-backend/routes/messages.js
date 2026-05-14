@@ -4,6 +4,24 @@ const db = require("../services/neonDatabase");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 /* ====================================
+   GET /messages/unread-count
+   Nombre de messages non lus
+==================================== */
+router.get("/unread-count", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const result = await db.query(
+      "SELECT COUNT(*) as count FROM messages WHERE to_user_id = $1 AND read = false",
+      [userId]
+    );
+    res.json({ success: true, count: parseInt(result.rows[0].count, 10) });
+  } catch (error) {
+    console.error("Erreur comptage messages non lus:", error);
+    res.status(500).json({ success: false, count: 0 });
+  }
+});
+
+/* ====================================
    GET /messages/users
    Liste des utilisateurs pour la messagerie
 ==================================== */
