@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -8,6 +7,7 @@ const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
 const gameRoutes = require("./routes/game");
 const honeypotRoutes = require("./routes/honeypot");
+const progressionRoutes = require("./routes/progression");
 
 const app = express();
 
@@ -38,6 +38,7 @@ app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/messages", messageRoutes);
 app.use("/game", gameRoutes);
+app.use("/api/progression", progressionRoutes);
 app.use("/", honeypotRoutes);
 
 /* =========================
