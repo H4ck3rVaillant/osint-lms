@@ -1,8 +1,8 @@
 // Routes backend COMPLETES pour tous les modules OSINT 2026
 const express = require("express");
 const router = express.Router();
-const db = require("../config/database");
-const authMiddleware = require("../middleware/authMiddleware");
+const db = require("../services/neonDatabase");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 // ========== INSTAGRAM OSINT ==========
 router.get("/instagram-osint", authMiddleware, async (req, res) => {
