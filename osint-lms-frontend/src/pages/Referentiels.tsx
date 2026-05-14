@@ -355,6 +355,19 @@ export default function Referentiels() {
                 </div>
               </div>
               
+              <div style={{ background: colors.bgSecondary, padding: "20px", borderRadius: "8px", marginTop: "20px", marginBottom: "20px" }}>
+                <p style={{ color: colors.accent, fontWeight: "bold", marginBottom: "10px", fontSize: "1rem" }}>
+                  📌 Spécificité française : la catégorie OIV
+                </p>
+                <p style={{ color: colors.textSecondary, lineHeight: "1.8", margin: 0 }}>
+                  La catégorie des <strong style={{ color: colors.textPrimary }}>opérateurs d'importance vitale (OIV)</strong> n'est ni 
+                  supprimée ni abordée par NIS2 et DORA : elle demeure une catégorie 
+                  spécifiquement française, ancrée dans le code de la défense et la 
+                  loi de programmation militaire, visant la protection des 
+                  infrastructures et activités vitales pour la Nation.
+                </p>
+              </div>
+
               <a href="https://cyber.gouv.fr/reglementation/cybersecurite-systemes-dinformation/directives-nis-nis2-et-dispositif-saiv/dispositif-saiv" target="_blank" rel="noopener noreferrer" 
                  style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
                 → Protection des OIV (ANSSI)
@@ -556,6 +569,10 @@ export default function Referentiels() {
                   <a href="https://cyber.gouv.fr/nous-connaitre/publications/panoramas-de-la-cybermenace/" target="_blank" rel="noopener noreferrer" 
                      style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
                     → Panorama des menaces cyber (ANSSI)
+                  </a>
+                  <a href="https://www.cnil.fr/fr/la-recherche-sur-internet-de-fuites-dinformations-rifi" target="_blank" rel="noopener noreferrer" 
+                     style={{ color: colors.accent, textDecoration: "none", fontWeight: "bold" }}>
+                    → RIFI - Recherche de fuites d'informations (CNIL)
                   </a>
                 </div>
               </div>

@@ -27,11 +27,11 @@ export default function MaltegoModule() {
   ];
 
   const quizQuestions = [
-    { id: 1, question: "Maltego est un outil de ?", options: ["Data mining et visualisation", "Scan de ports", "Crack passwords", "Analyse malware"], correct: 0 },
-    { id: 2, question: "Élément de base Maltego ?", options: ["Entity", "Node", "Object", "Item"], correct: 0 },
-    { id: 3, question: "Comment Maltego collecte données ?", options: ["Transforms (requêtes automatisées)", "Scan actif", "Injection SQL", "Bruteforce"], correct: 0 },
-    { id: 4, question: "Version gratuite Maltego ?", options: ["CE (Community Edition)", "Free", "Basic", "Lite"], correct: 0 },
-    { id: 5, question: "À quoi sert Maltego ?", options: ["Cartographier relations entre entités", "Cracker hashes", "Exploiter vulnérabilités", "Analyser trafic réseau"], correct: 0 }
+    { id: 1, question: "Maltego est un outil de ?", options: ["Scan de ports", "Data mining et visualisation", "Analyse malware", "Crack passwords"], correct: 1 },
+    { id: 2, question: "Élément de base Maltego ?", options: ["Node", "Item", "Object", "Entity"], correct: 3 },
+    { id: 3, question: "Comment Maltego collecte données ?", options: ["Injection SQL", "Scan actif", "Bruteforce", "Transforms (requêtes automatisées)"], correct: 3 },
+    { id: 4, question: "Version gratuite Maltego ?", options: ["Basic", "CE (Community Edition)", "Lite", "Free"], correct: 1 },
+    { id: 5, question: "À quoi sert Maltego ?", options: ["Analyser trafic réseau", "Cracker hashes", "Cartographier relations entre entités", "Exploiter vulnérabilités"], correct: 2 }
   ];
 
   const handleQuizSubmit = () => {

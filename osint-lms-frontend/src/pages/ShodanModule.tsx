@@ -32,56 +32,56 @@ export default function ShodanModule() {
       id: 1,
       question: "Qu'est-ce que Shodan indexe principalement ?",
       options: [
-        "Des bannières de services exposés sur Internet",
         "Des pages web statiques",
         "Des profils de réseaux sociaux",
+        "Des bannières de services exposés sur Internet",
         "Des documents PDF"
       ],
-      correct: 0
+      correct: 2
     },
     {
       id: 2,
       question: "Quelle requête Shodan permet de trouver des webcams non sécurisées ?",
       options: [
-        'product:"webcam" has_screenshot:true',
         'webcam password:default',
+        'ip_camera country:US',
         'camera port:80',
-        'ip_camera country:US'
+        'product:"webcam" has_screenshot:true'
       ],
-      correct: 0
+      correct: 3
     },
     {
       id: 3,
       question: "Quel filtre Shodan permet de rechercher par organisation propriétaire ?",
       options: [
-        "org:",
         "company:",
-        "owner:",
-        "entity:"
+        "org:",
+        "entity:",
+        "owner:"
       ],
-      correct: 0
+      correct: 1
     },
     {
       id: 4,
       question: "Comment Shodan détecte-t-il les appareils vulnérables ?",
       options: [
-        "En analysant les versions de logiciels dans les bannières",
         "En hackant les appareils",
+        "En scannant les fichiers système",
         "En utilisant des exploits",
-        "En scannant les fichiers système"
+        "En analysant les versions de logiciels dans les bannières"
       ],
-      correct: 0
+      correct: 3
     },
     {
       id: 5,
       question: "Quel est le port par défaut pour le protocole RDP (Remote Desktop) ?",
       options: [
-        "3389",
         "22",
-        "443",
-        "8080"
+        "8080",
+        "3389",
+        "443"
       ],
-      correct: 0
+      correct: 2
     }
   ];
 

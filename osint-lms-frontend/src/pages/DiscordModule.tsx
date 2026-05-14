@@ -27,11 +27,11 @@ export default function DiscordModule() {
   ];
 
   const quizQuestions = [
-    { id: 1, question: "Utilisateurs actifs Discord ?", options: ["150+ millions", "100 millions", "200 millions", "50 millions"], correct: 0 },
-    { id: 2, question: "Chiffres Server ID Discord ?", options: ["18 chiffres", "16 chiffres", "12 chiffres", "20 chiffres"], correct: 0 },
-    { id: 3, question: "Serveurs indexés Google ?", options: ["Non par défaut", "Oui tous", "Seulement publics", "Avec autorisation"], correct: 0 },
-    { id: 4, question: "Site serveurs Discord publics ?", options: ["disboard.org", "discordfinder.com", "serverlist.io", "discorddb.com"], correct: 0 },
-    { id: 5, question: "Messages supprimés récupérables ?", options: ["Non, sauf loggés par bot", "Oui toujours", "Avec Nitro", "Via support"], correct: 0 }
+    { id: 1, question: "Utilisateurs actifs Discord ?", options: ["100 millions", "50 millions", "200 millions", "150+ millions"], correct: 3 },
+    { id: 2, question: "Chiffres Server ID Discord ?", options: ["16 chiffres", "18 chiffres", "12 chiffres", "20 chiffres"], correct: 1 },
+    { id: 3, question: "Serveurs indexés Google ?", options: ["Oui tous", "Avec autorisation", "Non par défaut", "Seulement publics"], correct: 2 },
+    { id: 4, question: "Site serveurs Discord publics ?", options: ["discordfinder.com", "discorddb.com", "serverlist.io", "disboard.org"], correct: 3 },
+    { id: 5, question: "Messages supprimés récupérables ?", options: ["Oui toujours", "Non, sauf loggés par bot", "Via support", "Avec Nitro"], correct: 1 }
   ];
 
   const handleQuizSubmit = () => {

@@ -27,11 +27,11 @@ export default function TheHarvesterModule() {
   ];
 
   const quizQuestions = [
-    { id: 1, question: "Que collecte principalement theHarvester ?", options: ["Emails, sous-domaines, IPs, noms", "Mots de passe", "Fichiers sensibles", "Logs serveurs"], correct: 0 },
-    { id: 2, question: "Quelles sources theHarvester interroge ?", options: ["Google, Bing, Shodan, LinkedIn, etc.", "Uniquement Google", "Bases SQL", "Fichiers locaux"], correct: 0 },
-    { id: 3, question: "Commande de base theHarvester ?", options: ["theHarvester -d domain.com -b all", "harvester --scan domain", "python harvest.py -t domain", "theharvest -domain"], correct: 0 },
-    { id: 4, question: "theHarvester est-il légal ?", options: ["Oui si données publiques", "Non, toujours illégal", "Oui sans restriction", "Nécessite autorisation écrite"], correct: 0 },
-    { id: 5, question: "Formats d'export supportés ?", options: ["JSON, XML, HTML", "PDF uniquement", "SQL uniquement", "Texte brut uniquement"], correct: 0 }
+    { id: 1, question: "Que collecte principalement theHarvester ?", options: ["Mots de passe", "Logs serveurs", "Fichiers sensibles", "Emails, sous-domaines, IPs, noms"], correct: 3 },
+    { id: 2, question: "Quelles sources theHarvester interroge ?", options: ["Uniquement Google", "Fichiers locaux", "Google, Bing, Shodan, LinkedIn, etc.", "Bases SQL"], correct: 2 },
+    { id: 3, question: "Commande de base theHarvester ?", options: ["harvester --scan domain", "theHarvester -d domain.com -b all", "theharvest -domain", "python harvest.py -t domain"], correct: 1 },
+    { id: 4, question: "theHarvester est-il légal ?", options: ["Non, toujours illégal", "Oui si données publiques", "Nécessite autorisation écrite", "Oui sans restriction"], correct: 1 },
+    { id: 5, question: "Formats d'export supportés ?", options: ["PDF uniquement", "Texte brut uniquement", "JSON, XML, HTML", "SQL uniquement"], correct: 2 }
   ];
 
   const handleQuizSubmit = () => {

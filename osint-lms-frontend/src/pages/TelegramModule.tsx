@@ -27,11 +27,11 @@ export default function TelegramModule() {
   ];
 
   const quizQuestions = [
-    { id: 1, question: "Combien d'utilisateurs actifs Telegram ?", options: ["700+ millions", "500 millions", "1 milliard", "300 millions"], correct: 0 },
-    { id: 2, question: "Limite membres groupe Telegram ?", options: ["200 000", "100 000", "50 000", "Illimité"], correct: 0 },
-    { id: 3, question: "Canaux publics indexés Google ?", options: ["Oui via site:t.me", "Non jamais", "Seulement vérifiés", "Avec autorisation"], correct: 0 },
-    { id: 4, question: "Outil Python scraper Telegram ?", options: ["Telethon", "TeleScrape", "TeleBot", "PyTelegram"], correct: 0 },
-    { id: 5, question: "Historique canal public accessible ?", options: ["Oui via API", "Non jamais", "100 derniers", "Avec premium"], correct: 0 }
+    { id: 1, question: "Combien d'utilisateurs actifs Telegram ?", options: ["500 millions", "300 millions", "700+ millions", "1 milliard"], correct: 2 },
+    { id: 2, question: "Limite membres groupe Telegram ?", options: ["100 000", "200 000", "50 000", "Illimité"], correct: 1 },
+    { id: 3, question: "Canaux publics indexés Google ?", options: ["Non jamais", "Seulement vérifiés", "Avec autorisation", "Oui via site:t.me"], correct: 3 },
+    { id: 4, question: "Outil Python scraper Telegram ?", options: ["TeleScrape", "Telethon", "PyTelegram", "TeleBot"], correct: 1 },
+    { id: 5, question: "Historique canal public accessible ?", options: ["Non jamais", "Avec premium", "Oui via API", "100 derniers"], correct: 2 }
   ];
 
   const handleQuizSubmit = () => {

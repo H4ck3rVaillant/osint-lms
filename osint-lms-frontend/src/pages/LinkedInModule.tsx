@@ -27,11 +27,11 @@ export default function LinkedInModule() {
   ];
 
   const quizQuestions = [
-    { id: 1, question: "Combien de membres LinkedIn compte-t-il ?", options: ["900+ millions", "500 millions", "1 milliard", "300 millions"], correct: 0 },
-    { id: 2, question: "Quel opérateur LinkedIn pour rechercher par entreprise ?", options: ['company:"Nom"', 'org:"Nom"', 'work:"Nom"', 'employer:"Nom"'], correct: 0 },
-    { id: 3, question: "Quel outil scrape les employés LinkedIn ?", options: ["CrossLinked", "LinkedScraper", "ProfileHarvest", "LinkedBot"], correct: 0 },
-    { id: 4, question: "Le scraping LinkedIn est-il légal ?", options: ["Non, viole CGU", "Oui avec premium", "Oui usage perso", "Oui sans restriction"], correct: 0 },
-    { id: 5, question: "Info NON trouvable sur profil public ?", options: ["Tél personnel", "Parcours pro", "Compétences", "Recommandations"], correct: 0 }
+    { id: 1, question: "Combien de membres LinkedIn compte-t-il ?", options: ["500 millions", "1 milliard", "900+ millions", "300 millions"], correct: 2 },
+    { id: 2, question: "Quel opérateur LinkedIn pour rechercher par entreprise ?", options: ['org:"Nom"', 'company:"Nom"', 'employer:"Nom"', 'work:"Nom"'], correct: 1 },
+    { id: 3, question: "Quel outil scrape les employés LinkedIn ?", options: ["LinkedScraper", "LinkedBot", "ProfileHarvest", "CrossLinked"], correct: 3 },
+    { id: 4, question: "Le scraping LinkedIn est-il légal ?", options: ["Oui avec premium", "Oui usage perso", "Oui sans restriction", "Non, viole CGU"], correct: 3 },
+    { id: 5, question: "Info NON trouvable sur profil public ?", options: ["Parcours pro", "Tél personnel", "Recommandations", "Compétences"], correct: 1 }
   ];
 
   const handleQuizSubmit = () => {
