@@ -12,6 +12,13 @@ export default function Dashboard() {
     total: 0,
   });
 
+  const [moduleProgress, setModuleProgress] = useState({
+    instagram: 0,
+    facebook: 0,
+    tiktok: 0,
+    googlemaps: 0,
+  });
+
   useEffect(() => {
     const debIntro = localStorage.getItem("badge_deb_intro") === "true";
     const debMethodo = localStorage.getItem("badge_deb_methodo") === "true";
@@ -37,11 +44,9 @@ export default function Dashboard() {
 
     const exercicesCompleted = parseInt(localStorage.getItem("exercices_completed") || "0");
     const totalExercices = 20;
-
-    const totalBadges = 26; // 20 + 6 modules
+    const totalBadges = 26;
     const badgesEarned = debutantCount + intermediaireCount + avanceCount + etudesCasCount;
-
-    const totalModules = 13 + 5 + 6; // 13 modules parcours + 5 études + 6 modules spécialisés
+    const totalModules = 13 + 5 + 6;
     const totalCompleted = badgesEarned;
 
     setStats({
@@ -53,7 +58,38 @@ export default function Dashboard() {
       badges: (badgesEarned / totalBadges) * 100,
       total: (totalCompleted / totalModules) * 100,
     });
+
+    // Charger progression des 4 nouveaux modules
+    loadModuleProgress();
   }, []);
+
+  const loadModuleProgress = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const modules = ['instagram-osint', 'facebook-osint', 'tiktok-osint', 'googlemaps-osint'];
+    const progressData = { instagram: 0, facebook: 0, tiktok: 0, googlemaps: 0 };
+
+    for (const module of modules) {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/progression/${module}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.progress) {
+            const completed = Object.values(data.progress).filter(Boolean).length;
+            const key = module.replace('-osint', '') as keyof typeof progressData;
+            progressData[key] = (completed / 5) * 100;
+          }
+        }
+      } catch (error) {
+        console.error(`Error loading ${module} progress:`, error);
+      }
+    }
+
+    setModuleProgress(progressData);
+  };
 
   const cardStyle = {
     background: "#0b0f1a",
@@ -194,7 +230,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* MODULES OSINT SPÉCIALISÉS - 6 MODULES */}
+      {/* MODULES OSINT SPÉCIALISÉS - 6 MODULES EXISTANTS */}
       <section style={{ marginBottom: "40px" }}>
         <h2 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "20px" }}>
           🎓 Modules OSINT Spécialisés
@@ -252,6 +288,119 @@ export default function Dashboard() {
             </h3>
             <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6" }}>
               Visualisation graphique de relations OSINT
+            </p>
+          </Link>
+        </div>
+      </section>
+
+      {/* NOUVEAUX MODULES OSINT 2026 - 4 MODULES */}
+      <section style={{ marginBottom: "40px" }}>
+        <h2 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "20px" }}>
+          🆕 Nouveaux Modules OSINT (2026)
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
+          
+          <Link to="/modules/instagram" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
+              📸 Instagram OSINT
+            </h3>
+            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "15px" }}>
+              Investigation sur Instagram : profils, hashtags, géolocalisation
+            </p>
+            <div style={{
+              width: "100%",
+              height: "6px",
+              background: "#1a1f2e",
+              borderRadius: "3px",
+              overflow: "hidden",
+            }}>
+              <div style={{
+                width: `${moduleProgress.instagram}%`,
+                height: "100%",
+                background: "#00ff9c",
+                transition: "width 0.5s ease"
+              }} />
+            </div>
+            <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
+              {moduleProgress.instagram.toFixed(0)}% complété
+            </p>
+          </Link>
+
+          <Link to="/modules/facebook" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
+              📘 Facebook OSINT
+            </h3>
+            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "15px" }}>
+              Analyse de profils, groupes, pages et Graph Search
+            </p>
+            <div style={{
+              width: "100%",
+              height: "6px",
+              background: "#1a1f2e",
+              borderRadius: "3px",
+              overflow: "hidden",
+            }}>
+              <div style={{
+                width: `${moduleProgress.facebook}%`,
+                height: "100%",
+                background: "#00ff9c",
+                transition: "width 0.5s ease"
+              }} />
+            </div>
+            <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
+              {moduleProgress.facebook.toFixed(0)}% complété
+            </p>
+          </Link>
+
+          <Link to="/modules/tiktok" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
+              🎵 TikTok OSINT
+            </h3>
+            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "15px" }}>
+              Investigation vidéos, hashtags, tendances et sons
+            </p>
+            <div style={{
+              width: "100%",
+              height: "6px",
+              background: "#1a1f2e",
+              borderRadius: "3px",
+              overflow: "hidden",
+            }}>
+              <div style={{
+                width: `${moduleProgress.tiktok}%`,
+                height: "100%",
+                background: "#00ff9c",
+                transition: "width 0.5s ease"
+              }} />
+            </div>
+            <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
+              {moduleProgress.tiktok.toFixed(0)}% complété
+            </p>
+          </Link>
+
+          <Link to="/modules/googlemaps" style={cardStyle}>
+            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
+              🗺️ Google Maps OSINT
+            </h3>
+            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "15px" }}>
+              Géolocalisation, Street View, coordonnées GPS et Timeline
+            </p>
+            <div style={{
+              width: "100%",
+              height: "6px",
+              background: "#1a1f2e",
+              borderRadius: "3px",
+              overflow: "hidden",
+            }}>
+              <div style={{
+                width: `${moduleProgress.googlemaps}%`,
+                height: "100%",
+                background: "#00ff9c",
+                transition: "width 0.5s ease"
+              }} />
+            </div>
+            <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
+              {moduleProgress.googlemaps.toFixed(0)}% complété
             </p>
           </Link>
         </div>

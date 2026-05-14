@@ -39,6 +39,10 @@ import TelegramModule from "./pages/TelegramModule";
 import DiscordModule from "./pages/DiscordModule";
 import TheHarvesterModule from "./pages/theHarvesterModule";
 import MaltegoModule from "./pages/MaltegoModule";
+import InstagramOSINT from "./pages/InstagramOSINT";
+import FacebookOSINT from "./pages/FacebookOSINT";
+import TikTokOSINT from "./pages/TikTokOSINT";
+import GoogleMapsOSINT from "./pages/GoogleMapsOSINT";
 import ExercicesOSINT from "./pages/ExercicesOSINT";
 import BadgesOSINT from "./pages/BadgesOSINT";
 import CertificatPage from "./pages/CertificatPage";
@@ -63,17 +67,14 @@ import ArgusConsole from "./pages/ArgusConsole";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-
   return null;
 }
 
 function Protected({ children }: { children: JSX.Element }) {
   const { user, isLoading } = useAuth();
-
   if (isLoading) {
     return (
       <div style={{
@@ -99,9 +100,7 @@ function Protected({ children }: { children: JSX.Element }) {
       </div>
     );
   }
-
   if (!user) return <Navigate to="/login" replace />;
-
   return children;
 }
 
@@ -187,6 +186,10 @@ export default function App() {
         <Route path="/modules/discord" element={<Protected><Layout><DiscordModule /></Layout></Protected>} />
         <Route path="/modules/theharvester" element={<Protected><Layout><TheHarvesterModule /></Layout></Protected>} />
         <Route path="/modules/maltego" element={<Protected><Layout><MaltegoModule /></Layout></Protected>} />
+        <Route path="/modules/instagram" element={<Protected><Layout><InstagramOSINT /></Layout></Protected>} />
+        <Route path="/modules/facebook" element={<Protected><Layout><FacebookOSINT /></Layout></Protected>} />
+        <Route path="/modules/tiktok" element={<Protected><Layout><TikTokOSINT /></Layout></Protected>} />
+        <Route path="/modules/googlemaps" element={<Protected><Layout><GoogleMapsOSINT /></Layout></Protected>} />
         <Route path="/exercices-osint" element={<Protected><Layout><ExercicesOSINT /></Layout></Protected>} />
         <Route path="/badges-osint" element={<Protected><Layout><BadgesOSINT /></Layout></Protected>} />
         <Route path="/certificat" element={<Protected><Layout><CertificatPage /></Layout></Protected>} />

@@ -111,6 +111,7 @@ export default function Header() {
         >
           ☰
         </button>
+
         {/* 🎯 LOGO */}
         <Link to="/dashboard" style={{ 
           display: "flex", 
@@ -128,7 +129,9 @@ export default function Header() {
             CyberOSINT Academy
           </span>
         </Link>
+
         <div style={separatorStyle} className="separator" />
+
         {/* 📚 SECTION FORMATION (desktop) */}
         <nav style={{
           display: "flex",
@@ -152,6 +155,7 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
+
           {/* Menu Modules OSINT */}
           <div style={{ position: "relative" as const }}>
             <span onClick={() => setShowModulesMenu(!showModulesMenu)} style={{
@@ -284,9 +288,88 @@ export default function Header() {
                 }}>
                   🕸️ Maltego
                 </Link>
+                
+                <div style={{ height: "1px", background: colors.border, margin: "8px 0" }} />
+                <div style={{ padding: "5px 18px", fontSize: "0.75rem", color: colors.textSecondary, fontWeight: "bold" }}>
+                  🆕 NOUVEAUX 2026
+                </div>
+                
+                <Link to="/modules/instagram" onClick={() => setShowModulesMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  📸 Instagram
+                </Link>
+                <Link to="/modules/facebook" onClick={() => setShowModulesMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  📘 Facebook
+                </Link>
+                <Link to="/modules/tiktok" onClick={() => setShowModulesMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  🎵 TikTok
+                </Link>
+                <Link to="/modules/googlemaps" onClick={() => setShowModulesMenu(false)} style={{
+                  display: "block",
+                  color: colors.textPrimary,
+                  textDecoration: "none",
+                  padding: "10px 18px",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = colors.bgSecondary;
+                  e.currentTarget.style.color = colors.accent;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = colors.textPrimary;
+                }}>
+                  🗺️ Google Maps
+                </Link>
               </div>
             )}
           </div>
+
           {[
             { label: "Exercices", to: "/exercices-osint" },
             { label: "Etudes de cas", to: "/etudes-osint" },
@@ -303,6 +386,7 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
+
           {/* Menu Quiz + Challenge */}
           <div style={{ position: "relative" as const }}>
             <span onClick={() => setShowQuizMenu(!showQuizMenu)} style={{
@@ -385,7 +469,9 @@ export default function Header() {
             )}
           </div>
         </nav>
+
         <div style={separatorStyle} className="separator" />
+
         {/* 🛠️ SECTION LABO/OUTILS (desktop) */}
         <nav style={{
           display: "flex",
@@ -404,6 +490,7 @@ export default function Header() {
           }}>
             Labo
           </Link>
+
           {/* Menu Outils */}
           <div style={{ position: "relative" as const }}>
             <span onClick={() => setShowOutilsMenu(!showOutilsMenu)} style={{
@@ -461,6 +548,7 @@ export default function Header() {
               </div>
             )}
           </div>
+
           <Link to="/youtube" style={linkStyle}
           onMouseEnter={(e) => {
             e.currentTarget.style.color = colors.accent;
@@ -473,7 +561,9 @@ export default function Header() {
             YouTube (embeds)
           </Link>
         </nav>
+
         <div style={separatorStyle} className="separator" />
+
         {/* 🏆 SECTION SUIVI (desktop) */}
         <nav style={{
           display: "flex",
@@ -501,7 +591,9 @@ export default function Header() {
             </Link>
           ))}
         </nav>
+
         <div style={separatorStyle} className="separator" />
+
         {/* 🎨 BOUTONS ACTIONS */}
         <div style={{ 
           display: "flex", 
@@ -539,6 +631,7 @@ export default function Header() {
           >
             {theme === "dark" ? "🌞" : "🌙"}
           </button>
+
           {/* Avatar + User Menu */}
           <div style={{ position: "relative" as const }}>
             <div onClick={() => setShowUserMenu(!showUserMenu)} style={{
@@ -577,6 +670,7 @@ export default function Header() {
               
               <span style={{ color: colors.textSecondary, fontSize: "0.6rem" }}>▾</span>
             </div>
+
             {showUserMenu && (
               <div style={{
                 position: "absolute" as const,
@@ -645,6 +739,7 @@ export default function Header() {
                 }}>
                   💬 Messages
                 </Link>
+
                 {/* Panel Admin - Visible uniquement pour Cyber_Admin */}
                 {user?.username === "Cyber_Admin" && (
                   <>
@@ -687,6 +782,7 @@ export default function Header() {
                     </Link>
                   </>
                 )}
+
                 <div style={{ height: "1px", background: colors.border, margin: "8px 0" }} />
                 <button onClick={handleLogout} style={{
                   width: "100%",
@@ -710,6 +806,7 @@ export default function Header() {
               </div>
             )}
           </div>
+
           {/* Online Status */}
           <div style={{
             width: "10px",
@@ -723,6 +820,7 @@ export default function Header() {
           />
         </div>
       </div>
+
       {/* 📱 MENU MOBILE OVERLAY */}
       {showMobileMenu && (
         <div style={{
@@ -768,7 +866,8 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
-            {/* MODULES OSINT - 6 modules */}
+
+            {/* MODULES OSINT - 10 modules (6 anciens + 4 nouveaux) */}
             <div style={{ 
               color: colors.textSecondary, 
               fontSize: "0.75rem", 
@@ -785,6 +884,10 @@ export default function Header() {
               { label: "🎮 Discord", to: "/modules/discord" },
               { label: "🌾 theHarvester", to: "/modules/theharvester" },
               { label: "🕸️ Maltego", to: "/modules/maltego" },
+              { label: "📸 Instagram 🆕", to: "/modules/instagram" },
+              { label: "📘 Facebook 🆕", to: "/modules/facebook" },
+              { label: "🎵 TikTok 🆕", to: "/modules/tiktok" },
+              { label: "🗺️ Google Maps 🆕", to: "/modules/googlemaps" },
             ].map((item) => (
               <Link key={item.to} to={item.to} onClick={() => setShowMobileMenu(false)} style={{
                 color: colors.textPrimary,
@@ -798,6 +901,7 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
+
             <div style={{ 
               color: colors.textSecondary, 
               fontSize: "0.75rem", 
@@ -831,6 +935,7 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
+
             <div style={{ 
               color: colors.textSecondary, 
               fontSize: "0.75rem", 
@@ -862,8 +967,10 @@ export default function Header() {
         </div>
       )}
     </header>
+
     {/* SPACER */}
     <div style={{ height: "60px" }} />
+
     <style>{`
       /* Mode mobile < 1400px */
       @media (max-width: 1400px) {
