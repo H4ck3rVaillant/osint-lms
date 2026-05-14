@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useThemeColors } from "../context/ThemeContext";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 
 export default function InstagramOSINT() {
   const colors = useThemeColors();
