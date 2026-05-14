@@ -68,7 +68,7 @@ export default function Header() {
         if (count > 0 && !hasShownPopup.current) {
           hasShownPopup.current = true;
           setShowMsgPopup(true);
-          setTimeout(() => setShowMsgPopup(false), 5000);
+          setTimeout(() => setShowMsgPopup(false), 10000);
         }
       } catch {
         // Silencieux — ne pas bloquer si le backend est lent
@@ -680,19 +680,32 @@ export default function Header() {
               background: showUserMenu ? colors.bgSecondary : "transparent",
             }}>
               
-              <div style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "50%",
-                border: `2px solid ${colors.accent}`,
-                background: colors.bgSecondary,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "1.2rem",
-                flexShrink: 0,
-              }}>
-                {getUserAvatar(user.username)}
+              <div style={{ position: "relative" as const, width: "32px", height: "32px", flexShrink: 0 }}>
+                <div style={{
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "50%",
+                  border: `2px solid ${unreadCount > 0 ? "#ef4444" : colors.accent}`,
+                  background: colors.bgSecondary,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.2rem",
+                }}>
+                  {getUserAvatar(user.username)}
+                </div>
+                {unreadCount > 0 && (
+                  <div style={{
+                    position: "absolute" as const,
+                    top: "-2px",
+                    right: "-2px",
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "50%",
+                    background: "#ef4444",
+                    border: "2px solid #0b0f1a",
+                  }} />
+                )}
               </div>
               <span style={{ 
                 color: colors.textSecondary, 
