@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useTheme, useThemeColors } from "../context/ThemeContext";
 import Logo from "../assets/images/Logo.png";
@@ -44,6 +44,41 @@ export default function Header() {
   const [showOutilsMenu, setShowOutilsMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showMsgPopup, setShowMsgPopup] = useState(false);
+  const hasShownPopup = useRef(false);
+
+  const API_URL = "https://osint-lms-backend.onrender.com";
+
+  useEffect(() => {
+    if (!auth.user) return;
+
+    const fetchUnread = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+        const res = await fetch(`${API_URL}/messages/unread-count`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        const count = data.count || 0;
+        setUnreadCount(count);
+        // Popup à la première détection de messages non lus (une seule fois par session)
+        if (count > 0 && !hasShownPopup.current) {
+          hasShownPopup.current = true;
+          setShowMsgPopup(true);
+          setTimeout(() => setShowMsgPopup(false), 5000);
+        }
+      } catch {
+        // Silencieux — ne pas bloquer si le backend est lent
+      }
+    };
+
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000);
+    return () => clearInterval(interval);
+  }, [auth.user]);
 
   if (!auth.user) return null;
 
@@ -721,13 +756,14 @@ export default function Header() {
                 }}>
                   📧 Contact Admin
                 </Link>
-                <Link to="/messages" onClick={() => setShowUserMenu(false)} style={{
+                <Link to="/messages" onClick={() => { setShowUserMenu(false); setUnreadCount(0); setShowMsgPopup(false); }} style={{
                   display: "block",
                   color: colors.textPrimary,
                   textDecoration: "none",
                   padding: "10px 18px",
                   fontSize: "0.85rem",
                   transition: "all 0.2s",
+                  position: "relative" as const,
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = colors.bgSecondary;
@@ -738,6 +774,23 @@ export default function Header() {
                   e.currentTarget.style.color = colors.textPrimary;
                 }}>
                   💬 Messages
+                  {unreadCount > 0 && (
+                    <span style={{
+                      position: "absolute" as const,
+                      top: "6px",
+                      right: "12px",
+                      background: "#ef4444",
+                      color: "#fff",
+                      borderRadius: "10px",
+                      fontSize: "0.7rem",
+                      fontWeight: "700",
+                      padding: "1px 6px",
+                      minWidth: "18px",
+                      textAlign: "center" as const,
+                    }}>
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  )}
                 </Link>
 
                 {/* Panel Admin - Visible uniquement pour Cyber_Admin */}
@@ -818,6 +871,47 @@ export default function Header() {
           }}
           title="En ligne"
           />
+
+          {/* Icône message avec badge si non lus */}
+          {unreadCount > 0 && (
+            <Link
+              to="/messages"
+              onClick={() => { setUnreadCount(0); setShowMsgPopup(false); }}
+              title={`${unreadCount} message(s) non lu(s)`}
+              style={{
+                position: "relative" as const,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "36px",
+                height: "36px",
+                background: colors.bgSecondary,
+                border: "2px solid #ef4444",
+                borderRadius: "50%",
+                textDecoration: "none",
+                fontSize: "1rem",
+                flexShrink: 0,
+                animation: "pulse-msg 1.5s ease-in-out infinite",
+              }}
+            >
+              💬
+              <span style={{
+                position: "absolute" as const,
+                top: "-4px",
+                right: "-4px",
+                background: "#ef4444",
+                color: "#fff",
+                borderRadius: "10px",
+                fontSize: "0.65rem",
+                fontWeight: "700",
+                padding: "1px 5px",
+                minWidth: "16px",
+                textAlign: "center" as const,
+              }}>
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -971,6 +1065,69 @@ export default function Header() {
     {/* SPACER */}
     <div style={{ height: "60px" }} />
 
+    {/* POPUP NOUVEAU MESSAGE */}
+    {showMsgPopup && (
+      <div style={{
+        position: "fixed" as const,
+        bottom: "30px",
+        left: "30px",
+        zIndex: 9998,
+        background: "#0b0f1a",
+        border: "2px solid #ef4444",
+        borderRadius: "12px",
+        padding: "16px 20px",
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        boxShadow: "0 4px 30px rgba(239,68,68,0.4)",
+        minWidth: "280px",
+        maxWidth: "360px",
+        animation: "slideInLeft 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+      }}>
+        <span style={{ fontSize: "1.8rem", flexShrink: 0 }}>💬</span>
+        <div style={{ flex: 1 }}>
+          <p style={{ color: "#ef4444", fontWeight: "bold", margin: "0 0 3px 0", fontSize: "0.95rem" }}>
+            Nouveau(x) message(s) !
+          </p>
+          <p style={{ color: "#e5e7eb", margin: 0, fontSize: "0.82rem", lineHeight: "1.4" }}>
+            Vous avez <strong style={{ color: "#ef4444" }}>{unreadCount}</strong> message{unreadCount > 1 ? "s" : ""} non lu{unreadCount > 1 ? "s" : ""}.
+          </p>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: "6px", flexShrink: 0 }}>
+          <Link
+            to="/messages"
+            onClick={() => { setShowMsgPopup(false); setUnreadCount(0); }}
+            style={{
+              background: "#ef4444",
+              color: "#fff",
+              textDecoration: "none",
+              padding: "5px 10px",
+              borderRadius: "6px",
+              fontSize: "0.78rem",
+              fontWeight: "600",
+              textAlign: "center" as const,
+            }}
+          >
+            Voir
+          </Link>
+          <button
+            onClick={() => setShowMsgPopup(false)}
+            style={{
+              background: "transparent",
+              border: "1px solid #4b5563",
+              color: "#9ca3af",
+              cursor: "pointer",
+              fontSize: "0.78rem",
+              padding: "4px 10px",
+              borderRadius: "6px",
+            }}
+          >
+            Fermer
+          </button>
+        </div>
+      </div>
+    )}
+
     <style>{`
       /* Mode mobile < 1400px */
       @media (max-width: 1400px) {
@@ -997,6 +1154,14 @@ export default function Header() {
           font-size: 0.9rem !important;
           padding: 8px 12px !important;
         }
+      }
+      @keyframes slideInLeft {
+        from { opacity: 0; transform: translateX(-40px); }
+        to   { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes pulse-msg {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+        50%       { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
       }
     `}</style>
     </>
