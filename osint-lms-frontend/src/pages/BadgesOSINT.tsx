@@ -38,8 +38,16 @@ export default function BadgesOSINT() {
         { key: "badge_adv_outils", label: "APIs et Automatisation", desc: "Maîtriser Python, Neo4j et ML pour l'OSINT" },
       ],
     },
-    // NOTE: Les modules spécialisés ci-dessous sont déclarés mais pas encore implémentés
-    // Les pages correspondantes seront créées dans une version future
+    {
+      title: "🆕 Modules OSINT 2026",
+      description: "Réseaux sociaux et géolocalisation avancée",
+      badges: [
+        { key: "badge_module_instagram", label: "Expert Instagram", desc: "Investigations Instagram : profils, hashtags, géolocalisation et détection de faux comptes" },
+        { key: "badge_module_facebook",  label: "Expert Facebook",  desc: "Analyse de profils, groupes, pages, publicités et Graph Search" },
+        { key: "badge_module_tiktok",    label: "Expert TikTok",    desc: "Investigation vidéos, hashtags, géolocalisation et détection de campagnes coordonnées" },
+        { key: "badge_module_googlemaps",label: "Expert Google Maps",desc: "Géolocalisation, Street View temporel, coordonnées GPS et cartographie d'infrastructure" },
+      ],
+    },
     {
       title: "🎯 Modules OSINT Spécialisés",
       description: "Expertise sur plateformes et outils ciblés",
@@ -322,7 +330,7 @@ export default function BadgesOSINT() {
             <strong>Parcours de formation :</strong> Complétez les modules Introduction, Méthodologie et Outils de chaque niveau
           </li>
           <li>
-            <strong>Modules spécialisés :</strong> Validez les quiz des 6 modules (Shodan, LinkedIn, Telegram, Discord, theHarvester, Maltego) avec 80% minimum
+            <strong>Modules spécialisés :</strong> Validez les quiz des 10 modules (Shodan, LinkedIn, Telegram, Discord, theHarvester, Maltego, Instagram, Facebook, TikTok, Google Maps) avec 80% minimum
           </li>
           <li>
             <strong>Exercices pratiques :</strong> Résolvez 5 exercices par niveau de difficulté

@@ -296,6 +296,37 @@ export default function CertificatPage() {
             </div>
           </div>
 
+          {/* Modules 2026 */}
+          <div
+            style={{
+              background: colors.bgSecondary,
+              border: `1px solid ${colors.border}`,
+              borderRadius: "12px",
+              padding: "25px",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: "600",
+                color: colors.textPrimary,
+                marginBottom: "20px",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <span style={{ fontSize: "1.5rem" }}>🆕</span>
+              Modules 2026 (4)
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              <CheckItem completed={details.modulesSpecialises.instagram} label="Instagram" />
+              <CheckItem completed={details.modulesSpecialises.facebook} label="Facebook" />
+              <CheckItem completed={details.modulesSpecialises.tiktok} label="TikTok" />
+              <CheckItem completed={details.modulesSpecialises.googlemaps} label="Google Maps" />
+            </div>
+          </div>
+
           {/* Quiz */}
           <div
             style={{

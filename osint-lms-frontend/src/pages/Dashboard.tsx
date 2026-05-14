@@ -237,66 +237,39 @@ export default function Dashboard() {
         </h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
           
-          <Link to="/modules/shodan" style={cardStyle}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
-              🔍 Shodan OSINT
-            </h3>
-            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6" }}>
-              Moteur de recherche IoT et appareils connectés
-            </p>
-          </Link>
-
-          <Link to="/modules/linkedin" style={cardStyle}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
-              💼 LinkedIn OSINT
-            </h3>
-            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6" }}>
-              Investigations professionnelles et reconnaissance
-            </p>
-          </Link>
-
-          <Link to="/modules/telegram" style={cardStyle}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
-              ✈️ Telegram OSINT
-            </h3>
-            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6" }}>
-              Recherche de groupes, canaux et utilisateurs
-            </p>
-          </Link>
-
-          <Link to="/modules/discord" style={cardStyle}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
-              🎮 Discord OSINT
-            </h3>
-            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6" }}>
-              Investigation et reconnaissance de serveurs
-            </p>
-          </Link>
-
-          <Link to="/modules/theharvester" style={cardStyle}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
-              🌾 theHarvester
-            </h3>
-            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6" }}>
-              Collecte emails, sous-domaines et IPs
-            </p>
-          </Link>
-
-          <Link to="/modules/maltego" style={cardStyle}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
-              🕸️ Maltego Basics
-            </h3>
-            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6" }}>
-              Visualisation graphique de relations OSINT
-            </p>
-          </Link>
+          {[
+            { to: "/modules/shodan",      icon: "🔍", title: "Shodan OSINT",    desc: "Moteur de recherche IoT et appareils connectés",       badge: "badge_module_shodan"       },
+            { to: "/modules/linkedin",    icon: "💼", title: "LinkedIn OSINT",  desc: "Investigations professionnelles et reconnaissance",    badge: "badge_module_linkedin"     },
+            { to: "/modules/telegram",    icon: "✈️", title: "Telegram OSINT",  desc: "Recherche de groupes, canaux et utilisateurs",         badge: "badge_module_telegram"     },
+            { to: "/modules/discord",     icon: "🎮", title: "Discord OSINT",   desc: "Investigation et reconnaissance de serveurs",          badge: "badge_module_discord"      },
+            { to: "/modules/theharvester",icon: "🌾", title: "theHarvester",    desc: "Collecte emails, sous-domaines et IPs",                badge: "badge_module_theharvester" },
+            { to: "/modules/maltego",     icon: "🕸️", title: "Maltego Basics",  desc: "Visualisation graphique de relations OSINT",           badge: "badge_module_maltego"      },
+          ].map((m) => {
+            const done = localStorage.getItem(m.badge) === "true";
+            return (
+              <Link key={m.to} to={m.to} style={cardStyle}>
+                <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
+                  {m.icon} {m.title}
+                </h3>
+                <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "15px" }}>
+                  {m.desc}
+                </p>
+                <div style={{ width: "100%", height: "6px", background: "#1a1f2e", borderRadius: "3px", overflow: "hidden" }}>
+                  <div style={{ width: done ? "100%" : "0%", height: "100%", background: "#00ff9c", transition: "width 0.5s ease" }} />
+                </div>
+                <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
+                  {done ? "100% — Quiz validé ✓" : "Quiz non validé"}
+                </p>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
       {/* NOUVEAUX MODULES OSINT 2026 - 4 MODULES */}
       <section style={{ marginBottom: "40px" }}>
         <h2 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "20px" }}>
-          🆕 Nouveaux Modules OSINT (2026)
+          🆕 Modules OSINT Réseaux Sociaux & Géo (2026)
         </h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
           
