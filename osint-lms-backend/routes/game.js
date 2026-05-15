@@ -257,11 +257,41 @@ router.delete("/reset-all-challenges", authMiddleware, async (req, res) => {
       delete data["ctf_progress"];
       delete data["challenges_solved"];
 
+      // Réinitialiser aussi l'XP et les solvedChallenges dans game_state
+      if (data["cyberosint_game_state"]) {
+        try {
+          const gameState = typeof data["cyberosint_game_state"] === "string"
+            ? JSON.parse(data["cyberosint_game_state"])
+            : data["cyberosint_game_state"];
+
+          gameState.xp = 0;
+          gameState.level = 0;
+          gameState.levelName = "Newbie";
+          gameState.solvedChallenges = [];
+          gameState.totalAttempts = 0;
+          gameState.badges = gameState.badges
+            ? gameState.badges.map((b) => ({ ...b, unlocked: false, unlockedAt: null }))
+            : [];
+
+          data["cyberosint_game_state"] = gameState;
+        } catch (e) {
+          delete data["cyberosint_game_state"];
+        }
+      }
+
       await db.query(
         "UPDATE user_progression SET data = $1, updated_at = NOW() WHERE user_id = $2",
         [JSON.stringify(data), userId]
       );
     }
+
+    // 3. Réinitialiser game_progress (XP, level, streak)
+    await db.query(
+      `UPDATE game_progress 
+       SET xp = 0, level = 0, streak = 0, longest_streak = 0, updated_at = NOW()
+       WHERE user_id = $1`,
+      [userId]
+    );
 
     res.json({ success: true, message: "Tous les challenges ont été réinitialisés" });
   } catch (error) {
