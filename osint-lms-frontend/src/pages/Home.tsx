@@ -104,7 +104,8 @@ export default function Home() {
         }}>
           Plateforme professionnelle d'apprentissage en cybersécurité et OSINT.
           Développez vos compétences à travers des parcours structurés, des défis CTF,
-          des laboratoires interactifs (Kali et Parrot), un système de gamification complet
+          des laboratoires interactifs (Kali et Parrot), un système de gamification complet,
+          10 modules spécialisés (réseaux sociaux, géolocalisation, outils OSINT)
           et une bibliothèque de 22+ outils professionnels.
         </p>
 
@@ -119,7 +120,7 @@ export default function Home() {
         }}>
           {[
             { icon: "🎓", title: "Parcours progressifs",    desc: "3 niveaux : Débutant, Intermédiaire, Avancé" },
-            { icon: "🎯", title: "6 Modules spécialisés",   desc: "Shodan, LinkedIn, Telegram, Discord, theHarvester, Maltego Basic" },
+            { icon: "🎯", title: "10 Modules spécialisés",  desc: "Shodan, LinkedIn, Telegram, Discord, theHarvester, Maltego, Instagram, Facebook, TikTok, Google Maps" },
             { icon: "✏️", title: "20 Exercices pratiques",  desc: "Entraînements OSINT guidés et corrigés" },
             { icon: "🔎", title: "5 Études de cas réels",   desc: "Investigations type Bellingcat" },
             { icon: "🏅", title: "Système de badges",       desc: "Progression et récompenses déblocables" },
@@ -182,12 +183,12 @@ export default function Home() {
           animation: "fadeInUp 1s ease-out 1s backwards"
         }}>
           {[
-            { number: "13",  label: "Modules de formation" },
+            { number: "17",  label: "Modules de formation" },
             { number: "20",  label: "Exercices pratiques" },
             { number: "5",   label: "Études de cas OSINT" },
             { number: "52",  label: "Challenges Hebdo" },
             { number: "11",  label: "Défis CTF" },
-            { number: "20",  label: "Badges à débloquer" },
+            { number: "24+", label: "Badges à débloquer" },
             { number: "22+", label: "Outils référencés" },
           ].map((stat, i) => (
             <div key={i} style={{ textAlign: "center" }}>
@@ -286,7 +287,7 @@ export default function Home() {
           animation: "fadeIn 1s ease-out 1.4s backwards"
         }}>
           <p style={{ color: "#6b7280", fontSize: "0.85rem" }}>
-            © 2025 CyberOSINT Academy · Plateforme d'apprentissage professionnelle en cybersécurité
+            © 2026 CyberOSINT Academy · Plateforme d'apprentissage professionnelle en cybersécurité
           </p>
         </div>
       </div>
