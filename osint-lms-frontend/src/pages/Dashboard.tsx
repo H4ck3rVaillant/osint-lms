@@ -19,6 +19,19 @@ export default function Dashboard() {
     googlemaps: 0,
   });
 
+  // Keepalive : ping le backend toutes les 10 minutes pour éviter la mise en veille (Render Free Tier)
+  useEffect(() => {
+    const backendUrl = import.meta.env.VITE_API_URL || "https://osint-lms-backend.onrender.com";
+    const pingBackend = () => {
+      fetch(`${backendUrl}/`)
+        .then(() => console.log("🔄 Backend keepalive ping"))
+        .catch(() => console.log("⚠️ Backend keepalive failed"));
+    };
+    pingBackend(); // Premier ping immédiat
+    const interval = setInterval(pingBackend, 10 * 60 * 1000); // Puis toutes les 10 min
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     const debIntro = localStorage.getItem("badge_deb_intro") === "true";
     const debMethodo = localStorage.getItem("badge_deb_methodo") === "true";
