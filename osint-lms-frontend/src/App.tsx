@@ -139,6 +139,9 @@ export default function App() {
           <p style={{ color: "#00ff9c", fontSize: "1.1rem", fontWeight: "bold" }}>
             Restauration de votre progression...
           </p>
+          <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
+            Vos données sont en cours de chargement, veuillez patienter.
+          </p>
           <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
         </div>
       </div>

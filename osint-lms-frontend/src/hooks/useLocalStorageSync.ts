@@ -55,7 +55,6 @@ export function useLocalStorageSync() {
               }
             });
             console.log("✅ Progression restaurée depuis l'API");
-            
             // Émettre un événement pour notifier les composants
             window.dispatchEvent(new Event('localStorageUpdated'));
           }
@@ -63,6 +62,7 @@ export function useLocalStorageSync() {
       } catch (error) {
         console.error("❌ Erreur chargement API:", error);
       } finally {
+        // setIsLoading(false) appelé après que les données soient écrites
         setIsLoading(false);
         // ATTENDRE 10 SECONDES après le chargement avant de commencer à sauvegarder
         setTimeout(() => {
