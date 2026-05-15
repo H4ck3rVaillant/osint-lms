@@ -19,11 +19,11 @@ export default function CasFinalOSINT() {
       question: "Quelle est la première étape de la méthodologie du cas final ?",
       options: [
         "Attribution des acteurs",
-        "Collecte et archivage des contenus",
         "Géolocalisation des images",
+        "Collecte et archivage des contenus",
         "Construction de la chronologie"
       ],
-      correct: 1
+      correct: 2
     },
     {
       id: 2,
@@ -46,7 +46,106 @@ export default function CasFinalOSINT() {
         "Absolu (100%)"
       ],
       correct: 2
-    }
+    },
+    {
+      id: 4,
+      question: "Pourquoi archiver les contenus dès leur découverte en OSINT ?",
+      options: [
+        "Pour les partager sur les réseaux sociaux",
+        "Pour respecter le RGPD",
+        "Pour créer un rapport plus long",
+        "Pour éviter leur suppression avant la fin de l'investigation"
+      ],
+      correct: 3
+    },
+    {
+      id: 5,
+      question: "Quelle technique permet de vérifier si une image a déjà été publiée dans un autre contexte ?",
+      options: [
+        "Analyse EXIF uniquement",
+        "Recherche inversée d'image",
+        "Lecture des métadonnées DNS",
+        "Scan avec Shodan"
+      ],
+      correct: 1
+    },
+    {
+      id: 6,
+      question: "Lors d'une géolocalisation par image, quel élément visuel est le plus utile ?",
+      options: [
+        "La couleur du ciel",
+        "La résolution de l'image",
+        "Les reliefs, bâtiments et infrastructures identifiables",
+        "Le nombre de personnes présentes"
+      ],
+      correct: 2
+    },
+    {
+      id: 7,
+      question: "Qu'est-ce que la corrélation temporelle dans une chronologie OSINT ?",
+      options: [
+        "Trier les fichiers par taille",
+        "Comparer les horodatages de différentes sources pour reconstituer l'ordre des faits",
+        "Vérifier l'heure locale d'un seul document",
+        "Calculer la durée totale d'une opération"
+      ],
+      correct: 1
+    },
+    {
+      id: 8,
+      question: "Qu'est-ce qu'un acteur proxy dans le contexte d'une attribution ?",
+      options: [
+        "Un outil de navigation anonyme",
+        "Un serveur intermédiaire réseau",
+        "Un groupe agissant pour le compte d'un autre sans revendiquer l'action",
+        "Un témoin oculaire anonyme"
+      ],
+      correct: 2
+    },
+    {
+      id: 9,
+      question: "Quelle source ouverte est mentionnée comme utilisée dans le cas final ?",
+      options: [
+        "Facebook uniquement",
+        "Réseaux sociaux, images satellites et archives médias",
+        "Uniquement les bases de données gouvernementales",
+        "Les journaux imprimés"
+      ],
+      correct: 1
+    },
+    {
+      id: 10,
+      question: "Pourquoi certaines zones d'incertitude subsistent-elles malgré un niveau de confiance élevé ?",
+      options: [
+        "L'analyste manquait d'expérience",
+        "Les outils OSINT étaient insuffisants",
+        "Certaines preuves sont invérifiables ou incomplètes",
+        "Le budget de l'enquête était limité"
+      ],
+      correct: 2
+    },
+    {
+      id: 11,
+      question: "Qu'est-ce qui distingue une analyse OSINT professionnelle d'une simple recherche web ?",
+      options: [
+        "L'utilisation d'outils payants uniquement",
+        "La rapidité de publication des résultats",
+        "Le nombre de sources consultées",
+        "La rigueur méthodologique, la traçabilité et la vérifiabilité de chaque affirmation"
+      ],
+      correct: 3
+    },
+    {
+      id: 12,
+      question: "Quelle est la conclusion pédagogique principale de ce cas final ?",
+      options: [
+        "L'OSINT permet de tout prouver avec certitude",
+        "Chaque affirmation doit pouvoir être retracée, vérifiée et expliquée à un tiers",
+        "Les sources anonymes sont toujours fiables",
+        "La vitesse prime sur la précision en investigation"
+      ],
+      correct: 1
+    },
   ];
 
   useEffect(() => {
@@ -74,7 +173,7 @@ export default function CasFinalOSINT() {
     setShowResults(true);
     localStorage.setItem(QUIZ_COMPLETED_KEY, "true");
     
-    if (score >= 2) {
+    if (score >= 9) {
       localStorage.setItem(BADGE_KEY, "true");
       localStorage.setItem("Analyste OSINT – Cas réels", "true");
     }
@@ -216,7 +315,7 @@ export default function CasFinalOSINT() {
             <div>
               <h2 style={{ color: colors.textPrimary, fontSize: "2rem", marginBottom: "20px" }}>🎯 Quiz de validation</h2>
               <p style={{ color: colors.textSecondary, marginBottom: "30px" }}>
-                Répondez aux 3 questions pour valider vos connaissances. Badge débloqué si score ≥ 2/3.
+                Répondez aux 12 questions pour valider vos connaissances. Badge débloqué si score ≥ 9/12.
               </p>
 
               {!showResults && (
@@ -243,21 +342,21 @@ export default function CasFinalOSINT() {
 
               {showResults && (
                 <div>
-                  <div style={{ marginBottom: "30px", padding: "25px", background: getScore() >= 2 ? colors.accent + "20" : "#ef444420", border: `2px solid ${getScore() >= 2 ? colors.accent : "#ef4444"}`, borderRadius: "12px" }}>
-                    <h3 style={{ color: getScore() >= 2 ? colors.accent : "#ef4444", fontSize: "1.5rem", marginBottom: "15px" }}>
-                      {getScore() >= 2 ? "✅ Badge débloqué !" : "❌ Réessayez"}
+                  <div style={{ marginBottom: "30px", padding: "25px", background: getScore() >= 9 ? colors.accent + "20" : "#ef444420", border: `2px solid ${getScore() >= 9 ? colors.accent : "#ef4444"}`, borderRadius: "12px" }}>
+                    <h3 style={{ color: getScore() >= 9 ? colors.accent : "#ef4444", fontSize: "1.5rem", marginBottom: "15px" }}>
+                      {getScore() >= 9 ? "✅ Badge débloqué !" : "❌ Réessayez"}
                     </h3>
                     <p style={{ color: colors.textPrimary, fontSize: "1.2rem", marginBottom: "15px" }}>
                       Score : {getScore()}/{quizQuestions.length}
                     </p>
-                    {getScore() >= 2 && (
+                    {getScore() >= 9 && (
                       <p style={{ color: colors.accent, fontSize: "1.1rem", marginTop: "10px", fontWeight: "600" }}>
                         🏆 Badge master « Analyste OSINT – Cas réels » débloqué !
                       </p>
                     )}
                     
                     <div style={{ display: "flex", gap: "15px", marginTop: "20px", flexWrap: "wrap" }}>
-                      {getScore() >= 2 && (
+                      {getScore() >= 9 && (
                         <button onClick={returnToEtudes} style={{ padding: "12px 30px", background: colors.accent, color: "#020617", border: "none", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>
                           → Retour aux études de cas
                         </button>
