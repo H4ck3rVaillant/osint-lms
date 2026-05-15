@@ -238,11 +238,30 @@ router.delete("/reset-all-challenges", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Supprimer tous les challenges résolus
+    // 1. Supprimer tous les challenges résolus
     await db.query(
       "DELETE FROM solved_challenges WHERE user_id = $1",
       [userId]
     );
+
+    // 2. Retirer cyberosint_challenges de user_progression
+    //    sans toucher au reste (XP, badges, parcours...)
+    const result = await db.query(
+      "SELECT data FROM user_progression WHERE user_id = $1",
+      [userId]
+    );
+
+    if (result.rows.length > 0) {
+      const data = result.rows[0].data;
+      delete data["cyberosint_challenges"];
+      delete data["ctf_progress"];
+      delete data["challenges_solved"];
+
+      await db.query(
+        "UPDATE user_progression SET data = $1, updated_at = NOW() WHERE user_id = $2",
+        [JSON.stringify(data), userId]
+      );
+    }
 
     res.json({ success: true, message: "Tous les challenges ont été réinitialisés" });
   } catch (error) {
