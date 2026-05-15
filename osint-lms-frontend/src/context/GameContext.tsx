@@ -383,6 +383,7 @@ interface GameContextType {
   submitFlag: (challengeId: string, flag: string) => { success: boolean; message: string; xpGained?: number };
   useHint: (challengeId: string) => void;
   addXP: (amount: number, reason: string) => void;
+  unlockBadge: (badgeKey: string, badgeLabel: string) => void;
   checkAndUpdateStreak: () => void;
   recentNotification: { message: string; type: "success" | "badge" | "level" } | null;
   clearNotification: () => void;
@@ -525,6 +526,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const unlockBadge = (badgeKey: string, badgeLabel: string) => {
+    // Éviter de notifier si déjà débloqué
+    if (localStorage.getItem(badgeKey) === "true") return;
+    localStorage.setItem(badgeKey, "true");
+    showNotification(`🏅 Badge débloqué : ${badgeLabel}`, "badge");
+  };
+
   const submitFlag = (challengeId: string, flag: string): { success: boolean; message: string; xpGained?: number } => {
     const challenge = challenges.find(c => c.id === challengeId);
     if (!challenge) return { success: false, message: "Défi introuvable" };
@@ -614,7 +622,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   return (
     <GameContext.Provider value={{
       gameState, challenges, submitFlag, useHint,
-      addXP, checkAndUpdateStreak, recentNotification, clearNotification
+      addXP, unlockBadge, checkAndUpdateStreak, recentNotification, clearNotification
     }}>
       {children}
     </GameContext.Provider>
