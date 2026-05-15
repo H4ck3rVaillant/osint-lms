@@ -138,7 +138,52 @@ export function useLocalStorageSync() {
           "quiz_adv_intro_answers",
           // Certificat
           "certificat_progression",
-          "formation_date_debut"
+          "formation_date_debut",
+          // Modules OSINT spécialisés (6 anciens)
+          "badge_module_shodan",
+          "badge_module_linkedin",
+          "badge_module_telegram",
+          "badge_module_discord",
+          "badge_module_theharvester",
+          "badge_module_maltego",
+          "quiz_answers_shodan",
+          "quiz_results_shodan",
+          "quiz_answers_linkedin",
+          "quiz_results_linkedin",
+          "quiz_answers_telegram",
+          "quiz_results_telegram",
+          "quiz_answers_discord",
+          "quiz_results_discord",
+          "quiz_answers_theharvester",
+          "quiz_results_theharvester",
+          "quiz_answers_maltego",
+          "quiz_results_maltego",
+          // Modules OSINT 2026 (4 nouveaux)
+          "badge_module_instagram",
+          "badge_module_facebook",
+          "badge_module_tiktok",
+          "badge_module_googlemaps",
+          "quiz_answers_instagram",
+          "quiz_results_instagram",
+          "quiz_answers_facebook",
+          "quiz_results_facebook",
+          "quiz_answers_tiktok",
+          "quiz_results_tiktok",
+          "quiz_answers_googlemaps",
+          "quiz_results_googlemaps",
+          // Quiz parcours (methodo et outils)
+          "quiz_deb_methodo_completed",
+          "quiz_deb_methodo_answers",
+          "quiz_deb_outils_completed",
+          "quiz_deb_outils_answers",
+          "quiz_int_methodo_completed",
+          "quiz_int_methodo_answers",
+          "quiz_int_outils_completed",
+          "quiz_int_outils_answers",
+          "quiz_adv_methodo_completed",
+          "quiz_adv_methodo_answers",
+          "quiz_adv_outils_completed",
+          "quiz_adv_outils_answers"
         ];
 
         keysToSync.forEach(key => {
