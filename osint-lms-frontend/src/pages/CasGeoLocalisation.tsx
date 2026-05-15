@@ -40,12 +40,12 @@ export default function CasGeoLocalisation() {
       id: 3,
       question: "Quelle erreur classique faut-il absolument éviter en géolocalisation ?",
       options: [
-        "Utiliser plusieurs sources cartographiques différentes",
         "Se fier à une seule source cartographique",
+        "Utiliser plusieurs sources cartographiques différentes",
         "Analyser les ombres et le mobilier urbain",
         "Vérifier avec des images satellites"
       ],
-      correct: 1
+      correct: 0
     }
   ];
 

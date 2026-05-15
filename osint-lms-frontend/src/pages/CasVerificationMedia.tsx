@@ -29,12 +29,12 @@ export default function CasVerificationMedia() {
       id: 2,
       question: "Quelle erreur classique faut-il éviter lors de la vérification de médias ?",
       options: [
-        "Faire plusieurs recherches inversées sur différents moteurs",
         "Se fier à une seule recherche inversée",
+        "Faire plusieurs recherches inversées sur différents moteurs",
         "Vérifier les métadonnées EXIF",
         "Consulter les archives médias ouvertes"
       ],
-      correct: 1
+      correct: 0
     },
     {
       id: 3,

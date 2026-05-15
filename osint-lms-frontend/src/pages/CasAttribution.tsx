@@ -18,12 +18,12 @@ export default function CasAttribution() {
       id: 1,
       question: "Quelle est la première étape d'une méthodologie d'attribution ?",
       options: [
-        "Analyse comportementale",
         "Collecte des artefacts techniques",
+        "Analyse comportementale",
         "Évaluation du niveau de confiance",
         "Recoupement multi-sources"
       ],
-      correct: 1
+      correct: 0
     },
     {
       id: 2,
@@ -41,11 +41,11 @@ export default function CasAttribution() {
       question: "Que révèlent les fuseaux horaires et cycles d'activité ?",
       options: [
         "La nationalité exacte",
-        "Les horaires de travail probables",
         "Le type de cyberattaque",
-        "Le nombre d'attaquants"
+        "Le nombre d'attaquants",
+        "Les horaires de travail probables"
       ],
-      correct: 1
+      correct: 3
     }
   ];
 

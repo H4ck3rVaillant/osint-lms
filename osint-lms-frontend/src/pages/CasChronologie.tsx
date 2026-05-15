@@ -29,23 +29,23 @@ export default function CasChronologie() {
       id: 2,
       question: "Quelle erreur fréquente compromet gravement une chronologie ?",
       options: [
-        "Utiliser trop de sources différentes",
         "Prendre des contenus repostés comme originaux",
+        "Utiliser trop de sources différentes",
         "Vérifier systématiquement les données météo",
         "Documenter toutes les sources"
       ],
-      correct: 1
+      correct: 0
     },
     {
       id: 3,
       question: "Avec quoi doit-on aligner les timestamps pour valider une chronologie ?",
       options: [
         "Les titres des articles de presse",
-        "Les données satellites et météo",
         "Les commentaires des utilisateurs",
-        "Les statistiques de partages"
+        "Les statistiques de partages",
+        "Les données satellites et météo"
       ],
-      correct: 1
+      correct: 3
     }
   ];
 
