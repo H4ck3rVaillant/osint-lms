@@ -67,7 +67,7 @@ export default function Dashboard() {
 
     const exercicesCompleted = parseInt(localStorage.getItem("exercices_completed") || "0");
     const totalExercices = 20;
-    const totalBadges = 26;
+    const totalBadges = 29;
     const badgesEarned = debutantCount + intermediaireCount + avanceCount + etudesCasCount;
     const totalModules = 13 + 5 + 6;
     const totalCompleted = badgesEarned;
