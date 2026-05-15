@@ -135,7 +135,7 @@ export default function Home() {
             { icon: "🤖", title: "HackerAI",                desc: "Assistant IA spécialisé cybersécurité" },
             { icon: "🔍", title: "Argus V2.0",              desc: "OSINT Automation & Threat Intelligence" },
             { icon: "🔧", title: "22+ Outils référencés",   desc: "Catalogue complet d'outils OSINT" },
-            { icon: "📚", title: "Référentiels",            desc: "ANSSI, RGPD, NIS2, ISO 27001" },
+            { icon: "📚", title: "Référentiels",            desc: "ANSSI, RGPD, NIS2, DORA, LPM, ISO 27001, RIFI" },
             { icon: "📦", title: "Dependency Track",        desc: "Supply chain security et SBOM" },
           ].map((feature, i) => (
             <div
