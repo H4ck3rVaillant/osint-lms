@@ -54,38 +54,28 @@ export default function CTFPage() {
   };
 
   const handleReset = async () => {
-    try {
-      // 1. Appeler l'API pour effacer dans Neon
-      const response = await fetch("https://osint-lms-backend.onrender.com/game/reset-all-challenges", {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
+    // 1. Nettoyer IMMÉDIATEMENT le localStorage sans attendre l'API
+    localStorage.removeItem("ctf_progress");
+    localStorage.removeItem("cyberosint_game_state");
+    localStorage.removeItem("cyberosint_challenges");
+    localStorage.removeItem("challenges_solved");
 
-      if (response.ok) {
-        // 2. Nettoyer IMMÉDIATEMENT le localStorage
-        localStorage.removeItem("ctf_progress");
-        localStorage.removeItem("cyberosint_game_state");
-        localStorage.removeItem("cyberosint_challenges");
-        
-        console.log("✅ Reset effectué dans l'API et localStorage");
-        
-        // 3. Attendre 500ms puis recharger pour que tout soit synchronisé
-        setTimeout(() => {
-          setShowResetModal(false);
-          window.location.reload();
-        }, 500);
-      } else {
-        console.error("❌ Erreur reset API:", response.status);
-        alert("Erreur lors de la réinitialisation. Veuillez réessayer.");
-        setShowResetModal(false);
-      }
+    setShowResetModal(false);
+
+    // 2. Appeler l'API en arrière-plan (best effort)
+    try {
+      const token = localStorage.getItem("token");
+      await fetch("https://osint-lms-backend.onrender.com/game/reset-all-challenges", {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      console.log("✅ Reset effectué dans l'API et localStorage");
     } catch (error) {
-      console.error("❌ Erreur reset:", error);
-      alert("Erreur réseau. Veuillez réessayer.");
-      setShowResetModal(false);
+      console.warn("⚠️ Reset localStorage OK, API non joignable:", error);
     }
+
+    // 3. Recharger la page
+    window.location.reload();
   };
 
   return (
