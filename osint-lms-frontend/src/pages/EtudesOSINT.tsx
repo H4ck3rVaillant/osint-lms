@@ -74,6 +74,7 @@ export default function EtudesOSINT() {
       path: "/cas/final",
       difficulty: "Expert",
       duration: "60-90 min",
+      isFinal: true,
     },
   ];
 
@@ -181,18 +182,22 @@ export default function EtudesOSINT() {
       }}>
         {cases.map((c) => {
           const done = completedCases[c.key as keyof typeof completedCases];
+          const isFinal = (c as any).isFinal === true;
           return (
             <div
               key={c.key}
               onClick={() => navigate(c.path)}
               style={{
-                background: colors.bgPrimary,
-                border: `1px solid ${done ? colors.accent : colors.border}`,
+                background: isFinal
+                  ? `linear-gradient(135deg, ${colors.bgPrimary} 0%, rgba(0,255,156,0.08) 100%)`
+                  : colors.bgPrimary,
+                border: `${isFinal ? "2px" : "1px"} solid ${done ? colors.accent : isFinal ? colors.accent + "80" : colors.border}`,
                 borderRadius: "12px",
                 padding: "24px",
                 cursor: "pointer",
                 transition: "all 0.3s ease",
                 position: "relative" as const,
+                gridColumn: isFinal ? "1 / -1" : "auto",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px)";
@@ -203,7 +208,25 @@ export default function EtudesOSINT() {
                 e.currentTarget.style.boxShadow = "none";
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "10px" }}>
+              {isFinal && (
+                <div style={{
+                  position: "absolute" as const,
+                  top: "-12px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  background: colors.accent,
+                  color: "#020617",
+                  padding: "3px 16px",
+                  borderRadius: "20px",
+                  fontSize: "0.78rem",
+                  fontWeight: "700",
+                  letterSpacing: "0.05em",
+                  whiteSpace: "nowrap" as const,
+                }}>
+                  INVESTIGATION FINALE — TOUTES COMPÉTENCES REQUISES
+                </div>
+              )}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "10px", marginTop: isFinal ? "10px" : "0" }}>
                 <h2 style={{ color: colors.accent, margin: 0, fontSize: "1.3rem" }}>
                   {c.title}
                 </h2>

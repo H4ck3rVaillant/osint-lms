@@ -86,7 +86,16 @@ export default function BadgesOSINT() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    
+    updateStats();
+  }, []);
+
+  // Rafraîchir quand localStorage est restauré depuis l'API
+  useEffect(() => {
+    window.addEventListener('localStorageUpdated', updateStats);
+    return () => window.removeEventListener('localStorageUpdated', updateStats);
+  }, []);
+
+  const updateStats = () => {
     let totalCount = 0;
     let unlockedCount = 0;
 
@@ -104,7 +113,7 @@ export default function BadgesOSINT() {
       unlockedBadges: unlockedCount,
       progressPercentage: (unlockedCount / totalCount) * 100,
     });
-  }, []);
+  };
 
   return (
     <main style={{ 

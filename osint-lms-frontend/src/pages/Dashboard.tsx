@@ -27,12 +27,22 @@ export default function Dashboard() {
         .then(() => console.log("🔄 Backend keepalive ping"))
         .catch(() => console.log("⚠️ Backend keepalive failed"));
     };
-    pingBackend(); // Premier ping immédiat
-    const interval = setInterval(pingBackend, 10 * 60 * 1000); // Puis toutes les 10 min
+    pingBackend();
+    const interval = setInterval(pingBackend, 10 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
+  // Rafraîchir les stats quand localStorage est restauré depuis l'API
   useEffect(() => {
+    const handleStorageUpdate = () => {
+      loadStats();
+      loadModuleProgress();
+    };
+    window.addEventListener('localStorageUpdated', handleStorageUpdate);
+    return () => window.removeEventListener('localStorageUpdated', handleStorageUpdate);
+  }, []);
+
+  const loadStats = () => {
     const debIntro = localStorage.getItem("badge_deb_intro") === "true";
     const debMethodo = localStorage.getItem("badge_deb_methodo") === "true";
     const debOutils = localStorage.getItem("badge_deb_outils") === "true";
@@ -71,8 +81,10 @@ export default function Dashboard() {
       badges: (badgesEarned / totalBadges) * 100,
       total: (totalCompleted / totalModules) * 100,
     });
+  };
 
-    // Charger progression des 4 nouveaux modules
+  useEffect(() => {
+    loadStats();
     loadModuleProgress();
   }, []);
 
