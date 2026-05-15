@@ -93,10 +93,19 @@ export default function CTFPage() {
           }}>
             <div style={{ fontSize: "4rem", textAlign: "center", marginBottom: "20px" }}>⚠️</div>
             <h2 style={{ color: "#00ff9c", fontSize: "1.8rem", textAlign: "center", marginBottom: "15px" }}>
-              Réinitialiser
+              Réinitialiser les CTF
             </h2>
-            <p style={{ color: "#9ca3af", textAlign: "center", marginBottom: "30px", lineHeight: "1.6" }}>
-              <strong style={{ color: "#00ff9c" }}>SUPPRIMER</strong> tous vos flags ?
+            <p style={{ color: "#9ca3af", textAlign: "center", marginBottom: "15px", lineHeight: "1.8" }}>
+              Cette action va <strong style={{ color: "#ef4444" }}>supprimer définitivement</strong> :
+            </p>
+            <ul style={{ color: "#9ca3af", marginBottom: "25px", lineHeight: "2", paddingLeft: "20px" }}>
+              <li>Tous vos <strong style={{ color: "#00ff9c" }}>flags CTF</strong> résolus</li>
+              <li>Tous vos <strong style={{ color: "#00ff9c" }}>points XP</strong> et votre niveau</li>
+              <li>Tous vos <strong style={{ color: "#00ff9c" }}>badges de gamification</strong></li>
+              <li>Votre <strong style={{ color: "#00ff9c" }}>streak</strong> et historique d'activité</li>
+            </ul>
+            <p style={{ color: "#ef4444", textAlign: "center", marginBottom: "25px", fontSize: "0.9rem", fontWeight: "600" }}>
+              ⚠️ Cette action est irréversible.
             </p>
             <div style={{ display: "flex", gap: "15px" }}>
               <button onClick={() => setShowResetModal(false)} style={{
