@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useThemeColors } from "../context/ThemeContext";
+import { useGame } from "../context/GameContext";
 
 export default function CasAttribution() {
   const navigate = useNavigate();
   const colors = useThemeColors();
+  const { unlockBadge } = useGame();
   const [activeTab, setActiveTab] = useState("theory");
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
@@ -78,6 +80,7 @@ export default function CasAttribution() {
     
     if (score >= 2) {
       localStorage.setItem(BADGE_KEY, "true");
+      unlockBadge(BADGE_KEY, "Attribution d'Acteurs");
     }
   };
 
