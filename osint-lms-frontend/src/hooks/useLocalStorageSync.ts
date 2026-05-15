@@ -171,6 +171,17 @@ export function useLocalStorageSync() {
           "quiz_results_tiktok",
           "quiz_answers_googlemaps",
           "quiz_results_googlemaps",
+          // Quiz études de cas
+          "quiz_case_geo_answers",
+          "quiz_case_geo_completed",
+          "quiz_case_media_answers",
+          "quiz_case_media_completed",
+          "quiz_case_attr_answers",
+          "quiz_case_attr_completed",
+          "quiz_case_chrono_answers",
+          "quiz_case_chrono_completed",
+          "quiz_case_final_answers",
+          "quiz_case_final_completed",
           // Quiz parcours (methodo et outils)
           "quiz_deb_methodo_completed",
           "quiz_deb_methodo_answers",

@@ -14,7 +14,7 @@ export default function EtudesOSINT() {
     final: false,
   });
 
-  useEffect(() => {
+  const loadCases = () => {
     setCompletedCases({
       geo: localStorage.getItem("badge_case_geo") === "true",
       media: localStorage.getItem("badge_case_media") === "true",
@@ -22,6 +22,16 @@ export default function EtudesOSINT() {
       chronologie: localStorage.getItem("badge_case_chrono") === "true",
       final: localStorage.getItem("badge_cases_osint") === "true",
     });
+  };
+
+  useEffect(() => {
+    loadCases();
+  }, []);
+
+  // Rafraîchir quand localStorage est restauré depuis l'API
+  useEffect(() => {
+    window.addEventListener('localStorageUpdated', loadCases);
+    return () => window.removeEventListener('localStorageUpdated', loadCases);
   }, []);
 
   const cases = [
