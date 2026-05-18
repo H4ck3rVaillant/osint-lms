@@ -9,6 +9,7 @@ export default function BadgesOSINT() {
     unlockedBadges: 0,
     progressPercentage: 0,
   });
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const sections = [
     {
@@ -82,6 +83,30 @@ export default function BadgesOSINT() {
         { key: "badge_exo_master", label: "🏆 Master OSINT", desc: "Complétez tous les 20 exercices pratiques" },
       ],
     },
+    {
+      title: "🎯 Quiz Interactifs",
+      description: "Validez vos connaissances théoriques par thème",
+      badges: [
+        { key: "quiz_osint-basics_gold",        label: "OSINT Basics — Or",              desc: "Score ≥ 95% au quiz Bases de l'OSINT" },
+        { key: "quiz_osint-basics_silver",      label: "OSINT Basics — Argent",          desc: "Score ≥ 80% au quiz Bases de l'OSINT" },
+        { key: "quiz_osint-basics_bronze",      label: "OSINT Basics — Bronze",          desc: "Score ≥ 60% au quiz Bases de l'OSINT" },
+        { key: "quiz_search-techniques_gold",   label: "Techniques de Recherche — Or",   desc: "Score ≥ 95% au quiz Techniques de Recherche" },
+        { key: "quiz_search-techniques_silver", label: "Techniques de Recherche — Argent", desc: "Score ≥ 80% au quiz Techniques de Recherche" },
+        { key: "quiz_search-techniques_bronze", label: "Techniques de Recherche — Bronze", desc: "Score ≥ 60% au quiz Techniques de Recherche" },
+        { key: "quiz_geolocation_gold",         label: "Géolocalisation — Or",           desc: "Score ≥ 95% au quiz Géolocalisation" },
+        { key: "quiz_geolocation_silver",       label: "Géolocalisation — Argent",       desc: "Score ≥ 80% au quiz Géolocalisation" },
+        { key: "quiz_geolocation_bronze",       label: "Géolocalisation — Bronze",       desc: "Score ≥ 60% au quiz Géolocalisation" },
+        { key: "quiz_social-media_gold",        label: "Réseaux Sociaux — Or",           desc: "Score ≥ 95% au quiz Réseaux Sociaux" },
+        { key: "quiz_social-media_silver",      label: "Réseaux Sociaux — Argent",       desc: "Score ≥ 80% au quiz Réseaux Sociaux" },
+        { key: "quiz_social-media_bronze",      label: "Réseaux Sociaux — Bronze",       desc: "Score ≥ 60% au quiz Réseaux Sociaux" },
+        { key: "quiz_crypto-blockchain_gold",   label: "Crypto & Blockchain — Or",       desc: "Score ≥ 95% au quiz Crypto & Blockchain" },
+        { key: "quiz_crypto-blockchain_silver", label: "Crypto & Blockchain — Argent",   desc: "Score ≥ 80% au quiz Crypto & Blockchain" },
+        { key: "quiz_crypto-blockchain_bronze", label: "Crypto & Blockchain — Bronze",   desc: "Score ≥ 60% au quiz Crypto & Blockchain" },
+        { key: "quiz_darkweb_gold",             label: "Dark Web — Or",                  desc: "Score ≥ 95% au quiz Dark Web" },
+        { key: "quiz_darkweb_silver",           label: "Dark Web — Argent",              desc: "Score ≥ 80% au quiz Dark Web" },
+        { key: "quiz_darkweb_bronze",           label: "Dark Web — Bronze",              desc: "Score ≥ 60% au quiz Dark Web" },
+      ],
+    },
   ];
 
   useEffect(() => {
@@ -89,10 +114,14 @@ export default function BadgesOSINT() {
     updateStats();
   }, []);
 
-  // Rafraîchir quand localStorage est restauré depuis l'API
+  // Rafraîchir quand localStorage est restauré depuis l'API ou modifié
   useEffect(() => {
     window.addEventListener('localStorageUpdated', updateStats);
-    return () => window.removeEventListener('localStorageUpdated', updateStats);
+    window.addEventListener('storage', updateStats);
+    return () => {
+      window.removeEventListener('localStorageUpdated', updateStats);
+      window.removeEventListener('storage', updateStats);
+    };
   }, []);
 
   const updateStats = () => {
@@ -113,6 +142,7 @@ export default function BadgesOSINT() {
       unlockedBadges: unlockedCount,
       progressPercentage: (unlockedCount / totalCount) * 100,
     });
+    setRefreshKey(k => k + 1);
   };
 
   return (
@@ -208,6 +238,7 @@ export default function BadgesOSINT() {
       </div>
 
       {/* Sections de badges */}
+      <div key={refreshKey}>
       {sections.map((section) => {
         const sectionUnlocked = section.badges.filter(
           b => localStorage.getItem(b.key) === "true"
@@ -322,6 +353,8 @@ export default function BadgesOSINT() {
           </section>
         );
       })}
+
+      </div>
 
       {/* Section informative */}
       <div style={{
