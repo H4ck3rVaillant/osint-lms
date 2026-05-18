@@ -301,6 +301,8 @@ export default function QuizSession() {
         badges.push(badge);
         localStorage.setItem("quiz_badges", JSON.stringify(badges));
       }
+      // Écrire aussi la clé individuelle pour BadgesOSINT
+      localStorage.setItem(badge, "true");
       unlockBadge(badge, `Quiz ${themeId} - ${percentage >= 95 ? "Or" : percentage >= 80 ? "Argent" : "Bronze"}`);
     }
     

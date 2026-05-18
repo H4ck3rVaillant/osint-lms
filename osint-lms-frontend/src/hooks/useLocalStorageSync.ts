@@ -194,7 +194,26 @@ export function useLocalStorageSync() {
           "quiz_adv_methodo_completed",
           "quiz_adv_methodo_answers",
           "quiz_adv_outils_completed",
-          "quiz_adv_outils_answers"
+          "quiz_adv_outils_answers",
+          // Badges quiz interactifs (clés individuelles)
+          "quiz_osint-basics_gold",
+          "quiz_osint-basics_silver",
+          "quiz_osint-basics_bronze",
+          "quiz_search-techniques_gold",
+          "quiz_search-techniques_silver",
+          "quiz_search-techniques_bronze",
+          "quiz_geolocation_gold",
+          "quiz_geolocation_silver",
+          "quiz_geolocation_bronze",
+          "quiz_social-media_gold",
+          "quiz_social-media_silver",
+          "quiz_social-media_bronze",
+          "quiz_crypto-blockchain_gold",
+          "quiz_crypto-blockchain_silver",
+          "quiz_crypto-blockchain_bronze",
+          "quiz_darkweb_gold",
+          "quiz_darkweb_silver",
+          "quiz_darkweb_bronze"
         ];
 
         keysToSync.forEach(key => {
