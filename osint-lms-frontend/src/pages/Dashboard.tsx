@@ -295,8 +295,6 @@ export default function Dashboard() {
           })}
         </div>
       </section>
-        </div>
-      </section>
 
       {/* Pratique */}
       <section style={{ marginBottom: "40px" }}>
