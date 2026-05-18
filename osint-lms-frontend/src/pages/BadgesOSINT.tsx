@@ -352,8 +352,6 @@ export default function BadgesOSINT() {
         );
       })}
 
-      </div>
-
       {/* Section informative */}
       <div style={{
         background: colors.bgSecondary,
