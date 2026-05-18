@@ -82,6 +82,61 @@ export default function ShodanModule() {
         "443"
       ],
       correct: 2
+    },
+    {
+      id: 6,
+      question: "Quel filtre Shodan permet de chercher par pays ?",
+      options: [
+        "country:FR",
+        "location:FR",
+        "geo:FR",
+        "region:FR"
+      ],
+      correct: 0
+    },
+    {
+      id: 7,
+      question: "Shodan peut-il scanner des adresses IP privées (192.168.x.x) ?",
+      options: [
+        "Oui toujours",
+        "Non, uniquement les IPs publiques",
+        "Avec un abonnement premium",
+        "Via un VPN"
+      ],
+      correct: 1
+    },
+    {
+      id: 8,
+      question: "Que signifie 'has_vuln:CVE-2021-44228' dans une recherche Shodan ?",
+      options: [
+        "Recherche des fichiers Log4j",
+        "Filtre les appareils ayant cette vulnérabilité détectée",
+        "Affiche les exploits disponibles",
+        "Liste les appareils patchés"
+      ],
+      correct: 1
+    },
+    {
+      id: 9,
+      question: "Quel type de systèmes industriels Shodan peut-il détecter ?",
+      options: [
+        "Uniquement les routeurs",
+        "Systèmes SCADA/ICS exposés sur Internet",
+        "Uniquement les serveurs Windows",
+        "Les bases de données uniquement"
+      ],
+      correct: 1
+    },
+    {
+      id: 10,
+      question: "Quelle API Shodan permet d'automatiser les recherches ?",
+      options: [
+        "Shodan REST API avec clé d'authentification",
+        "Shodan GraphQL",
+        "Shodan WebSocket uniquement",
+        "Pas d'API disponible"
+      ],
+      correct: 0
     }
   ];
 
@@ -90,7 +145,7 @@ export default function ShodanModule() {
     setShowResults(true);
     localStorage.setItem(ANSWERS_KEY, JSON.stringify(quizAnswers));
     localStorage.setItem(RESULTS_KEY, "true");
-    if (score >= 4) localStorage.setItem(BADGE_KEY, "true");
+    if (score >= 8) localStorage.setItem(BADGE_KEY, "true");
   };
 
   const handleReset = () => {

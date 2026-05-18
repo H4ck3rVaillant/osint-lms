@@ -67,7 +67,7 @@ export default function Dashboard() {
 
     const exercicesCompleted = parseInt(localStorage.getItem("exercices_completed") || "0");
     const totalExercices = 20;
-    const totalBadges = 29;
+    const totalBadges = 47;
     const badgesEarned = debutantCount + intermediaireCount + avanceCount + etudesCasCount;
     const totalModules = 13 + 5 + 6;
     const totalCompleted = badgesEarned;
@@ -255,22 +255,29 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* MODULES OSINT SPÉCIALISÉS - 6 MODULES EXISTANTS */}
+      {/* MODULES OSINT — 10 MODULES */}
       <section style={{ marginBottom: "40px" }}>
         <h2 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "20px" }}>
-          🎓 Modules OSINT Spécialisés
+          🎯 Modules OSINT Spécialisés
         </h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
-          
           {[
-            { to: "/modules/shodan",      icon: "🔍", title: "Shodan OSINT",    desc: "Moteur de recherche IoT et appareils connectés",       badge: "badge_module_shodan"       },
-            { to: "/modules/linkedin",    icon: "💼", title: "LinkedIn OSINT",  desc: "Investigations professionnelles et reconnaissance",    badge: "badge_module_linkedin"     },
-            { to: "/modules/telegram",    icon: "✈️", title: "Telegram OSINT",  desc: "Recherche de groupes, canaux et utilisateurs",         badge: "badge_module_telegram"     },
-            { to: "/modules/discord",     icon: "🎮", title: "Discord OSINT",   desc: "Investigation et reconnaissance de serveurs",          badge: "badge_module_discord"      },
-            { to: "/modules/theharvester",icon: "🌾", title: "theHarvester",    desc: "Collecte emails, sous-domaines et IPs",                badge: "badge_module_theharvester" },
-            { to: "/modules/maltego",     icon: "🕸️", title: "Maltego Basics",  desc: "Visualisation graphique de relations OSINT",           badge: "badge_module_maltego"      },
+            { to: "/modules/shodan",       icon: "🔍", title: "Shodan OSINT",      desc: "Moteur de recherche IoT et appareils connectés",        badge: "badge_module_shodan",       prog: null },
+            { to: "/modules/linkedin",     icon: "💼", title: "LinkedIn OSINT",    desc: "Investigations professionnelles et reconnaissance",     badge: "badge_module_linkedin",     prog: null },
+            { to: "/modules/telegram",     icon: "✈️", title: "Telegram OSINT",    desc: "Recherche de groupes, canaux et utilisateurs",          badge: "badge_module_telegram",     prog: null },
+            { to: "/modules/discord",      icon: "🎮", title: "Discord OSINT",     desc: "Investigation et reconnaissance de serveurs",           badge: "badge_module_discord",      prog: null },
+            { to: "/modules/theharvester", icon: "🌾", title: "theHarvester",      desc: "Collecte emails, sous-domaines et IPs",                 badge: "badge_module_theharvester", prog: null },
+            { to: "/modules/maltego",      icon: "🕸️", title: "Maltego Basics",    desc: "Visualisation graphique de relations OSINT",            badge: "badge_module_maltego",      prog: null },
+            { to: "/modules/instagram",    icon: "📸", title: "Instagram OSINT",   desc: "Investigation sur Instagram : profils, hashtags, géo", badge: "badge_module_instagram",    prog: moduleProgress.instagram },
+            { to: "/modules/facebook",     icon: "📘", title: "Facebook OSINT",    desc: "Analyse de profils, groupes, pages et Graph Search",   badge: "badge_module_facebook",     prog: moduleProgress.facebook },
+            { to: "/modules/tiktok",       icon: "🎵", title: "TikTok OSINT",      desc: "Investigation vidéos, hashtags, tendances et sons",    badge: "badge_module_tiktok",       prog: moduleProgress.tiktok },
+            { to: "/modules/googlemaps",   icon: "🗺️", title: "Google Maps OSINT", desc: "Géolocalisation, Street View, coordonnées GPS",        badge: "badge_module_googlemaps",   prog: moduleProgress.googlemaps },
           ].map((m) => {
             const done = localStorage.getItem(m.badge) === "true";
+            const width = m.prog !== null ? `${m.prog}%` : (done ? "100%" : "0%");
+            const label = m.prog !== null
+              ? (m.prog > 0 ? `${m.prog.toFixed(0)}% complété` : "Quiz non validé")
+              : (done ? "100% — Quiz validé ✓" : "Quiz non validé");
             return (
               <Link key={m.to} to={m.to} style={cardStyle}>
                 <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
@@ -280,127 +287,14 @@ export default function Dashboard() {
                   {m.desc}
                 </p>
                 <div style={{ width: "100%", height: "6px", background: "#1a1f2e", borderRadius: "3px", overflow: "hidden" }}>
-                  <div style={{ width: done ? "100%" : "0%", height: "100%", background: "#00ff9c", transition: "width 0.5s ease" }} />
+                  <div style={{ width, height: "100%", background: "#00ff9c", transition: "width 0.5s ease" }} />
                 </div>
-                <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
-                  {done ? "100% — Quiz validé ✓" : "Quiz non validé"}
-                </p>
+                <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>{label}</p>
               </Link>
             );
           })}
         </div>
       </section>
-
-      {/* NOUVEAUX MODULES OSINT 2026 - 4 MODULES */}
-      <section style={{ marginBottom: "40px" }}>
-        <h2 style={{ color: "#00ff9c", fontSize: "1.4rem", marginBottom: "20px" }}>
-          🆕 Modules OSINT Réseaux Sociaux & Géo (2026)
-        </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
-          
-          <Link to="/modules/instagram" style={cardStyle}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
-              📸 Instagram OSINT
-            </h3>
-            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "15px" }}>
-              Investigation sur Instagram : profils, hashtags, géolocalisation
-            </p>
-            <div style={{
-              width: "100%",
-              height: "6px",
-              background: "#1a1f2e",
-              borderRadius: "3px",
-              overflow: "hidden",
-            }}>
-              <div style={{
-                width: `${moduleProgress.instagram}%`,
-                height: "100%",
-                background: "#00ff9c",
-                transition: "width 0.5s ease"
-              }} />
-            </div>
-            <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
-              {moduleProgress.instagram > 0 ? `${moduleProgress.instagram.toFixed(0)}% complété` : "Quiz non validé"}
-            </p>
-          </Link>
-
-          <Link to="/modules/facebook" style={cardStyle}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
-              📘 Facebook OSINT
-            </h3>
-            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "15px" }}>
-              Analyse de profils, groupes, pages et Graph Search
-            </p>
-            <div style={{
-              width: "100%",
-              height: "6px",
-              background: "#1a1f2e",
-              borderRadius: "3px",
-              overflow: "hidden",
-            }}>
-              <div style={{
-                width: `${moduleProgress.facebook}%`,
-                height: "100%",
-                background: "#00ff9c",
-                transition: "width 0.5s ease"
-              }} />
-            </div>
-            <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
-              {moduleProgress.facebook > 0 ? `${moduleProgress.facebook.toFixed(0)}% complété` : "Quiz non validé"}
-            </p>
-          </Link>
-
-          <Link to="/modules/tiktok" style={cardStyle}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
-              🎵 TikTok OSINT
-            </h3>
-            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "15px" }}>
-              Investigation vidéos, hashtags, tendances et sons
-            </p>
-            <div style={{
-              width: "100%",
-              height: "6px",
-              background: "#1a1f2e",
-              borderRadius: "3px",
-              overflow: "hidden",
-            }}>
-              <div style={{
-                width: `${moduleProgress.tiktok}%`,
-                height: "100%",
-                background: "#00ff9c",
-                transition: "width 0.5s ease"
-              }} />
-            </div>
-            <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
-              {moduleProgress.tiktok > 0 ? `${moduleProgress.tiktok.toFixed(0)}% complété` : "Quiz non validé"}
-            </p>
-          </Link>
-
-          <Link to="/modules/googlemaps" style={cardStyle}>
-            <h3 style={{ color: "#00ff9c", margin: 0, fontSize: "1.2rem", marginBottom: "10px" }}>
-              🗺️ Google Maps OSINT
-            </h3>
-            <p style={{ color: "#9ca3af", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "15px" }}>
-              Géolocalisation, Street View, coordonnées GPS et Timeline
-            </p>
-            <div style={{
-              width: "100%",
-              height: "6px",
-              background: "#1a1f2e",
-              borderRadius: "3px",
-              overflow: "hidden",
-            }}>
-              <div style={{
-                width: `${moduleProgress.googlemaps}%`,
-                height: "100%",
-                background: "#00ff9c",
-                transition: "width 0.5s ease"
-              }} />
-            </div>
-            <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "8px" }}>
-              {moduleProgress.googlemaps > 0 ? `${moduleProgress.googlemaps.toFixed(0)}% complété` : "Quiz non validé"}
-            </p>
-          </Link>
         </div>
       </section>
 

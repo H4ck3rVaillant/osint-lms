@@ -27,11 +27,16 @@ export default function TheHarvesterModule() {
   ];
 
   const quizQuestions = [
-    { id: 1, question: "Que collecte principalement theHarvester ?", options: ["Mots de passe", "Logs serveurs", "Fichiers sensibles", "Emails, sous-domaines, IPs, noms"], correct: 3 },
-    { id: 2, question: "Quelles sources theHarvester interroge ?", options: ["Uniquement Google", "Fichiers locaux", "Google, Bing, Shodan, LinkedIn, etc.", "Bases SQL"], correct: 2 },
-    { id: 3, question: "Commande de base theHarvester ?", options: ["harvester --scan domain", "theHarvester -d domain.com -b all", "theharvest -domain", "python harvest.py -t domain"], correct: 1 },
-    { id: 4, question: "theHarvester est-il légal ?", options: ["Non, toujours illégal", "Oui si données publiques", "Nécessite autorisation écrite", "Oui sans restriction"], correct: 1 },
-    { id: 5, question: "Formats d'export supportés ?", options: ["PDF uniquement", "Texte brut uniquement", "JSON, XML, HTML", "SQL uniquement"], correct: 2 }
+    { id: 1, question: "Que collecte principalement theHarvester ?", options: ["Mots de passe", "Emails, sous-domaines, IPs, noms", "Logs serveurs", "Fichiers sensibles"], correct: 1 },
+    { id: 2, question: "Quelles sources theHarvester interroge ?", options: ["Uniquement Google", "Bases SQL", "Fichiers locaux", "Google, Bing, Shodan, LinkedIn, etc."], correct: 3 },
+    { id: 3, question: "Commande de base theHarvester ?", options: ["theHarvester -d domain.com -b all", "harvester --scan domain", "theharvest -domain", "python harvest.py -t domain"], correct: 0 },
+    { id: 4, question: "theHarvester est-il légal ?", options: ["Non, toujours illégal", "Nécessite autorisation écrite", "Oui si données publiques", "Oui sans restriction"], correct: 2 },
+    { id: 5, question: "Formats d'export supportés ?", options: ["PDF uniquement", "SQL uniquement", "Texte brut uniquement", "JSON, XML, HTML"], correct: 3 },
+    { id: 6, question: "Que signifie le paramètre '-b all' dans theHarvester ?", options: ["Limiter à Google", "Utiliser toutes les sources disponibles", "Export en format all", "Scanner tous les ports"], correct: 1 },
+    { id: 7, question: "theHarvester peut-il trouver des sous-domaines ?", options: ["Non", "Oui, c'est une de ses fonctions principales", "Seulement avec API payante", "Uniquement sur Linux"], correct: 1 },
+    { id: 8, question: "Quelle option theHarvester limite le nombre de résultats ?", options: ["-l (limit)", "-m (max)", "-n (number)", "-r (results)"], correct: 0 },
+    { id: 9, question: "theHarvester est écrit en quel langage ?", options: ["Java", "Ruby", "Python", "Go"], correct: 2 },
+    { id: 10, question: "Quelle source theHarvester utilise pour les certificats SSL ?", options: ["OpenSSL", "Certbot", "CertSpotter/crt.sh", "LetsEncrypt"], correct: 2 }
   ];
 
   const handleQuizSubmit = () => {
@@ -39,7 +44,7 @@ export default function TheHarvesterModule() {
     setShowResults(true);
     localStorage.setItem(ANSWERS_KEY, JSON.stringify(quizAnswers));
     localStorage.setItem(RESULTS_KEY, "true");
-    if (score >= 4) localStorage.setItem(BADGE_KEY, "true");
+    if (score >= 8) localStorage.setItem(BADGE_KEY, "true");
   };
 
   const handleReset = () => {

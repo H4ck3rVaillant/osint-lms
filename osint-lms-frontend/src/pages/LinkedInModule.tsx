@@ -27,11 +27,16 @@ export default function LinkedInModule() {
   ];
 
   const quizQuestions = [
-    { id: 1, question: "Combien de membres LinkedIn compte-t-il ?", options: ["500 millions", "1 milliard", "900+ millions", "300 millions"], correct: 2 },
-    { id: 2, question: "Quel opérateur LinkedIn pour rechercher par entreprise ?", options: ['org:"Nom"', 'company:"Nom"', 'employer:"Nom"', 'work:"Nom"'], correct: 1 },
-    { id: 3, question: "Quel outil scrape les employés LinkedIn ?", options: ["LinkedScraper", "LinkedBot", "ProfileHarvest", "CrossLinked"], correct: 3 },
-    { id: 4, question: "Le scraping LinkedIn est-il légal ?", options: ["Oui avec premium", "Oui usage perso", "Oui sans restriction", "Non, viole CGU"], correct: 3 },
-    { id: 5, question: "Info NON trouvable sur profil public ?", options: ["Parcours pro", "Tél personnel", "Recommandations", "Compétences"], correct: 1 }
+    { id: 1, question: "Combien de membres LinkedIn ?", options: ["500 millions", "300 millions", "900+ millions", "1 milliard"], correct: 2 },
+    { id: 2, question: "Opérateur LinkedIn pour rechercher par entreprise ?", options: ['org:"Nom"', 'company:"Nom"', 'employer:"Nom"', 'work:"Nom"'], correct: 1 },
+    { id: 3, question: "Outil qui scrape les employés LinkedIn ?", options: ["LinkedScraper", "ProfileHarvest", "LinkedBot", "CrossLinked"], correct: 3 },
+    { id: 4, question: "Le scraping LinkedIn est-il légal ?", options: ["Oui avec premium", "Non, viole CGU", "Oui usage perso", "Oui sans restriction"], correct: 1 },
+    { id: 5, question: "Info NON trouvable sur profil public LinkedIn ?", options: ["Parcours pro", "Recommandations", "Tél personnel", "Compétences"], correct: 2 },
+    { id: 6, question: "Que permet Google Dork 'site:linkedin.com/in "entreprise"' ?", options: ["Trouver les offres d'emploi", "Trouver les profils d'employés d'une entreprise", "Accéder aux messages privés", "Télécharger les CV"], correct: 1 },
+    { id: 7, question: "Qu'est-ce que le LinkedIn Sales Navigator ?", options: ["Un outil de publication de contenus", "Une version premium avec filtres avancés de recherche", "Un outil de recrutement uniquement", "Une extension Chrome gratuite"], correct: 1 },
+    { id: 8, question: "Comment voir le profil LinkedIn sans être connecté ?", options: ["Impossible", "Via cache Google ou LinkedIn en mode public", "Via l'API uniquement", "Uniquement avec un compte premium"], correct: 1 },
+    { id: 9, question: "Quelle information LinkedIn révèle sur les connexions d'un profil ?", options: ["La liste complète des connexions", "Le nombre de connexions et les connexions communes", "Les messages échangés", "L'historique des visites de profil"], correct: 1 },
+    { id: 10, question: "Quel outil automatise la recherche OSINT sur LinkedIn ?", options: ["Maltego avec transform LinkedIn", "LinkedBot Pro", "InScraper", "ProfileDump"], correct: 0 }
   ];
 
   const handleQuizSubmit = () => {
@@ -39,7 +44,7 @@ export default function LinkedInModule() {
     setShowResults(true);
     localStorage.setItem(ANSWERS_KEY, JSON.stringify(quizAnswers));
     localStorage.setItem(RESULTS_KEY, "true");
-    if (score >= 4) localStorage.setItem(BADGE_KEY, "true");
+    if (score >= 8) localStorage.setItem(BADGE_KEY, "true");
   };
 
   const handleReset = () => {

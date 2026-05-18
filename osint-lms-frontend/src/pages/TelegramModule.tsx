@@ -27,11 +27,16 @@ export default function TelegramModule() {
   ];
 
   const quizQuestions = [
-    { id: 1, question: "Combien d'utilisateurs actifs Telegram ?", options: ["500 millions", "300 millions", "700+ millions", "1 milliard"], correct: 2 },
-    { id: 2, question: "Limite membres groupe Telegram ?", options: ["100 000", "200 000", "50 000", "Illimité"], correct: 1 },
+    { id: 1, question: "Combien d'utilisateurs actifs Telegram ?", options: ["300 millions", "500 millions", "700+ millions", "1 milliard"], correct: 2 },
+    { id: 2, question: "Limite membres groupe Telegram ?", options: ["50 000", "200 000", "100 000", "Illimité"], correct: 1 },
     { id: 3, question: "Canaux publics indexés Google ?", options: ["Non jamais", "Seulement vérifiés", "Avec autorisation", "Oui via site:t.me"], correct: 3 },
     { id: 4, question: "Outil Python scraper Telegram ?", options: ["TeleScrape", "Telethon", "PyTelegram", "TeleBot"], correct: 1 },
-    { id: 5, question: "Historique canal public accessible ?", options: ["Non jamais", "Avec premium", "Oui via API", "100 derniers"], correct: 2 }
+    { id: 5, question: "Historique canal public accessible ?", options: ["Non jamais", "Avec premium", "Oui via API", "100 derniers seulement"], correct: 2 },
+    { id: 6, question: "Comment trouver un canal Telegram par mot-clé ?", options: ["Via l'API officielle uniquement", "Impossible sans invitation", "Via t.me/s/nomcanal ou moteur tgstat.com", "Via Google uniquement"], correct: 2 },
+    { id: 7, question: "Que révèle un Username Telegram public ?", options: ["L'adresse IP de l'utilisateur", "Le numéro de téléphone complet", "L'historique des messages privés", "Le profil, la bio et les canaux rejoints si publics"], correct: 3 },
+    { id: 8, question: "Quel site permet d'analyser les statistiques d'un canal Telegram ?", options: ["telestat.io", "tgstat.com", "channel-analytics.ru", "telemetrio.org"], correct: 1 },
+    { id: 9, question: "Les messages supprimés sur Telegram sont-ils récupérables en OSINT ?", options: ["Oui toujours via l'API", "Oui s'ils ont été archivés par un tiers", "Non jamais", "Oui via Telethon"], correct: 1 },
+    { id: 10, question: "Quelle information Telegram ne rend PAS publique par défaut ?", options: ["Username", "Photo de profil", "Numéro de téléphone", "Bio"], correct: 2 }
   ];
 
   const handleQuizSubmit = () => {
@@ -39,7 +44,7 @@ export default function TelegramModule() {
     setShowResults(true);
     localStorage.setItem(ANSWERS_KEY, JSON.stringify(quizAnswers));
     localStorage.setItem(RESULTS_KEY, "true");
-    if (score >= 4) localStorage.setItem(BADGE_KEY, "true");
+    if (score >= 8) localStorage.setItem(BADGE_KEY, "true");
   };
 
   const handleReset = () => {

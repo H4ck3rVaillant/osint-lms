@@ -10,20 +10,17 @@ export default function ParcoursHub() {
     avance: 0,
   });
 
-  useEffect(() => {
-    // Parcours Débutant
+  const loadStats = () => {
     const debIntro = localStorage.getItem("badge_deb_intro") === "true";
     const debMethodo = localStorage.getItem("badge_deb_methodo") === "true";
     const debOutils = localStorage.getItem("badge_deb_outils") === "true";
     const debutantCount = [debIntro, debMethodo, debOutils].filter(Boolean).length;
 
-    // Parcours Intermédiaire
     const intIntro = localStorage.getItem("badge_int_intro") === "true";
     const intMethodo = localStorage.getItem("badge_int_methodo") === "true";
     const intOutils = localStorage.getItem("badge_int_outils") === "true";
     const intermediaireCount = [intIntro, intMethodo, intOutils].filter(Boolean).length;
 
-    // Parcours Avancé
     const advIntro = localStorage.getItem("badge_adv_intro") === "true";
     const advMethodo = localStorage.getItem("badge_adv_methodo") === "true";
     const advOutils = localStorage.getItem("badge_adv_outils") === "true";
@@ -34,6 +31,12 @@ export default function ParcoursHub() {
       intermediaire: (intermediaireCount / 3) * 100,
       avance: (avanceCount / 3) * 100,
     });
+  };
+
+  useEffect(() => {
+    loadStats();
+    window.addEventListener('localStorageUpdated', loadStats);
+    return () => window.removeEventListener('localStorageUpdated', loadStats);
   }, []);
 
   const cardStyle = {

@@ -188,7 +188,7 @@ export default function Home() {
             { number: "5",   label: "Études de cas OSINT" },
             { number: "52",  label: "Challenges Hebdo" },
             { number: "11",  label: "Défis CTF" },
-            { number: "29",  label: "Badges à débloquer" },
+            { number: "47",  label: "Badges à débloquer" },
             { number: "22+", label: "Outils référencés" },
           ].map((stat, i) => (
             <div key={i} style={{ textAlign: "center" }}>

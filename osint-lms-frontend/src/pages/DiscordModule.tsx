@@ -27,11 +27,16 @@ export default function DiscordModule() {
   ];
 
   const quizQuestions = [
-    { id: 1, question: "Utilisateurs actifs Discord ?", options: ["100 millions", "50 millions", "200 millions", "150+ millions"], correct: 3 },
-    { id: 2, question: "Chiffres Server ID Discord ?", options: ["16 chiffres", "18 chiffres", "12 chiffres", "20 chiffres"], correct: 1 },
-    { id: 3, question: "Serveurs indexés Google ?", options: ["Oui tous", "Avec autorisation", "Non par défaut", "Seulement publics"], correct: 2 },
-    { id: 4, question: "Site serveurs Discord publics ?", options: ["discordfinder.com", "discorddb.com", "serverlist.io", "disboard.org"], correct: 3 },
-    { id: 5, question: "Messages supprimés récupérables ?", options: ["Oui toujours", "Non, sauf loggés par bot", "Via support", "Avec Nitro"], correct: 1 }
+    { id: 1, question: "Utilisateurs actifs Discord ?", options: ["100 millions", "50 millions", "150+ millions", "200 millions"], correct: 2 },
+    { id: 2, question: "Nombre de chiffres d'un Server ID Discord ?", options: ["16 chiffres", "18 chiffres", "12 chiffres", "20 chiffres"], correct: 1 },
+    { id: 3, question: "Les serveurs Discord sont-ils indexés par Google ?", options: ["Oui tous", "Avec autorisation", "Non par défaut", "Seulement publics"], correct: 2 },
+    { id: 4, question: "Principal annuaire de serveurs Discord publics ?", options: ["discordfinder.com", "discorddb.com", "serverlist.io", "disboard.org"], correct: 3 },
+    { id: 5, question: "Messages supprimés récupérables sur Discord ?", options: ["Oui toujours", "Non, sauf loggés par bot", "Via support Discord", "Avec Nitro"], correct: 1 },
+    { id: 6, question: "Comment trouver l'ID d'un utilisateur Discord ?", options: ["Via son profil public", "En activant le mode développeur puis clic droit sur le profil", "Via l'email de l'utilisateur", "Via le support Discord"], correct: 1 },
+    { id: 7, question: "Qu'est-ce que Snowflake ID sur Discord ?", options: ["Un type de bot Discord", "Un identifiant unique encodant l'horodatage de création", "Un système de badges", "Un format de fichier"], correct: 1 },
+    { id: 8, question: "Quel outil permet d'analyser un serveur Discord sans le rejoindre ?", options: ["discord.id pour les infos basiques via l'ID", "DiscordSpy", "ServerAnalyzer", "Discord Lookup Pro"], correct: 0 },
+    { id: 9, question: "Que révèle le lien discord.gg/XXXXX ?", options: ["L'ID du propriétaire", "Un lien d'invitation vers un serveur public ou privé", "La liste des membres", "Les messages récents"], correct: 1 },
+    { id: 10, question: "Quelle information est visible sans rejoindre un serveur via son lien d'invitation ?", options: ["Tous les messages", "Nom du serveur, nombre de membres en ligne et total", "Liste des modérateurs", "Canaux privés"], correct: 1 }
   ];
 
   const handleQuizSubmit = () => {
@@ -39,7 +44,7 @@ export default function DiscordModule() {
     setShowResults(true);
     localStorage.setItem(ANSWERS_KEY, JSON.stringify(quizAnswers));
     localStorage.setItem(RESULTS_KEY, "true");
-    if (score >= 4) localStorage.setItem(BADGE_KEY, "true");
+    if (score >= 8) localStorage.setItem(BADGE_KEY, "true");
   };
 
   const handleReset = () => {

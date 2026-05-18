@@ -31,7 +31,12 @@ export default function MaltegoModule() {
     { id: 2, question: "Élément de base Maltego ?", options: ["Node", "Item", "Object", "Entity"], correct: 3 },
     { id: 3, question: "Comment Maltego collecte données ?", options: ["Injection SQL", "Scan actif", "Bruteforce", "Transforms (requêtes automatisées)"], correct: 3 },
     { id: 4, question: "Version gratuite Maltego ?", options: ["Basic", "CE (Community Edition)", "Lite", "Free"], correct: 1 },
-    { id: 5, question: "À quoi sert Maltego ?", options: ["Analyser trafic réseau", "Cracker hashes", "Cartographier relations entre entités", "Exploiter vulnérabilités"], correct: 2 }
+    { id: 5, question: "À quoi sert Maltego ?", options: ["Analyser trafic réseau", "Cracker hashes", "Cartographier relations entre entités", "Exploiter vulnérabilités"], correct: 2 },
+    { id: 6, question: "Qu'est-ce qu'un 'Transform' dans Maltego ?", options: ["Un graphique de visualisation", "Une requête automatisée qui enrichit une entité", "Un type de rapport", "Un filtre de recherche"], correct: 1 },
+    { id: 7, question: "Maltego peut-il cartographier un réseau de domaines liés ?", options: ["Non, uniquement les personnes", "Oui via les transforms DNS et WHOIS", "Seulement avec l'édition commerciale", "Non, il faut Shodan pour ça"], correct: 1 },
+    { id: 8, question: "Quelle entité Maltego représente une adresse email ?", options: ["EmailAddress", "Mail", "Email Entity", "MailObject"], correct: 0 },
+    { id: 9, question: "Combien d'entités maximum en version Community Edition ?", options: ["50", "500", "12", "Illimité"], correct: 2 },
+    { id: 10, question: "Quel hub Maltego fournit des transforms OSINT gratuits ?", options: ["OSINT Hub", "Transform Market", "Maltego Hub", "Free Transforms"], correct: 2 }
   ];
 
   const handleQuizSubmit = () => {
@@ -39,7 +44,7 @@ export default function MaltegoModule() {
     setShowResults(true);
     localStorage.setItem(ANSWERS_KEY, JSON.stringify(quizAnswers));
     localStorage.setItem(RESULTS_KEY, "true");
-    if (score >= 4) localStorage.setItem(BADGE_KEY, "true");
+    if (score >= 8) localStorage.setItem(BADGE_KEY, "true");
   };
 
   const handleReset = () => {
