@@ -20,16 +20,23 @@ export default function CertificatPage() {
   const [isAvailable, setIsAvailable] = useState(false);
 
   useEffect(() => {
-    // Rafraîchir les données
-    const prog = getProgression();
-    const perc = getCompletionPercentage();
-    const det = getCompletionDetails();
-    const avail = isCertificatAvailable();
+    const loadData = () => {
+      const prog = getProgression();
+      const perc = getCompletionPercentage();
+      const det = getCompletionDetails();
+      const avail = isCertificatAvailable();
 
-    setProgression(prog);
-    setPercentage(perc);
-    setDetails(det);
-    setIsAvailable(avail);
+      setProgression(prog);
+      setPercentage(perc);
+      setDetails(det);
+      setIsAvailable(avail);
+    };
+
+    loadData();
+
+    // Rafraîchir quand localStorage est restauré depuis l'API
+    window.addEventListener('localStorageUpdated', loadData);
+    return () => window.removeEventListener('localStorageUpdated', loadData);
   }, []);
 
   const handleDownload = () => {

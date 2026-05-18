@@ -131,12 +131,12 @@ function checkQuizFromLocalStorage(): ProgressionData["quiz"] {
     }
     
     return {
-      osintBasics: (quizData["osint-basics"]?.score || 0) >= 60,
-      searchTechniques: (quizData["search-techniques"]?.score || 0) >= 60,
-      geolocation: (quizData["geolocation"]?.score || 0) >= 60,
-      socialMedia: (quizData["social-media"]?.score || 0) >= 60,
-      cryptoBlockchain: (quizData["crypto-blockchain"]?.score || 0) >= 60,
-      darkweb: (quizData["darkweb"]?.score || 0) >= 60,
+      osintBasics:      (quizData["osint-basics"]?.percentage      || 0) >= 60,
+      searchTechniques: (quizData["search-techniques"]?.percentage || 0) >= 60,
+      geolocation:      (quizData["geolocation"]?.percentage       || 0) >= 60,
+      socialMedia:      (quizData["social-media"]?.percentage      || 0) >= 60,
+      cryptoBlockchain: (quizData["crypto-blockchain"]?.percentage || 0) >= 60,
+      darkweb:          (quizData["darkweb"]?.percentage           || 0) >= 60,
     };
   } catch (error) {
     console.error("Erreur lecture quiz_results:", error);
