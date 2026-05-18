@@ -303,6 +303,8 @@ export default function QuizSession() {
       }
       // Écrire aussi la clé individuelle pour BadgesOSINT
       localStorage.setItem(badge, "true");
+      // Notifier BadgesOSINT que le localStorage a changé
+      window.dispatchEvent(new Event('localStorageUpdated'));
       unlockBadge(badge, `Quiz ${themeId} - ${percentage >= 95 ? "Or" : percentage >= 80 ? "Argent" : "Bronze"}`);
     }
     

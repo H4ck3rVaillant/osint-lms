@@ -9,7 +9,7 @@ export default function BadgesOSINT() {
     unlockedBadges: 0,
     progressPercentage: 0,
   });
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [unlockedMap, setUnlockedMap] = useState<Record<string, boolean>>({});
 
   const sections = [
     {
@@ -127,13 +127,14 @@ export default function BadgesOSINT() {
   const updateStats = () => {
     let totalCount = 0;
     let unlockedCount = 0;
+    const newUnlockedMap: Record<string, boolean> = {};
 
     sections.forEach(section => {
       section.badges.forEach(badge => {
         totalCount++;
-        if (localStorage.getItem(badge.key) === "true") {
-          unlockedCount++;
-        }
+        const isUnlocked = localStorage.getItem(badge.key) === "true";
+        newUnlockedMap[badge.key] = isUnlocked;
+        if (isUnlocked) unlockedCount++;
       });
     });
 
@@ -142,7 +143,7 @@ export default function BadgesOSINT() {
       unlockedBadges: unlockedCount,
       progressPercentage: (unlockedCount / totalCount) * 100,
     });
-    setRefreshKey(k => k + 1);
+    setUnlockedMap(newUnlockedMap);
   };
 
   return (
@@ -238,11 +239,8 @@ export default function BadgesOSINT() {
       </div>
 
       {/* Sections de badges */}
-      <div key={refreshKey}>
       {sections.map((section) => {
-        const sectionUnlocked = section.badges.filter(
-          b => localStorage.getItem(b.key) === "true"
-        ).length;
+        const sectionUnlocked = section.badges.filter(b => unlockedMap[b.key]).length;
         const sectionTotal = section.badges.length;
         const sectionProgress = (sectionUnlocked / sectionTotal) * 100;
 
@@ -290,7 +288,7 @@ export default function BadgesOSINT() {
               gap: "20px",
             }}>
               {section.badges.map((b) => {
-                const unlocked = localStorage.getItem(b.key) === "true";
+                const unlocked = unlockedMap[b.key] === true;
 
                 return (
                   <div
