@@ -231,13 +231,19 @@ export default function QuizSession() {
     setShowExplanation(true);
     
     const isCorrect = answerIndex === questions[currentQuestion].correctAnswer;
+    const newScore = isCorrect ? score + 1 : score;
     if (isCorrect) {
-      setScore(score + 1);
+      setScore(newScore);
     }
     
     const newAnswered = [...answeredQuestions];
     newAnswered[currentQuestion] = true;
     setAnsweredQuestions(newAnswered);
+
+    // Si c'est la dernière question, finir avec le bon score
+    if (currentQuestion === questions.length - 1) {
+      setTimeout(() => handleFinishQuiz(newScore), 100);
+    }
   };
 
   const handleNextQuestion = useCallback(() => {
@@ -246,15 +252,15 @@ export default function QuizSession() {
       setSelectedAnswer(null);
       setShowExplanation(false);
       setQuestionTime(30);
-    } else {
-      handleFinishQuiz();
     }
+    // Ne pas appeler handleFinishQuiz ici — géré dans handleAnswerSelect
   }, [currentQuestion, questions.length]);
 
-  const handleFinishQuiz = () => {
+  const handleFinishQuiz = useCallback((finalScore?: number) => {
+    const actualScore = finalScore !== undefined ? finalScore : score;
     setIsFinished(true);
     
-    const percentage = (score / questions.length) * 100;
+    const percentage = (actualScore / questions.length) * 100;
     let badge = "";
     let xpGain = 0;
 
@@ -272,7 +278,7 @@ export default function QuizSession() {
     // Sauvegarder le résultat dans localStorage
     const quizResult = {
       themeId,
-      score,
+      score: actualScore,
       total: questions.length,
       percentage,
       badge,
@@ -280,11 +286,10 @@ export default function QuizSession() {
       completedAt: new Date().toISOString()
     };
     
-    // Récupérer les résultats existants
+    // Remplacer l'ancien résultat (pas ajouter)
     const existingResults = localStorage.getItem("quiz_results");
     let results = existingResults ? JSON.parse(existingResults) : [];
-    
-    // Ajouter le nouveau résultat
+    results = results.filter((r: any) => r.themeId !== themeId);
     results.push(quizResult);
     localStorage.setItem("quiz_results", JSON.stringify(results));
     
@@ -303,11 +308,11 @@ export default function QuizSession() {
       addXP(xpGain, `Terminé quiz ${themeId}`);
     }
 
-    // ✅ Tracker le quiz pour le certificat si score ≥60%
+    // Tracker le quiz pour le certificat si score ≥60%
     if (percentage >= 60 && themeId) {
       markQuizComplete(themeId);
     }
-  };
+  }, [score, questions.length, themeId, addXP, unlockBadge]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -455,8 +460,15 @@ export default function QuizSession() {
                     console.error("Erreur suppression résultat:", error);
                   }
                 }
-                // Recharger la page
-                window.location.reload();
+                // Réinitialiser tous les états sans reload
+                setIsFinished(false);
+                setCurrentQuestion(0);
+                setSelectedAnswer(null);
+                setScore(0);
+                setShowExplanation(false);
+                setAnsweredQuestions(new Array(questions.length).fill(false));
+                setGlobalTime(15 * 60);
+                setQuestionTime(30);
               }}
               style={{
                 background: "transparent",
